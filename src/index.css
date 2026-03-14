@@ -1,0 +1,217 @@
+@font-face {
+  font-family: 'Bebas Neue';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/bebas-neue-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 300 700;
+  font-display: swap;
+  src: url('/fonts/space-grotesk-latin-variable.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Dark maroon background — matching the-ace.academy */
+    --background: 0 60% 8%;
+    --foreground: 0 10% 95%;
+
+    --card: 0 50% 12%;
+    --card-foreground: 0 10% 95%;
+
+    --popover: 0 50% 12%;
+    --popover-foreground: 0 10% 95%;
+
+    /* Bright red — the-ace.academy primary accent */
+    --primary: 0 90% 45%;
+    --primary-foreground: 0 10% 95%;
+
+    --secondary: 0 40% 15%;
+    --secondary-foreground: 0 10% 90%;
+
+    --muted: 0 30% 15%;
+    --muted-foreground: 0 10% 60%;
+
+    --accent: 0 90% 45%;
+    --accent-foreground: 0 10% 95%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 0 40% 20%;
+    --input: 0 40% 20%;
+    --ring: 0 90% 45%;
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 0 50% 12%;
+    --sidebar-foreground: 0 10% 95%;
+    --sidebar-primary: 0 90% 45%;
+    --sidebar-primary-foreground: 0 10% 95%;
+    --sidebar-accent: 0 40% 15%;
+    --sidebar-accent-foreground: 0 10% 90%;
+    --sidebar-border: 0 40% 20%;
+    --sidebar-ring: 0 90% 45%;
+
+    /* Custom tokens */
+    --maroon: 0 60% 8%;
+    --maroon-light: 0 50% 18%;
+    --cream: 0 10% 95%;
+    --cream-dark: 0 15% 85%;
+    --surface-elevated: 0 45% 14%;
+    --hero-gradient: linear-gradient(135deg, hsl(0, 60%, 8%) 0%, hsl(0, 50%, 15%) 100%);
+    --text-gradient: linear-gradient(135deg, hsl(0, 90%, 45%), hsl(0, 85%, 55%));
+    --overlay-dark: linear-gradient(180deg, hsla(0, 60%, 8%, 0.2) 0%, hsla(0, 60%, 8%, 0.85) 100%);
+    --overlay-hero: linear-gradient(180deg, hsla(0, 60%, 8%, 0.1) 0%, hsla(0, 60%, 8%, 0.85) 70%, hsla(0, 60%, 8%, 1) 100%);
+
+    --font-display: 'Bebas Neue', sans-serif;
+    --font-body: 'Space Grotesk', sans-serif;
+  }
+
+  .light {
+    --background: 10 100% 98%;
+    --foreground: 0 0% 10%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 10%;
+
+    --primary: 1 100% 44%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 10 100% 96%;
+    --secondary-foreground: 0 0% 10%;
+
+    --muted: 20 18% 92%;
+    --muted-foreground: 0 0% 32%;
+
+    --accent: 14 100% 62%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 20 15% 85%;
+    --input: 20 15% 85%;
+    --ring: 1 100% 44%;
+
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 0 0% 10%;
+    --sidebar-primary: 1 100% 44%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 10 100% 96%;
+    --sidebar-accent-foreground: 0 0% 10%;
+    --sidebar-border: 20 18% 92%;
+    --sidebar-ring: 1 100% 44%;
+
+    --maroon: 10 100% 98%;
+    --maroon-light: 20 18% 92%;
+    --cream: 0 0% 10%;
+    --cream-dark: 20 20% 94%;
+    --surface-elevated: 0 0% 98%;
+    --hero-gradient: linear-gradient(135deg, hsla(0, 0%, 100%, 0.85) 0%, hsla(0, 0%, 100%, 0.7) 100%);
+    --text-gradient: linear-gradient(135deg, hsl(1, 100%, 44%), hsl(14, 100%, 62%));
+    --overlay-dark: linear-gradient(180deg, hsla(0, 0%, 100%, 0.02) 0%, hsla(10, 100%, 98%, 0.25) 100%);
+    --overlay-hero: linear-gradient(180deg, hsla(10, 100%, 98%, 0) 0%, hsla(10, 100%, 98%, 0.6) 50%, hsla(10, 100%, 98%, 0.95) 100%);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html, body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-body);
+    overflow-x: hidden;
+  }
+
+  #root {
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    letter-spacing: 0.02em;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    background: var(--text-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    padding-right: 0.15em;
+  }
+
+  em, i {
+    padding-right: 0.15em;
+  }
+
+  .bg-hero-gradient {
+    background: var(--hero-gradient);
+  }
+
+  .bg-overlay-dark {
+    background: var(--overlay-dark);
+  }
+
+  .bg-overlay-hero {
+    background: var(--overlay-hero);
+  }
+
+  .bg-surface-elevated {
+    background: hsl(var(--surface-elevated));
+  }
+
+  .bg-cream-dark {
+    background: hsl(var(--cream-dark));
+  }
+
+  .text-maroon {
+    color: hsl(var(--maroon));
+  }
+
+  .text-maroon-light {
+    color: hsl(var(--maroon-light));
+  }
+}
+
+/* Dark mode (default): invert black logo to white */
+img[alt="The Ace Academy"] {
+  filter: invert(1);
+}
+
+/* Light mode: keep logo black */
+.light img[alt="The Ace Academy"] {
+  filter: none;
+}
+
+/* Light mode: make navbar fully opaque to prevent bleed-through */
+.light nav.fixed {
+  background: hsl(var(--background)) !important;
+}
+
+/* Light mode: cards need clear separation from background */
+.light .group[class*="bg-card"] {
+  box-shadow: 0 2px 12px -2px hsla(0, 0%, 0%, 0.08);
+}
+
+/* Light mode: make card bg images more visible */
+.light .group img[class*="opacity-"] {
+  opacity: 0.4 !important;
+}

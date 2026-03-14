@@ -1,0 +1,354 @@
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
+import { motion, AnimatePresence } from "framer-motion";
+import { Plus, Search, Edit2, Trash2, X, Clock, Tag, Play } from "lucide-react";
+import PortalLayout from "@/components/portal/PortalLayout";
+import type { Database } from "@/integrations/supabase/types";
+
+type ModuleCategory = Database["public"]["Enums"]["module_category"];
+type ModuleDifficulty = Database["public"]["Enums"]["module_difficulty"];
+
+const CATEGORIES: ModuleCategory[] = [
+  "warm_up", "padel_drill", "footwork", "fitness", "strength",
+  "mental", "recovery", "cool_down", "nutrition", "video",
+];
+
+const DIFFICULTIES: ModuleDifficulty[] = ["beginner", "intermediate", "advanced", "elite"];
+
+const CATEGORY_COLORS: Record<string, string> = {
+  warm_up: "bg-yellow-500/20 text-yellow-400",
+  padel_drill: "bg-cyan-500/20 text-cyan-400",
+  footwork: "bg-blue-500/20 text-blue-400",
+  fitness: "bg-orange-500/20 text-orange-400",
+  strength: "bg-orange-600/20 text-orange-300",
+  mental: "bg-purple-500/20 text-purple-400",
+  recovery: "bg-green-500/20 text-green-400",
+  cool_down: "bg-teal-500/20 text-teal-400",
+  nutrition: "bg-lime-500/20 text-lime-400",
+  video: "bg-pink-500/20 text-pink-400",
+};
+
+interface Module {
+  id: string;
+  title: string;
+  category: ModuleCategory;
+  difficulty: ModuleDifficulty | null;
+  duration_minutes: number | null;
+  description: string | null;
+  instructions: string | null;
+  video_url: string | null;
+  tags: string[] | null;
+  equipment: string[] | null;
+  is_shared: boolean | null;
+}
+
+const emptyForm = {
+  title: "",
+  category: "padel_drill" as ModuleCategory,
+  difficulty: "beginner" as ModuleDifficulty,
+  duration_minutes: 15,
+  description: "",
+  instructions: "",
+  video_url: "",
+  tags: "",
+  equipment: "",
+  is_shared: false,
+};
+
+const CoachModules = () => {
+  const { user } = useAuth();
+  const [modules, setModules] = useState<Module[]>([]);
+  const [search, setSearch] = useState("");
+  const [filterCat, setFilterCat] = useState<ModuleCategory | "all">("all");
+  const [loading, setLoading] = useState(true);
+  const [showForm, setShowForm] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [form, setForm] = useState(emptyForm);
+
+  useEffect(() => {
+    if (user) fetchModules();
+  }, [user]);
+
+  const fetchModules = async () => {
+    if (!user) return;
+    const { data } = await supabase
+      .from("modules")
+      .select("*")
+      .eq("created_by", user.id)
+      .order("created_at", { ascending: false });
+    setModules((data as Module[]) || []);
+    setLoading(false);
+  };
+
+  const handleSave = async () => {
+    if (!user || !form.title.trim()) return;
+    const payload = {
+      title: form.title,
+      category: form.category,
+      difficulty: form.difficulty,
+      duration_minutes: form.duration_minutes,
+      description: form.description || null,
+      instructions: form.instructions || null,
+      video_url: form.video_url || null,
+      tags: form.tags ? form.tags.split(",").map((t) => t.trim()).filter(Boolean) : [],
+      equipment: form.equipment ? form.equipment.split(",").map((e) => e.trim()).filter(Boolean) : [],
+      is_shared: form.is_shared,
+      created_by: user.id,
+    };
+
+    if (editingId) {
+      await supabase.from("modules").update(payload).eq("id", editingId);
+    } else {
+      await supabase.from("modules").insert(payload);
+    }
+    setShowForm(false);
+    setEditingId(null);
+    setForm(emptyForm);
+    fetchModules();
+  };
+
+  const handleEdit = (mod: Module) => {
+    setForm({
+      title: mod.title,
+      category: mod.category,
+      difficulty: mod.difficulty || "beginner",
+      duration_minutes: mod.duration_minutes || 15,
+      description: mod.description || "",
+      instructions: mod.instructions || "",
+      video_url: mod.video_url || "",
+      tags: mod.tags?.join(", ") || "",
+      equipment: mod.equipment?.join(", ") || "",
+      is_shared: mod.is_shared || false,
+    });
+    setEditingId(mod.id);
+    setShowForm(true);
+  };
+
+  const handleDelete = async (id: string) => {
+    await supabase.from("modules").delete().eq("id", id);
+    fetchModules();
+  };
+
+  const filtered = modules.filter((m) => {
+    const matchSearch = m.title.toLowerCase().includes(search.toLowerCase());
+    const matchCat = filterCat === "all" || m.category === filterCat;
+    return matchSearch && matchCat;
+  });
+
+  return (
+    <PortalLayout>
+      <div className="max-w-4xl mx-auto">
+        <div className="flex items-center justify-between mb-4">
+          <h1 className="font-display text-3xl text-foreground">MODULES</h1>
+          <button
+            onClick={() => { setForm(emptyForm); setEditingId(null); setShowForm(true); }}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground font-display text-xs tracking-wider hover:bg-primary/90 transition-colors"
+          >
+            <Plus size={16} /> NEW MODULE
+          </button>
+        </div>
+
+        {/* Search & filter */}
+        {/* Category filter strip */}
+        <div className="flex gap-1.5 overflow-x-auto pb-2 mb-3 scrollbar-none">
+          {(["all", ...CATEGORIES] as const).map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setFilterCat(cat)}
+              className={`shrink-0 px-3 py-1.5 rounded-lg font-display text-xs tracking-wider transition-colors ${
+                filterCat === cat
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-card border border-border text-muted-foreground hover:bg-secondary"
+              }`}
+            >
+              {cat === "all" ? "ALL" : cat.replace("_", " ").toUpperCase()}
+            </button>
+          ))}
+        </div>
+
+        {/* Search */}
+        <div className="relative mb-4">
+          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+          <input
+            type="text"
+            placeholder="Search..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full pl-10 pr-4 py-2 rounded-lg bg-card border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+          />
+        </div>
+
+        {/* Module list */}
+        {loading ? (
+          <div className="flex justify-center py-12">
+            <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+          </div>
+        ) : filtered.length === 0 ? (
+          <div className="bg-card border border-border rounded-xl p-8 text-center">
+            <p className="font-body text-muted-foreground">No modules found. Create your first!</p>
+          </div>
+        ) : (
+          <div className="grid gap-3 md:grid-cols-2">
+            {filtered.map((mod, i) => (
+              <motion.div
+                key={mod.id}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.02 }}
+                className="bg-card border border-border rounded-xl p-4"
+              >
+                <div className="flex items-start justify-between mb-2">
+                  <div>
+                    <span className={`text-[10px] font-body font-semibold px-2 py-0.5 rounded-full uppercase ${CATEGORY_COLORS[mod.category] || "bg-muted text-muted-foreground"}`}>
+                      {mod.category.replace("_", " ")}
+                    </span>
+                    <h3 className="font-display text-lg text-foreground mt-1">{mod.title}</h3>
+                  </div>
+                  <div className="flex gap-1">
+                    <button onClick={() => handleEdit(mod)} className="p-1.5 rounded-lg hover:bg-secondary transition-colors">
+                      <Edit2 size={14} className="text-muted-foreground" />
+                    </button>
+                    <button onClick={() => handleDelete(mod.id)} className="p-1.5 rounded-lg hover:bg-destructive/20 transition-colors">
+                      <Trash2 size={14} className="text-destructive" />
+                    </button>
+                  </div>
+                </div>
+                <div className="flex gap-3 text-xs font-body text-muted-foreground">
+                  <span className="flex items-center gap-1"><Clock size={12} /> {mod.duration_minutes || 0} min</span>
+                  <span>{mod.difficulty}</span>
+                  {mod.is_shared && <span className="text-primary">shared</span>}
+                  {mod.video_url && (
+                    <span className="flex items-center gap-1 px-1.5 py-0.5 rounded bg-pink-500/20 text-pink-400 text-xs font-body">
+                      <Play className="w-2.5 h-2.5" /> video
+                    </span>
+                  )}
+                </div>
+                {mod.description && (
+                  <p className="text-xs font-body text-muted-foreground mt-2 line-clamp-2">{mod.description}</p>
+                )}
+              </motion.div>
+            ))}
+          </div>
+        )}
+
+        {/* Modal form */}
+        <AnimatePresence>
+          {showForm && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm p-4"
+              onClick={() => setShowForm(false)}
+            >
+              <motion.div
+                initial={{ scale: 0.95, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.95, opacity: 0 }}
+                onClick={(e) => e.stopPropagation()}
+                className="w-full max-w-lg max-h-[80vh] overflow-y-auto bg-card border border-border rounded-xl p-6"
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="font-display text-xl text-foreground">{editingId ? "EDIT MODULE" : "NEW MODULE"}</h2>
+                  <button onClick={() => setShowForm(false)}><X size={20} className="text-muted-foreground" /></button>
+                </div>
+
+                <div className="space-y-3">
+                  <input
+                    placeholder="Module title"
+                    value={form.title}
+                    onChange={(e) => setForm({ ...form, title: e.target.value })}
+                    className="w-full px-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+                  />
+                  <div className="grid grid-cols-2 gap-3">
+                    <select
+                      value={form.category}
+                      onChange={(e) => setForm({ ...form, category: e.target.value as ModuleCategory })}
+                      className="px-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-sm"
+                    >
+                      {CATEGORIES.map((c) => <option key={c} value={c}>{c.replace("_", " ")}</option>)}
+                    </select>
+                    <select
+                      value={form.difficulty}
+                      onChange={(e) => setForm({ ...form, difficulty: e.target.value as ModuleDifficulty })}
+                      className="px-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-sm"
+                    >
+                      {DIFFICULTIES.map((d) => <option key={d} value={d}>{d}</option>)}
+                    </select>
+                  </div>
+                  <input
+                    type="number"
+                    placeholder="Duration (min)"
+                    value={form.duration_minutes}
+                    onChange={(e) => setForm({ ...form, duration_minutes: parseInt(e.target.value) || 0 })}
+                    className="w-full px-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-sm focus:outline-none"
+                  />
+                  <textarea
+                    placeholder="Description"
+                    value={form.description}
+                    onChange={(e) => setForm({ ...form, description: e.target.value })}
+                    rows={2}
+                    className="w-full px-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-sm focus:outline-none resize-none"
+                  />
+                  <textarea
+                    placeholder="Instructions (step by step)"
+                    value={form.instructions}
+                    onChange={(e) => setForm({ ...form, instructions: e.target.value })}
+                    rows={3}
+                    className="w-full px-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-sm focus:outline-none resize-none"
+                  />
+                  <input
+                    placeholder="YouTube URL"
+                    value={form.video_url}
+                    onChange={(e) => setForm({ ...form, video_url: e.target.value })}
+                    className="w-full px-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-sm focus:outline-none"
+                  />
+                  {form.video_url && (() => {
+                    const match = form.video_url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+                    const ytId = match ? match[1] : null;
+                    return ytId ? (
+                      <div className="aspect-video rounded-lg overflow-hidden">
+                        <iframe src={`https://www.youtube.com/embed/${ytId}`} className="w-full h-full" allowFullScreen title="Video preview" />
+                      </div>
+                    ) : null;
+                  })()}
+                  <input
+                    placeholder="Tags (comma separated)"
+                    value={form.tags}
+                    onChange={(e) => setForm({ ...form, tags: e.target.value })}
+                    className="w-full px-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-sm focus:outline-none"
+                  />
+                  <input
+                    placeholder="Equipment (comma separated)"
+                    value={form.equipment}
+                    onChange={(e) => setForm({ ...form, equipment: e.target.value })}
+                    className="w-full px-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-sm focus:outline-none"
+                  />
+                  <label className="flex items-center gap-2 font-body text-sm text-muted-foreground">
+                    <input
+                      type="checkbox"
+                      checked={form.is_shared}
+                      onChange={(e) => setForm({ ...form, is_shared: e.target.checked })}
+                      className="rounded"
+                    />
+                    Share with other coaches
+                  </label>
+                </div>
+
+                <button
+                  onClick={handleSave}
+                  className="w-full mt-4 py-2.5 rounded-lg bg-primary text-primary-foreground font-display text-sm tracking-wider hover:bg-primary/90 transition-colors"
+                >
+                  {editingId ? "UPDATE MODULE" : "CREATE MODULE"}
+                </button>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </PortalLayout>
+  );
+};
+
+export default CoachModules;
