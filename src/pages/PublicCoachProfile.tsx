@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
+import { Textarea } from "@/components/ui/textarea";
 import { motion } from "framer-motion";
 import {
   MapPin, Clock, Star, CheckCircle2, Share2, Globe, Award,
@@ -86,6 +88,7 @@ const SESSION_COLORS: Record<string, string> = {
 
 const PublicCoachProfile = () => {
   const { slug } = useParams<{ slug: string }>();
+  const { user } = useAuth();
   const [coach, setCoach] = useState<CoachProfile | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [packages, setPackages] = useState<Package[]>([]);
@@ -93,6 +96,10 @@ const PublicCoachProfile = () => {
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [showStickyBook, setShowStickyBook] = useState(false);
+  const [reviewRating, setReviewRating] = useState(5);
+  const [reviewText, setReviewText] = useState('');
+  const [submittingReview, setSubmittingReview] = useState(false);
+  const [hasReviewed, setHasReviewed] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setShowStickyBook(window.scrollY > 400);
@@ -149,9 +156,51 @@ const PublicCoachProfile = () => {
           player_avatar: (playerMap.get(r.player_id) as any)?.avatar_url || null,
         }))
       );
+
+      if (user) {
+        const alreadyReviewed = (reviewsRes.data as any[]).some(
+          (r: any) => r.player_id === user.id
+        );
+        setHasReviewed(alreadyReviewed);
+      }
+    } else {
+      setReviews([]);
+      setHasReviewed(false);
     }
 
     setLoading(false);
+  };
+
+  const handleSubmitReview = async () => {
+    if (!user || !coach) return;
+    setSubmittingReview(true);
+    try {
+      const { error } = await supabase.from('reviews').insert({
+        coach_id: coach.user_id,
+        player_id: user.id,
+        rating: reviewRating,
+        comment: reviewText.trim() || null,
+      });
+
+      if (error) {
+        toast({ title: 'Error', description: error.message, variant: 'destructive' });
+        return;
+      }
+
+      await supabase.rpc('award_xp', {
+        p_user_id: user.id,
+        p_amount: 20,
+        p_event_type: 'review_written',
+        p_description: 'Wrote a coach review',
+      });
+
+      toast({ title: 'Review submitted! +20 XP 🎉' });
+      setReviewText('');
+      setHasReviewed(true);
+      fetchCoach();
+    } finally {
+      setSubmittingReview(false);
+    }
   };
 
   const avgRating = reviews.length > 0
@@ -418,6 +467,45 @@ const PublicCoachProfile = () => {
               <h2 className="font-display text-sm tracking-wider text-muted-foreground mb-4">
                 REVIEWS {reviews.length > 0 && `(${reviews.length})`}
               </h2>
+
+              {/* Review Form */}
+              {user && coach && user.id !== coach.user_id && !hasReviewed && (
+                <div className="bg-card border border-border rounded-xl p-5 mb-4 space-y-3">
+                  <p className="font-display text-xs tracking-wider text-muted-foreground">LEAVE A REVIEW</p>
+                  <div className="flex gap-1">
+                    {[1, 2, 3, 4, 5].map((s) => (
+                      <button
+                        key={s}
+                        type="button"
+                        onClick={() => setReviewRating(s)}
+                        className="p-0.5 transition-transform hover:scale-110"
+                      >
+                        <Star
+                          size={22}
+                          className={s <= reviewRating ? "text-chart-4 fill-chart-4" : "text-muted-foreground/30"}
+                        />
+                      </button>
+                    ))}
+                  </div>
+                  <Textarea
+                    placeholder="Share your experience with this coach..."
+                    value={reviewText}
+                    onChange={(e) => setReviewText(e.target.value)}
+                    rows={3}
+                    className="font-body text-sm"
+                  />
+                  <button
+                    onClick={handleSubmitReview}
+                    disabled={submittingReview}
+                    className="px-5 py-2.5 rounded-lg bg-primary text-primary-foreground font-display text-xs tracking-wider hover:bg-primary/90 transition-colors disabled:opacity-50"
+                  >
+                    {submittingReview ? 'SUBMITTING...' : 'SUBMIT REVIEW'}
+                  </button>
+                </div>
+              )}
+              {user && hasReviewed && (
+                <p className="font-body text-xs text-chart-2 mb-4">✓ You have already reviewed this coach</p>
+              )}
               {reviews.length === 0 ? (
                 <div className="bg-card border border-border rounded-2xl p-8 text-center">
                   <p className="font-body text-sm text-muted-foreground">No reviews yet.</p>
