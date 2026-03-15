@@ -47,7 +47,10 @@ const CoachCalendar = () => {
   const [showPlayerPicker, setShowPlayerPicker] = useState(false);
 
   useEffect(() => {
-    if (targetCoachId) fetchMonthPlans();
+    if (targetCoachId) {
+      fetchMonthPlans();
+      if (!isAdminView) fetchAssignedPlayers();
+    }
   }, [targetCoachId, currentMonth]);
 
   useEffect(() => {
@@ -56,6 +59,21 @@ const CoachCalendar = () => {
         .then(({ data }) => setCoachName(data?.full_name || "Coach"));
     }
   }, [isAdminView, paramCoachId]);
+
+  const fetchAssignedPlayers = async () => {
+    if (!targetCoachId) return;
+    const { data: assignments } = await supabase
+      .from("coach_player_assignments")
+      .select("player_id")
+      .eq("coach_id", targetCoachId);
+    const ids = assignments?.map((a) => a.player_id) || [];
+    if (ids.length === 0) return;
+    const { data: profiles } = await supabase
+      .from("profiles")
+      .select("user_id, full_name")
+      .in("user_id", ids);
+    setAssignedPlayers(profiles?.map((p) => ({ player_id: p.user_id, full_name: p.full_name })) || []);
+  };
 
   const fetchMonthPlans = async () => {
     if (!targetCoachId) return;
