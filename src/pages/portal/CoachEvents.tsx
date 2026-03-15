@@ -61,7 +61,7 @@ const CoachEvents = () => {
     if (!user) return;
     setLoading(true);
     const { data } = await supabase.from("events").select("*").eq("coach_id", user.id).order("start_datetime", { ascending: false });
-    setEvents((data as any as EventRow[]) || []);
+    setEvents((data || []) as EventRow[]);
     setLoading(false);
   };
 
