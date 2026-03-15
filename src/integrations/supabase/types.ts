@@ -608,6 +608,63 @@ export type Database = {
         }
         Relationships: []
       }
+      founder_share_tokens: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          expires_at: string
+          id: string
+          token: string
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          expires_at: string
+          id?: string
+          token: string
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          expires_at?: string
+          id?: string
+          token?: string
+        }
+        Relationships: []
+      }
+      founder_spend: {
+        Row: {
+          amount: number
+          category: string
+          created_at: string | null
+          created_by: string | null
+          currency: string | null
+          id: string
+          month: string
+          notes: string | null
+        }
+        Insert: {
+          amount: number
+          category: string
+          created_at?: string | null
+          created_by?: string | null
+          currency?: string | null
+          id?: string
+          month: string
+          notes?: string | null
+        }
+        Update: {
+          amount?: number
+          category?: string
+          created_at?: string | null
+          created_by?: string | null
+          currency?: string | null
+          id?: string
+          month?: string
+          notes?: string | null
+        }
+        Relationships: []
+      }
       health_connections: {
         Row: {
           access_token: string | null
@@ -892,6 +949,30 @@ export type Database = {
           link?: string | null
           title?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      page_views: {
+        Row: {
+          created_at: string | null
+          id: string
+          page_type: string
+          reference_id: string | null
+          viewer_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          page_type: string
+          reference_id?: string | null
+          viewer_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          page_type?: string
+          reference_id?: string | null
+          viewer_id?: string | null
         }
         Relationships: []
       }
