@@ -33,7 +33,7 @@ interface TrainingBlock {
   is_public: boolean; is_for_sale: boolean; price: number; currency: string;
 }
 
-interface PlanBlock { tempId: string; block: TrainingBlock; coach_note: string; }
+interface PlanBlock { tempId: string; block: TrainingBlock; coach_note: string; block_id: string; }
 
 const CATEGORY_LABELS: Record<string, string> = {
   warm_up: "WARM UP", padel_drill: "TECHNICAL", footwork: "FOOTWORK",
