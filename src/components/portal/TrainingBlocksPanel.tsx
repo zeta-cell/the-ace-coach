@@ -151,27 +151,31 @@ const TrainingBlocksPanel = ({ onApplyBlock, onSaveAsBlock, modules, isOpen = tr
     toast.success(`Applied "${block.title}" — ${items.length} modules added`);
   };
 
-  return (
-    <AnimatePresence>
-      {isOpen && (
-        <>
-          {/* Backdrop */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-background/40 z-40 lg:hidden"
-            onClick={onClose}
-          />
+  // Inline render (for CoachPlanBuilder sidebar)
+  if (!isSlideIn) {
+    return (
+      <div className="space-y-3">
+        <div className="flex items-center gap-2">
+          <Layers size={16} className="text-primary" />
+          <h3 className="font-display text-xs tracking-wider text-foreground">TRAINING BLOCKS</h3>
+        </div>
+        {onSaveAsBlock && (
+          <button onClick={onSaveAsBlock}
+            className="w-full py-2.5 rounded-xl border border-dashed border-border text-muted-foreground font-display text-[10px] tracking-wider hover:border-primary hover:text-primary transition-colors flex items-center justify-center gap-1.5">
+            <Save size={12} /> SAVE CURRENT PLAN AS BLOCK
+          </button>
+        )}
+        <div className="relative">
+          <Search size={12} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
+          <input placeholder="Search blocks..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-8 pr-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-xs focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-muted-foreground" />
+        </div>
+        {renderBlockList()}
+      </div>
+    );
+  }
 
-          {/* Panel */}
-          <motion.div
-            initial={{ x: -320 }}
-            animate={{ x: 0 }}
-            exit={{ x: -320 }}
-            transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="fixed left-0 top-0 bottom-0 w-80 bg-card border-r border-border z-50 overflow-y-auto scrollbar-none"
-          >
+  // Slide-in render (for Training page)
             <div className="p-4 space-y-3">
               {/* Header */}
               <div className="flex items-center justify-between">
