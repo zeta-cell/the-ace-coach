@@ -22,13 +22,27 @@ interface DayPlan {
   }[];
 }
 
+interface PurchasedProgram {
+  id: string;
+  block_id: string;
+  current_week: number;
+  title: string;
+  author_name: string | null;
+  author_avatar_url: string | null;
+  week_count: number;
+  block_type: string;
+  thumbnail_url: string | null;
+}
+
 const Dashboard = () => {
   const { user, profile } = useAuth();
+  const navigate = useNavigate();
   const [todayPlan, setTodayPlan] = useState<DayPlan | null>(null);
   const [weekPlans, setWeekPlans] = useState<string[]>([]);
   const [selectedDay, setSelectedDay] = useState(new Date());
   const [selectedDayPlan, setSelectedDayPlan] = useState<DayPlan | null>(null);
   const [stats, setStats] = useState({ sessionsThisWeek: 0, streak: 0, completedModules: 0 });
+  const [programs, setPrograms] = useState<PurchasedProgram[]>([]);
 
   const today = new Date();
   const weekStart = startOfWeek(today, { weekStartsOn: 1 });
