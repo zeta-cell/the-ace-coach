@@ -151,13 +151,13 @@ const Training = () => {
       .select("id, title, category, duration_minutes, description, instructions, video_url, coach_video_url")
       .in("id", moduleIds.length > 0 ? moduleIds : ["00000000-0000-0000-0000-000000000000"]);
 
-    const moduleMap = new Map(mods?.map((m) => [m.id, m]) || []);
+    const moduleMap = new Map(mods?.map((m: any) => [m.id, m]) || []);
     setPlanItems(
       (items || []).map((item) => ({
         ...item,
         module: moduleMap.get(item.module_id) || {
           id: item.module_id, title: "Unknown", category: "", duration_minutes: 0,
-          description: null, instructions: null, video_url: null,
+          description: null, instructions: null, video_url: null, coach_video_url: null,
         },
       }))
     );
