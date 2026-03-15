@@ -1386,9 +1386,11 @@ const FoundersDashboard = () => {
                         <p className="text-[10px] text-muted-foreground">{c.location || "No location"} • {c.pkgCount} packages</p>
                       </div>
                     </div>
-                    <Button size="sm" variant="outline" onClick={() => handleSendNudge(c.userId)}>
-                      <Send className="w-3 h-3 mr-1" /> NUDGE
-                    </Button>
+                    {!isReadOnly && (
+                      <Button size="sm" variant="outline" onClick={() => handleSendNudge(c.userId)}>
+                        <Send className="w-3 h-3 mr-1" /> NUDGE
+                      </Button>
+                    )}
                   </div>
                 ))}
               </div>
