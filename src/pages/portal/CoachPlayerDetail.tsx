@@ -85,6 +85,18 @@ const CoachPlayerDetail = () => {
       }));
     }
 
+    // Fetch upcoming 7 days of training
+    const today = format(new Date(), "yyyy-MM-dd");
+    const nextWeek = format(addDays(new Date(), 7), "yyyy-MM-dd");
+    const { data: plans } = await supabase
+      .from("player_day_plans")
+      .select("id, plan_date, notes, start_time")
+      .eq("player_id", playerId)
+      .gte("plan_date", today)
+      .lte("plan_date", nextWeek)
+      .order("plan_date");
+    setUpcomingPlans(plans || []);
+
     setLoading(false);
   };
 
