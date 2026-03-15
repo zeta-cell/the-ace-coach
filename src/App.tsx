@@ -11,6 +11,7 @@ import { lazy, Suspense } from "react";
 // Public
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
+const PublicCoachProfile = lazy(() => import("./pages/PublicCoachProfile"));
 
 // Portal pages (lazy-loaded)
 const Login = lazy(() => import("./pages/portal/Login"));
@@ -57,6 +58,7 @@ const App = () => (
           <Routes>
             {/* Public */}
             <Route path="/" element={<Index />} />
+            <Route path="/coach/:slug" element={<Suspense fallback={<PortalLoader />}><PublicCoachProfile /></Suspense>} />
 
             {/* Auth */}
             <Route path="/login" element={<Suspense fallback={<PortalLoader />}><Login /></Suspense>} />

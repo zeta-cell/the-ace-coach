@@ -667,6 +667,33 @@ export type Database = {
         }
         Relationships: []
       }
+      reviews: {
+        Row: {
+          coach_id: string
+          comment: string | null
+          created_at: string
+          id: string
+          player_id: string
+          rating: number
+        }
+        Insert: {
+          coach_id: string
+          comment?: string | null
+          created_at?: string
+          id?: string
+          player_id: string
+          rating: number
+        }
+        Update: {
+          coach_id?: string
+          comment?: string | null
+          created_at?: string
+          id?: string
+          player_id?: string
+          rating?: number
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: string
