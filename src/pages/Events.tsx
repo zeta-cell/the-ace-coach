@@ -82,16 +82,16 @@ const Events = () => {
       .order("start_datetime");
 
     if (data && data.length > 0) {
-      const coachIds = [...new Set((data as any[]).map((e: any) => e.coach_id))];
+      const coachIds = [...new Set(data.map(e => e.coach_id))];
       const { data: profiles } = await supabase
         .from("profiles")
         .select("user_id, full_name, avatar_url")
         .in("user_id", coachIds);
-      const profileMap = new Map((profiles || []).map((p: any) => [p.user_id, p]));
-      setEvents((data as any[]).map((e: any) => ({
+      const profileMap = new Map((profiles || []).map(p => [p.user_id, p]));
+      setEvents(data.map(e => ({
         ...e,
-        coach_name: (profileMap.get(e.coach_id) as any)?.full_name || "Coach",
-        coach_avatar: (profileMap.get(e.coach_id) as any)?.avatar_url || null,
+        coach_name: profileMap.get(e.coach_id)?.full_name || "Coach",
+        coach_avatar: profileMap.get(e.coach_id)?.avatar_url || null,
       })));
     } else {
       setEvents([]);
@@ -106,7 +106,7 @@ const Events = () => {
       .select("event_id")
       .eq("player_id", user.id)
       .eq("status", "registered");
-    setRegisteredIds(new Set((data || []).map((r: any) => r.event_id)));
+    setRegisteredIds(new Set((data || []).map(r => r.event_id)));
   };
 
   const handleRegister = async (event: EventRow) => {
@@ -121,7 +121,7 @@ const Events = () => {
       status: "registered",
       payment_status: isFree ? "paid" : "pending",
       amount_paid: isFree ? 0 : Number(event.price_per_person),
-    } as any);
+    });
 
     if (error) {
       toast.error(error.message.includes("duplicate") ? "Already registered!" : "Registration failed");
@@ -133,8 +133,8 @@ const Events = () => {
     await Promise.all([
       supabase.rpc("award_xp", { p_user_id: user.id, p_amount: 30, p_event_type: "event_registration", p_description: `Registered for ${event.title}` }),
       supabase.rpc("increment_raffle_tickets", { p_user_id: user.id }),
-      supabase.from("notifications").insert({ user_id: user.id, title: `You're registered for ${event.title}!`, body: `See you there 🎾`, link: "/events" } as any),
-      supabase.from("notifications").insert({ user_id: event.coach_id, title: `New registration for ${event.title}`, body: "A player just registered for your event", link: "/coach/events" } as any),
+      supabase.from("notifications").insert({ user_id: user.id, title: `You're registered for ${event.title}!`, body: `See you there 🎾`, link: "/events" }),
+      supabase.from("notifications").insert({ user_id: event.coach_id, title: `New registration for ${event.title}`, body: "A player just registered for your event", link: "/coach/events" }),
     ]);
 
     setRegisteredIds(prev => new Set([...prev, event.id]));
@@ -146,7 +146,7 @@ const Events = () => {
   const handleCancel = async (eventId: string) => {
     if (!user) return;
     await supabase.from("event_registrations")
-      .update({ status: "cancelled" } as any)
+      .update({ status: "cancelled" })
       .eq("event_id", eventId)
       .eq("player_id", user.id);
     setRegisteredIds(prev => { const s = new Set(prev); s.delete(eventId); return s; });
