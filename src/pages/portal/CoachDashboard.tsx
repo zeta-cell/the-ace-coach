@@ -31,6 +31,8 @@ const CoachDashboard = () => {
   const [players, setPlayers] = useState<AssignedPlayer[]>([]);
   const [moduleCount, setModuleCount] = useState(0);
   const [todayPlansCount, setTodayPlansCount] = useState(0);
+  const [requests, setRequests] = useState<CoachRequest[]>([]);
+  const [marketplaceStats, setMarketplaceStats] = useState({ published: 0, sales: 0, revenue: 0 });
 
   useEffect(() => {
     if (user) fetchData();
