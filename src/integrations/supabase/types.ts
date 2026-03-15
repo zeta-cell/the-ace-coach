@@ -492,6 +492,122 @@ export type Database = {
           },
         ]
       }
+      event_registrations: {
+        Row: {
+          amount_paid: number | null
+          event_id: string
+          id: string
+          payment_status: string | null
+          player_id: string
+          registered_at: string | null
+          status: string | null
+        }
+        Insert: {
+          amount_paid?: number | null
+          event_id: string
+          id?: string
+          payment_status?: string | null
+          player_id: string
+          registered_at?: string | null
+          status?: string | null
+        }
+        Update: {
+          amount_paid?: number | null
+          event_id?: string
+          id?: string
+          payment_status?: string | null
+          player_id?: string
+          registered_at?: string | null
+          status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_registrations_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      events: {
+        Row: {
+          age_group: string | null
+          coach_id: string
+          cover_image_url: string | null
+          created_at: string | null
+          currency: string | null
+          current_participants: number | null
+          description: string | null
+          end_datetime: string
+          event_type: string
+          id: string
+          is_online: boolean | null
+          location_address: string | null
+          location_city: string | null
+          location_country: string | null
+          location_name: string | null
+          max_participants: number | null
+          price_per_person: number | null
+          skill_level: string | null
+          sport: string
+          start_datetime: string
+          status: string | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          age_group?: string | null
+          coach_id: string
+          cover_image_url?: string | null
+          created_at?: string | null
+          currency?: string | null
+          current_participants?: number | null
+          description?: string | null
+          end_datetime: string
+          event_type?: string
+          id?: string
+          is_online?: boolean | null
+          location_address?: string | null
+          location_city?: string | null
+          location_country?: string | null
+          location_name?: string | null
+          max_participants?: number | null
+          price_per_person?: number | null
+          skill_level?: string | null
+          sport?: string
+          start_datetime: string
+          status?: string | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          age_group?: string | null
+          coach_id?: string
+          cover_image_url?: string | null
+          created_at?: string | null
+          currency?: string | null
+          current_participants?: number | null
+          description?: string | null
+          end_datetime?: string
+          event_type?: string
+          id?: string
+          is_online?: boolean | null
+          location_address?: string | null
+          location_city?: string | null
+          location_country?: string | null
+          location_name?: string | null
+          max_participants?: number | null
+          price_per_person?: number | null
+          skill_level?: string | null
+          sport?: string
+          start_datetime?: string
+          status?: string | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       health_connections: {
         Row: {
           access_token: string | null
