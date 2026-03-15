@@ -50,6 +50,7 @@ const CoachEvents = lazy(() => import("./pages/portal/CoachEvents"));
 
 // Admin pages (lazy-loaded)
 const AdminDashboard = lazy(() => import("./pages/portal/AdminDashboard"));
+const FoundersDashboard = lazy(() => import("./pages/portal/FoundersDashboard"));
 const AdminUsers = lazy(() => import("./pages/portal/AdminUsers"));
 const AdminAssignments = lazy(() => import("./pages/portal/AdminAssignments"));
 const AdminPayments = lazy(() => import("./pages/portal/AdminPayments"));
@@ -217,6 +218,11 @@ const App = () => (
             <Route path="/admin/schedule/coach/:coachId" element={
               <Suspense fallback={<PortalLoader />}>
                 <ProtectedRoute requiredRole="admin"><CoachCalendar /></ProtectedRoute>
+              </Suspense>
+            } />
+            <Route path="/founders" element={
+              <Suspense fallback={<PortalLoader />}>
+                <ProtectedRoute requiredRole="admin"><FoundersDashboard /></ProtectedRoute>
               </Suspense>
             } />
 

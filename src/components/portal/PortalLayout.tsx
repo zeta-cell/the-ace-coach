@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   LayoutDashboard, Calendar, BookOpen, Video,
   MessageSquare, User, LogOut, Menu, X, ChevronLeft, ChevronRight,
-  Users, Settings, Home, CreditCard, Link2, CalendarDays, UserCheck, Search, ShoppingBag
+  Users, Settings, Home, CreditCard, Link2, CalendarDays, UserCheck, Search, ShoppingBag, Eye
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import NotificationBell from "@/components/portal/NotificationBell";
@@ -41,6 +41,7 @@ const adminNav = [
   { label: "Assignments", icon: Link2, href: "/admin/assignments" },
   { label: "Payments", icon: CreditCard, href: "/admin/payments" },
   { label: "Schedule", icon: CalendarDays, href: "/admin/schedule" },
+  { label: "Founders", icon: Eye, href: "/founders" },
 ];
 
 const PortalLayout = ({ children }: { children: React.ReactNode }) => {
