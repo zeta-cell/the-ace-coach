@@ -88,6 +88,7 @@ const SESSION_COLORS: Record<string, string> = {
 
 const PublicCoachProfile = () => {
   const { slug } = useParams<{ slug: string }>();
+  const { user } = useAuth();
   const [coach, setCoach] = useState<CoachProfile | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [packages, setPackages] = useState<Package[]>([]);
@@ -95,6 +96,10 @@ const PublicCoachProfile = () => {
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [showStickyBook, setShowStickyBook] = useState(false);
+  const [reviewRating, setReviewRating] = useState(5);
+  const [reviewText, setReviewText] = useState('');
+  const [submittingReview, setSubmittingReview] = useState(false);
+  const [hasReviewed, setHasReviewed] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setShowStickyBook(window.scrollY > 400);
