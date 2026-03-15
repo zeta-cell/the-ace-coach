@@ -317,6 +317,7 @@ const FindACoach = () => {
   const [selectedRating, setSelectedRating] = useState("Any");
   const [selectedExperience, setSelectedExperience] = useState("Any");
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const [desktopFiltersOpen, setDesktopFiltersOpen] = useState(false);
 
   const toggleLanguage = (l: string) => {
     setSelectedLanguages((prev) => {
@@ -545,15 +546,6 @@ const FindACoach = () => {
                 placeholder="London, Berlin, Madrid..."
                 className="flex-1 bg-transparent font-body text-sm text-foreground placeholder:text-muted-foreground focus:outline-none min-w-0" />
             </div>
-            <div className="hidden sm:flex items-center gap-1 bg-card border border-border rounded-xl p-1">
-              {(["all", "tennis", "padel"] as const).map((s) => (
-                <button key={s} onClick={() => setSportFilter(s)}
-                  className={`px-3 py-1.5 rounded-lg font-display text-[10px] tracking-wider transition-colors ${
-                    sportFilter === s ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
-                  }`}
-                >{s.toUpperCase()}</button>
-              ))}
-            </div>
           </div>
           <div className="hidden md:flex items-center gap-3 shrink-0">
             <Link to="/login" className="font-display text-sm tracking-wider text-muted-foreground hover:text-foreground transition-colors">LOG IN</Link>
@@ -562,19 +554,25 @@ const FindACoach = () => {
         </div>
       </nav>
 
-      {/* Mobile filter toggle */}
-      <div className="md:hidden px-4 py-3 border-b border-border flex items-center gap-2">
-        <div className="flex items-center gap-1 bg-card border border-border rounded-xl p-1 flex-1">
+      {/* Filter toggle (all screens) */}
+      <div className="px-4 md:px-6 py-3 border-b border-border flex items-center gap-2 max-w-7xl mx-auto">
+        <div className="flex items-center gap-1 bg-card border border-border rounded-xl p-1 flex-1 sm:flex-none">
           {(["all", "tennis", "padel"] as const).map((s) => (
             <button key={s} onClick={() => setSportFilter(s)}
-              className={`flex-1 px-3 py-1.5 rounded-lg font-display text-[10px] tracking-wider transition-colors ${
+              className={`flex-1 sm:flex-none px-3 py-1.5 rounded-lg font-display text-[10px] tracking-wider transition-colors ${
                 sportFilter === s ? "bg-primary text-primary-foreground" : "text-muted-foreground"
               }`}
             >{s.toUpperCase()}</button>
           ))}
         </div>
-        <button onClick={() => setMobileFiltersOpen(true)} className="p-2.5 rounded-xl bg-card border border-border">
-          <SlidersHorizontal size={16} className="text-muted-foreground" />
+        <button onClick={() => {
+          if (window.innerWidth < 768) setMobileFiltersOpen(true);
+          else setDesktopFiltersOpen(prev => !prev);
+        }} className={`p-2.5 rounded-xl border transition-colors flex items-center gap-1.5 ${
+          desktopFiltersOpen ? "bg-primary border-primary text-primary-foreground" : "bg-card border-border text-muted-foreground hover:text-foreground"
+        }`}>
+          <SlidersHorizontal size={16} />
+          <span className="hidden md:inline font-display text-[10px] tracking-wider">FILTERS</span>
         </button>
       </div>
 
@@ -596,9 +594,22 @@ const FindACoach = () => {
       </AnimatePresence>
 
       <div className="max-w-7xl mx-auto px-4 md:px-6 py-6 flex gap-6">
-        <aside className="hidden md:block w-[280px] shrink-0 sticky top-[80px] self-start max-h-[calc(100vh-96px)] overflow-y-auto pr-2 scrollbar-none">
-          <FilterContent {...filterProps} />
-        </aside>
+        {/* Desktop collapsible filter sidebar */}
+        <AnimatePresence>
+          {desktopFiltersOpen && (
+            <motion.aside
+              initial={{ width: 0, opacity: 0 }}
+              animate={{ width: 280, opacity: 1 }}
+              exit={{ width: 0, opacity: 0 }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="hidden md:block shrink-0 overflow-hidden"
+            >
+              <div className="w-[280px] sticky top-[80px] self-start max-h-[calc(100vh-96px)] overflow-y-auto pr-2 scrollbar-none">
+                <FilterContent {...filterProps} />
+              </div>
+            </motion.aside>
+          )}
+        </AnimatePresence>
 
         <main className="flex-1 min-w-0">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
