@@ -97,7 +97,7 @@ const Dashboard = () => {
       { onConflict: 'user_id', ignoreDuplicates: true }
     );
     const { data: stats } = await supabase.from("user_stats").select("*").eq("user_id", user.id).single();
-    if (stats) setUserStats(stats as unknown as UserStats);
+    if (stats) setUserStats(stats as UserStats);
 
     // Earned badges
     const { data: badges } = await supabase.from("user_badges").select("badge_key, badge_name, earned_at").eq("user_id", user.id).order("earned_at", { ascending: false });
