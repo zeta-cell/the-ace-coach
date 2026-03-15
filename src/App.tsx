@@ -58,6 +58,7 @@ const App = () => (
           <Routes>
             {/* Public */}
             <Route path="/" element={<Index />} />
+            <Route path="/coach/:slug" element={<Suspense fallback={<PortalLoader />}><PublicCoachProfile /></Suspense>} />
 
             {/* Auth */}
             <Route path="/login" element={<Suspense fallback={<PortalLoader />}><Login /></Suspense>} />
