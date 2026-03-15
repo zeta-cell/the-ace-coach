@@ -370,6 +370,12 @@ const CoachPlayerDetail = () => {
             <Plus size={16} /> CREATE DAY PLAN
           </Link>
         </motion.div>
+
+        <QuickAddTrainingDrawer
+          open={trainDrawerOpen}
+          onClose={() => setTrainDrawerOpen(false)}
+          prefilledPlayerId={playerId}
+        />
       </div>
     </PortalLayout>
   );
