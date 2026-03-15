@@ -237,10 +237,84 @@ const CreateTrainingBlockDrawer = ({ open, onClose, onCreated }: Props) => {
                 </button>
               </div>
 
+              {/* Block Type */}
+              <div>
+                <label className="font-display text-[10px] tracking-wider text-muted-foreground mb-2 block">BLOCK TYPE</label>
+                <div className="flex flex-wrap gap-1.5">
+                  {["session", "program", "nutrition", "mental", "template"].map((t) => (
+                    <button key={t} onClick={() => setBlockType(t)}
+                      className={`px-2.5 py-1 rounded-lg font-display text-[10px] tracking-wider transition-colors ${
+                        blockType === t ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground hover:text-foreground"
+                      }`}>{t.toUpperCase()}</button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Program fields */}
+              {blockType === "program" && (
+                <div>
+                  <label className="font-display text-[10px] tracking-wider text-muted-foreground">NUMBER OF WEEKS</label>
+                  <input type="number" value={weekCount} onChange={(e) => setWeekCount(Number(e.target.value))} min={1} max={52}
+                    className="w-full mt-1 px-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary" />
+                </div>
+              )}
+
+              {/* Target Level */}
+              <div>
+                <label className="font-display text-[10px] tracking-wider text-muted-foreground mb-2 block">TARGET LEVEL</label>
+                <div className="flex flex-wrap gap-1.5">
+                  {DIFFICULTIES.map((d) => (
+                    <button key={d} onClick={() => setTargetLevel(d)}
+                      className={`px-2.5 py-1 rounded-lg font-display text-[10px] tracking-wider transition-colors ${
+                        targetLevel === d ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground hover:text-foreground"
+                      }`}>{d.toUpperCase()}</button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Visibility */}
+              <div>
+                <label className="font-display text-[10px] tracking-wider text-muted-foreground mb-2 block">VISIBILITY</label>
+                <div className="space-y-1.5">
+                  {([["private", "PRIVATE — Only I can use this"], ["public", "PUBLIC — Visible in Marketplace"], ["for_sale", "FOR SALE — Others can buy this"]] as const).map(([v, label]) => (
+                    <button key={v} onClick={() => setVisibility(v)}
+                      className={`w-full text-left px-3 py-2 rounded-lg font-body text-xs transition-colors ${
+                        visibility === v ? "bg-primary/10 border border-primary text-foreground" : "bg-secondary border border-border text-muted-foreground hover:text-foreground"
+                      }`}>{label}</button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Price (for sale) */}
+              {visibility === "for_sale" && (
+                <div className="space-y-2">
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <label className="font-display text-[10px] tracking-wider text-muted-foreground">PRICE (€)</label>
+                      <input type="number" value={price} onChange={(e) => setPrice(Number(e.target.value))} min={0}
+                        className="w-full mt-1 px-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-sm focus:outline-none" />
+                    </div>
+                    <div>
+                      <label className="font-display text-[10px] tracking-wider text-muted-foreground">CURRENCY</label>
+                      <select value={currency} onChange={(e) => setCurrency(e.target.value)}
+                        className="w-full mt-1 px-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-sm focus:outline-none">
+                        <option>EUR</option><option>USD</option><option>GBP</option>
+                      </select>
+                    </div>
+                  </div>
+                  <p className="text-[10px] font-body text-muted-foreground">ACE takes 15% — you receive €{(price * 0.85).toFixed(2)} per sale</p>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" checked={termsAccepted} onChange={(e) => setTermsAccepted(e.target.checked)}
+                      className="w-3.5 h-3.5 rounded accent-primary" />
+                    <span className="text-[10px] font-body text-muted-foreground">I confirm this is my original content</span>
+                  </label>
+                </div>
+              )}
+
               {/* Save */}
-              <button onClick={handleSave} disabled={!title.trim() || saving}
+              <button onClick={handleSave} disabled={!title.trim() || saving || (visibility === "for_sale" && !termsAccepted)}
                 className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-display text-xs tracking-wider hover:bg-primary/90 disabled:opacity-50 transition-colors">
-                {saving ? "SAVING..." : "CREATE BLOCK"}
+                {saving ? "SAVING..." : visibility === "for_sale" ? "PUBLISH & SELL" : visibility === "public" ? "PUBLISH TO MARKETPLACE" : "CREATE BLOCK"}
               </button>
             </div>
           </motion.div>
