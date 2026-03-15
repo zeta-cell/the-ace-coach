@@ -27,6 +27,8 @@ interface CoachCard {
   coaching_style: string | null;
   avg_rating: number;
   review_count: number;
+  session_types: string[];
+  available_days: number[];
 }
 
 const BADGE_CONFIG: Record<string, { icon: typeof Shield; color: string; label: string }> = {
@@ -38,6 +40,7 @@ const BADGE_CONFIG: Record<string, { icon: typeof Shield; color: string; label: 
 
 const LANGUAGES = ["English", "Spanish", "German", "French", "Portuguese", "Arabic", "Italian"];
 const SESSION_TYPES = ["Individual", "Group", "Kids", "Online"];
+const AVAILABILITY_OPTIONS = ["Any", "Weekdays", "Weekends"];
 const BADGE_LEVELS = ["Any", "Pro", "Elite", "Legend"];
 const RATINGS = ["Any", "3+", "4+", "4.5+"];
 const EXPERIENCE = ["Any", "2+ years", "5+ years", "10+ years"];
@@ -80,7 +83,6 @@ const CoachCardComponent = ({ coach }: { coach: CoachCard }) => {
       animate={{ opacity: 1, y: 0 }}
       className="bg-card border border-border rounded-2xl p-5 hover:border-primary/40 hover:-translate-y-0.5 transition-all duration-200 group"
     >
-      {/* Header */}
       <div className="flex items-start gap-3 mb-3">
         {coach.avatar_url ? (
           <img src={coach.avatar_url} alt={coach.full_name} className="w-14 h-14 rounded-full object-cover border-2 border-border" />
@@ -107,7 +109,6 @@ const CoachCardComponent = ({ coach }: { coach: CoachCard }) => {
         </div>
       </div>
 
-      {/* Rating + price row */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-1.5">
           {coach.review_count > 0 ? (
@@ -125,7 +126,6 @@ const CoachCardComponent = ({ coach }: { coach: CoachCard }) => {
         </span>
       </div>
 
-      {/* Languages */}
       {coach.languages.length > 0 && (
         <div className="flex items-center gap-1.5 mb-2 flex-wrap">
           {coach.languages.slice(0, 3).map((l) => (
@@ -137,7 +137,6 @@ const CoachCardComponent = ({ coach }: { coach: CoachCard }) => {
         </div>
       )}
 
-      {/* Specializations */}
       {coach.specializations.length > 0 && (
         <div className="flex items-center gap-1.5 mb-4 flex-wrap">
           {coach.specializations.slice(0, 3).map((s) => (
@@ -146,7 +145,6 @@ const CoachCardComponent = ({ coach }: { coach: CoachCard }) => {
         </div>
       )}
 
-      {/* Buttons */}
       <div className="flex gap-2">
         <Link
           to={coach.profile_slug ? `/coach/${coach.profile_slug}` : "#"}
@@ -170,6 +168,8 @@ const FilterContent = ({
   priceRange, setPriceRange,
   selectedLanguages, toggleLanguage,
   selectedSessionTypes, toggleSessionType,
+  selectedAvailability, setSelectedAvailability,
+  coachingStyleSearch, setCoachingStyleSearch,
   selectedBadge, setSelectedBadge,
   selectedRating, setSelectedRating,
   selectedExperience, setSelectedExperience,
@@ -181,6 +181,10 @@ const FilterContent = ({
   toggleLanguage: (l: string) => void;
   selectedSessionTypes: Set<string>;
   toggleSessionType: (t: string) => void;
+  selectedAvailability: string;
+  setSelectedAvailability: (a: string) => void;
+  coachingStyleSearch: string;
+  setCoachingStyleSearch: (s: string) => void;
   selectedBadge: string;
   setSelectedBadge: (b: string) => void;
   selectedRating: string;
@@ -198,12 +202,7 @@ const FilterContent = ({
     {/* Price */}
     <div>
       <p className="font-display text-xs tracking-wider text-muted-foreground mb-3">PRICE RANGE</p>
-      <Slider
-        min={0} max={500} step={5}
-        value={priceRange}
-        onValueChange={setPriceRange}
-        className="mb-2"
-      />
+      <Slider min={0} max={500} step={5} value={priceRange} onValueChange={setPriceRange} className="mb-2" />
       <p className="text-xs font-body text-muted-foreground">€{priceRange[0]} — €{priceRange[1]}/session</p>
     </div>
 
@@ -213,12 +212,7 @@ const FilterContent = ({
       <div className="space-y-1.5">
         {LANGUAGES.map((l) => (
           <label key={l} className="flex items-center gap-2 cursor-pointer group">
-            <input
-              type="checkbox"
-              checked={selectedLanguages.has(l)}
-              onChange={() => toggleLanguage(l)}
-              className="w-3.5 h-3.5 rounded border-border bg-secondary accent-primary"
-            />
+            <input type="checkbox" checked={selectedLanguages.has(l)} onChange={() => toggleLanguage(l)} className="w-3.5 h-3.5 rounded border-border bg-secondary accent-primary" />
             <span className="text-xs font-body text-muted-foreground group-hover:text-foreground transition-colors">{l}</span>
           </label>
         ))}
@@ -230,17 +224,37 @@ const FilterContent = ({
       <p className="font-display text-xs tracking-wider text-muted-foreground mb-2">SESSION TYPE</p>
       <div className="flex flex-wrap gap-1.5">
         {SESSION_TYPES.map((t) => (
-          <button
-            key={t}
-            onClick={() => toggleSessionType(t)}
+          <button key={t} onClick={() => toggleSessionType(t)}
             className={`px-3 py-1.5 rounded-lg font-display text-[10px] tracking-wider transition-colors ${
               selectedSessionTypes.has(t) ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground hover:text-foreground"
             }`}
-          >
-            {t.toUpperCase()}
-          </button>
+          >{t.toUpperCase()}</button>
         ))}
       </div>
+    </div>
+
+    {/* Availability */}
+    <div>
+      <p className="font-display text-xs tracking-wider text-muted-foreground mb-2">AVAILABILITY</p>
+      <div className="flex flex-wrap gap-1.5">
+        {AVAILABILITY_OPTIONS.map((a) => (
+          <button key={a} onClick={() => setSelectedAvailability(a)}
+            className={`px-3 py-1.5 rounded-lg font-display text-[10px] tracking-wider transition-colors ${
+              selectedAvailability === a ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground hover:text-foreground"
+            }`}
+          >{a.toUpperCase()}</button>
+        ))}
+      </div>
+    </div>
+
+    {/* Coaching style */}
+    <div>
+      <p className="font-display text-xs tracking-wider text-muted-foreground mb-2">COACHING STYLE</p>
+      <input
+        type="text" value={coachingStyleSearch} onChange={(e) => setCoachingStyleSearch(e.target.value)}
+        placeholder="e.g. Technical, Tactical..."
+        className="w-full px-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-xs focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-muted-foreground"
+      />
     </div>
 
     {/* Badge */}
@@ -248,15 +262,11 @@ const FilterContent = ({
       <p className="font-display text-xs tracking-wider text-muted-foreground mb-2">BADGE LEVEL</p>
       <div className="flex flex-wrap gap-1.5">
         {BADGE_LEVELS.map((b) => (
-          <button
-            key={b}
-            onClick={() => setSelectedBadge(b)}
+          <button key={b} onClick={() => setSelectedBadge(b)}
             className={`px-3 py-1.5 rounded-lg font-display text-[10px] tracking-wider transition-colors ${
               selectedBadge === b ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground hover:text-foreground"
             }`}
-          >
-            {b.toUpperCase()}
-          </button>
+          >{b.toUpperCase()}</button>
         ))}
       </div>
     </div>
@@ -266,15 +276,11 @@ const FilterContent = ({
       <p className="font-display text-xs tracking-wider text-muted-foreground mb-2">RATING</p>
       <div className="flex flex-wrap gap-1.5">
         {RATINGS.map((r) => (
-          <button
-            key={r}
-            onClick={() => setSelectedRating(r)}
+          <button key={r} onClick={() => setSelectedRating(r)}
             className={`px-3 py-1.5 rounded-lg font-display text-[10px] tracking-wider transition-colors ${
               selectedRating === r ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground hover:text-foreground"
             }`}
-          >
-            {r}
-          </button>
+          >{r}</button>
         ))}
       </div>
     </div>
@@ -284,15 +290,11 @@ const FilterContent = ({
       <p className="font-display text-xs tracking-wider text-muted-foreground mb-2">EXPERIENCE</p>
       <div className="flex flex-wrap gap-1.5">
         {EXPERIENCE.map((e) => (
-          <button
-            key={e}
-            onClick={() => setSelectedExperience(e)}
+          <button key={e} onClick={() => setSelectedExperience(e)}
             className={`px-3 py-1.5 rounded-lg font-display text-[10px] tracking-wider transition-colors ${
               selectedExperience === e ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground hover:text-foreground"
             }`}
-          >
-            {e.toUpperCase()}
-          </button>
+          >{e.toUpperCase()}</button>
         ))}
       </div>
     </div>
@@ -309,6 +311,8 @@ const FindACoach = () => {
   const [priceRange, setPriceRange] = useState([0, 500]);
   const [selectedLanguages, setSelectedLanguages] = useState<Set<string>>(new Set());
   const [selectedSessionTypes, setSelectedSessionTypes] = useState<Set<string>>(new Set());
+  const [selectedAvailability, setSelectedAvailability] = useState("Any");
+  const [coachingStyleSearch, setCoachingStyleSearch] = useState("");
   const [selectedBadge, setSelectedBadge] = useState("Any");
   const [selectedRating, setSelectedRating] = useState("Any");
   const [selectedExperience, setSelectedExperience] = useState("Any");
@@ -334,6 +338,8 @@ const FindACoach = () => {
     setPriceRange([0, 500]);
     setSelectedLanguages(new Set());
     setSelectedSessionTypes(new Set());
+    setSelectedAvailability("Any");
+    setCoachingStyleSearch("");
     setSelectedBadge("Any");
     setSelectedRating("Any");
     setSelectedExperience("Any");
@@ -341,14 +347,11 @@ const FindACoach = () => {
     setSportFilter("all");
   };
 
-  useEffect(() => {
-    fetchCoaches();
-  }, []);
+  useEffect(() => { fetchCoaches(); }, []);
 
   const fetchCoaches = async () => {
     setLoading(true);
 
-    // Fetch coach profiles with slugs and bios
     const { data: coachProfiles } = await supabase
       .from("coach_profiles")
       .select("user_id, bio, location_city, location_country, badge_level, is_verified, years_experience, languages, specializations, hourly_rate_from, profile_slug, total_sessions_coached, coaching_style");
@@ -361,21 +364,36 @@ const FindACoach = () => {
 
     const userIds = coachProfiles.map((c) => c.user_id);
 
-    // Parallel fetches
-    const [profilesRes, reviewsRes] = await Promise.all([
+    const [profilesRes, reviewsRes, packagesRes, availabilityRes] = await Promise.all([
       supabase.from("profiles").select("user_id, full_name, avatar_url").in("user_id", userIds),
       supabase.from("reviews").select("coach_id, rating"),
+      supabase.from("coach_packages").select("coach_id, session_type").eq("is_active", true).in("coach_id", userIds),
+      supabase.from("coach_availability_slots").select("coach_id, day_of_week").eq("is_recurring", true).in("coach_id", userIds),
     ]);
 
     const profileMap = new Map(profilesRes.data?.map((p) => [p.user_id, p]) || []);
 
-    // Calculate avg rating per coach
     const ratingMap = new Map<string, { sum: number; count: number }>();
     reviewsRes.data?.forEach((r) => {
       const existing = ratingMap.get(r.coach_id) || { sum: 0, count: 0 };
       existing.sum += r.rating;
       existing.count += 1;
       ratingMap.set(r.coach_id, existing);
+    });
+
+    const sessionTypesMap = new Map<string, string[]>();
+    packagesRes.data?.forEach((p) => {
+      const existing = sessionTypesMap.get(p.coach_id) || [];
+      if (!existing.includes(p.session_type)) existing.push(p.session_type);
+      sessionTypesMap.set(p.coach_id, existing);
+    });
+
+    const availabilityMap = new Map<string, number[]>();
+    availabilityRes.data?.forEach((a) => {
+      if (a.day_of_week === null) return;
+      const existing = availabilityMap.get(a.coach_id) || [];
+      if (!existing.includes(a.day_of_week)) existing.push(a.day_of_week);
+      availabilityMap.set(a.coach_id, existing);
     });
 
     const result: CoachCard[] = coachProfiles.map((cp) => {
@@ -399,6 +417,8 @@ const FindACoach = () => {
         coaching_style: cp.coaching_style,
         avg_rating: ratings ? ratings.sum / ratings.count : 0,
         review_count: ratings?.count || 0,
+        session_types: sessionTypesMap.get(cp.user_id) || [],
+        available_days: availabilityMap.get(cp.user_id) || [],
       };
     });
 
@@ -415,11 +435,20 @@ const FindACoach = () => {
       result = result.filter((c) => c.location_city?.toLowerCase().includes(q));
     }
 
-    // Sport — derive from specializations
+    // Coaching style
+    if (coachingStyleSearch.trim()) {
+      const q = coachingStyleSearch.toLowerCase();
+      result = result.filter((c) => c.coaching_style?.toLowerCase().includes(q));
+    }
+
+    // Sport — robust match
     if (sportFilter !== "all") {
-      result = result.filter((c) =>
-        c.specializations.some((s) => s.toLowerCase().includes(sportFilter))
-      );
+      result = result.filter((c) => {
+        const inSpecs = c.specializations.some((s) => s.toLowerCase().includes(sportFilter));
+        const inBio = c.bio?.toLowerCase().includes(sportFilter);
+        const inStyle = c.coaching_style?.toLowerCase().includes(sportFilter);
+        return inSpecs || inBio || inStyle;
+      });
     }
 
     // Price
@@ -430,8 +459,13 @@ const FindACoach = () => {
 
     // Languages
     if (selectedLanguages.size > 0) {
+      result = result.filter((c) => c.languages.some((l) => selectedLanguages.has(l)));
+    }
+
+    // Session types
+    if (selectedSessionTypes.size > 0) {
       result = result.filter((c) =>
-        c.languages.some((l) => selectedLanguages.has(l))
+        c.session_types.some((t) => selectedSessionTypes.has(t.charAt(0).toUpperCase() + t.slice(1)))
       );
     }
 
@@ -452,6 +486,16 @@ const FindACoach = () => {
       result = result.filter((c) => (c.years_experience || 0) >= minYears);
     }
 
+    // Availability
+    if (selectedAvailability !== "Any") {
+      result = result.filter((c) => {
+        if (!c.available_days || c.available_days.length === 0) return true;
+        if (selectedAvailability === "Weekdays") return c.available_days.some((d) => d >= 0 && d <= 4);
+        if (selectedAvailability === "Weekends") return c.available_days.some((d) => d === 5 || d === 6);
+        return true;
+      });
+    }
+
     // Sort
     switch (sortBy) {
       case "price":
@@ -463,7 +507,7 @@ const FindACoach = () => {
       case "experience":
         result.sort((a, b) => (b.years_experience || 0) - (a.years_experience || 0));
         break;
-      default: // best match
+      default:
         result.sort((a, b) => {
           if (a.is_verified !== b.is_verified) return a.is_verified ? -1 : 1;
           if (b.avg_rating !== a.avg_rating) return b.avg_rating - a.avg_rating;
@@ -472,12 +516,14 @@ const FindACoach = () => {
     }
 
     return result;
-  }, [coaches, citySearch, sportFilter, priceRange, selectedLanguages, selectedSessionTypes, selectedBadge, selectedRating, selectedExperience, sortBy]);
+  }, [coaches, citySearch, coachingStyleSearch, sportFilter, priceRange, selectedLanguages, selectedSessionTypes, selectedAvailability, selectedBadge, selectedRating, selectedExperience, sortBy]);
 
   const filterProps = {
     priceRange, setPriceRange,
     selectedLanguages, toggleLanguage,
     selectedSessionTypes, toggleSessionType,
+    selectedAvailability, setSelectedAvailability,
+    coachingStyleSearch, setCoachingStyleSearch,
     selectedBadge, setSelectedBadge,
     selectedRating, setSelectedRating,
     selectedExperience, setSelectedExperience,
@@ -489,46 +535,29 @@ const FindACoach = () => {
       {/* Sticky nav */}
       <nav className="sticky top-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border">
         <div className="max-w-7xl mx-auto px-4 md:px-6 h-16 flex items-center gap-4">
-          {/* Logo */}
           <Link to="/" className="font-display text-2xl tracking-wider text-foreground shrink-0">
             ACE<span className="text-primary">.</span>
           </Link>
-
-          {/* Center search */}
           <div className="flex-1 flex items-center gap-2 max-w-2xl mx-auto">
             <div className="flex items-center gap-2 flex-1 bg-card border border-border rounded-xl px-3 py-2">
               <MapPin size={16} className="text-muted-foreground shrink-0" />
-              <input
-                type="text"
-                value={citySearch}
-                onChange={(e) => setCitySearch(e.target.value)}
+              <input type="text" value={citySearch} onChange={(e) => setCitySearch(e.target.value)}
                 placeholder="London, Berlin, Madrid..."
-                className="flex-1 bg-transparent font-body text-sm text-foreground placeholder:text-muted-foreground focus:outline-none min-w-0"
-              />
+                className="flex-1 bg-transparent font-body text-sm text-foreground placeholder:text-muted-foreground focus:outline-none min-w-0" />
             </div>
             <div className="hidden sm:flex items-center gap-1 bg-card border border-border rounded-xl p-1">
               {(["all", "tennis", "padel"] as const).map((s) => (
-                <button
-                  key={s}
-                  onClick={() => setSportFilter(s)}
+                <button key={s} onClick={() => setSportFilter(s)}
                   className={`px-3 py-1.5 rounded-lg font-display text-[10px] tracking-wider transition-colors ${
                     sportFilter === s ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
                   }`}
-                >
-                  {s.toUpperCase()}
-                </button>
+                >{s.toUpperCase()}</button>
               ))}
             </div>
           </div>
-
-          {/* Right nav */}
           <div className="hidden md:flex items-center gap-3 shrink-0">
-            <Link to="/login" className="font-display text-sm tracking-wider text-muted-foreground hover:text-foreground transition-colors">
-              LOG IN
-            </Link>
-            <Link to="/login" className="font-display text-sm tracking-wider bg-primary text-primary-foreground px-5 py-2 rounded-lg hover:bg-primary/90 transition-colors">
-              SIGN UP
-            </Link>
+            <Link to="/login" className="font-display text-sm tracking-wider text-muted-foreground hover:text-foreground transition-colors">LOG IN</Link>
+            <Link to="/login" className="font-display text-sm tracking-wider bg-primary text-primary-foreground px-5 py-2 rounded-lg hover:bg-primary/90 transition-colors">SIGN UP</Link>
           </div>
         </div>
       </nav>
@@ -537,21 +566,14 @@ const FindACoach = () => {
       <div className="md:hidden px-4 py-3 border-b border-border flex items-center gap-2">
         <div className="flex items-center gap-1 bg-card border border-border rounded-xl p-1 flex-1">
           {(["all", "tennis", "padel"] as const).map((s) => (
-            <button
-              key={s}
-              onClick={() => setSportFilter(s)}
+            <button key={s} onClick={() => setSportFilter(s)}
               className={`flex-1 px-3 py-1.5 rounded-lg font-display text-[10px] tracking-wider transition-colors ${
                 sportFilter === s ? "bg-primary text-primary-foreground" : "text-muted-foreground"
               }`}
-            >
-              {s.toUpperCase()}
-            </button>
+            >{s.toUpperCase()}</button>
           ))}
         </div>
-        <button
-          onClick={() => setMobileFiltersOpen(true)}
-          className="p-2.5 rounded-xl bg-card border border-border"
-        >
+        <button onClick={() => setMobileFiltersOpen(true)} className="p-2.5 rounded-xl bg-card border border-border">
           <SlidersHorizontal size={16} className="text-muted-foreground" />
         </button>
       </div>
@@ -560,20 +582,9 @@ const FindACoach = () => {
       <AnimatePresence>
         {mobileFiltersOpen && (
           <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-background/80 z-50"
-              onClick={() => setMobileFiltersOpen(false)}
-            />
-            <motion.div
-              initial={{ x: "-100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "-100%" }}
-              transition={{ type: "spring", damping: 25 }}
-              className="fixed left-0 top-0 bottom-0 w-[300px] bg-card border-r border-border z-50 overflow-y-auto p-5"
-            >
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-background/80 z-50" onClick={() => setMobileFiltersOpen(false)} />
+            <motion.div initial={{ x: "-100%" }} animate={{ x: 0 }} exit={{ x: "-100%" }} transition={{ type: "spring", damping: 25 }}
+              className="fixed left-0 top-0 bottom-0 w-[300px] bg-card border-r border-border z-50 overflow-y-auto p-5">
               <div className="flex items-center justify-between mb-4">
                 <span className="font-display text-sm tracking-wider">FILTERS</span>
                 <button onClick={() => setMobileFiltersOpen(false)} className="p-1"><X size={18} /></button>
@@ -585,76 +596,53 @@ const FindACoach = () => {
       </AnimatePresence>
 
       <div className="max-w-7xl mx-auto px-4 md:px-6 py-6 flex gap-6">
-        {/* Desktop sidebar */}
         <aside className="hidden md:block w-[280px] shrink-0 sticky top-[80px] self-start max-h-[calc(100vh-96px)] overflow-y-auto pr-2 scrollbar-none">
           <FilterContent {...filterProps} />
         </aside>
 
-        {/* Results */}
         <main className="flex-1 min-w-0">
-          {/* Results header */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
             <p className="font-display text-sm tracking-wider text-foreground">
               {loading ? "SEARCHING..." : `${filtered.length} COACH${filtered.length !== 1 ? "ES" : ""} FOUND${citySearch ? ` IN ${citySearch.toUpperCase()}` : ""}`}
             </p>
             <div className="flex items-center gap-1 bg-card border border-border rounded-xl p-1 overflow-x-auto">
               {SORTS.map((s) => (
-                <button
-                  key={s.key}
-                  onClick={() => setSortBy(s.key)}
+                <button key={s.key} onClick={() => setSortBy(s.key)}
                   className={`px-3 py-1.5 rounded-lg font-display text-[10px] tracking-wider whitespace-nowrap transition-colors ${
                     sortBy === s.key ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
                   }`}
-                >
-                  {s.label}
-                </button>
+                >{s.label}</button>
               ))}
             </div>
           </div>
 
-          {/* Loading */}
           {loading && (
             <div className="grid sm:grid-cols-2 gap-4">
               {Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)}
             </div>
           )}
 
-          {/* Results grid */}
           {!loading && filtered.length > 0 && (
             <div className="grid sm:grid-cols-2 gap-4">
-              {filtered.map((coach) => (
-                <CoachCardComponent key={coach.user_id} coach={coach} />
-              ))}
+              {filtered.map((coach) => <CoachCardComponent key={coach.user_id} coach={coach} />)}
             </div>
           )}
 
-          {/* Empty: no results with city search */}
           {!loading && filtered.length === 0 && citySearch && (
             <div className="text-center py-20">
               <MapPin size={40} className="text-muted-foreground mx-auto mb-4" />
-              <h3 className="font-display text-xl text-foreground mb-2">
-                NO COACHES FOUND IN {citySearch.toUpperCase()} YET
-              </h3>
-              <p className="font-body text-sm text-muted-foreground mb-6">
-                Want to coach in {citySearch}? Join as a coach →
-              </p>
-              <Link to="/login" className="inline-flex items-center gap-2 font-display text-sm tracking-wider bg-primary text-primary-foreground px-6 py-3 rounded-xl hover:bg-primary/90 transition-colors">
-                JOIN AS COACH
-              </Link>
+              <h3 className="font-display text-xl text-foreground mb-2">NO COACHES FOUND IN {citySearch.toUpperCase()} YET</h3>
+              <p className="font-body text-sm text-muted-foreground mb-6">Want to coach in {citySearch}? Join as a coach →</p>
+              <Link to="/login" className="inline-flex items-center gap-2 font-display text-sm tracking-wider bg-primary text-primary-foreground px-6 py-3 rounded-xl hover:bg-primary/90 transition-colors">JOIN AS COACH</Link>
             </div>
           )}
 
-          {/* Empty: no coaches at all */}
           {!loading && filtered.length === 0 && !citySearch && coaches.length === 0 && (
             <div className="text-center py-20">
               <Shield size={40} className="text-primary mx-auto mb-4" />
               <h3 className="font-display text-2xl text-foreground mb-2">BE THE FIRST COACH ON ACE</h3>
-              <p className="font-body text-sm text-muted-foreground mb-6">
-                Join the platform and start coaching today.
-              </p>
-              <Link to="/login" className="inline-flex items-center gap-2 font-display text-sm tracking-wider bg-primary text-primary-foreground px-6 py-3 rounded-xl hover:bg-primary/90 transition-colors">
-                JOIN AS COACH
-              </Link>
+              <p className="font-body text-sm text-muted-foreground mb-6">Join the platform and start coaching today.</p>
+              <Link to="/login" className="inline-flex items-center gap-2 font-display text-sm tracking-wider bg-primary text-primary-foreground px-6 py-3 rounded-xl hover:bg-primary/90 transition-colors">JOIN AS COACH</Link>
             </div>
           )}
         </main>

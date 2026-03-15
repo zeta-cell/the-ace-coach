@@ -800,12 +800,18 @@ export type Database = {
           coach_id: string | null
           created_at: string | null
           description: string | null
+          difficulty: string
+          duration_minutes: number
+          exercises: Json | null
           goal: string
+          goals: string[] | null
           id: string
+          is_custom: boolean | null
           is_system: boolean | null
           module_durations: number[]
           module_ids: string[]
           module_notes: string[]
+          sport: string
           title: string
         }
         Insert: {
@@ -813,12 +819,18 @@ export type Database = {
           coach_id?: string | null
           created_at?: string | null
           description?: string | null
+          difficulty?: string
+          duration_minutes?: number
+          exercises?: Json | null
           goal: string
+          goals?: string[] | null
           id?: string
+          is_custom?: boolean | null
           is_system?: boolean | null
           module_durations?: number[]
           module_ids?: string[]
           module_notes?: string[]
+          sport?: string
           title: string
         }
         Update: {
@@ -826,12 +838,18 @@ export type Database = {
           coach_id?: string | null
           created_at?: string | null
           description?: string | null
+          difficulty?: string
+          duration_minutes?: number
+          exercises?: Json | null
           goal?: string
+          goals?: string[] | null
           id?: string
+          is_custom?: boolean | null
           is_system?: boolean | null
           module_durations?: number[]
           module_ids?: string[]
           module_notes?: string[]
+          sport?: string
           title?: string
         }
         Relationships: []

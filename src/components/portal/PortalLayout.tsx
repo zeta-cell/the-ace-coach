@@ -4,13 +4,14 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   LayoutDashboard, Calendar, BookOpen, Video,
   MessageSquare, User, LogOut, Menu, X, ChevronLeft, ChevronRight,
-  Users, Settings, Home, CreditCard, Link2, CalendarDays, UserCheck
+  Users, Settings, Home, CreditCard, Link2, CalendarDays, UserCheck, Search
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import NotificationBell from "@/components/portal/NotificationBell";
 // Logo placeholder
 
 const playerNav = [
+  { label: "Find a Coach", icon: Search, href: "/find-a-coach" },
   { label: "Home", icon: Home, href: "/dashboard" },
   { label: "Training", icon: Calendar, href: "/training" },
   { label: "Videos", icon: Video, href: "/videos" },
