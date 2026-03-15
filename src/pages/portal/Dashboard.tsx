@@ -67,7 +67,7 @@ const Dashboard = () => {
   const [weekPlans, setWeekPlans] = useState<string[]>([]);
   const [selectedDay, setSelectedDay] = useState(new Date());
   const [programs, setPrograms] = useState<PurchasedProgram[]>([]);
-  const [userStats, setUserStats] = useState<UserStats>({ total_xp: 0, current_level: 'bronze', current_streak_days: 0, total_sessions: 0, wallet_balance: 0, raffle_tickets: 0, total_minutes: 0 });
+  const [userStats, setUserStats] = useState<UserStats>({ total_xp: 0, current_level: 'bronze', current_streak_days: 0, total_sessions: 0, wallet_balance: 0, raffle_tickets: 0, total_minutes: 0, total_calories: 0 });
   const [earnedBadges, setEarnedBadges] = useState<EarnedBadge[]>([]);
   const [activityData, setActivityData] = useState<any[]>([]);
   const [topPlayers, setTopPlayers] = useState<any[]>([]);
