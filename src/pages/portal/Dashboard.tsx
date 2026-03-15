@@ -196,6 +196,49 @@ const Dashboard = () => {
           </div>
         </motion.div>
 
+        {/* My Programs */}
+        {programs.length > 0 && (
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12 }} className="mb-6">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="font-display text-sm tracking-wider text-foreground flex items-center gap-2">
+                <ShoppingBag size={16} className="text-primary" /> MY PROGRAMS
+              </h3>
+              <Link to="/marketplace" className="text-xs font-body text-primary hover:underline">Browse more</Link>
+            </div>
+            <div className="space-y-2">
+              {programs.map((prog) => {
+                const progress = prog.week_count > 1 ? Math.round(((prog.current_week || 1) / prog.week_count) * 100) : 0;
+                const status = (prog.current_week || 1) <= 1 ? "NOT STARTED" : (prog.current_week || 1) >= prog.week_count ? "COMPLETED" : "IN PROGRESS";
+                return (
+                  <div key={prog.id} className="bg-card border border-border rounded-xl p-4 flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center shrink-0">
+                      <ShoppingBag size={18} className="text-primary" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-display text-sm text-foreground truncate">{prog.title}</p>
+                      <div className="flex items-center gap-2 mt-0.5">
+                        <span className="text-[9px] font-body text-muted-foreground">by {prog.author_name || "ACE"}</span>
+                        {prog.week_count > 1 && <span className="text-[9px] font-body text-primary">Week {prog.current_week || 1} of {prog.week_count}</span>}
+                        <span className={`px-1.5 py-0.5 rounded text-[8px] font-display ${
+                          status === "COMPLETED" ? "bg-green-500/20 text-green-400" : status === "IN PROGRESS" ? "bg-amber-500/20 text-amber-400" : "bg-muted text-muted-foreground"
+                        }`}>{status}</span>
+                      </div>
+                      {prog.week_count > 1 && (
+                        <div className="w-full h-1 bg-muted rounded-full mt-1.5">
+                          <div className="h-full bg-primary rounded-full transition-all" style={{ width: `${progress}%` }} />
+                        </div>
+                      )}
+                    </div>
+                    <Link to="/training" className="p-2 rounded-lg border border-border text-muted-foreground hover:text-foreground hover:border-primary/40 transition-colors shrink-0">
+                      <ChevronRight size={16} />
+                    </Link>
+                  </div>
+                );
+              })}
+            </div>
+          </motion.div>
+        )}
+
         {/* Training Day Info */}
         {user && (
           <motion.div
