@@ -26,6 +26,15 @@ interface CoachRequest {
   created_at: string;
 }
 
+interface UpcomingPlan {
+  id: string;
+  plan_date: string;
+  player_name: string;
+  item_count: number;
+  start_time: string | null;
+  program_author: string | null;
+}
+
 const CoachDashboard = () => {
   const { user, profile } = useAuth();
   const [players, setPlayers] = useState<AssignedPlayer[]>([]);
