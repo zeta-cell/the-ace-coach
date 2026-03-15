@@ -197,7 +197,7 @@ const CoachCalendar = () => {
 
   const addBlockToPlan = (block: TrainingBlock) => {
     if (!selectedDay) { toast.error("Select a day first"); return; }
-    setPlanBlocks((prev) => [...prev, { tempId: crypto.randomUUID(), block, coach_note: "" }]);
+    setPlanBlocks((prev) => [...prev, { tempId: crypto.randomUUID(), block, coach_note: "", block_id: block.id }]);
     toast.success(`Added "${block.title}"`);
   };
 
