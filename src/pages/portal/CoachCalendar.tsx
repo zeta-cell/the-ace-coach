@@ -144,19 +144,41 @@ const CoachCalendar = () => {
     const playerIds = [...new Set(dayPlans.map(p => p.player_id))];
     const [profilesRes, itemsRes] = await Promise.all([
       supabase.from("profiles").select("user_id, full_name").in("user_id", playerIds),
-      supabase.from("player_day_plan_items").select("plan_id").in("plan_id", dayPlans.map(p => p.id)),
+      supabase.from("player_day_plan_items").select("plan_id, block_id").in("plan_id", dayPlans.map(p => p.id)),
     ]);
 
     const nameMap = new Map(profilesRes.data?.map(p => [p.user_id, p.full_name]) || []);
     const countMap = new Map<string, number>();
-    itemsRes.data?.forEach(item => { countMap.set(item.plan_id, (countMap.get(item.plan_id) || 0) + 1); });
+    const planBlockIds = new Map<string, string>(); // plan_id -> first block_id
+    (itemsRes.data as any[])?.forEach((item: any) => {
+      countMap.set(item.plan_id, (countMap.get(item.plan_id) || 0) + 1);
+      if (item.block_id && !planBlockIds.has(item.plan_id)) planBlockIds.set(item.plan_id, item.block_id);
+    });
 
-    const result = dayPlans.map(p => ({
-      id: p.id, plan_date: p.plan_date, player_id: p.player_id,
-      player_name: nameMap.get(p.player_id) || "Unknown",
-      item_count: countMap.get(p.id) || 0,
-      start_time: p.start_time || null, end_time: p.end_time || null,
-    }));
+    // Fetch block author info for program credit
+    const uniqueBlockIds = [...new Set(planBlockIds.values())];
+    let blockAuthorMap = new Map<string, { title: string; author_name: string | null; author_avatar_url: string | null; author_id: string | null }>();
+    if (uniqueBlockIds.length > 0) {
+      const { data: blockData } = await supabase.from("training_blocks")
+        .select("id, title, author_name, author_avatar_url, author_id")
+        .in("id", uniqueBlockIds);
+      blockData?.forEach(b => blockAuthorMap.set(b.id, { title: b.title, author_name: b.author_name, author_avatar_url: b.author_avatar_url, author_id: b.author_id }));
+    }
+
+    const result: DayPlan[] = dayPlans.map(p => {
+      const blockId = planBlockIds.get(p.id);
+      const blockInfo = blockId ? blockAuthorMap.get(blockId) : null;
+      const isExternalAuthor = blockInfo && blockInfo.author_id && blockInfo.author_id !== targetCoachId;
+      return {
+        id: p.id, plan_date: p.plan_date, player_id: p.player_id,
+        player_name: nameMap.get(p.player_id) || "Unknown",
+        item_count: countMap.get(p.id) || 0,
+        start_time: p.start_time || null, end_time: p.end_time || null,
+        program_author: isExternalAuthor ? blockInfo!.author_name : null,
+        program_title: isExternalAuthor ? blockInfo!.title : null,
+        program_author_avatar: isExternalAuthor ? blockInfo!.author_avatar_url : null,
+      };
+    });
     result.sort((a, b) => (a.start_time || "99:99").localeCompare(b.start_time || "99:99"));
     setPlans(result);
     setLoading(false);
