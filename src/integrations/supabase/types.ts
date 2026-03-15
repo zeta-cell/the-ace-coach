@@ -356,33 +356,45 @@ export type Database = {
       coach_requests: {
         Row: {
           block_id: string | null
+          coach_has_program_access: boolean | null
           coach_id: string
           created_at: string | null
           id: string
           message: string | null
+          package_id: string | null
           player_id: string
+          proposed_sessions: number | null
+          proposed_start_date: string | null
           request_type: string | null
           responded_at: string | null
           status: string | null
         }
         Insert: {
           block_id?: string | null
+          coach_has_program_access?: boolean | null
           coach_id: string
           created_at?: string | null
           id?: string
           message?: string | null
+          package_id?: string | null
           player_id: string
+          proposed_sessions?: number | null
+          proposed_start_date?: string | null
           request_type?: string | null
           responded_at?: string | null
           status?: string | null
         }
         Update: {
           block_id?: string | null
+          coach_has_program_access?: boolean | null
           coach_id?: string
           created_at?: string | null
           id?: string
           message?: string | null
+          package_id?: string | null
           player_id?: string
+          proposed_sessions?: number | null
+          proposed_start_date?: string | null
           request_type?: string | null
           responded_at?: string | null
           status?: string | null
