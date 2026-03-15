@@ -439,6 +439,10 @@ export type Database = {
           created_at: string
           end_time: string | null
           id: string
+          location_address: string | null
+          location_lat: number | null
+          location_lng: number | null
+          location_name: string | null
           notes: string | null
           plan_date: string
           player_id: string
@@ -450,6 +454,10 @@ export type Database = {
           created_at?: string
           end_time?: string | null
           id?: string
+          location_address?: string | null
+          location_lat?: number | null
+          location_lng?: number | null
+          location_name?: string | null
           notes?: string | null
           plan_date: string
           player_id: string
@@ -461,6 +469,10 @@ export type Database = {
           created_at?: string
           end_time?: string | null
           id?: string
+          location_address?: string | null
+          location_lat?: number | null
+          location_lng?: number | null
+          location_name?: string | null
           notes?: string | null
           plan_date?: string
           player_id?: string
