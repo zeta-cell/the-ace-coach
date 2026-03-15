@@ -63,22 +63,29 @@ const CreateTrainingBlockDrawer = ({ open, onClose, onCreated }: Props) => {
     if (!title.trim() || !user) return;
     setSaving(true);
 
+    const profileRes = await supabase.from("profiles").select("full_name, avatar_url").eq("user_id", user.id).single();
     const { error } = await supabase.from("training_blocks").insert({
       coach_id: user.id,
+      author_id: user.id,
+      author_name: profileRes.data?.full_name || "",
+      author_avatar_url: profileRes.data?.avatar_url || null,
       title: title.trim(),
       description: description.trim() || null,
-      category,
-      sport,
-      duration_minutes: duration,
-      difficulty,
+      category, sport,
+      duration_minutes: duration, difficulty,
       goals,
       exercises: exercises.filter((e) => e.name.trim()) as any,
-      is_system: false,
-      is_custom: true,
+      is_system: false, is_custom: true,
+      is_public: visibility !== "private",
+      is_for_sale: visibility === "for_sale",
+      price: visibility === "for_sale" ? price : 0,
+      currency,
+      block_type: blockType,
+      week_count: blockType === "program" ? weekCount : 1,
+      target_level: targetLevel,
+      target_sport: sport,
       goal: category.replace("_", " ").replace(/\b\w/g, (c) => c.toUpperCase()),
-      module_ids: [],
-      module_durations: [],
-      module_notes: [],
+      module_ids: [], module_durations: [], module_notes: [],
     } as any);
 
     if (error) {
