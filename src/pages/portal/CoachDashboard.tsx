@@ -90,14 +90,60 @@ const CoachDashboard = () => {
       .eq("created_by", user.id);
     setModuleCount(count || 0);
 
-    // Today's plans
+    // Today's plans + upcoming (next 7 days)
     const todayStr = format(new Date(), "yyyy-MM-dd");
+    const weekFromNow = format(new Date(Date.now() + 7 * 86400000), "yyyy-MM-dd");
     const { count: plansCount } = await supabase
       .from("player_day_plans")
       .select("id", { count: "exact", head: true })
       .eq("coach_id", user.id)
       .eq("plan_date", todayStr);
     setTodayPlansCount(plansCount || 0);
+
+    // Upcoming plans with program credit
+    const { data: upcomingData } = await supabase
+      .from("player_day_plans")
+      .select("id, plan_date, player_id, start_time")
+      .eq("coach_id", user.id)
+      .gte("plan_date", todayStr)
+      .lte("plan_date", weekFromNow)
+      .order("plan_date")
+      .limit(5);
+
+    if (upcomingData && upcomingData.length > 0) {
+      const upPlayerIds = [...new Set(upcomingData.map(p => p.player_id))];
+      const upPlanIds = upcomingData.map(p => p.id);
+      const [upProfiles, upItems] = await Promise.all([
+        supabase.from("profiles").select("user_id, full_name").in("user_id", upPlayerIds),
+        supabase.from("player_day_plan_items").select("plan_id, block_id").in("plan_id", upPlanIds),
+      ]);
+      const upNameMap = new Map(upProfiles.data?.map(p => [p.user_id, p.full_name]) || []);
+      const upCountMap = new Map<string, number>();
+      const upBlockMap = new Map<string, string>();
+      (upItems.data as any[])?.forEach((item: any) => {
+        upCountMap.set(item.plan_id, (upCountMap.get(item.plan_id) || 0) + 1);
+        if (item.block_id && !upBlockMap.has(item.plan_id)) upBlockMap.set(item.plan_id, item.block_id);
+      });
+
+      const uniqueBlockIds = [...new Set(upBlockMap.values())];
+      let authorMap = new Map<string, string | null>();
+      if (uniqueBlockIds.length > 0) {
+        const { data: blocks } = await supabase.from("training_blocks")
+          .select("id, author_name, author_id").in("id", uniqueBlockIds);
+        blocks?.forEach(b => {
+          if (b.author_id && b.author_id !== user.id) authorMap.set(b.id, b.author_name);
+        });
+      }
+
+      setUpcomingPlans(upcomingData.map(p => ({
+        id: p.id,
+        plan_date: p.plan_date,
+        player_name: upNameMap.get(p.player_id) || "Player",
+        item_count: upCountMap.get(p.id) || 0,
+        start_time: p.start_time || null,
+        program_author: upBlockMap.has(p.id) ? (authorMap.get(upBlockMap.get(p.id)!) || null) : null,
+      })));
+    }
 
     // Fetch coaching requests
     const { data: reqData } = await supabase
