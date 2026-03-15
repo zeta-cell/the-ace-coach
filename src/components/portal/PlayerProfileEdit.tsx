@@ -19,6 +19,16 @@ interface PlayerEditData {
   injuries: string;
   best_shot: string;
   weakest_shot: string;
+  preferred_sport: string;
+  favourite_players: string[];
+  club_name: string;
+  club_location: string;
+  shirt_size: string;
+  target_ranking: string;
+  plays_since_year: string;
+  preferred_court_surface: string;
+  training_freq: string;
+  current_usta_ntrp: string;
 }
 
 interface Props {
@@ -29,7 +39,7 @@ interface Props {
   onSaved: () => void;
 }
 
-const TagInput = ({ label, tags, onChange }: { label: string; tags: string[]; onChange: (t: string[]) => void }) => {
+const TagInput = ({ label, tags, onChange, placeholder }: { label: string; tags: string[]; onChange: (t: string[]) => void; placeholder?: string }) => {
   const [input, setInput] = useState("");
   const add = () => {
     const val = input.trim();
@@ -45,27 +55,37 @@ const TagInput = ({ label, tags, onChange }: { label: string; tags: string[]; on
         {tags.map((t) => (
           <span key={t} className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-primary/10 text-primary text-xs font-body">
             {t}
-            <button type="button" onClick={() => onChange(tags.filter((x) => x !== t))} className="hover:text-destructive">
-              <X size={12} />
-            </button>
+            <button type="button" onClick={() => onChange(tags.filter((x) => x !== t))} className="hover:text-destructive"><X size={12} /></button>
           </span>
         ))}
       </div>
       <div className="flex gap-2">
-        <Input
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), add())}
-          placeholder={`Add ${label.toLowerCase()}…`}
-          className="h-9 text-sm"
-        />
-        <button type="button" onClick={add} className="shrink-0 h-9 w-9 rounded-lg bg-primary/10 text-primary flex items-center justify-center hover:bg-primary/20">
-          <Plus size={16} />
-        </button>
+        <Input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), add())} placeholder={placeholder || `Add ${label.toLowerCase()}…`} className="h-9 text-sm" />
+        <button type="button" onClick={add} className="shrink-0 h-9 w-9 rounded-lg bg-primary/10 text-primary flex items-center justify-center hover:bg-primary/20"><Plus size={16} /></button>
       </div>
     </div>
   );
 };
+
+const ChipSelect = ({ label, options, value, onChange }: { label: string; options: { value: string; label: string }[]; value: string; onChange: (v: string) => void }) => (
+  <div>
+    <label className="font-display text-xs tracking-wider text-muted-foreground">{label}</label>
+    <div className="flex flex-wrap gap-2 mt-1.5">
+      {options.map((opt) => (
+        <button
+          key={opt.value}
+          type="button"
+          onClick={() => onChange(opt.value)}
+          className={`px-3 py-1.5 rounded-lg text-xs font-display tracking-wider transition-colors ${
+            value === opt.value ? "bg-primary text-primary-foreground" : "bg-secondary text-foreground hover:bg-secondary/80"
+          }`}
+        >
+          {opt.label}
+        </button>
+      ))}
+    </div>
+  </div>
+);
 
 const PlayerProfileEdit = ({ open, onClose, playerData, phone, onSaved }: Props) => {
   const { user, refreshProfile } = useAuth();
@@ -83,6 +103,16 @@ const PlayerProfileEdit = ({ open, onClose, playerData, phone, onSaved }: Props)
     injuries: playerData?.injuries || "",
     best_shot: playerData?.best_shot || "",
     weakest_shot: playerData?.weakest_shot || "",
+    preferred_sport: playerData?.preferred_sport || "padel",
+    favourite_players: playerData?.favourite_players || [],
+    club_name: playerData?.club_name || "",
+    club_location: playerData?.club_location || "",
+    shirt_size: playerData?.shirt_size || "",
+    target_ranking: playerData?.target_ranking || "",
+    plays_since_year: playerData?.plays_since_year?.toString() || "",
+    preferred_court_surface: playerData?.preferred_court_surface || "",
+    training_freq: playerData?.training_freq || "occasional",
+    current_usta_ntrp: playerData?.current_usta_ntrp?.toString() || "",
   });
 
   const set = (key: keyof PlayerEditData, value: any) => setForm((f) => ({ ...f, [key]: value }));
@@ -106,7 +136,17 @@ const PlayerProfileEdit = ({ open, onClose, playerData, phone, onSaved }: Props)
             injuries: form.injuries || null,
             best_shot: form.best_shot || null,
             weakest_shot: form.weakest_shot || null,
-          })
+            preferred_sport: (form.preferred_sport || null) as any,
+            favourite_players: form.favourite_players,
+            club_name: form.club_name || null,
+            club_location: form.club_location || null,
+            shirt_size: form.shirt_size || null,
+            target_ranking: form.target_ranking || null,
+            plays_since_year: form.plays_since_year ? parseInt(form.plays_since_year) : null,
+            preferred_court_surface: form.preferred_court_surface || null,
+            training_freq: (form.training_freq || null) as any,
+            current_usta_ntrp: form.current_usta_ntrp ? parseFloat(form.current_usta_ntrp) : null,
+          } as any)
           .eq("user_id", user.id),
         supabase
           .from("profiles")
@@ -130,13 +170,7 @@ const PlayerProfileEdit = ({ open, onClose, playerData, phone, onSaved }: Props)
   const Field = ({ label, field, type = "text", placeholder = "" }: { label: string; field: keyof PlayerEditData; type?: string; placeholder?: string }) => (
     <div>
       <label className="font-display text-xs tracking-wider text-muted-foreground">{label}</label>
-      <Input
-        type={type}
-        value={form[field] as string}
-        onChange={(e) => set(field, type === "number" ? Number(e.target.value) : e.target.value)}
-        placeholder={placeholder}
-        className="mt-1.5 h-9 text-sm"
-      />
+      <Input type={type} value={form[field] as string} onChange={(e) => set(field, type === "number" ? Number(e.target.value) : e.target.value)} placeholder={placeholder} className="mt-1.5 h-9 text-sm" />
     </div>
   );
 
@@ -155,31 +189,68 @@ const PlayerProfileEdit = ({ open, onClose, playerData, phone, onSaved }: Props)
             <Field label="DATE OF BIRTH" field="date_of_birth" type="date" />
             <div>
               <label className="font-display text-xs tracking-wider text-muted-foreground">PHONE</label>
-              <Input
-                value={editPhone}
-                onChange={(e) => setEditPhone(e.target.value)}
-                placeholder="+34 …"
-                className="mt-1.5 h-9 text-sm"
-              />
+              <Input value={editPhone} onChange={(e) => setEditPhone(e.target.value)} placeholder="+34 …" className="mt-1.5 h-9 text-sm" />
             </div>
             <Field label="YEARS PLAYING" field="years_playing" type="number" />
+            <Field label="SHIRT SIZE" field="shirt_size" placeholder="e.g. M, L, XL" />
             <div>
               <label className="font-display text-xs tracking-wider text-muted-foreground">DOMINANT HAND</label>
               <div className="flex gap-2 mt-1.5">
                 {["left", "right"].map((h) => (
-                  <button
-                    key={h}
-                    type="button"
-                    onClick={() => set("dominant_hand", h)}
-                    className={`flex-1 py-2 rounded-lg text-sm font-display tracking-wider transition-colors ${
-                      form.dominant_hand === h ? "bg-primary text-primary-foreground" : "bg-secondary text-foreground"
-                    }`}
-                  >
+                  <button key={h} type="button" onClick={() => set("dominant_hand", h)}
+                    className={`flex-1 py-2 rounded-lg text-sm font-display tracking-wider transition-colors ${form.dominant_hand === h ? "bg-primary text-primary-foreground" : "bg-secondary text-foreground"}`}>
                     {h.toUpperCase()}
                   </button>
                 ))}
               </div>
             </div>
+          </section>
+
+          {/* Sport Preferences */}
+          <section className="space-y-3">
+            <h3 className="font-display text-xs tracking-wider text-muted-foreground border-b border-border pb-2">SPORT PREFERENCES</h3>
+            <ChipSelect
+              label="PREFERRED SPORT"
+              value={form.preferred_sport}
+              onChange={(v) => set("preferred_sport", v)}
+              options={[
+                { value: "tennis", label: "🎾 TENNIS" },
+                { value: "padel", label: "🏓 PADEL" },
+                { value: "both", label: "BOTH" },
+              ]}
+            />
+            <ChipSelect
+              label="TRAINING FREQUENCY"
+              value={form.training_freq}
+              onChange={(v) => set("training_freq", v)}
+              options={[
+                { value: "daily", label: "DAILY" },
+                { value: "3-4x_week", label: "3–4×/WEEK" },
+                { value: "1-2x_week", label: "1–2×/WEEK" },
+                { value: "occasional", label: "OCCASIONAL" },
+              ]}
+            />
+            <ChipSelect
+              label="PREFERRED COURT SURFACE"
+              value={form.preferred_court_surface}
+              onChange={(v) => set("preferred_court_surface", v)}
+              options={[
+                { value: "clay", label: "CLAY" },
+                { value: "hard", label: "HARD" },
+                { value: "grass", label: "GRASS" },
+                { value: "artificial_grass", label: "ARTIFICIAL" },
+                { value: "indoor", label: "INDOOR" },
+              ]}
+            />
+            <TagInput label="FAVOURITE PLAYERS" tags={form.favourite_players} onChange={(t) => set("favourite_players", t)} placeholder="e.g. Djokovic, Lebron Chila…" />
+            <Field label="TARGET RANKING" field="target_ranking" placeholder="e.g. Top 100 local" />
+          </section>
+
+          {/* Club */}
+          <section className="space-y-3">
+            <h3 className="font-display text-xs tracking-wider text-muted-foreground border-b border-border pb-2">MY CLUB</h3>
+            <Field label="CLUB NAME" field="club_name" placeholder="e.g. Padel Club London" />
+            <Field label="CLUB LOCATION" field="club_location" placeholder="e.g. London, UK" />
           </section>
 
           {/* Fitness & Goals */}
@@ -189,14 +260,8 @@ const PlayerProfileEdit = ({ open, onClose, playerData, phone, onSaved }: Props)
               <label className="font-display text-xs tracking-wider text-muted-foreground">FITNESS LEVEL</label>
               <div className="grid grid-cols-2 gap-2 mt-1.5">
                 {["beginner", "intermediate", "advanced", "elite"].map((l) => (
-                  <button
-                    key={l}
-                    type="button"
-                    onClick={() => set("fitness_level", l)}
-                    className={`py-2 rounded-lg text-xs font-display tracking-wider transition-colors ${
-                      form.fitness_level === l ? "bg-primary text-primary-foreground" : "bg-secondary text-foreground"
-                    }`}
-                  >
+                  <button key={l} type="button" onClick={() => set("fitness_level", l)}
+                    className={`py-2 rounded-lg text-xs font-display tracking-wider transition-colors ${form.fitness_level === l ? "bg-primary text-primary-foreground" : "bg-secondary text-foreground"}`}>
                     {l.toUpperCase()}
                   </button>
                 ))}
@@ -209,11 +274,12 @@ const PlayerProfileEdit = ({ open, onClose, playerData, phone, onSaved }: Props)
             </div>
           </section>
 
-          {/* Playtomic */}
+          {/* Ratings */}
           <section className="space-y-3">
-            <h3 className="font-display text-xs tracking-wider text-muted-foreground border-b border-border pb-2">PLAYTOMIC</h3>
-            <Field label="LEVEL" field="playtomic_level" type="number" />
-            <Field label="PROFILE URL" field="playtomic_url" placeholder="https://…" />
+            <h3 className="font-display text-xs tracking-wider text-muted-foreground border-b border-border pb-2">RATINGS</h3>
+            <Field label="PLAYTOMIC LEVEL" field="playtomic_level" type="number" />
+            <Field label="PLAYTOMIC URL" field="playtomic_url" placeholder="https://…" />
+            <Field label="USTA/NTRP RATING" field="current_usta_ntrp" type="number" placeholder="e.g. 3.5" />
           </section>
 
           {/* Play style */}
@@ -226,11 +292,7 @@ const PlayerProfileEdit = ({ open, onClose, playerData, phone, onSaved }: Props)
 
         {/* Sticky save */}
         <div className="fixed bottom-0 left-0 right-0 p-4 bg-background border-t border-border">
-          <button
-            onClick={handleSave}
-            disabled={saving}
-            className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-display text-sm tracking-widest hover:bg-primary/90 transition-colors disabled:opacity-50"
-          >
+          <button onClick={handleSave} disabled={saving} className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-display text-sm tracking-widest hover:bg-primary/90 transition-colors disabled:opacity-50">
             {saving ? "SAVING…" : "SAVE CHANGES"}
           </button>
         </div>

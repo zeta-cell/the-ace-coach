@@ -3,7 +3,14 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion } from "framer-motion";
-import { ExternalLink, Camera, Target, TrendingDown, Bell, BellOff, LogOut, Mail, Phone, MessageCircle, Calendar, Pencil } from "lucide-react";
+import {
+  ExternalLink, Camera, Target, TrendingDown, Bell, BellOff, LogOut,
+  Mail, Phone, MessageCircle, Calendar, Pencil, MapPin, Activity,
+  Heart, Dumbbell, Trophy
+} from "lucide-react";
+import {
+  Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer
+} from "recharts";
 import UpcomingSchedule from "@/components/portal/UpcomingSchedule";
 import PortalLayout from "@/components/portal/PortalLayout";
 import PlayerProfileEdit from "@/components/portal/PlayerProfileEdit";
@@ -29,6 +36,17 @@ interface PlayerData {
   weakest_shot: string | null;
   shot_data_source: string | null;
   date_of_birth: string | null;
+  preferred_sport: string | null;
+  favourite_players: string[];
+  club_name: string | null;
+  club_location: string | null;
+  shirt_size: string | null;
+  apple_health_connected: boolean;
+  target_ranking: string | null;
+  plays_since_year: number | null;
+  preferred_court_surface: string | null;
+  training_freq: string | null;
+  current_usta_ntrp: number | null;
 }
 
 interface RacketData {
@@ -37,7 +55,14 @@ interface RacketData {
   model: string;
   type: string;
   is_favorite: boolean;
+  string_brand: string | null;
+  string_tension: string | null;
+  grip_size: string | null;
 }
+
+const SPORT_LABELS: Record<string, string> = { tennis: "🎾 Tennis", padel: "🏓 Padel", both: "🎾🏓 Both" };
+const SURFACE_LABELS: Record<string, string> = { clay: "Clay", hard: "Hard Court", grass: "Grass", artificial_grass: "Artificial Grass", indoor: "Indoor" };
+const FREQ_LABELS: Record<string, string> = { daily: "Daily", "3-4x_week": "3–4× / week", "1-2x_week": "1–2× / week", occasional: "Occasional" };
 
 const PlayerProfile = () => {
   const { user, profile, signOut } = useAuth();
@@ -54,9 +79,7 @@ const PlayerProfile = () => {
   });
 
   useEffect(() => {
-    if (user) {
-      fetchData();
-    }
+    if (user) fetchData();
   }, [user]);
 
   const fetchData = async () => {
@@ -66,8 +89,8 @@ const PlayerProfile = () => {
       supabase.from("player_rackets").select("*").eq("player_id", user.id),
       supabase.from("profiles").select("notification_preferences, phone").eq("user_id", user.id).single(),
     ]);
-    if (player) setPlayerData(player as PlayerData);
-    if (racketsData) setRackets(racketsData as RacketData[]);
+    if (player) setPlayerData(player as unknown as PlayerData);
+    if (racketsData) setRackets(racketsData as unknown as RacketData[]);
     if (prof) {
       if (prof.phone) setPlayerPhone(prof.phone as string);
       if (prof.notification_preferences) {
@@ -83,6 +106,17 @@ const PlayerProfile = () => {
       await supabase.from("profiles").update({ notification_preferences: updated } as any).eq("user_id", user.id);
     }
   };
+
+  const radarData = playerData
+    ? [
+        { shot: "Forehand", value: playerData.forehand_pct },
+        { shot: "Backhand", value: playerData.backhand_pct },
+        { shot: "Serve", value: playerData.serve_pct },
+        { shot: "Volley", value: playerData.volley_pct },
+        { shot: "Smash", value: playerData.smash_pct },
+        { shot: "Lob", value: playerData.lob_pct },
+      ]
+    : [];
 
   const shots = playerData
     ? [
@@ -101,11 +135,7 @@ const PlayerProfile = () => {
     <PortalLayout>
       <div className="max-w-3xl mx-auto space-y-6">
         {/* Identity */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-card border border-border rounded-xl p-6"
-        >
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="bg-card border border-border rounded-xl p-6">
           <div className="flex items-center justify-between mb-2">
             <div />
             <button
@@ -141,7 +171,12 @@ const PlayerProfile = () => {
                     {playerData.dominant_hand} hand
                   </span>
                 )}
-                {playerData?.years_playing !== undefined && (
+                {playerData?.preferred_sport && (
+                  <span className="font-body text-[10px] bg-secondary text-foreground px-2 py-0.5 rounded-full font-semibold">
+                    {SPORT_LABELS[playerData.preferred_sport] || playerData.preferred_sport}
+                  </span>
+                )}
+                {playerData?.years_playing !== undefined && playerData.years_playing > 0 && (
                   <span className="font-body text-xs text-muted-foreground">{playerData.years_playing}y playing</span>
                 )}
               </div>
@@ -176,53 +211,97 @@ const PlayerProfile = () => {
             )}
           </div>
 
-          {/* Message coach button */}
           <button
             onClick={() => navigate("/messages")}
             className="mt-4 w-full py-2.5 rounded-lg bg-primary text-primary-foreground font-display text-sm tracking-widest hover:bg-primary/90 transition-colors flex items-center justify-center gap-2"
           >
-            <MessageCircle size={16} />
-            MESSAGE MY COACH
+            <MessageCircle size={16} /> MESSAGE MY COACH
           </button>
         </motion.div>
 
+        {/* Sport Preferences */}
+        {playerData && (playerData.favourite_players?.length > 0 || playerData.preferred_court_surface || playerData.training_freq) && (
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="bg-card border border-border rounded-xl p-6">
+            <h2 className="font-display text-sm tracking-wider text-muted-foreground mb-4">SPORT PREFERENCES</h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-4">
+              {playerData.preferred_court_surface && (
+                <div className="bg-secondary rounded-lg p-3 text-center">
+                  <p className="font-display text-sm text-foreground">{SURFACE_LABELS[playerData.preferred_court_surface] || playerData.preferred_court_surface}</p>
+                  <p className="text-[10px] font-body text-muted-foreground uppercase">Court Surface</p>
+                </div>
+              )}
+              {playerData.training_freq && (
+                <div className="bg-secondary rounded-lg p-3 text-center">
+                  <Dumbbell size={18} className="text-primary mx-auto mb-1" />
+                  <p className="font-display text-sm text-foreground">{FREQ_LABELS[playerData.training_freq] || playerData.training_freq}</p>
+                  <p className="text-[10px] font-body text-muted-foreground uppercase">Training</p>
+                </div>
+              )}
+              {playerData.target_ranking && (
+                <div className="bg-secondary rounded-lg p-3 text-center">
+                  <Trophy size={18} className="text-chart-4 mx-auto mb-1" />
+                  <p className="font-display text-sm text-foreground">{playerData.target_ranking}</p>
+                  <p className="text-[10px] font-body text-muted-foreground uppercase">Target Ranking</p>
+                </div>
+              )}
+            </div>
+            {playerData.favourite_players?.length > 0 && (
+              <div>
+                <h3 className="font-display text-xs tracking-wider text-muted-foreground mb-2">FAVOURITE PLAYERS</h3>
+                <div className="flex flex-wrap gap-2">
+                  {playerData.favourite_players.map((p) => (
+                    <span key={p} className="px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-body font-medium">{p}</span>
+                  ))}
+                </div>
+              </div>
+            )}
+          </motion.div>
+        )}
+
+        {/* My Club */}
+        {playerData?.club_name && (
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }} className="bg-card border border-border rounded-xl p-6">
+            <h2 className="font-display text-sm tracking-wider text-muted-foreground mb-3">MY CLUB</h2>
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-xl bg-secondary flex items-center justify-center">
+                <MapPin size={20} className="text-primary" />
+              </div>
+              <div>
+                <p className="font-body text-sm font-medium text-foreground">{playerData.club_name}</p>
+                {playerData.club_location && <p className="font-body text-xs text-muted-foreground">{playerData.club_location}</p>}
+              </div>
+            </div>
+          </motion.div>
+        )}
+
         {/* Playtomic */}
         {(playerData?.playtomic_level || playerData?.playtomic_url) && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="bg-card border border-border rounded-xl p-6"
-          >
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="bg-card border border-border rounded-xl p-6">
             <h2 className="font-display text-sm tracking-wider text-muted-foreground mb-3">PLAYTOMIC</h2>
             <div className="flex items-center justify-between">
-              <div>
+              <div className="flex items-center gap-4">
                 {playerData?.playtomic_level && (
                   <span className="font-display text-4xl text-foreground">{playerData.playtomic_level}</span>
                 )}
+                {playerData?.current_usta_ntrp && (
+                  <div className="text-center">
+                    <span className="font-display text-2xl text-foreground">{playerData.current_usta_ntrp}</span>
+                    <p className="text-[10px] font-body text-muted-foreground">NTRP</p>
+                  </div>
+                )}
               </div>
               {playerData?.playtomic_url && (
-                <a
-                  href={playerData.playtomic_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 text-primary font-body text-sm hover:underline"
-                >
-                  View profile on Playtomic <ExternalLink size={14} />
+                <a href={playerData.playtomic_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-primary font-body text-sm hover:underline">
+                  View profile <ExternalLink size={14} />
                 </a>
               )}
             </div>
           </motion.div>
         )}
 
-        {/* Play Style */}
+        {/* Play Style with Radar Chart */}
         {playerData && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="bg-card border border-border rounded-xl p-6"
-          >
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="bg-card border border-border rounded-xl p-6">
             <div className="flex items-center justify-between mb-4">
               <h2 className="font-display text-sm tracking-wider text-muted-foreground">PLAY STYLE</h2>
               {playerData.shot_data_source === "coach" && (
@@ -232,27 +311,35 @@ const PlayerProfile = () => {
               )}
             </div>
 
-            {/* Side preference — improved visual */}
+            {/* Radar Chart */}
+            <div className="w-full aspect-square max-w-[280px] mx-auto mb-6">
+              <ResponsiveContainer width="100%" height="100%">
+                <RadarChart data={radarData} cx="50%" cy="50%" outerRadius="70%">
+                  <PolarGrid stroke="hsl(var(--border))" />
+                  <PolarAngleAxis
+                    dataKey="shot"
+                    tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11, fontFamily: "Space Grotesk" }}
+                  />
+                  <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
+                  <Radar name="Shots" dataKey="value" stroke="hsl(var(--primary))" fill="hsl(var(--primary))" fillOpacity={0.2} strokeWidth={2} />
+                </RadarChart>
+              </ResponsiveContainer>
+            </div>
+
+            {/* Side preference */}
             <div className="mb-6">
               <div className="h-10 rounded-full overflow-hidden flex mb-1">
-                <div
-                  className="bg-primary flex items-center justify-start pl-3 transition-all"
-                  style={{ width: `${Math.max(playerData.left_tendency_pct, 15)}%` }}
-                >
-                  <span className="text-xs font-body font-semibold text-primary-foreground whitespace-nowrap">
-                    Left {playerData.left_tendency_pct}%
-                  </span>
+                <div className="bg-primary flex items-center justify-start pl-3 transition-all" style={{ width: `${Math.max(playerData.left_tendency_pct, 15)}%` }}>
+                  <span className="text-xs font-body font-semibold text-primary-foreground whitespace-nowrap">Left {playerData.left_tendency_pct}%</span>
                 </div>
                 <div className="bg-muted flex-1 flex items-center justify-end pr-3">
-                  <span className="text-xs font-body font-semibold text-muted-foreground whitespace-nowrap">
-                    Right {playerData.right_tendency_pct}%
-                  </span>
+                  <span className="text-xs font-body font-semibold text-muted-foreground whitespace-nowrap">Right {playerData.right_tendency_pct}%</span>
                 </div>
               </div>
               <p className="text-[10px] text-muted-foreground font-body text-center mt-1">Side Preference</p>
             </div>
 
-            {/* Best/Weakest with icons */}
+            {/* Best/Weakest */}
             <div className="grid grid-cols-2 gap-3 mb-6">
               <div className="bg-secondary rounded-lg p-4 text-center">
                 <Target size={24} className="text-primary mx-auto mb-2" />
@@ -266,7 +353,7 @@ const PlayerProfile = () => {
               </div>
             </div>
 
-            {/* Shot confidence bars — top 2 = primary, rest = muted */}
+            {/* Shot bars */}
             <h3 className="font-display text-xs tracking-wider text-muted-foreground mb-3">SHOT CONFIDENCE</h3>
             <div className="space-y-3">
               {shots.map((shot, i) => (
@@ -276,10 +363,7 @@ const PlayerProfile = () => {
                     <span className="text-sm font-body font-semibold text-foreground">{shot.pct}%</span>
                   </div>
                   <div className="h-2 bg-secondary rounded-full overflow-hidden">
-                    <div
-                      className={`h-full rounded-full transition-all ${i < 2 ? "bg-primary" : "bg-muted-foreground/30"}`}
-                      style={{ width: `${shot.pct}%` }}
-                    />
+                    <div className={`h-full rounded-full transition-all ${i < 2 ? "bg-primary" : "bg-muted-foreground/30"}`} style={{ width: `${shot.pct}%` }} />
                   </div>
                 </div>
               ))}
@@ -287,89 +371,116 @@ const PlayerProfile = () => {
           </motion.div>
         )}
 
-        {/* Rackets */}
+        {/* Rackets — enhanced */}
         {rackets.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="bg-card border border-border rounded-xl p-6"
-          >
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="bg-card border border-border rounded-xl p-6">
             <div className="flex items-center justify-between mb-4">
               <h2 className="font-display text-sm tracking-wider text-muted-foreground">MY RACKETS</h2>
-              {favoriteRacket && (
-                <span className="text-xs font-body text-muted-foreground">
-                  Favorite: {favoriteRacket.brand}
-                </span>
-              )}
+              {favoriteRacket && <span className="text-xs font-body text-muted-foreground">Favorite: {favoriteRacket.brand}</span>}
             </div>
             <div className="space-y-3">
               {rackets.map((racket) => (
-                <div key={racket.id} className="flex items-center gap-3 bg-secondary rounded-lg p-3">
-                  <div className="w-10 h-10 rounded-full bg-background flex items-center justify-center font-display text-sm text-foreground">
-                    {racket.brand.substring(0, 2).toUpperCase()}
+                <div key={racket.id} className="bg-secondary rounded-lg p-4">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="w-10 h-10 rounded-full bg-background flex items-center justify-center font-display text-sm text-foreground">
+                      {racket.brand.substring(0, 2).toUpperCase()}
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2">
+                        <span className="font-body text-sm font-medium text-foreground">{racket.model}</span>
+                        {racket.is_favorite && (
+                          <span className="text-[10px] bg-primary/10 text-primary px-2 py-0.5 rounded-full font-body font-semibold uppercase">Main</span>
+                        )}
+                      </div>
+                      <p className="text-xs font-body text-muted-foreground">{racket.brand} · {racket.type}</p>
+                    </div>
                   </div>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <span className="font-body text-sm font-medium text-foreground">{racket.model}</span>
-                      {racket.is_favorite && (
-                        <span className="text-[10px] bg-primary/10 text-primary px-2 py-0.5 rounded-full font-body font-semibold uppercase">
-                          Main
+                  {(racket.string_brand || racket.string_tension || racket.grip_size) && (
+                    <div className="flex flex-wrap gap-2 mt-2 pt-2 border-t border-border/50">
+                      {racket.string_brand && (
+                        <span className="text-[10px] font-body text-muted-foreground bg-background px-2 py-0.5 rounded-full">
+                          String: {racket.string_brand}
+                        </span>
+                      )}
+                      {racket.string_tension && (
+                        <span className="text-[10px] font-body text-muted-foreground bg-background px-2 py-0.5 rounded-full">
+                          Tension: {racket.string_tension}
+                        </span>
+                      )}
+                      {racket.grip_size && (
+                        <span className="text-[10px] font-body text-muted-foreground bg-background px-2 py-0.5 rounded-full">
+                          Grip: {racket.grip_size}
                         </span>
                       )}
                     </div>
-                    <p className="text-xs font-body text-muted-foreground">
-                      {racket.brand} · {racket.type}
-                    </p>
-                  </div>
+                  )}
                 </div>
               ))}
             </div>
+          </motion.div>
+        )}
+
+        {/* Apple Health */}
+        {playerData && (
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }} className="bg-card border border-border rounded-xl p-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-chart-1/20 flex items-center justify-center">
+                  <Heart size={20} className="text-chart-1" />
+                </div>
+                <div>
+                  <h2 className="font-display text-sm tracking-wider text-foreground">APPLE HEALTH</h2>
+                  <p className="font-body text-[10px] text-muted-foreground">Sync workouts, calories & steps</p>
+                </div>
+              </div>
+              <button
+                onClick={async () => {
+                  if (!user) return;
+                  const newVal = !playerData.apple_health_connected;
+                  setPlayerData({ ...playerData, apple_health_connected: newVal });
+                  await supabase.from("player_profiles").update({ apple_health_connected: newVal } as any).eq("user_id", user.id);
+                }}
+                className={`relative w-12 h-7 rounded-full transition-colors ${
+                  playerData.apple_health_connected ? "bg-chart-2" : "bg-secondary"
+                }`}
+              >
+                <div className={`absolute top-0.5 w-6 h-6 rounded-full bg-foreground transition-transform ${
+                  playerData.apple_health_connected ? "translate-x-5" : "translate-x-0.5"
+                }`} />
+              </button>
+            </div>
+            {playerData.apple_health_connected && (
+              <p className="mt-3 font-body text-xs text-chart-2 flex items-center gap-1">
+                <Activity size={12} /> Connected — full integration coming soon
+              </p>
+            )}
           </motion.div>
         )}
 
         {/* Goals */}
         {playerData && playerData.goals.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className="bg-card border border-border rounded-xl p-6"
-          >
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="bg-card border border-border rounded-xl p-6">
             <h2 className="font-display text-sm tracking-wider text-muted-foreground mb-3">GOALS & FITNESS</h2>
             <div className="flex flex-wrap gap-2 mb-3">
               {playerData.goals.map((goal) => (
-                <span key={goal} className="px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-body font-medium">
-                  {goal}
-                </span>
+                <span key={goal} className="px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-body font-medium">{goal}</span>
               ))}
             </div>
             {playerData.fitness_level && (
-              <span className="px-3 py-1 rounded-full bg-secondary text-foreground text-xs font-body font-semibold uppercase">
-                {playerData.fitness_level}
-              </span>
+              <span className="px-3 py-1 rounded-full bg-secondary text-foreground text-xs font-body font-semibold uppercase">{playerData.fitness_level}</span>
             )}
           </motion.div>
         )}
 
-        {/* Upcoming Training Schedule */}
+        {/* Upcoming Training */}
         {user && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.45 }}
-          >
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45 }}>
             <UpcomingSchedule playerId={user.id} linkPrefix="training" showCoach={true} />
           </motion.div>
         )}
 
-        {/* Notification Preferences */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-          className="bg-card border border-border rounded-xl p-6"
-        >
+        {/* Notifications */}
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="bg-card border border-border rounded-xl p-6">
           <h2 className="font-display text-sm tracking-wider text-muted-foreground mb-4">NOTIFICATION SETTINGS</h2>
           <div className="space-y-3">
             {([
@@ -387,28 +498,19 @@ const PlayerProfile = () => {
                   <p className="font-body text-sm text-foreground">{pref.label}</p>
                   <p className="font-body text-[10px] text-muted-foreground">{pref.desc}</p>
                 </div>
-                {notifPrefs[pref.key] ? (
-                  <Bell size={18} className="text-primary shrink-0" />
-                ) : (
-                  <BellOff size={18} className="text-muted-foreground shrink-0" />
-                )}
+                {notifPrefs[pref.key] ? <Bell size={18} className="text-primary shrink-0" /> : <BellOff size={18} className="text-muted-foreground shrink-0" />}
               </button>
             ))}
           </div>
         </motion.div>
 
         {/* Sign Out */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
-        >
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}>
           <button
             onClick={signOut}
             className="w-full py-3 rounded-xl border border-destructive/30 text-destructive font-display text-sm tracking-widest hover:bg-destructive/10 transition-colors flex items-center justify-center gap-2"
           >
-            <LogOut className="w-4 h-4" />
-            SIGN OUT
+            <LogOut className="w-4 h-4" /> SIGN OUT
           </button>
         </motion.div>
 
