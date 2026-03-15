@@ -46,12 +46,12 @@ const WalletCard = () => {
       .eq("user_id", user.id)
       .order("created_at", { ascending: false })
       .limit(5);
-    setTransactions((txns as unknown as WalletTransaction[]) || []);
+    setTransactions((txns || []) as WalletTransaction[]);
   };
 
   const fetchReferrals = async () => {
     if (!user || !profile) return;
-    setReferralCode((profile as any).referral_code || "");
+    setReferralCode(profile?.referral_code || "");
     const { data } = await supabase.from("referrals").select("*").eq("referrer_id", user.id);
     if (data) {
       const signedUp = data.filter(r => r.status !== 'pending').length;

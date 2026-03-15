@@ -97,11 +97,11 @@ const Dashboard = () => {
       { onConflict: 'user_id', ignoreDuplicates: true }
     );
     const { data: stats } = await supabase.from("user_stats").select("*").eq("user_id", user.id).single();
-    if (stats) setUserStats(stats as unknown as UserStats);
+    if (stats) setUserStats(stats as UserStats);
 
     // Earned badges
     const { data: badges } = await supabase.from("user_badges").select("badge_key, badge_name, earned_at").eq("user_id", user.id).order("earned_at", { ascending: false });
-    setEarnedBadges((badges as unknown as EarnedBadge[]) || []);
+    setEarnedBadges((badges || []) as EarnedBadge[]);
 
     // Activity chart (last 8 weeks)
     const weeks: any[] = [];
@@ -131,19 +131,16 @@ const Dashboard = () => {
     const { data: top } = await supabase.from("leaderboard").select("*").order("total_xp", { ascending: false }).limit(3);
     setTopPlayers(top || []);
 
-    const { data: allRanks } = await supabase.from("leaderboard").select("user_id, total_xp").order("total_xp", { ascending: false });
-    if (allRanks) {
-      const idx = allRanks.findIndex(r => r.user_id === user.id);
-      setMyRank(idx >= 0 ? idx + 1 : null);
-    }
+    const { data: myLeaderboard } = await supabase.from("leaderboard").select("rank_global").eq("user_id", user.id).maybeSingle();
+    setMyRank(myLeaderboard?.rank_global || null);
 
     // Check and award badges
-    checkBadges(stats as any, badges as any);
+    checkBadges(stats as UserStats | null, (badges || []) as EarnedBadge[]);
   };
 
-  const checkBadges = async (stats: any, existingBadges: any[]) => {
+  const checkBadges = async (stats: UserStats | null, existingBadges: EarnedBadge[]) => {
     if (!user || !stats) return;
-    const earned = new Set((existingBadges || []).map((b: any) => b.badge_key));
+    const earned = new Set(existingBadges.map(b => b.badge_key));
     const newBadges: { key: string; name: string; desc: string }[] = [];
 
     if (stats.total_sessions >= 1 && !earned.has('first_session')) newBadges.push({ key: 'first_session', name: 'First Session', desc: 'Complete your first booked session' });
