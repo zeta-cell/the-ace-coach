@@ -182,6 +182,11 @@ const App = () => (
                 <ProtectedRoute requiredRole="coach"><CoachMarketplace /></ProtectedRoute>
               </Suspense>
             } />
+            <Route path="/coach/events" element={
+              <Suspense fallback={<PortalLoader />}>
+                <ProtectedRoute requiredRole="coach"><CoachEvents /></ProtectedRoute>
+              </Suspense>
+            } />
 
             {/* Admin */}
             <Route path="/admin" element={

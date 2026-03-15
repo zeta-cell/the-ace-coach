@@ -548,6 +548,8 @@ const FindACoach = () => {
             </div>
           </div>
           <div className="hidden md:flex items-center gap-3 shrink-0">
+            <Link to="/events" className="font-display text-xs tracking-wider text-muted-foreground hover:text-foreground transition-colors">EVENTS</Link>
+            <Link to="/community" className="font-display text-xs tracking-wider text-muted-foreground hover:text-foreground transition-colors">COMMUNITY</Link>
             <Link to="/login" className="font-display text-sm tracking-wider text-muted-foreground hover:text-foreground transition-colors">LOG IN</Link>
             <Link to="/login" className="font-display text-sm tracking-wider bg-primary text-primary-foreground px-5 py-2 rounded-lg hover:bg-primary/90 transition-colors">SIGN UP</Link>
           </div>

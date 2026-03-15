@@ -30,6 +30,8 @@ const Index = () => {
           <div className="flex items-center gap-4">
             <Link to="/find-a-coach" className="font-display text-xs tracking-wider text-muted-foreground hover:text-foreground transition-colors hidden md:block">FIND A COACH</Link>
             <Link to="/marketplace" className="font-display text-xs tracking-wider text-muted-foreground hover:text-foreground transition-colors hidden md:block">MARKETPLACE</Link>
+            <Link to="/events" className="font-display text-xs tracking-wider text-muted-foreground hover:text-foreground transition-colors hidden md:block">EVENTS</Link>
+            <Link to="/community" className="font-display text-xs tracking-wider text-muted-foreground hover:text-foreground transition-colors hidden md:block">COMMUNITY</Link>
             <Link to="/login" className="font-display text-sm tracking-wider text-muted-foreground hover:text-foreground transition-colors">LOG IN</Link>
             <Link to="/login" className="font-display text-sm tracking-wider bg-primary text-primary-foreground px-5 py-2 rounded-lg hover:bg-primary/90 transition-colors">GET STARTED</Link>
           </div>
