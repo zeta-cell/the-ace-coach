@@ -44,6 +44,10 @@ const CoachProfile = () => {
   const navigate = useNavigate();
   const [coachData, setCoachData] = useState<CoachData | null>(null);
   const [editOpen, setEditOpen] = useState(false);
+  const [packages, setPackages] = useState<CoachPackage[]>([]);
+  const [pkgDialogOpen, setPkgDialogOpen] = useState(false);
+  const [editingPkg, setEditingPkg] = useState<CoachPackage | null>(null);
+  const [pkgSaving, setPkgSaving] = useState(false);
   const [notifPrefs, setNotifPrefs] = useState({
     new_message: true,
     coach_feedback: true,
