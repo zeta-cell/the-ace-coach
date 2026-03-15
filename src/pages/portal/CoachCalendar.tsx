@@ -3,6 +3,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import PortalLayout from "@/components/portal/PortalLayout";
+import CoachAvailabilityGrid from "@/components/portal/CoachAvailabilityGrid";
 import {
   format, startOfMonth, endOfMonth, eachDayOfInterval,
   isSameMonth, isToday, startOfWeek, endOfWeek,
@@ -120,6 +121,11 @@ const CoachCalendar = () => {
   return (
     <PortalLayout>
       <div className="space-y-6">
+        {/* Availability grid — coach's own view only */}
+        {!isAdminView && targetCoachId && (
+          <CoachAvailabilityGrid coachId={targetCoachId} />
+        )}
+
         {/* Header */}
         <div className="space-y-4">
           {isAdminView && (

@@ -71,10 +71,10 @@ const Index = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
-                to="/login"
+                to="/find-a-coach"
                 className="inline-flex items-center justify-center gap-2 font-display text-sm tracking-widest bg-primary text-primary-foreground px-8 py-3.5 rounded-xl hover:bg-primary/90 transition-colors"
               >
-                START TRAINING <ArrowRight size={18} />
+                FIND A COACH <ArrowRight size={18} />
               </Link>
               <Link
                 to="/login"
