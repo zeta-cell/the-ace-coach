@@ -92,6 +92,13 @@ const PublicCoachProfile = () => {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+  const [showStickyBook, setShowStickyBook] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setShowStickyBook(window.scrollY > 400);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   useEffect(() => {
     if (slug) fetchCoach();
