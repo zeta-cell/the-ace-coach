@@ -129,10 +129,11 @@ const PublicCoachProfile = () => {
 
     setCoach(coachData as unknown as CoachProfile);
 
-    const [profileRes, packagesRes, reviewsRes] = await Promise.all([
+    const [profileRes, packagesRes, reviewsRes, eventsRes] = await Promise.all([
       supabase.from("profiles").select("full_name, avatar_url").eq("user_id", coachData.user_id).single(),
       supabase.from("coach_packages").select("*").eq("coach_id", coachData.user_id).eq("is_active", true).order("price_per_session"),
       supabase.from("reviews").select("*").eq("coach_id", coachData.user_id).order("created_at", { ascending: false }),
+      supabase.from("events").select("*").eq("coach_id", coachData.user_id).eq("status", "published").gte("start_datetime", new Date().toISOString()).order("start_datetime").limit(3),
     ]);
 
     if (profileRes.data) setProfile(profileRes.data as Profile);
