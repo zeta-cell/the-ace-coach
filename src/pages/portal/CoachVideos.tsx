@@ -293,6 +293,40 @@ const CoachVideos = () => {
                       <Send size={14} /> {saving ? "SAVING..." : "SEND FEEDBACK"}
                     </button>
                   </div>
+
+                  {/* Comments section */}
+                  <div className="mt-4 border-t border-border pt-4">
+                    <button onClick={() => setShowComments(!showComments)}
+                      className="flex items-center gap-2 font-display text-xs tracking-wider text-muted-foreground mb-2">
+                      COMMENTS ({comments.length})
+                      {showComments ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
+                    </button>
+                    {showComments && (
+                      <div className="space-y-2">
+                        {comments.map(c => (
+                          <div key={c.id} className="bg-secondary rounded-lg p-2">
+                            <div className="flex items-center gap-2 mb-1">
+                              <span className="font-display text-[10px] text-primary">{c.author_name}</span>
+                              <span className="text-[9px] font-body text-muted-foreground">{format(new Date(c.created_at), "d MMM HH:mm")}</span>
+                            </div>
+                            <p className="font-body text-xs text-foreground">{c.comment}</p>
+                          </div>
+                        ))}
+                        <div className="flex gap-2">
+                          <input
+                            value={newComment} onChange={e => setNewComment(e.target.value)}
+                            placeholder="Add a comment..."
+                            className="flex-1 px-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+                            onKeyDown={e => { if (e.key === "Enter") handleComment(); }}
+                          />
+                          <button onClick={handleComment} disabled={!newComment.trim() || sendingComment}
+                            className="px-3 py-2 rounded-lg bg-primary text-primary-foreground disabled:opacity-50">
+                            <Send size={14} />
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </motion.div>
             </motion.div>
