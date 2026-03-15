@@ -848,11 +848,18 @@ const CoachPlanBuilder = () => {
             <SortableContext items={planItems.map((i) => i.tempId)} strategy={verticalListSortingStrategy}>
               <div className="space-y-2 mb-4">
                 {planItems.map((item) => (
-                  <SortablePlanItem key={item.tempId} item={item} onRemove={removeItem} onNoteChange={updateNote} onDurationChange={updateDuration} />
+                  <SortablePlanItem key={item.tempId} item={item} onRemove={removeItem} onNoteChange={updateNote} onDurationChange={updateDuration} onDurationSave={saveDurationToDB} />
                 ))}
               </div>
             </SortableContext>
           </DndContext>
+        )}
+
+        {/* Inline add module row */}
+        {user && (
+          <div className="mb-4">
+            <InlineAddModule onAdd={handleInlineAdd} userId={user.id} />
+          </div>
         )}
 
         {/* Summary & Save */}
