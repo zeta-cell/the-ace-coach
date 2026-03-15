@@ -20,19 +20,7 @@ interface TrainingBlock {
   coach_id: string | null;
 }
 
-interface ModuleItem {
-  id: string;
-  title: string;
-  category: string;
-  duration_minutes: number | null;
-}
-
-interface PlanItem {
-  tempId: string;
-  module: ModuleItem;
-  coach_note: string;
-  custom_duration: number;
-}
+// ModuleItem and PlanItem (as BlockPlanItem) imported from @/types/training
 
 const BLOCK_CATEGORY_COLORS: Record<string, { bg: string; text: string }> = {
   "Match Preparation": { bg: "bg-amber-500/10", text: "text-amber-500" },
