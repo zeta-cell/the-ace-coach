@@ -43,6 +43,8 @@ const CoachCalendar = () => {
   const [loading, setLoading] = useState(true);
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
   const [coachName, setCoachName] = useState<string>("");
+  const [assignedPlayers, setAssignedPlayers] = useState<AssignedPlayer[]>([]);
+  const [showPlayerPicker, setShowPlayerPicker] = useState(false);
 
   useEffect(() => {
     if (targetCoachId) fetchMonthPlans();
