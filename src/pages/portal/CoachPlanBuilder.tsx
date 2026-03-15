@@ -169,6 +169,11 @@ const CoachPlanBuilder = () => {
   const [blockGoal, setBlockGoal] = useState("Technique");
   const [blockDesc, setBlockDesc] = useState("");
 
+  // Week context from CoachPlayerDetail
+  const weekParam = searchParams.get("week");
+  const blockIdParam = searchParams.get("block_id");
+  const [weekBlockData, setWeekBlockData] = useState<{ title: string; week_count: number; weekly_structure: any } | null>(null);
+
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
