@@ -402,6 +402,17 @@ const Onboarding = () => {
         return (
           <div className="space-y-6">
             <div>
+              <label className="block font-display text-xs tracking-wider text-muted-foreground mb-1.5">REFERRAL CODE (OPTIONAL)</label>
+              <input
+                value={referralCode}
+                onChange={(e) => setReferralCode(e.target.value)}
+                className="w-full bg-card border border-border rounded-lg px-4 py-3 text-foreground font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-muted-foreground"
+                placeholder="Enter a friend's referral code"
+              />
+              <p className="text-xs text-muted-foreground mt-1 font-body">Were you referred by a friend?</p>
+            </div>
+
+            <div>
               <label className="block font-display text-xs tracking-wider text-muted-foreground mb-1.5">PLAYTOMIC PROFILE</label>
               <input
                 type="url"
