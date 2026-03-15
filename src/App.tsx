@@ -13,6 +13,7 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 const PublicCoachProfile = lazy(() => import("./pages/PublicCoachProfile"));
 const FindACoach = lazy(() => import("./pages/FindACoach"));
+const Marketplace = lazy(() => import("./pages/Marketplace"));
 
 // Portal pages (lazy-loaded)
 const Login = lazy(() => import("./pages/portal/Login"));
