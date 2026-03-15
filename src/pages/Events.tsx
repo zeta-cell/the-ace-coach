@@ -106,7 +106,7 @@ const Events = () => {
       .select("event_id")
       .eq("player_id", user.id)
       .eq("status", "registered");
-    setRegisteredIds(new Set((data || []).map((r: any) => r.event_id)));
+    setRegisteredIds(new Set((data || []).map(r => r.event_id)));
   };
 
   const handleRegister = async (event: EventRow) => {
