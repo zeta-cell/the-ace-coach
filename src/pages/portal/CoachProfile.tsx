@@ -5,10 +5,13 @@ import { useAuth } from "@/contexts/AuthContext";
 import { motion } from "framer-motion";
 import {
   Camera, ExternalLink, Target, TrendingDown,
-  Bell, BellOff, LogOut, Mail, Phone, Globe, Award, BookOpen, MessageCircle, Pencil
+  Bell, BellOff, LogOut, Mail, Phone, Globe, Award, BookOpen, MessageCircle, Pencil, Plus
 } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
 import PortalLayout from "@/components/portal/PortalLayout";
 import CoachProfileEdit from "@/components/portal/CoachProfileEdit";
+import CoachPackageCard, { type CoachPackage } from "@/components/portal/CoachPackageCard";
+import CoachPackageDialog from "@/components/portal/CoachPackageDialog";
 
 interface CoachData {
   bio: string | null;
@@ -41,6 +44,10 @@ const CoachProfile = () => {
   const navigate = useNavigate();
   const [coachData, setCoachData] = useState<CoachData | null>(null);
   const [editOpen, setEditOpen] = useState(false);
+  const [packages, setPackages] = useState<CoachPackage[]>([]);
+  const [pkgDialogOpen, setPkgDialogOpen] = useState(false);
+  const [editingPkg, setEditingPkg] = useState<CoachPackage | null>(null);
+  const [pkgSaving, setPkgSaving] = useState(false);
   const [notifPrefs, setNotifPrefs] = useState({
     new_message: true,
     coach_feedback: true,
@@ -54,14 +61,16 @@ const CoachProfile = () => {
 
   const fetchData = async () => {
     if (!user) return;
-    const [{ data: coach }, { data: prof }] = await Promise.all([
+    const [{ data: coach }, { data: prof }, { data: pkgs }] = await Promise.all([
       supabase.from("coach_profiles").select("*").eq("user_id", user.id).single(),
       supabase.from("profiles").select("notification_preferences").eq("user_id", user.id).single(),
+      supabase.from("coach_packages").select("*").eq("coach_id", user.id).order("created_at", { ascending: false }),
     ]);
     if (coach) setCoachData(coach as CoachData);
     if (prof?.notification_preferences) {
       setNotifPrefs(prof.notification_preferences as typeof notifPrefs);
     }
+    if (pkgs) setPackages(pkgs as unknown as CoachPackage[]);
   };
 
   const toggleNotifPref = async (key: keyof typeof notifPrefs) => {
@@ -70,6 +79,41 @@ const CoachProfile = () => {
     if (user) {
       await supabase.from("profiles").update({ notification_preferences: updated } as any).eq("user_id", user.id);
     }
+  };
+
+  const handleSavePkg = async (data: any) => {
+    if (!user) return;
+    setPkgSaving(true);
+    try {
+      if (editingPkg) {
+        const { error } = await supabase.from("coach_packages").update(data as any).eq("id", editingPkg.id);
+        if (error) throw error;
+        toast({ title: "Package updated" });
+      } else {
+        const { error } = await supabase.from("coach_packages").insert({ ...data, coach_id: user.id } as any);
+        if (error) throw error;
+        toast({ title: "Package created" });
+      }
+      setPkgDialogOpen(false);
+      setEditingPkg(null);
+      fetchData();
+    } catch (err: any) {
+      toast({ title: "Error", description: err.message, variant: "destructive" });
+    } finally {
+      setPkgSaving(false);
+    }
+  };
+
+  const handleDeletePkg = async (id: string) => {
+    const { error } = await supabase.from("coach_packages").delete().eq("id", id);
+    if (error) toast({ title: "Error", description: error.message, variant: "destructive" });
+    else fetchData();
+  };
+
+  const handleTogglePkg = async (id: string, active: boolean) => {
+    const { error } = await supabase.from("coach_packages").update({ is_active: active } as any).eq("id", id);
+    if (error) toast({ title: "Error", description: error.message, variant: "destructive" });
+    else fetchData();
   };
 
   const shots = coachData
@@ -216,6 +260,34 @@ const CoachProfile = () => {
           </motion.div>
         )}
 
+        {/* My Packages */}
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.22 }} className="bg-card border border-border rounded-xl p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="font-display text-sm tracking-wider text-muted-foreground">MY PACKAGES</h2>
+            <button
+              onClick={() => { setEditingPkg(null); setPkgDialogOpen(true); }}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-display tracking-wider hover:bg-primary/90 transition-colors"
+            >
+              <Plus size={12} /> CREATE
+            </button>
+          </div>
+          {packages.length === 0 ? (
+            <p className="font-body text-sm text-muted-foreground text-center py-8">No packages yet. Create your first coaching package!</p>
+          ) : (
+            <div className="grid gap-3 sm:grid-cols-2">
+              {packages.map((pkg) => (
+                <CoachPackageCard
+                  key={pkg.id}
+                  pkg={pkg}
+                  onEdit={(p) => { setEditingPkg(p); setPkgDialogOpen(true); }}
+                  onDelete={handleDeletePkg}
+                  onToggleActive={handleTogglePkg}
+                />
+              ))}
+            </div>
+          )}
+        </motion.div>
+
         {/* Shot confidence */}
         {coachData && (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }} className="bg-card border border-border rounded-xl p-6">
@@ -315,6 +387,14 @@ const CoachProfile = () => {
             onSaved={fetchData}
           />
         )}
+
+        <CoachPackageDialog
+          open={pkgDialogOpen}
+          onClose={() => { setPkgDialogOpen(false); setEditingPkg(null); }}
+          onSave={handleSavePkg}
+          editing={editingPkg}
+          saving={pkgSaving}
+        />
       </div>
     </PortalLayout>
   );
