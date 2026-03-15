@@ -82,16 +82,16 @@ const Events = () => {
       .order("start_datetime");
 
     if (data && data.length > 0) {
-      const coachIds = [...new Set((data as any[]).map((e: any) => e.coach_id))];
+      const coachIds = [...new Set(data.map(e => e.coach_id))];
       const { data: profiles } = await supabase
         .from("profiles")
         .select("user_id, full_name, avatar_url")
         .in("user_id", coachIds);
-      const profileMap = new Map((profiles || []).map((p: any) => [p.user_id, p]));
-      setEvents((data as any[]).map((e: any) => ({
+      const profileMap = new Map((profiles || []).map(p => [p.user_id, p]));
+      setEvents(data.map(e => ({
         ...e,
-        coach_name: (profileMap.get(e.coach_id) as any)?.full_name || "Coach",
-        coach_avatar: (profileMap.get(e.coach_id) as any)?.avatar_url || null,
+        coach_name: profileMap.get(e.coach_id)?.full_name || "Coach",
+        coach_avatar: profileMap.get(e.coach_id)?.avatar_url || null,
       })));
     } else {
       setEvents([]);
