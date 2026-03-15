@@ -407,8 +407,27 @@ const CoachPlanBuilder = () => {
     }
   };
 
-  const removeItem = (tempId: string) => {
-    setPlanItems((prev) => prev.filter((i) => i.tempId !== tempId));
+  const removeItem = async (tempId: string) => {
+    const prev = planItems;
+    setPlanItems((p) => p.filter((i) => i.tempId !== tempId));
+
+    // If this item exists in DB (existingPlanId means plan is saved, tempId is the DB id)
+    if (existingPlanId) {
+      const { error } = await supabase.from("player_day_plan_items").delete().eq("id", tempId);
+      if (error) {
+        setPlanItems(prev);
+        toast.error("Fehler beim Löschen");
+        return;
+      }
+      toast.success("Modul entfernt", { duration: 1500 });
+
+      // If no items left, delete the plan itself
+      const remaining = prev.filter((i) => i.tempId !== tempId);
+      if (remaining.length === 0) {
+        await supabase.from("player_day_plans").delete().eq("id", existingPlanId);
+        setExistingPlanId(null);
+      }
+    }
   };
 
   const updateNote = (tempId: string, note: string) => {
@@ -417,6 +436,22 @@ const CoachPlanBuilder = () => {
 
   const updateDuration = (tempId: string, duration: number) => {
     setPlanItems((prev) => prev.map((i) => (i.tempId === tempId ? { ...i, custom_duration: duration } : i)));
+  };
+
+  const saveDurationToDB = async (_tempId: string, moduleId: string, duration: number) => {
+    const { error } = await supabase
+      .from("modules")
+      .update({ duration_minutes: duration })
+      .eq("id", moduleId);
+    if (error) {
+      toast.error("Fehler beim Speichern");
+    } else {
+      toast.success("Saved ✓", { duration: 1500 });
+    }
+  };
+
+  const handleInlineAdd = (mod: ModuleItem) => {
+    addModule(mod);
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
