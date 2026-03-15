@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion } from "framer-motion";
-import { ChevronRight, Search, Users, BookOpen } from "lucide-react";
+import { ChevronRight, Search, Users, BookOpen, Calendar, MessageSquare } from "lucide-react";
 import PortalLayout from "@/components/portal/PortalLayout";
+import QuickAddTrainingDrawer from "@/components/portal/QuickAddTrainingDrawer";
 
 interface PlayerRow {
   player_id: string;
@@ -19,9 +20,12 @@ interface PlayerRow {
 
 const CoachPlayers = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [players, setPlayers] = useState<PlayerRow[]>([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
+  const [trainDrawerOpen, setTrainDrawerOpen] = useState(false);
+  const [trainPlayerId, setTrainPlayerId] = useState<string | undefined>();
 
   useEffect(() => {
     if (user) fetchPlayers();
@@ -130,33 +134,56 @@ const CoachPlayers = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.03 }}
               >
-                <Link
-                  to={`/coach/players/${player.player_id}`}
-                  className="flex items-center gap-4 bg-card border border-border rounded-xl p-4 hover:border-primary/50 transition-colors"
-                >
-                  <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-primary font-display text-lg flex-shrink-0">
-                    {player.full_name?.charAt(0)?.toUpperCase() || "?"}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-display text-lg text-foreground truncate">{player.full_name}</p>
-                    <div className="flex gap-3 text-xs font-body text-muted-foreground">
-                      <span>{player.fitness_level || "—"}</span>
-                      <span>Level {player.playtomic_level ?? "—"}</span>
-                      {player.best_shot && <span className="text-primary">Best: {player.best_shot}</span>}
+                <div className="flex items-center gap-4 bg-card border border-border rounded-xl p-4 hover:border-primary/50 transition-colors">
+                  <Link to={`/coach/players/${player.player_id}`} className="flex items-center gap-4 flex-1 min-w-0">
+                    <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-primary font-display text-lg flex-shrink-0">
+                      {player.full_name?.charAt(0)?.toUpperCase() || "?"}
                     </div>
-                    {player.program_name && (
-                      <div className="flex items-center gap-1 mt-0.5">
-                        <BookOpen size={10} className="text-primary" />
-                        <span className="text-[9px] font-body text-primary">Via: {player.program_name}</span>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-display text-lg text-foreground truncate">{player.full_name}</p>
+                      <div className="flex gap-3 text-xs font-body text-muted-foreground">
+                        <span>{player.fitness_level || "—"}</span>
+                        <span>Level {player.playtomic_level ?? "—"}</span>
+                        {player.best_shot && <span className="text-primary">Best: {player.best_shot}</span>}
                       </div>
-                    )}
+                      {player.program_name && (
+                        <div className="flex items-center gap-1 mt-0.5">
+                          <BookOpen size={10} className="text-primary" />
+                          <span className="text-[9px] font-body text-primary">Via: {player.program_name}</span>
+                        </div>
+                      )}
+                    </div>
+                  </Link>
+                  <div className="flex gap-1.5 shrink-0">
+                    <button
+                      onClick={(e) => { e.stopPropagation(); setTrainPlayerId(player.player_id); setTrainDrawerOpen(true); }}
+                      className="p-2 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
+                      title="Assign training"
+                    >
+                      <Calendar size={16} />
+                    </button>
+                    <button
+                      onClick={(e) => { e.stopPropagation(); navigate(`/coach/messages?to=${player.player_id}`); }}
+                      className="p-2 rounded-lg bg-secondary text-muted-foreground hover:text-foreground transition-colors"
+                      title="Message"
+                    >
+                      <MessageSquare size={16} />
+                    </button>
                   </div>
-                  <ChevronRight size={18} className="text-muted-foreground flex-shrink-0" />
-                </Link>
+                  <Link to={`/coach/players/${player.player_id}`}>
+                    <ChevronRight size={18} className="text-muted-foreground flex-shrink-0" />
+                  </Link>
+                </div>
               </motion.div>
             ))}
           </div>
         )}
+
+        <QuickAddTrainingDrawer
+          open={trainDrawerOpen}
+          onClose={() => { setTrainDrawerOpen(false); setTrainPlayerId(undefined); }}
+          prefilledPlayerId={trainPlayerId}
+        />
       </div>
     </PortalLayout>
   );

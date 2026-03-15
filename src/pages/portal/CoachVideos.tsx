@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
-import { Video, Play, X, MessageSquare, Send } from "lucide-react";
+import { Video, Play, X, MessageSquare, Send, ChevronDown, ChevronUp } from "lucide-react";
 import { format } from "date-fns";
 import { toast } from "sonner";
 import PortalLayout from "@/components/portal/PortalLayout";
@@ -43,6 +43,14 @@ const VideoThumbnail = ({ path, className }: { path: string; className?: string 
   return <video src={src} className={className} preload="metadata" />;
 };
 
+interface VideoComment {
+  id: string;
+  comment: string;
+  created_at: string;
+  author_id: string;
+  author_name?: string;
+}
+
 const CoachVideos = () => {
   const { user } = useAuth();
   const [videos, setVideos] = useState<PlayerVideo[]>([]);
@@ -50,6 +58,10 @@ const CoachVideos = () => {
   const [selectedVideo, setSelectedVideo] = useState<PlayerVideo | null>(null);
   const [feedback, setFeedback] = useState("");
   const [saving, setSaving] = useState(false);
+  const [comments, setComments] = useState<VideoComment[]>([]);
+  const [newComment, setNewComment] = useState("");
+  const [showComments, setShowComments] = useState(false);
+  const [sendingComment, setSendingComment] = useState(false);
 
   useEffect(() => {
     if (user) fetchVideos();
@@ -117,6 +129,54 @@ const CoachVideos = () => {
     fetchVideos();
   };
 
+  const fetchComments = async (videoId: string) => {
+    const { data } = await supabase
+      .from("video_comments")
+      .select("id, comment, created_at, author_id")
+      .eq("video_id", videoId)
+      .order("created_at", { ascending: true });
+    
+    if (data && data.length > 0) {
+      const authorIds = [...new Set(data.map(c => c.author_id))];
+      const { data: profiles } = await supabase.from("profiles").select("user_id, full_name").in("user_id", authorIds);
+      const nameMap = new Map(profiles?.map(p => [p.user_id, p.full_name]) || []);
+      setComments(data.map(c => ({ ...c, author_name: nameMap.get(c.author_id) || "Unknown" })));
+    } else {
+      setComments([]);
+    }
+  };
+
+  const handleComment = async () => {
+    if (!selectedVideo || !newComment.trim() || !user) return;
+    setSendingComment(true);
+    await supabase.from("video_comments").insert({
+      video_id: selectedVideo.id,
+      author_id: user.id,
+      comment: newComment.trim(),
+    } as any);
+
+    // Award player XP for receiving feedback
+    await supabase.rpc("award_xp", {
+      p_user_id: selectedVideo.player_id,
+      p_amount: 10,
+      p_event_type: "coach_comment",
+      p_description: "Received coach feedback on video",
+    });
+
+    // Notify player
+    await supabase.from("notifications").insert({
+      user_id: selectedVideo.player_id,
+      title: "Your coach commented on your video",
+      body: `"${newComment.trim().substring(0, 50)}..."`,
+      link: "/videos",
+    });
+
+    toast.success("Comment sent", { duration: 1500 });
+    setNewComment("");
+    setSendingComment(false);
+    fetchComments(selectedVideo.id);
+  };
+
   return (
     <PortalLayout>
       <div className="max-w-4xl mx-auto">
@@ -139,7 +199,7 @@ const CoachVideos = () => {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.03 }}
-                onClick={() => { setSelectedVideo(v); setFeedback(v.coach_feedback || ""); }}
+                onClick={() => { setSelectedVideo(v); setFeedback(v.coach_feedback || ""); setShowComments(false); fetchComments(v.id); }}
                 className="bg-card border border-border rounded-xl overflow-hidden cursor-pointer hover:border-primary/30 transition-colors"
               >
                 <div className="aspect-video bg-secondary flex items-center justify-center relative">
@@ -232,6 +292,40 @@ const CoachVideos = () => {
                     >
                       <Send size={14} /> {saving ? "SAVING..." : "SEND FEEDBACK"}
                     </button>
+                  </div>
+
+                  {/* Comments section */}
+                  <div className="mt-4 border-t border-border pt-4">
+                    <button onClick={() => setShowComments(!showComments)}
+                      className="flex items-center gap-2 font-display text-xs tracking-wider text-muted-foreground mb-2">
+                      COMMENTS ({comments.length})
+                      {showComments ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
+                    </button>
+                    {showComments && (
+                      <div className="space-y-2">
+                        {comments.map(c => (
+                          <div key={c.id} className="bg-secondary rounded-lg p-2">
+                            <div className="flex items-center gap-2 mb-1">
+                              <span className="font-display text-[10px] text-primary">{c.author_name}</span>
+                              <span className="text-[9px] font-body text-muted-foreground">{format(new Date(c.created_at), "d MMM HH:mm")}</span>
+                            </div>
+                            <p className="font-body text-xs text-foreground">{c.comment}</p>
+                          </div>
+                        ))}
+                        <div className="flex gap-2">
+                          <input
+                            value={newComment} onChange={e => setNewComment(e.target.value)}
+                            placeholder="Add a comment..."
+                            className="flex-1 px-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+                            onKeyDown={e => { if (e.key === "Enter") handleComment(); }}
+                          />
+                          <button onClick={handleComment} disabled={!newComment.trim() || sendingComment}
+                            className="px-3 py-2 rounded-lg bg-primary text-primary-foreground disabled:opacity-50">
+                            <Send size={14} />
+                          </button>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               </motion.div>

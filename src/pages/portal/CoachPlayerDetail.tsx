@@ -3,11 +3,12 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion } from "framer-motion";
-import { ArrowLeft, Target, TrendingDown, Calendar, CalendarDays, Plus, Mail, Phone, MessageCircle, ChevronDown, ChevronUp, User, BookOpen, CheckCircle } from "lucide-react";
+import { ArrowLeft, Target, TrendingDown, Calendar, CalendarDays, Plus, Mail, Phone, MessageCircle, ChevronDown, ChevronUp, User, BookOpen, CheckCircle, Video, Dumbbell } from "lucide-react";
 import UpcomingSchedule from "@/components/portal/UpcomingSchedule";
-import { format } from "date-fns";
+import { format, addDays } from "date-fns";
 import PortalLayout from "@/components/portal/PortalLayout";
 import { toast } from "sonner";
+import QuickAddTrainingDrawer from "@/components/portal/QuickAddTrainingDrawer";
 
 interface ActiveProgram {
   request_id: string;
@@ -31,6 +32,8 @@ const CoachPlayerDetail = () => {
   const [infoOpen, setInfoOpen] = useState(false);
   const [activePrograms, setActivePrograms] = useState<ActiveProgram[]>([]);
   const [expandedProgram, setExpandedProgram] = useState<string | null>(null);
+  const [trainDrawerOpen, setTrainDrawerOpen] = useState(false);
+  const [upcomingPlans, setUpcomingPlans] = useState<any[]>([]);
 
   useEffect(() => {
     if (user && playerId) fetchAll();
@@ -81,6 +84,18 @@ const CoachPlayerDetail = () => {
         };
       }));
     }
+
+    // Fetch upcoming 7 days of training
+    const today = format(new Date(), "yyyy-MM-dd");
+    const nextWeek = format(addDays(new Date(), 7), "yyyy-MM-dd");
+    const { data: plans } = await supabase
+      .from("player_day_plans")
+      .select("id, plan_date, notes, start_time")
+      .eq("player_id", playerId)
+      .gte("plan_date", today)
+      .lte("plan_date", nextWeek)
+      .order("plan_date");
+    setUpcomingPlans(plans || []);
 
     setLoading(false);
   };
@@ -238,11 +253,45 @@ const CoachPlayerDetail = () => {
             )}
           </div>
 
-          {/* Message button */}
-          <button onClick={() => navigate(`/messages?to=${playerId}`)}
-            className="w-full py-2.5 rounded-xl bg-primary text-primary-foreground font-display text-sm tracking-widest hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 mb-6">
-            <MessageCircle size={16} /> MESSAGE PLAYER
-          </button>
+          {/* Action buttons row */}
+          <div className="grid grid-cols-3 gap-2 mb-6">
+            <button onClick={() => setTrainDrawerOpen(true)}
+              className="py-2.5 rounded-xl bg-primary text-primary-foreground font-display text-xs tracking-widest hover:bg-primary/90 transition-colors flex items-center justify-center gap-2">
+              <Dumbbell size={14} /> ASSIGN TRAINING
+            </button>
+            <button onClick={() => navigate(`/messages?to=${playerId}`)}
+              className="py-2.5 rounded-xl bg-card border border-border text-foreground font-display text-xs tracking-widest hover:bg-secondary transition-colors flex items-center justify-center gap-2">
+              <MessageCircle size={14} /> MESSAGE
+            </button>
+            <Link to={`/coach/videos`}
+              className="py-2.5 rounded-xl bg-card border border-border text-foreground font-display text-xs tracking-widest hover:bg-secondary transition-colors flex items-center justify-center gap-2">
+              <Video size={14} /> VIDEOS
+            </Link>
+          </div>
+
+          {/* Upcoming training timeline */}
+          {upcomingPlans.length > 0 && (
+            <div className="bg-card border border-border rounded-xl p-4 mb-6">
+              <h3 className="font-display text-sm tracking-wider text-muted-foreground mb-3">UPCOMING TRAINING (7 DAYS)</h3>
+              <div className="space-y-2">
+                {upcomingPlans.map(plan => (
+                  <Link key={plan.id} to={`/training?player=${playerId}&date=${plan.plan_date}`}
+                    className="flex items-center gap-3 p-2 rounded-lg hover:bg-secondary transition-colors">
+                    <div className="w-10 text-center">
+                      <p className="font-display text-xs text-primary">{format(new Date(plan.plan_date + "T00:00:00"), "EEE")}</p>
+                      <p className="font-display text-lg text-foreground">{format(new Date(plan.plan_date + "T00:00:00"), "d")}</p>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-body text-sm text-foreground truncate">{plan.notes || "Training session"}</p>
+                      {plan.start_time && (
+                        <p className="text-xs font-body text-muted-foreground">{plan.start_time?.slice(0, 5)}</p>
+                      )}
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Best / Weakest */}
           <div className="grid grid-cols-2 gap-3 mb-6">
@@ -321,6 +370,12 @@ const CoachPlayerDetail = () => {
             <Plus size={16} /> CREATE DAY PLAN
           </Link>
         </motion.div>
+
+        <QuickAddTrainingDrawer
+          open={trainDrawerOpen}
+          onClose={() => setTrainDrawerOpen(false)}
+          prefilledPlayerId={playerId}
+        />
       </div>
     </PortalLayout>
   );

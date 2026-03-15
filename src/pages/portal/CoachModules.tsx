@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Search, Edit2, Trash2, X, Clock, Tag, Play } from "lucide-react";
+import { Plus, Search, Edit2, Trash2, X, Clock, Tag, Play, Upload, Video, Loader2 } from "lucide-react";
 import PortalLayout from "@/components/portal/PortalLayout";
+import CoachVideoModal from "@/components/portal/CoachVideoModal";
 import type { Database } from "@/integrations/supabase/types";
+import { toast } from "sonner";
 
 type ModuleCategory = Database["public"]["Enums"]["module_category"];
 type ModuleDifficulty = Database["public"]["Enums"]["module_difficulty"];
@@ -38,6 +40,7 @@ interface Module {
   description: string | null;
   instructions: string | null;
   video_url: string | null;
+  coach_video_url: string | null;
   tags: string[] | null;
   equipment: string[] | null;
   is_shared: boolean | null;
@@ -65,6 +68,11 @@ const CoachModules = () => {
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState(emptyForm);
+  const [uploadingVideoId, setUploadingVideoId] = useState<string | null>(null);
+  const [videoModalOpen, setVideoModalOpen] = useState(false);
+  const [videoModalUrl, setVideoModalUrl] = useState("");
+  const [videoModalTitle, setVideoModalTitle] = useState("");
+  const videoFileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (user) fetchModules();
@@ -126,7 +134,30 @@ const CoachModules = () => {
   };
 
   const handleDelete = async (id: string) => {
+    if (!confirm("Delete this module?")) return;
     await supabase.from("modules").delete().eq("id", id);
+    toast.success("Module deleted", { duration: 1500 });
+    fetchModules();
+  };
+
+  const handleCoachVideoUpload = async (moduleId: string, file: File) => {
+    if (!user) return;
+    if (file.size > 100 * 1024 * 1024) {
+      toast.error("File too large (max 100MB)");
+      return;
+    }
+    setUploadingVideoId(moduleId);
+    const ext = file.name.split(".").pop();
+    const path = `modules/${moduleId}/${Date.now()}.${ext}`;
+    const { error } = await supabase.storage.from("coach-videos").upload(path, file, { contentType: file.type });
+    if (error) {
+      toast.error("Upload failed");
+      setUploadingVideoId(null);
+      return;
+    }
+    await supabase.from("modules").update({ coach_video_url: path } as any).eq("id", moduleId);
+    toast.success("Demo video uploaded!", { duration: 1500 });
+    setUploadingVideoId(null);
     fetchModules();
   };
 
@@ -223,10 +254,33 @@ const CoachModules = () => {
                       <Play className="w-2.5 h-2.5" /> video
                     </span>
                   )}
+                  {mod.coach_video_url && (
+                    <button onClick={() => { setVideoModalUrl(mod.coach_video_url!); setVideoModalTitle(mod.title); setVideoModalOpen(true); }}
+                      className="flex items-center gap-1 px-1.5 py-0.5 rounded bg-primary/10 text-primary text-xs font-body hover:bg-primary/20 transition-colors">
+                      <Video className="w-2.5 h-2.5" /> demo
+                    </button>
+                  )}
                 </div>
                 {mod.description && (
                   <p className="text-xs font-body text-muted-foreground mt-2 line-clamp-2">{mod.description}</p>
                 )}
+                {/* Coach video upload */}
+                <div className="mt-2 flex items-center gap-2">
+                  {!mod.coach_video_url ? (
+                    <label className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-dashed border-border text-muted-foreground text-[10px] font-body hover:border-primary hover:text-primary transition-colors cursor-pointer">
+                      <Upload size={10} /> Add demo video
+                      <input type="file" accept="video/mp4,video/*" className="hidden"
+                        onChange={e => { const f = e.target.files?.[0]; if (f) handleCoachVideoUpload(mod.id, f); e.target.value = ""; }} />
+                    </label>
+                  ) : (
+                    <label className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-secondary text-muted-foreground text-[10px] font-body hover:text-foreground transition-colors cursor-pointer">
+                      <Upload size={10} /> Replace video
+                      <input type="file" accept="video/mp4,video/*" className="hidden"
+                        onChange={e => { const f = e.target.files?.[0]; if (f) handleCoachVideoUpload(mod.id, f); e.target.value = ""; }} />
+                    </label>
+                  )}
+                  {uploadingVideoId === mod.id && <Loader2 size={14} className="animate-spin text-primary" />}
+                </div>
               </motion.div>
             ))}
           </div>
@@ -346,6 +400,14 @@ const CoachModules = () => {
             </motion.div>
           )}
         </AnimatePresence>
+
+        <CoachVideoModal
+          open={videoModalOpen}
+          onClose={() => setVideoModalOpen(false)}
+          videoUrl={videoModalUrl}
+          moduleTitle={videoModalTitle}
+          coachName={user ? "You" : undefined}
+        />
       </div>
     </PortalLayout>
   );

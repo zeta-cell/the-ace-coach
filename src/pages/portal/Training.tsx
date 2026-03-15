@@ -5,7 +5,7 @@ import { useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Check, ChevronDown, ChevronUp, ChevronLeft, ChevronRight,
-  Play, Clock, Layers, CalendarDays, MapPin, Save, Trash2, Plus, X,
+  Play, Clock, Layers, CalendarDays, MapPin, Save, Trash2, Plus, X, Video,
 } from "lucide-react";
 import {
   format, startOfWeek, addDays, isSameDay, parseISO, isValid,
@@ -14,6 +14,7 @@ import {
 import PortalLayout from "@/components/portal/PortalLayout";
 import TrainingDayInfo from "@/components/portal/TrainingDayInfo";
 import TrainingBlocksPanel from "@/components/portal/TrainingBlocksPanel";
+import CoachVideoModal from "@/components/portal/CoachVideoModal";
 import type { BlockPlanItem, ModuleItem as BlockModuleItem } from "@/types/training";
 import { toast } from "sonner";
 
@@ -33,6 +34,7 @@ interface PlanItem {
   module: {
     id: string; title: string; category: string; duration_minutes: number;
     description: string | null; instructions: string | null; video_url: string | null;
+    coach_video_url?: string | null;
   };
 }
 
@@ -77,6 +79,11 @@ const Training = () => {
   const [showSaveBlock, setShowSaveBlock] = useState(false);
   const [blockTitle, setBlockTitle] = useState("");
   const [blockGoal, setBlockGoal] = useState("Technique");
+
+  // Coach video modal
+  const [coachVideoOpen, setCoachVideoOpen] = useState(false);
+  const [coachVideoUrl, setCoachVideoUrl] = useState("");
+  const [coachVideoTitle, setCoachVideoTitle] = useState("");
 
   const weekStart = startOfWeek(selectedDay, { weekStartsOn: 1 });
   const weekDays = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
@@ -141,16 +148,16 @@ const Training = () => {
     const moduleIds = items?.map((i) => i.module_id) || [];
     const { data: mods } = await supabase
       .from("modules")
-      .select("id, title, category, duration_minutes, description, instructions, video_url")
+      .select("id, title, category, duration_minutes, description, instructions, video_url, coach_video_url")
       .in("id", moduleIds.length > 0 ? moduleIds : ["00000000-0000-0000-0000-000000000000"]);
 
-    const moduleMap = new Map(mods?.map((m) => [m.id, m]) || []);
+    const moduleMap = new Map(mods?.map((m: any) => [m.id, m]) || []);
     setPlanItems(
       (items || []).map((item) => ({
         ...item,
         module: moduleMap.get(item.module_id) || {
           id: item.module_id, title: "Unknown", category: "", duration_minutes: 0,
-          description: null, instructions: null, video_url: null,
+          description: null, instructions: null, video_url: null, coach_video_url: null,
         },
       }))
     );
@@ -489,12 +496,24 @@ const Training = () => {
                               className="w-full h-full" allowFullScreen loading="lazy" title={item.module.title} />
                           </div>
                         )}
-                        {item.coach_note && (
-                          <div className="bg-secondary rounded-lg p-3 mt-2">
-                            <p className="text-xs font-display tracking-wider text-muted-foreground mb-1">COACH NOTE</p>
-                            <p className="text-sm font-body text-foreground">{item.coach_note}</p>
-                          </div>
-                        )}
+                         {item.coach_note && (
+                           <div className="bg-secondary rounded-lg p-3 mt-2">
+                             <p className="text-xs font-display tracking-wider text-muted-foreground mb-1">COACH NOTE</p>
+                             <p className="text-sm font-body text-foreground">{item.coach_note}</p>
+                           </div>
+                         )}
+                         {(item.module as any).coach_video_url && (
+                           <button
+                             onClick={() => {
+                               setCoachVideoUrl((item.module as any).coach_video_url);
+                               setCoachVideoTitle(item.module.title);
+                               setCoachVideoOpen(true);
+                             }}
+                             className="mt-2 flex items-center gap-2 px-3 py-2 rounded-lg bg-primary/10 text-primary font-display text-[10px] tracking-wider hover:bg-primary/20 transition-colors"
+                           >
+                             <Video size={14} /> WATCH COACH DEMO
+                           </button>
+                         )}
                       </motion.div>
                     )}
                   </div>
@@ -566,6 +585,13 @@ const Training = () => {
           </>
         )}
       </AnimatePresence>
+
+      <CoachVideoModal
+        open={coachVideoOpen}
+        onClose={() => setCoachVideoOpen(false)}
+        videoUrl={coachVideoUrl}
+        moduleTitle={coachVideoTitle}
+      />
     </PortalLayout>
   );
 };

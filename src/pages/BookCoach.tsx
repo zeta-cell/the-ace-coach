@@ -181,6 +181,27 @@ const BookCoach = () => {
     const endHour = parseInt(selectedTime.split(":")[0]) + Math.ceil(selectedPackage.duration_minutes / 60);
     const endTimeStr = `${endHour.toString().padStart(2, "0")}:00:00`;
 
+    // Check auto-confirm
+    let initialStatus = "confirmed"; // default for test mode
+    const { data: pkg } = await supabase
+      .from("coach_packages")
+      .select("auto_confirm")
+      .eq("id", selectedPackage.id)
+      .single();
+
+    if (pkg?.auto_confirm) {
+      // Check if the requested slot is in coach_availability_slots
+      const { data: slot } = await supabase
+        .from("coach_availability_slots")
+        .select("id")
+        .eq("coach_id", coach.user_id)
+        .eq("day_of_week", selectedDate.getDay())
+        .maybeSingle();
+      if (slot) {
+        initialStatus = "confirmed";
+      }
+    }
+
     // Insert booking
     const { data: booking, error } = await supabase.from("bookings").insert({
       player_id: user.id,
@@ -189,7 +210,7 @@ const BookCoach = () => {
       booking_date: dateStr,
       start_time: selectedTime,
       end_time: endTimeStr,
-      status: "confirmed",
+      status: initialStatus,
       total_price: totalPrice,
       currency: selectedPackage.currency,
       platform_fee: platformFee,
@@ -204,6 +225,16 @@ const BookCoach = () => {
       toast.error("Failed to create booking", { description: error?.message });
       setConfirming(false);
       return;
+    }
+
+    // If auto-confirmed, notify coach informally
+    if (pkg?.auto_confirm && initialStatus === "confirmed") {
+      await supabase.from("notifications").insert({
+        user_id: coach.user_id,
+        title: "New booking auto-confirmed",
+        body: `A session was automatically confirmed for ${format(selectedDate, "d MMM")}`,
+        link: "/coach",
+      });
     }
 
     // Insert payment record
