@@ -467,6 +467,45 @@ const PublicCoachProfile = () => {
               <h2 className="font-display text-sm tracking-wider text-muted-foreground mb-4">
                 REVIEWS {reviews.length > 0 && `(${reviews.length})`}
               </h2>
+
+              {/* Review Form */}
+              {user && coach && user.id !== coach.user_id && !hasReviewed && (
+                <div className="bg-card border border-border rounded-xl p-5 mb-4 space-y-3">
+                  <p className="font-display text-xs tracking-wider text-muted-foreground">LEAVE A REVIEW</p>
+                  <div className="flex gap-1">
+                    {[1, 2, 3, 4, 5].map((s) => (
+                      <button
+                        key={s}
+                        type="button"
+                        onClick={() => setReviewRating(s)}
+                        className="p-0.5 transition-transform hover:scale-110"
+                      >
+                        <Star
+                          size={22}
+                          className={s <= reviewRating ? "text-chart-4 fill-chart-4" : "text-muted-foreground/30"}
+                        />
+                      </button>
+                    ))}
+                  </div>
+                  <Textarea
+                    placeholder="Share your experience with this coach..."
+                    value={reviewText}
+                    onChange={(e) => setReviewText(e.target.value)}
+                    rows={3}
+                    className="font-body text-sm"
+                  />
+                  <button
+                    onClick={handleSubmitReview}
+                    disabled={submittingReview}
+                    className="px-5 py-2.5 rounded-lg bg-primary text-primary-foreground font-display text-xs tracking-wider hover:bg-primary/90 transition-colors disabled:opacity-50"
+                  >
+                    {submittingReview ? 'SUBMITTING...' : 'SUBMIT REVIEW'}
+                  </button>
+                </div>
+              )}
+              {user && hasReviewed && (
+                <p className="font-body text-xs text-chart-2 mb-4">✓ You have already reviewed this coach</p>
+              )}
               {reviews.length === 0 ? (
                 <div className="bg-card border border-border rounded-2xl p-8 text-center">
                   <p className="font-body text-sm text-muted-foreground">No reviews yet.</p>
