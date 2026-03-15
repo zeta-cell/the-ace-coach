@@ -1757,7 +1757,7 @@ const FoundersDashboard = () => {
                       <td className="p-2 capitalize">{s.category}</td>
                       <td className="p-2 text-right">€{Number(s.amount).toLocaleString()}</td>
                       <td className="p-2 text-muted-foreground truncate max-w-[150px]">{s.notes || "—"}</td>
-                      <td className="p-2"><Button size="sm" variant="ghost" onClick={() => handleDeleteSpend(s.id)}><Trash2 className="w-3 h-3 text-destructive" /></Button></td>
+                      <td className="p-2">{!isReadOnly && <Button size="sm" variant="ghost" onClick={() => handleDeleteSpend(s.id)}><Trash2 className="w-3 h-3 text-destructive" /></Button>}</td>
                     </tr>
                   ))}
                   {spendRows.length === 0 && <tr><td colSpan={5} className="p-4 text-center text-muted-foreground">No expenses logged yet</td></tr>}
