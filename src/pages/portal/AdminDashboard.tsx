@@ -69,7 +69,7 @@ const AdminDashboard = () => {
 
   const fetchAll = async () => {
     if (!user) return;
-    await Promise.all([fetchStats(), fetchCharts(), fetchTopPerformers(), fetchActivityFeed(), fetchUnverified()]);
+    await Promise.all([fetchStats(), fetchCharts(), fetchTopPerformers(), fetchActivityFeed(), fetchUnverified(), fetchEventStats()]);
     setLoading(false);
   };
 
