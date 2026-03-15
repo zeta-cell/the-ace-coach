@@ -603,9 +603,22 @@ const FindACoach = () => {
       </AnimatePresence>
 
       <div className="max-w-7xl mx-auto px-4 md:px-6 py-6 flex gap-6">
-        <aside className="hidden md:block w-[280px] shrink-0 sticky top-[80px] self-start max-h-[calc(100vh-96px)] overflow-y-auto pr-2 scrollbar-none">
-          <FilterContent {...filterProps} />
-        </aside>
+        {/* Desktop collapsible filter sidebar */}
+        <AnimatePresence>
+          {desktopFiltersOpen && (
+            <motion.aside
+              initial={{ width: 0, opacity: 0 }}
+              animate={{ width: 280, opacity: 1 }}
+              exit={{ width: 0, opacity: 0 }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="hidden md:block shrink-0 overflow-hidden"
+            >
+              <div className="w-[280px] sticky top-[80px] self-start max-h-[calc(100vh-96px)] overflow-y-auto pr-2 scrollbar-none">
+                <FilterContent {...filterProps} />
+              </div>
+            </motion.aside>
+          )}
+        </AnimatePresence>
 
         <main className="flex-1 min-w-0">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
