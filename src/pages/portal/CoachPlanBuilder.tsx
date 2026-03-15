@@ -144,6 +144,10 @@ const CoachPlanBuilder = () => {
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [planNotes, setPlanNotes] = useState("");
+  const [locationName, setLocationName] = useState("");
+  const [locationAddress, setLocationAddress] = useState("");
+  const [locationLat, setLocationLat] = useState("");
+  const [locationLng, setLocationLng] = useState("");
   const [planItems, setPlanItems] = useState<PlanItem[]>([]);
   const [modules, setModules] = useState<ModuleItem[]>([]);
   const [moduleSearch, setModuleSearch] = useState("");
