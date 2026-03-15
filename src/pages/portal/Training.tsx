@@ -167,10 +167,11 @@ const Training = () => {
           })}
         </div>
 
-        {planNotes && (
-          <p className="text-sm font-body italic text-muted-foreground mb-4 bg-card border border-border rounded-lg p-3">
-            {planNotes}
-          </p>
+        {/* Training Day Info Card */}
+        {targetPlayerId && (
+          <div className="mb-6">
+            <TrainingDayInfo playerId={targetPlayerId} date={format(selectedDay, "yyyy-MM-dd")} />
+          </div>
         )}
 
         {loading ? (
