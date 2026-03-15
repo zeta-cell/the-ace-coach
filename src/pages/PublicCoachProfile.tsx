@@ -389,7 +389,7 @@ const PublicCoachProfile = () => {
                             )}
                           </div>
                           <Link
-                            to="/login"
+                            to={`/book/${coach.profile_slug}`}
                             className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-xs font-display tracking-wider hover:bg-primary/90 transition-colors opacity-0 group-hover:opacity-100"
                           >
                             BOOK
