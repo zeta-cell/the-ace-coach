@@ -164,6 +164,23 @@ const Onboarding = () => {
         );
       }
 
+      // Referral code redemption
+      if (referralCode.trim()) {
+        const { data: ref } = await supabase
+          .from("referrals")
+          .select("*")
+          .eq("referral_code", referralCode.trim().toLowerCase())
+          .maybeSingle();
+        if (ref && ref.referrer_id !== user.id) {
+          await supabase.from("referrals")
+            .update({ referred_id: user.id, status: "signed_up", signup_reward_paid: true })
+            .eq("id", ref.id);
+          await supabase.rpc("credit_wallet", { p_user_id: ref.referrer_id, p_amount: 5, p_type: "credit_referral", p_description: "Friend signed up with your code" });
+          await supabase.rpc("award_xp", { p_user_id: ref.referrer_id, p_amount: 100, p_event_type: "referral_signup", p_description: "Referral signup bonus" });
+          await supabase.from("notifications").insert({ user_id: ref.referrer_id, title: "A friend signed up!", body: "Someone used your referral code. You earned €5 + 100 XP!" });
+        }
+      }
+
       await refreshProfile();
       navigate("/dashboard");
     } catch (err) {
