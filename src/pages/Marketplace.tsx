@@ -172,6 +172,7 @@ const Marketplace = () => {
           <Link to="/" className="font-display text-2xl tracking-wider text-foreground shrink-0">ACE<span className="text-primary">.</span></Link>
           <div className="hidden md:flex items-center gap-6 flex-1 justify-center">
             <Link to="/find-a-coach" className="font-display text-xs tracking-wider text-muted-foreground hover:text-foreground transition-colors">FIND A COACH</Link>
+            <Link to="/marketplace?type=program" className="font-display text-xs tracking-wider text-muted-foreground hover:text-foreground transition-colors">PROGRAMS</Link>
             <Link to="/marketplace" className="font-display text-xs tracking-wider text-primary">MARKETPLACE</Link>
           </div>
           <div className="hidden md:flex items-center gap-3 shrink-0">

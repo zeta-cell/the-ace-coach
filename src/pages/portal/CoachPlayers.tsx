@@ -144,6 +144,12 @@ const CoachPlayers = () => {
                       <span>Level {player.playtomic_level ?? "—"}</span>
                       {player.best_shot && <span className="text-primary">Best: {player.best_shot}</span>}
                     </div>
+                    {player.program_name && (
+                      <div className="flex items-center gap-1 mt-0.5">
+                        <BookOpen size={10} className="text-primary" />
+                        <span className="text-[9px] font-body text-primary">Via: {player.program_name}</span>
+                      </div>
+                    )}
                   </div>
                   <ChevronRight size={18} className="text-muted-foreground flex-shrink-0" />
                 </Link>

@@ -14,6 +14,7 @@ const playerNav = [
   { label: "Find a Coach", icon: Search, href: "/find-a-coach" },
   { label: "Marketplace", icon: ShoppingBag, href: "/marketplace" },
   { label: "Home", icon: Home, href: "/dashboard" },
+  { label: "My Programs", icon: BookOpen, href: "/dashboard#programs" },
   { label: "Training", icon: Calendar, href: "/training" },
   { label: "Videos", icon: Video, href: "/videos" },
   { label: "Messages", icon: MessageSquare, href: "/messages" },
@@ -26,6 +27,7 @@ const coachNav = [
   { label: "Videos", icon: Video, href: "/coach/videos" },
   { label: "Calendar", icon: CalendarDays, href: "/coach/calendar" },
   { label: "Marketplace", icon: ShoppingBag, href: "/coach/marketplace" },
+  { label: "Requests", icon: UserCheck, href: "/coach" },
   { label: "Messages", icon: MessageSquare, href: "/coach/messages" },
 ];
 
