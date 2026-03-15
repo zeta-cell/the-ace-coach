@@ -314,7 +314,8 @@ const CoachCalendar = () => {
       if (mod) {
         await supabase.from("player_day_plan_items").insert({
           plan_id: planId, module_id: mod.id, order_index: i, coach_note: pb.coach_note || null,
-        });
+          block_id: pb.block_id || null,
+        } as any);
       }
     }
 
