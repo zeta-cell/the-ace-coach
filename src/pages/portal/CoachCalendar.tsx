@@ -8,7 +8,7 @@ import {
   format, startOfMonth, endOfMonth, eachDayOfInterval,
   isSameMonth, isToday, startOfWeek, endOfWeek,
 } from "date-fns";
-import { ChevronLeft, ChevronRight, Users, Clock, ArrowLeft } from "lucide-react";
+import { ChevronLeft, ChevronRight, Users, Clock, ArrowLeft, Plus } from "lucide-react";
 
 interface DayPlan {
   plan_date: string;
