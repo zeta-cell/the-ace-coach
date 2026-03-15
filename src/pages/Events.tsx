@@ -121,7 +121,7 @@ const Events = () => {
       status: "registered",
       payment_status: isFree ? "paid" : "pending",
       amount_paid: isFree ? 0 : Number(event.price_per_person),
-    } as any);
+    });
 
     if (error) {
       toast.error(error.message.includes("duplicate") ? "Already registered!" : "Registration failed");
