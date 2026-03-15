@@ -100,6 +100,7 @@ const PublicCoachProfile = () => {
   const [reviewText, setReviewText] = useState('');
   const [submittingReview, setSubmittingReview] = useState(false);
   const [hasReviewed, setHasReviewed] = useState(false);
+  const [coachEvents, setCoachEvents] = useState<any[]>([]);
 
   useEffect(() => {
     const handleScroll = () => setShowStickyBook(window.scrollY > 400);
