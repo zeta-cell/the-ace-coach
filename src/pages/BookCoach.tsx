@@ -224,30 +224,53 @@ const BookCoach = () => {
       p_description: 'Booked a coaching session',
     });
 
-    // Check referral bonus
-    const { data: referral } = await supabase
-      .from("referrals")
-      .select("*")
-      .eq("referred_id", user.id)
-      .eq("status", "signed_up")
-      .eq("booking_reward_paid", false)
-      .maybeSingle();
+    // Increment raffle tickets for booking
+    await supabase.rpc('increment_raffle_tickets', { p_user_id: user.id });
 
-    if (referral) {
-      await supabase.rpc('credit_wallet', {
-        p_user_id: referral.referrer_id,
-        p_amount: 10,
-        p_type: 'credit_referral',
-        p_description: 'Friend completed first booking',
-      });
-      await supabase.rpc('award_xp', {
-        p_user_id: referral.referrer_id,
-        p_amount: 150,
-        p_event_type: 'referral_booking',
-      });
-      await supabase.from("referrals")
-        .update({ booking_reward_paid: true, status: "completed" })
-        .eq("id", referral.id);
+    // Check if this is user's first booking and they were referred
+    const { count: bookingCount } = await supabase
+      .from('bookings')
+      .select('id', { count: 'exact', head: true })
+      .eq('player_id', user.id)
+      .eq('status', 'confirmed');
+
+    if (bookingCount === 1) {
+      const { data: referral } = await supabase
+        .from('referrals')
+        .select('id, referrer_id')
+        .eq('referred_id', user.id)
+        .eq('status', 'signed_up')
+        .eq('booking_reward_paid', false)
+        .maybeSingle();
+
+      if (referral) {
+        // Credit referrer €10
+        await supabase.rpc('credit_wallet', {
+          p_user_id: referral.referrer_id,
+          p_amount: 10,
+          p_type: 'credit_referral',
+          p_description: 'Referred friend completed first booking',
+          p_reference_id: booking.id,
+        });
+        // Award referrer 150 XP
+        await supabase.rpc('award_xp', {
+          p_user_id: referral.referrer_id,
+          p_amount: 150,
+          p_event_type: 'referral_booking',
+          p_description: 'Your referred friend booked their first session',
+        });
+        // Mark referral complete
+        await supabase.from('referrals')
+          .update({ booking_reward_paid: true, status: 'completed' })
+          .eq('id', referral.id);
+        // Notify referrer
+        await supabase.from('notifications').insert({
+          user_id: referral.referrer_id,
+          title: 'Referral reward unlocked!',
+          body: 'Your referred friend booked their first session. You earned €10 wallet credit!',
+          link: '/dashboard',
+        });
+      }
     }
 
     // Notifications

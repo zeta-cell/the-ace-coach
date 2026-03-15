@@ -166,18 +166,43 @@ const Onboarding = () => {
 
       // Referral code redemption
       if (referralCode.trim()) {
-        const { data: ref } = await supabase
-          .from("referrals")
-          .select("*")
-          .eq("referral_code", referralCode.trim().toLowerCase())
+        const { data: referrerProfile } = await supabase
+          .from('profiles')
+          .select('user_id')
+          .eq('referral_code', referralCode.trim().toLowerCase())
           .maybeSingle();
-        if (ref && ref.referrer_id !== user.id) {
-          await supabase.from("referrals")
-            .update({ referred_id: user.id, status: "signed_up", signup_reward_paid: true })
-            .eq("id", ref.id);
-          await supabase.rpc("credit_wallet", { p_user_id: ref.referrer_id, p_amount: 5, p_type: "credit_referral", p_description: "Friend signed up with your code" });
-          await supabase.rpc("award_xp", { p_user_id: ref.referrer_id, p_amount: 100, p_event_type: "referral_signup", p_description: "Referral signup bonus" });
-          await supabase.from("notifications").insert({ user_id: ref.referrer_id, title: "A friend signed up!", body: "Someone used your referral code. You earned €5 + 100 XP!" });
+
+        if (referrerProfile && referrerProfile.user_id !== user.id) {
+          // Create referral record
+          await supabase.from('referrals').insert({
+            referrer_id: referrerProfile.user_id,
+            referred_id: user.id,
+            referral_code: referralCode.trim().toLowerCase(),
+            status: 'signed_up',
+            signup_reward_paid: true,
+          });
+          // Credit referrer €5 wallet credit
+          await supabase.rpc('credit_wallet', {
+            p_user_id: referrerProfile.user_id,
+            p_amount: 5,
+            p_type: 'credit_referral',
+            p_description: 'Friend signed up with your referral code',
+            p_reference_id: user.id,
+          });
+          // Award referrer 100 XP
+          await supabase.rpc('award_xp', {
+            p_user_id: referrerProfile.user_id,
+            p_amount: 100,
+            p_event_type: 'referral_signup',
+            p_description: 'A friend signed up using your referral code',
+          });
+          // Notify referrer
+          await supabase.from('notifications').insert({
+            user_id: referrerProfile.user_id,
+            title: 'A friend joined ACE!',
+            body: 'Someone signed up using your referral code. You earned €5 wallet credit!',
+            link: '/dashboard',
+          });
         }
       }
 

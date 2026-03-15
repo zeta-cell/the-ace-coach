@@ -38,7 +38,7 @@ const Rankings = () => {
     if (filter === "padel") query = query.eq("sport", "padel");
 
     const { data } = await query;
-    const list = (data as unknown as LeaderboardEntry[]) || [];
+    const list = (data || []) as LeaderboardEntry[];
     setEntries(list);
 
     if (user) {

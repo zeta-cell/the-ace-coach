@@ -51,7 +51,7 @@ const WalletCard = () => {
 
   const fetchReferrals = async () => {
     if (!user || !profile) return;
-    setReferralCode((profile as any).referral_code || "");
+    setReferralCode(profile?.referral_code || "");
     const { data } = await supabase.from("referrals").select("*").eq("referrer_id", user.id);
     if (data) {
       const signedUp = data.filter(r => r.status !== 'pending').length;

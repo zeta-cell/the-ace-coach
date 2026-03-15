@@ -131,11 +131,8 @@ const Dashboard = () => {
     const { data: top } = await supabase.from("leaderboard").select("*").order("total_xp", { ascending: false }).limit(3);
     setTopPlayers(top || []);
 
-    const { data: allRanks } = await supabase.from("leaderboard").select("user_id, total_xp").order("total_xp", { ascending: false });
-    if (allRanks) {
-      const idx = allRanks.findIndex(r => r.user_id === user.id);
-      setMyRank(idx >= 0 ? idx + 1 : null);
-    }
+    const { data: myLeaderboard } = await supabase.from("leaderboard").select("rank_global").eq("user_id", user.id).maybeSingle();
+    setMyRank(myLeaderboard?.rank_global || null);
 
     // Check and award badges
     checkBadges(stats as UserStats | null, (badges || []) as EarnedBadge[]);
