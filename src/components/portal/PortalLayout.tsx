@@ -11,6 +11,7 @@ import NotificationBell from "@/components/portal/NotificationBell";
 // Logo placeholder
 
 const playerNav = [
+  { label: "Find a Coach", icon: Search, href: "/find-a-coach" },
   { label: "Home", icon: Home, href: "/dashboard" },
   { label: "Training", icon: Calendar, href: "/training" },
   { label: "Videos", icon: Video, href: "/videos" },
