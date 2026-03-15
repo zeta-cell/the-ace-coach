@@ -533,6 +533,16 @@ const PublicCoachProfile = () => {
           </div>
         </div>
       </div>
+      {showStickyBook && coach.profile_slug && (
+        <div className="fixed bottom-6 right-6 z-50">
+          <Link
+            to={`/book/${coach.profile_slug}`}
+            className="flex items-center gap-2 px-5 py-3 rounded-full bg-primary text-primary-foreground font-display text-xs tracking-wider shadow-lg hover:bg-primary/90 transition-all hover:scale-105"
+          >
+            BOOK A SESSION →
+          </Link>
+        </div>
+      )}
     </div>
   );
 };
