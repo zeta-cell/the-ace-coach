@@ -135,8 +135,31 @@ const ArcGauge = ({ score }: { score: number }) => {
 
 // ─── Main Component ─────────────────────────────────────
 const FoundersDashboard = () => {
-  const { user } = useAuth();
+  const { user, role, loading: authLoading } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const shareToken = searchParams.get("token");
+  const [tokenValid, setTokenValid] = useState(false);
+  const [checkingToken, setCheckingToken] = useState(!!shareToken);
+
+  // Validate share token
+  useEffect(() => {
+    if (!shareToken) return;
+    supabase
+      .from("founder_share_tokens")
+      .select("expires_at")
+      .eq("token", shareToken)
+      .gt("expires_at", new Date().toISOString())
+      .maybeSingle()
+      .then(({ data }) => {
+        setTokenValid(!!data);
+        setCheckingToken(false);
+      });
+  }, [shareToken]);
+
+  const isReadOnly = !!shareToken && tokenValid && !user;
+  const isAdmin = role === "admin";
+
   const [loading, setLoading] = useState(true);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [d, setD] = useState<any>({});
