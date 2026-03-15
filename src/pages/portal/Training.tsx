@@ -14,7 +14,7 @@ import {
 import PortalLayout from "@/components/portal/PortalLayout";
 import TrainingDayInfo from "@/components/portal/TrainingDayInfo";
 import TrainingBlocksPanel from "@/components/portal/TrainingBlocksPanel";
-import type { BlockPlanItem, BlockModuleItem } from "@/components/portal/TrainingBlocksPanel";
+import type { BlockPlanItem, ModuleItem as BlockModuleItem } from "@/types/training";
 import { toast } from "sonner";
 
 const CATEGORY_COLORS: Record<string, string> = {
