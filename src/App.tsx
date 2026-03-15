@@ -220,6 +220,11 @@ const App = () => (
                 <ProtectedRoute requiredRole="admin"><CoachCalendar /></ProtectedRoute>
               </Suspense>
             } />
+            <Route path="/founders" element={
+              <Suspense fallback={<PortalLoader />}>
+                <ProtectedRoute requiredRole="admin"><FoundersDashboard /></ProtectedRoute>
+              </Suspense>
+            } />
 
             <Route path="*" element={<NotFound />} />
           </Routes>

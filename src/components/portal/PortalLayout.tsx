@@ -41,6 +41,7 @@ const adminNav = [
   { label: "Assignments", icon: Link2, href: "/admin/assignments" },
   { label: "Payments", icon: CreditCard, href: "/admin/payments" },
   { label: "Schedule", icon: CalendarDays, href: "/admin/schedule" },
+  { label: "Founders", icon: Eye, href: "/founders" },
 ];
 
 const PortalLayout = ({ children }: { children: React.ReactNode }) => {
