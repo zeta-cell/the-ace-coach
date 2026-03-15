@@ -1092,9 +1092,9 @@ const FoundersDashboard = () => {
   const handleShareDashboard = async () => {
     const token = crypto.randomUUID();
     const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
-    const { error } = await supabase.from("founder_share_tokens" as any).insert({
+    const { error } = await supabase.from("founder_share_tokens").insert({
       token, created_by: user?.id, expires_at: expiresAt,
-    } as any);
+    });
     if (error) { toast("Failed to create link"); return; }
     const url = `${window.location.origin}/founders?token=${token}`;
     navigator.clipboard.writeText(url);
