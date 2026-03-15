@@ -3,11 +3,12 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion } from "framer-motion";
-import { ArrowLeft, Target, TrendingDown, Calendar, CalendarDays, Plus, Mail, Phone, MessageCircle, ChevronDown, ChevronUp, User, BookOpen, CheckCircle } from "lucide-react";
+import { ArrowLeft, Target, TrendingDown, Calendar, CalendarDays, Plus, Mail, Phone, MessageCircle, ChevronDown, ChevronUp, User, BookOpen, CheckCircle, Video, Dumbbell } from "lucide-react";
 import UpcomingSchedule from "@/components/portal/UpcomingSchedule";
-import { format } from "date-fns";
+import { format, addDays } from "date-fns";
 import PortalLayout from "@/components/portal/PortalLayout";
 import { toast } from "sonner";
+import QuickAddTrainingDrawer from "@/components/portal/QuickAddTrainingDrawer";
 
 interface ActiveProgram {
   request_id: string;
