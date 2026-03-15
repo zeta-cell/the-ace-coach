@@ -42,8 +42,12 @@ const Rankings = () => {
     setEntries(list);
 
     if (user) {
-      const idx = list.findIndex(e => e.user_id === user.id);
-      setMyRank(idx >= 0 ? idx + 1 : null);
+      const { data: myEntry } = await supabase
+        .from('leaderboard')
+        .select('rank_global, total_xp')
+        .eq('user_id', user.id)
+        .maybeSingle();
+      setMyRank(myEntry?.rank_global || null);
     }
     setLoading(false);
   };
