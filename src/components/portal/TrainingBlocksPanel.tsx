@@ -83,6 +83,8 @@ const TrainingBlocksPanel = ({ onApplyBlock, onSaveAsBlock, modules, isOpen = tr
   const [expandedGoal, setExpandedGoal] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
 
+  const isSlideIn = !!onClose;
+
   useEffect(() => {
     if (isOpen) fetchBlocks();
   }, [user, isOpen]);
