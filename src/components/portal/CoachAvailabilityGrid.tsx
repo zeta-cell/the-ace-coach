@@ -26,6 +26,12 @@ const CoachAvailabilityGrid = ({ coachId }: AvailabilityGridProps) => {
     loadAvailability();
   }, [coachId]);
 
+  useEffect(() => {
+    const up = () => setIsDragging(false);
+    window.addEventListener('mouseup', up);
+    return () => window.removeEventListener('mouseup', up);
+  }, []);
+
   const loadAvailability = async () => {
     const { data } = await supabase
       .from("coach_availability_slots")
