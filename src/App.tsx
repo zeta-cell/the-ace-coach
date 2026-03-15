@@ -41,6 +41,13 @@ const CoachMarketplace = lazy(() => import("./pages/portal/CoachMarketplace"));
 const Rankings = lazy(() => import("./pages/Rankings"));
 const Rewards = lazy(() => import("./pages/Rewards"));
 
+// Events & Community (lazy-loaded)
+const Events = lazy(() => import("./pages/Events"));
+const Community = lazy(() => import("./pages/Community"));
+
+// Coach Events (lazy-loaded)
+const CoachEvents = lazy(() => import("./pages/portal/CoachEvents"));
+
 // Admin pages (lazy-loaded)
 const AdminDashboard = lazy(() => import("./pages/portal/AdminDashboard"));
 const AdminUsers = lazy(() => import("./pages/portal/AdminUsers"));
@@ -72,6 +79,8 @@ const App = () => (
             <Route path="/marketplace" element={<Suspense fallback={<PortalLoader />}><Marketplace /></Suspense>} />
             <Route path="/booking-success" element={<Suspense fallback={<PortalLoader />}><BookingSuccess /></Suspense>} />
             <Route path="/rankings" element={<Suspense fallback={<PortalLoader />}><Rankings /></Suspense>} />
+            <Route path="/events" element={<Suspense fallback={<PortalLoader />}><Events /></Suspense>} />
+            <Route path="/community" element={<Suspense fallback={<PortalLoader />}><Community /></Suspense>} />
 
             {/* Auth */}
             <Route path="/login" element={<Suspense fallback={<PortalLoader />}><Login /></Suspense>} />
@@ -171,6 +180,11 @@ const App = () => (
             <Route path="/coach/marketplace" element={
               <Suspense fallback={<PortalLoader />}>
                 <ProtectedRoute requiredRole="coach"><CoachMarketplace /></ProtectedRoute>
+              </Suspense>
+            } />
+            <Route path="/coach/events" element={
+              <Suspense fallback={<PortalLoader />}>
+                <ProtectedRoute requiredRole="coach"><CoachEvents /></ProtectedRoute>
               </Suspense>
             } />
 

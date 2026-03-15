@@ -13,6 +13,7 @@ import NotificationBell from "@/components/portal/NotificationBell";
 const playerNav = [
   { label: "Find a Coach", icon: Search, href: "/find-a-coach" },
   { label: "Marketplace", icon: ShoppingBag, href: "/marketplace" },
+  { label: "Events", icon: CalendarDays, href: "/events" },
   { label: "Home", icon: Home, href: "/dashboard" },
   { label: "My Programs", icon: BookOpen, href: "/dashboard#programs" },
   { label: "Training", icon: Calendar, href: "/training" },
@@ -27,6 +28,7 @@ const coachNav = [
   { label: "Modules", icon: BookOpen, href: "/coach/modules" },
   { label: "Videos", icon: Video, href: "/coach/videos" },
   { label: "Calendar", icon: CalendarDays, href: "/coach/calendar" },
+  { label: "Events", icon: Calendar, href: "/coach/events" },
   { label: "Marketplace", icon: ShoppingBag, href: "/coach/marketplace" },
   { label: "Requests", icon: UserCheck, href: "/coach" },
   { label: "Messages", icon: MessageSquare, href: "/coach/messages" },

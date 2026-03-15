@@ -100,6 +100,7 @@ const PublicCoachProfile = () => {
   const [reviewText, setReviewText] = useState('');
   const [submittingReview, setSubmittingReview] = useState(false);
   const [hasReviewed, setHasReviewed] = useState(false);
+  const [coachEvents, setCoachEvents] = useState<any[]>([]);
 
   useEffect(() => {
     const handleScroll = () => setShowStickyBook(window.scrollY > 400);
@@ -128,14 +129,16 @@ const PublicCoachProfile = () => {
 
     setCoach(coachData as unknown as CoachProfile);
 
-    const [profileRes, packagesRes, reviewsRes] = await Promise.all([
+    const [profileRes, packagesRes, reviewsRes, eventsRes] = await Promise.all([
       supabase.from("profiles").select("full_name, avatar_url").eq("user_id", coachData.user_id).single(),
       supabase.from("coach_packages").select("*").eq("coach_id", coachData.user_id).eq("is_active", true).order("price_per_session"),
       supabase.from("reviews").select("*").eq("coach_id", coachData.user_id).order("created_at", { ascending: false }),
+      supabase.from("events").select("*").eq("coach_id", coachData.user_id).eq("status", "published").gte("start_datetime", new Date().toISOString()).order("start_datetime").limit(3),
     ]);
 
     if (profileRes.data) setProfile(profileRes.data as Profile);
     if (packagesRes.data) setPackages(packagesRes.data as unknown as Package[]);
+    if (eventsRes.data) setCoachEvents(eventsRes.data as any[]);
 
     // Fetch player names for reviews
     if (reviewsRes.data && reviewsRes.data.length > 0) {
@@ -457,6 +460,38 @@ const PublicCoachProfile = () => {
                 </div>
               )}
             </motion.section>
+
+            {/* 5.5 UPCOMING EVENTS */}
+            {coachEvents.length > 0 && (
+              <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="font-display text-sm tracking-wider text-muted-foreground">UPCOMING EVENTS</h2>
+                  <Link to="/events" className="font-display text-xs tracking-wider text-primary">VIEW ALL EVENTS →</Link>
+                </div>
+                <div className="space-y-3">
+                  {coachEvents.map((ev: any) => (
+                    <div key={ev.id} className="bg-card border border-border rounded-xl p-4 flex items-center justify-between">
+                      <div>
+                        <div className="flex items-center gap-2 mb-1">
+                          <h3 className="font-display text-sm tracking-wider text-foreground">{ev.title}</h3>
+                          <span className="px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-400 text-[10px] font-display tracking-wider">
+                            {(ev.event_type || '').replace(/_/g, ' ').toUpperCase()}
+                          </span>
+                        </div>
+                        <p className="font-body text-xs text-muted-foreground">
+                          {new Date(ev.start_datetime).toLocaleDateString()} · {ev.location_city || 'Online'}
+                        </p>
+                        <p className={`font-display text-xs mt-1 ${Number(ev.price_per_person) === 0 ? "text-emerald-400" : "text-foreground"}`}>
+                          {Number(ev.price_per_person) === 0 ? "Free" : `€${ev.price_per_person}`}
+                          {ev.max_participants && ` · ${ev.max_participants - ev.current_participants} spots left`}
+                        </p>
+                      </div>
+                      <Link to="/events" className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-xs font-display tracking-wider hover:bg-primary/90 transition-colors">REGISTER</Link>
+                    </div>
+                  ))}
+                </div>
+              </motion.section>
+            )}
 
             {/* 6. REVIEWS */}
             <motion.section
