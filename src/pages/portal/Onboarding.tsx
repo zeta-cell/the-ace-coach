@@ -52,6 +52,7 @@ const Onboarding = () => {
   // Step 4
   const [playtomicUrl, setPlaytomicUrl] = useState("");
   const [playtomicLevel, setPlaytomicLevel] = useState("");
+  const [referralCode, setReferralCode] = useState("");
   const [rackets, setRackets] = useState<Racket[]>([
     { brand: "", model: "", type: "mixed", is_favorite: true },
   ]);
