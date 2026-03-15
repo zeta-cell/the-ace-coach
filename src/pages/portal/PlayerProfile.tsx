@@ -14,6 +14,7 @@ import {
 import UpcomingSchedule from "@/components/portal/UpcomingSchedule";
 import PortalLayout from "@/components/portal/PortalLayout";
 import PlayerProfileEdit from "@/components/portal/PlayerProfileEdit";
+import HealthConnections from "@/components/portal/HealthConnections";
 
 interface PlayerData {
   dominant_hand: string | null;
@@ -420,40 +421,10 @@ const PlayerProfile = () => {
           </motion.div>
         )}
 
-        {/* Apple Health */}
-        {playerData && (
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }} className="bg-card border border-border rounded-xl p-6">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-chart-1/20 flex items-center justify-center">
-                  <Heart size={20} className="text-chart-1" />
-                </div>
-                <div>
-                  <h2 className="font-display text-sm tracking-wider text-foreground">APPLE HEALTH</h2>
-                  <p className="font-body text-[10px] text-muted-foreground">Sync workouts, calories & steps</p>
-                </div>
-              </div>
-              <button
-                onClick={async () => {
-                  if (!user) return;
-                  const newVal = !playerData.apple_health_connected;
-                  setPlayerData({ ...playerData, apple_health_connected: newVal });
-                  await supabase.from("player_profiles").update({ apple_health_connected: newVal } as any).eq("user_id", user.id);
-                }}
-                className={`relative w-12 h-7 rounded-full transition-colors ${
-                  playerData.apple_health_connected ? "bg-chart-2" : "bg-secondary"
-                }`}
-              >
-                <div className={`absolute top-0.5 w-6 h-6 rounded-full bg-foreground transition-transform ${
-                  playerData.apple_health_connected ? "translate-x-5" : "translate-x-0.5"
-                }`} />
-              </button>
-            </div>
-            {playerData.apple_health_connected && (
-              <p className="mt-3 font-body text-xs text-chart-2 flex items-center gap-1">
-                <Activity size={12} /> Connected — full integration coming soon
-              </p>
-            )}
+        {/* Connected Devices */}
+        {user && (
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}>
+            <HealthConnections />
           </motion.div>
         )}
 

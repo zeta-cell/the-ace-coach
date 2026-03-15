@@ -1,265 +1,297 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion } from "framer-motion";
-import { Users, BookOpen, Calendar, ChevronRight, ShoppingBag, Mail, Check, X as XIcon } from "lucide-react";
-import { format } from "date-fns";
+import {
+  Users, BookOpen, Calendar, ChevronRight, ShoppingBag, Mail, Check, X as XIcon,
+  TrendingUp, TrendingDown, DollarSign, Star, CreditCard
+} from "lucide-react";
+import { format, subMonths, startOfMonth, endOfMonth } from "date-fns";
+import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip, Line, ComposedChart } from "recharts";
 import PortalLayout from "@/components/portal/PortalLayout";
 import IncomingBookings from "@/components/portal/IncomingBookings";
 import { toast } from "sonner";
 
-interface AssignedPlayer {
-  player_id: string;
-  full_name: string;
-  avatar_url: string | null;
-  playtomic_level: number | null;
-  fitness_level: string | null;
-}
-
 interface CoachRequest {
-  id: string;
-  player_id: string;
-  player_name: string;
-  block_title: string | null;
-  message: string | null;
-  request_type: string;
-  created_at: string;
+  id: string; player_id: string; player_name: string;
+  block_title: string | null; message: string | null;
+  request_type: string; created_at: string;
 }
 
-interface UpcomingPlan {
-  id: string;
-  plan_date: string;
-  player_name: string;
-  item_count: number;
-  start_time: string | null;
-  program_author: string | null;
+interface PlayerCard {
+  player_id: string; full_name: string; avatar_url: string | null;
+  current_level: string | null; sessions_this_month: number; last_session: string | null;
 }
+
+const AnimatedNumber = ({ value, prefix = "" }: { value: number; prefix?: string }) => {
+  const [display, setDisplay] = useState(0);
+  useEffect(() => {
+    const dur = 800; const start = Date.now();
+    const animate = () => {
+      const p = Math.min((Date.now() - start) / dur, 1);
+      setDisplay(Math.round(value * p));
+      if (p < 1) requestAnimationFrame(animate);
+    };
+    animate();
+  }, [value]);
+  return <>{prefix}{display}</>;
+};
 
 const CoachDashboard = () => {
   const { user, profile } = useAuth();
-  const [players, setPlayers] = useState<AssignedPlayer[]>([]);
-  const [moduleCount, setModuleCount] = useState(0);
-  const [todayPlansCount, setTodayPlansCount] = useState(0);
+  const navigate = useNavigate();
   const [requests, setRequests] = useState<CoachRequest[]>([]);
+  const [playerCards, setPlayerCards] = useState<PlayerCard[]>([]);
+  const [stats, setStats] = useState({ players: 0, sessionsMonth: 0, revenueMonth: 0, avgRating: 0, lastMonthSessions: 0, lastMonthRevenue: 0 });
+  const [revenueData, setRevenueData] = useState<any[]>([]);
   const [marketplaceStats, setMarketplaceStats] = useState({ published: 0, sales: 0, revenue: 0 });
-  const [upcomingPlans, setUpcomingPlans] = useState<UpcomingPlan[]>([]);
+  const [weekBookings, setWeekBookings] = useState<any[]>([]);
 
-  useEffect(() => {
-    if (user) fetchData();
-  }, [user]);
+  useEffect(() => { if (user) fetchAll(); }, [user]);
 
-  const fetchData = async () => {
+  const fetchAll = async () => {
     if (!user) return;
+    const now = new Date();
+    const thisMonthStart = format(startOfMonth(now), "yyyy-MM-dd");
+    const thisMonthEnd = format(endOfMonth(now), "yyyy-MM-dd");
+    const lastMonthStart = format(startOfMonth(subMonths(now, 1)), "yyyy-MM-dd");
+    const lastMonthEnd = format(endOfMonth(subMonths(now, 1)), "yyyy-MM-dd");
 
-    // Fetch assigned players
-    const { data: assignments } = await supabase
-      .from("coach_player_assignments")
-      .select("player_id")
-      .eq("coach_id", user.id);
+    // All fetches in parallel
+    const [assignRes, bookThisRes, bookLastRes, reviewRes, reqRes, pubRes, salesRes, weekRes] = await Promise.all([
+      supabase.from("coach_player_assignments").select("player_id").eq("coach_id", user.id),
+      supabase.from("bookings").select("id, coach_payout, player_id, booking_date").eq("coach_id", user.id).gte("booking_date", thisMonthStart).lte("booking_date", thisMonthEnd).in("status", ["confirmed", "completed"]),
+      supabase.from("bookings").select("id, coach_payout").eq("coach_id", user.id).gte("booking_date", lastMonthStart).lte("booking_date", lastMonthEnd).in("status", ["confirmed", "completed"]),
+      supabase.from("reviews").select("rating").eq("coach_id", user.id),
+      supabase.from("coach_requests").select("id, player_id, block_id, message, request_type, created_at").eq("coach_id", user.id).eq("status", "pending").order("created_at", { ascending: false }),
+      supabase.from("training_blocks").select("id", { count: "exact", head: true }).eq("coach_id", user.id).eq("is_public", true),
+      supabase.from("block_purchases").select("amount_paid, platform_fee").eq("seller_id", user.id),
+      supabase.from("bookings").select("booking_date, player_id, start_time").eq("coach_id", user.id).gte("booking_date", format(now, "yyyy-MM-dd")).lte("booking_date", format(new Date(Date.now() + 7 * 86400000), "yyyy-MM-dd")).eq("status", "confirmed"),
+    ]);
 
-    const playerIds = assignments?.map((a) => a.player_id) || [];
+    const playerIds = assignRes.data?.map(a => a.player_id) || [];
+    const thisMonthBookings = bookThisRes.data || [];
+    const lastMonthBookings = bookLastRes.data || [];
+    const reviews = reviewRes.data || [];
+    const avgRating = reviews.length > 0 ? reviews.reduce((s, r) => s + r.rating, 0) / reviews.length : 0;
 
+    setStats({
+      players: playerIds.length,
+      sessionsMonth: thisMonthBookings.length,
+      revenueMonth: thisMonthBookings.reduce((s, b) => s + Number(b.coach_payout), 0),
+      avgRating: Math.round(avgRating * 10) / 10,
+      lastMonthSessions: lastMonthBookings.length,
+      lastMonthRevenue: lastMonthBookings.reduce((s, b) => s + Number(b.coach_payout), 0),
+    });
+
+    // Revenue chart (last 6 months)
+    const months: any[] = [];
+    for (let i = 5; i >= 0; i--) {
+      const m = subMonths(now, i);
+      months.push({ label: format(m, "MMM"), start: format(startOfMonth(m), "yyyy-MM-dd"), end: format(endOfMonth(m), "yyyy-MM-dd") });
+    }
+    const { data: allBookings } = await supabase.from("bookings").select("coach_payout, booking_date")
+      .eq("coach_id", user.id).gte("booking_date", months[0].start).in("status", ["confirmed", "completed"]);
+    setRevenueData(months.map(m => {
+      const monthBookings = (allBookings || []).filter(b => b.booking_date >= m.start && b.booking_date <= m.end);
+      return { name: m.label, earnings: monthBookings.reduce((s, b) => s + Number(b.coach_payout), 0), sessions: monthBookings.length };
+    }));
+
+    // Player cards
     if (playerIds.length > 0) {
-      const { data: profiles } = await supabase
-        .from("profiles")
-        .select("user_id, full_name, avatar_url")
-        .in("user_id", playerIds);
-
-      const { data: playerProfiles } = await supabase
-        .from("player_profiles")
-        .select("user_id, playtomic_level, fitness_level")
-        .in("user_id", playerIds);
-
-      const ppMap = new Map(playerProfiles?.map((p) => [p.user_id, p]) || []);
-
-      setPlayers(
-        (profiles || []).map((p) => ({
-          player_id: p.user_id,
-          full_name: p.full_name,
-          avatar_url: p.avatar_url,
-          playtomic_level: ppMap.get(p.user_id)?.playtomic_level ?? null,
-          fitness_level: ppMap.get(p.user_id)?.fitness_level ?? null,
-        }))
-      );
-    }
-
-    // Module count
-    const { count } = await supabase
-      .from("modules")
-      .select("id", { count: "exact", head: true })
-      .eq("created_by", user.id);
-    setModuleCount(count || 0);
-
-    // Today's plans + upcoming (next 7 days)
-    const todayStr = format(new Date(), "yyyy-MM-dd");
-    const weekFromNow = format(new Date(Date.now() + 7 * 86400000), "yyyy-MM-dd");
-    const { count: plansCount } = await supabase
-      .from("player_day_plans")
-      .select("id", { count: "exact", head: true })
-      .eq("coach_id", user.id)
-      .eq("plan_date", todayStr);
-    setTodayPlansCount(plansCount || 0);
-
-    // Upcoming plans with program credit
-    const { data: upcomingData } = await supabase
-      .from("player_day_plans")
-      .select("id, plan_date, player_id, start_time")
-      .eq("coach_id", user.id)
-      .gte("plan_date", todayStr)
-      .lte("plan_date", weekFromNow)
-      .order("plan_date")
-      .limit(5);
-
-    if (upcomingData && upcomingData.length > 0) {
-      const upPlayerIds = [...new Set(upcomingData.map(p => p.player_id))];
-      const upPlanIds = upcomingData.map(p => p.id);
-      const [upProfiles, upItems] = await Promise.all([
-        supabase.from("profiles").select("user_id, full_name").in("user_id", upPlayerIds),
-        supabase.from("player_day_plan_items").select("plan_id, block_id").in("plan_id", upPlanIds),
+      const [profilesRes, leaderRes] = await Promise.all([
+        supabase.from("profiles").select("user_id, full_name, avatar_url").in("user_id", playerIds),
+        supabase.from("leaderboard").select("user_id, current_level").in("user_id", playerIds),
       ]);
-      const upNameMap = new Map(upProfiles.data?.map(p => [p.user_id, p.full_name]) || []);
-      const upCountMap = new Map<string, number>();
-      const upBlockMap = new Map<string, string>();
-      (upItems.data as any[])?.forEach((item: any) => {
-        upCountMap.set(item.plan_id, (upCountMap.get(item.plan_id) || 0) + 1);
-        if (item.block_id && !upBlockMap.has(item.plan_id)) upBlockMap.set(item.plan_id, item.block_id);
-      });
-
-      const uniqueBlockIds = [...new Set(upBlockMap.values())];
-      let authorMap = new Map<string, string | null>();
-      if (uniqueBlockIds.length > 0) {
-        const { data: blocks } = await supabase.from("training_blocks")
-          .select("id, author_name, author_id").in("id", uniqueBlockIds);
-        blocks?.forEach(b => {
-          if (b.author_id && b.author_id !== user.id) authorMap.set(b.id, b.author_name);
-        });
-      }
-
-      setUpcomingPlans(upcomingData.map(p => ({
-        id: p.id,
-        plan_date: p.plan_date,
-        player_name: upNameMap.get(p.player_id) || "Player",
-        item_count: upCountMap.get(p.id) || 0,
-        start_time: p.start_time || null,
-        program_author: upBlockMap.has(p.id) ? (authorMap.get(upBlockMap.get(p.id)!) || null) : null,
-      })));
+      const lvlMap = new Map((leaderRes.data || []).map(l => [l.user_id, l.current_level]));
+      setPlayerCards((profilesRes.data || []).map(p => {
+        const playerBookings = thisMonthBookings.filter(b => b.player_id === p.user_id);
+        const lastBooking = playerBookings.length > 0 ? playerBookings.sort((a, b) => b.booking_date.localeCompare(a.booking_date))[0]?.booking_date : null;
+        return {
+          player_id: p.user_id, full_name: p.full_name, avatar_url: p.avatar_url,
+          current_level: lvlMap.get(p.user_id) || "bronze",
+          sessions_this_month: playerBookings.length, last_session: lastBooking,
+        };
+      }));
     }
 
-    // Fetch coaching requests
-    const { data: reqData } = await supabase
-      .from("coach_requests").select("id, player_id, block_id, message, request_type, created_at")
-      .eq("coach_id", user.id).eq("status", "pending").order("created_at", { ascending: false });
-    if (reqData && reqData.length > 0) {
-      const playerIds = reqData.map((r) => r.player_id);
-      const blockIds = reqData.filter((r) => r.block_id).map((r) => r.block_id);
-      const [profilesR, blocksR] = await Promise.all([
-        supabase.from("profiles").select("user_id, full_name").in("user_id", playerIds),
+    // Requests
+    if (reqRes.data && reqRes.data.length > 0) {
+      const rPlayerIds = reqRes.data.map(r => r.player_id);
+      const blockIds = reqRes.data.filter(r => r.block_id).map(r => r.block_id);
+      const [pRes, bRes] = await Promise.all([
+        supabase.from("profiles").select("user_id, full_name").in("user_id", rPlayerIds),
         blockIds.length > 0 ? supabase.from("training_blocks").select("id, title").in("id", blockIds) : { data: [] },
       ]);
-      const nameMap = new Map(profilesR.data?.map((p) => [p.user_id, p.full_name]) || []);
-      const blockMap = new Map((blocksR.data as any[])?.map((b: any) => [b.id, b.title]) || []);
-      setRequests(reqData.map((r) => ({
-        ...r,
-        player_name: nameMap.get(r.player_id) || "Player",
-        block_title: r.block_id ? blockMap.get(r.block_id) || null : null,
-      })));
+      const nameMap = new Map(pRes.data?.map(p => [p.user_id, p.full_name]) || []);
+      const blockMap = new Map((bRes.data as any[])?.map((b: any) => [b.id, b.title]) || []);
+      setRequests(reqRes.data.map(r => ({ ...r, player_name: nameMap.get(r.player_id) || "Player", block_title: r.block_id ? blockMap.get(r.block_id) || null : null })));
     }
 
-    // Marketplace stats
-    const { count: pubCount } = await supabase
-      .from("training_blocks").select("id", { count: "exact", head: true })
-      .eq("coach_id", user.id).eq("is_public", true);
-    const { data: salesData } = await supabase
-      .from("block_purchases").select("amount_paid, platform_fee")
-      .eq("seller_id", user.id);
     setMarketplaceStats({
-      published: pubCount || 0,
-      sales: salesData?.length || 0,
-      revenue: salesData?.reduce((s, p) => s + (Number(p.amount_paid) - Number(p.platform_fee || 0)), 0) || 0,
+      published: pubRes.count || 0,
+      sales: salesRes.data?.length || 0,
+      revenue: salesRes.data?.reduce((s, p) => s + (Number(p.amount_paid) - Number(p.platform_fee || 0)), 0) || 0,
     });
+
+    setWeekBookings(weekRes.data || []);
   };
 
   const firstName = profile?.full_name?.split(" ")[0]?.toUpperCase() || "COACH";
+  const sessionsTrend = stats.sessionsMonth - stats.lastMonthSessions;
+  const revenueTrend = stats.revenueMonth - stats.lastMonthRevenue;
+
+  const LEVEL_COLORS: Record<string, string> = { bronze: "#CD7F32", silver: "#C0C0C0", gold: "#FFD700", platinum: "#E5E4E2", diamond: "#B9F2FF", legend: "#FF69B4" };
+
+  // Week strip
+  const weekDays = Array.from({ length: 7 }, (_, i) => {
+    const d = new Date(); d.setDate(d.getDate() + i);
+    return { date: format(d, "yyyy-MM-dd"), label: format(d, "EEE"), day: format(d, "d") };
+  });
 
   return (
     <PortalLayout>
-      <div className="max-w-4xl mx-auto">
-        <motion.h1
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="font-display text-3xl md:text-4xl text-foreground mb-6"
-        >
+      <div className="max-w-5xl mx-auto">
+        <motion.h1 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="font-display text-3xl md:text-4xl text-foreground mb-6">
           WELCOME, {firstName}
         </motion.h1>
 
-        {/* Stats */}
-        <div className="grid grid-cols-3 gap-3 mb-8">
-          <Link to="/coach/players" className="bg-card border border-border rounded-xl p-4 text-center hover:border-primary/50 transition-colors">
-            <Users size={20} className="text-primary mx-auto mb-1" />
-            <p className="font-display text-2xl text-foreground">{players.length}</p>
-            <p className="font-body text-[10px] text-muted-foreground uppercase tracking-wide">Players</p>
-          </Link>
-          <Link to="/coach/modules" className="bg-card border border-border rounded-xl p-4 text-center hover:border-primary/50 transition-colors">
-            <BookOpen size={20} className="text-primary mx-auto mb-1" />
-            <p className="font-display text-2xl text-foreground">{moduleCount}</p>
-            <p className="font-body text-[10px] text-muted-foreground uppercase tracking-wide">Modules</p>
-          </Link>
+        {/* SECTION A — Hero Stats */}
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
           <div className="bg-card border border-border rounded-xl p-4 text-center">
-            <Calendar size={20} className="text-primary mx-auto mb-1" />
-            <p className="font-display text-2xl text-foreground">{todayPlansCount}</p>
-            <p className="font-body text-[10px] text-muted-foreground uppercase tracking-wide">Plans Today</p>
+            <Users size={18} className="text-primary mx-auto mb-1" />
+            <p className="font-display text-2xl text-foreground"><AnimatedNumber value={stats.players} /></p>
+            <p className="font-body text-[10px] text-muted-foreground uppercase tracking-wide">Players</p>
           </div>
-        </div>
-
-        {/* Recent players */}
-        <div className="mb-6">
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="font-display text-xl text-foreground">YOUR PLAYERS</h2>
-            <Link to="/coach/players" className="text-primary text-xs font-body hover:underline">View all</Link>
+          <div className="bg-card border border-border rounded-xl p-4 text-center">
+            <Calendar size={18} className="text-primary mx-auto mb-1" />
+            <p className="font-display text-2xl text-foreground"><AnimatedNumber value={stats.sessionsMonth} /></p>
+            <p className="font-body text-[10px] text-muted-foreground uppercase tracking-wide">Sessions</p>
+            <p className={`text-[9px] font-body flex items-center justify-center gap-0.5 mt-0.5 ${sessionsTrend >= 0 ? "text-green-400" : "text-red-400"}`}>
+              {sessionsTrend >= 0 ? <TrendingUp size={8} /> : <TrendingDown size={8} />} {sessionsTrend >= 0 ? "+" : ""}{sessionsTrend} vs last month
+            </p>
           </div>
+          <div className="bg-card border border-border rounded-xl p-4 text-center">
+            <CreditCard size={18} className="text-primary mx-auto mb-1" />
+            <p className="font-display text-2xl text-foreground"><AnimatedNumber value={Math.round(stats.revenueMonth)} prefix="€" /></p>
+            <p className="font-body text-[10px] text-muted-foreground uppercase tracking-wide">Revenue</p>
+            <p className={`text-[9px] font-body flex items-center justify-center gap-0.5 mt-0.5 ${revenueTrend >= 0 ? "text-green-400" : "text-red-400"}`}>
+              {revenueTrend >= 0 ? <TrendingUp size={8} /> : <TrendingDown size={8} />} €{Math.abs(Math.round(revenueTrend))}
+            </p>
+          </div>
+          <div className="bg-card border border-border rounded-xl p-4 text-center">
+            <Star size={18} className="text-amber-400 mx-auto mb-1" />
+            <p className="font-display text-2xl text-foreground">{stats.avgRating > 0 ? stats.avgRating.toFixed(1) : "—"}</p>
+            <p className="font-body text-[10px] text-muted-foreground uppercase tracking-wide">Avg Rating</p>
+          </div>
+        </motion.div>
 
-          {players.length === 0 ? (
-            <div className="bg-card border border-dashed border-border rounded-xl p-8 text-center">
-              <Users size={32} className="text-muted-foreground mx-auto mb-3" />
-              <p className="font-body text-sm text-muted-foreground">No players assigned yet.</p>
-              <p className="font-body text-xs text-muted-foreground mt-1">Ask your admin to assign players.</p>
+        {/* SECTION B — Revenue Chart */}
+        {revenueData.length > 0 && (
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="bg-card border border-border rounded-xl p-5 mb-6">
+            <h3 className="font-display text-sm tracking-wider text-muted-foreground mb-3 flex items-center gap-2">
+              <DollarSign size={14} className="text-primary" /> EARNINGS (6 MONTHS)
+            </h3>
+            <div className="h-44">
+              <ResponsiveContainer width="100%" height="100%">
+                <ComposedChart data={revenueData}>
+                  <XAxis dataKey="name" tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
+                  <YAxis yAxisId="left" tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
+                  <YAxis yAxisId="right" orientation="right" hide />
+                  <Tooltip contentStyle={{ backgroundColor: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: 8, fontSize: 11 }}
+                    formatter={(val: number, name: string) => [name === "earnings" ? `€${val}` : val, name === "earnings" ? "Earnings" : "Sessions"]} />
+                  <Bar yAxisId="left" dataKey="earnings" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} name="earnings" />
+                  <Line yAxisId="right" type="monotone" dataKey="sessions" stroke="#4ade80" strokeWidth={2} dot={{ r: 3 }} name="sessions" />
+                </ComposedChart>
+              </ResponsiveContainer>
             </div>
-          ) : (
-            <div className="space-y-2">
-              {players.slice(0, 5).map((player) => (
-                <Link
-                  key={player.player_id}
-                  to={`/coach/players/${player.player_id}`}
-                  className="flex items-center gap-3 bg-card border border-border rounded-xl p-3 hover:border-primary/50 transition-colors"
-                >
-                  <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-display text-sm">
-                    {player.full_name?.charAt(0)?.toUpperCase() || "?"}
+          </motion.div>
+        )}
+
+        {/* SECTION C — Player Progress Strip */}
+        {playerCards.length > 0 && (
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="mb-6">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="font-display text-sm tracking-wider text-muted-foreground">PLAYER PROGRESS</h3>
+              <Link to="/coach/players" className="text-xs font-display text-primary tracking-wider hover:underline">VIEW ALL →</Link>
+            </div>
+            <div className="flex gap-2 overflow-x-auto pb-2">
+              {playerCards.slice(0, 8).map(p => (
+                <Link key={p.player_id} to={`/coach/players/${p.player_id}`} className="shrink-0 w-32 bg-card border border-border rounded-xl p-3 text-center hover:border-primary/50 transition-colors">
+                  <div className="w-10 h-10 rounded-full mx-auto mb-1.5 overflow-hidden bg-secondary">
+                    {p.avatar_url ? <img src={p.avatar_url} alt="" className="w-full h-full object-cover" /> :
+                      <div className="w-full h-full flex items-center justify-center font-display text-primary text-sm">{p.full_name?.charAt(0)}</div>}
                   </div>
-                  <div className="flex-1">
-                    <p className="font-display text-foreground">{player.full_name}</p>
-                    <p className="text-xs font-body text-muted-foreground">
-                      {player.fitness_level || "—"} · Level {player.playtomic_level ?? "—"}
-                    </p>
+                  <p className="font-display text-xs text-foreground truncate">{p.full_name}</p>
+                  <div className="flex items-center justify-center gap-1 mt-0.5">
+                    <span className="w-2 h-2 rounded-full" style={{ backgroundColor: LEVEL_COLORS[p.current_level || "bronze"] }} />
+                    <span className="text-[8px] font-body text-muted-foreground uppercase">{p.current_level}</span>
                   </div>
-                  <ChevronRight size={16} className="text-muted-foreground" />
+                  <p className="text-[9px] font-body text-muted-foreground mt-1">{p.sessions_this_month} sessions</p>
                 </Link>
               ))}
             </div>
-          )}
-        </div>
+          </motion.div>
+        )}
+
+        {/* SECTION D — Marketplace Stats */}
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="mb-6">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="font-display text-sm tracking-wider text-muted-foreground flex items-center gap-2">
+              <ShoppingBag size={14} className="text-primary" /> MARKETPLACE
+            </h3>
+            <Link to="/coach/marketplace" className="text-xs font-display text-primary tracking-wider hover:underline">MANAGE →</Link>
+          </div>
+          <div className="grid grid-cols-3 gap-3">
+            <div className="bg-card border border-border rounded-xl p-3 text-center">
+              <p className="font-display text-xl text-foreground">{marketplaceStats.published}</p>
+              <p className="font-body text-[9px] text-muted-foreground uppercase">Published</p>
+            </div>
+            <div className="bg-card border border-border rounded-xl p-3 text-center">
+              <p className="font-display text-xl text-foreground">{marketplaceStats.sales}</p>
+              <p className="font-body text-[9px] text-muted-foreground uppercase">Sales</p>
+            </div>
+            <div className="bg-card border border-border rounded-xl p-3 text-center">
+              <p className="font-display text-xl text-foreground">€{marketplaceStats.revenue.toFixed(0)}</p>
+              <p className="font-body text-[9px] text-muted-foreground uppercase">Earnings</p>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* SECTION E — Week Strip */}
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }} className="mb-6">
+          <h3 className="font-display text-sm tracking-wider text-muted-foreground mb-3">UPCOMING WEEK</h3>
+          <div className="flex gap-2">
+            {weekDays.map(d => {
+              const dayBookings = weekBookings.filter(b => b.booking_date === d.date);
+              const isToday = d.date === format(new Date(), "yyyy-MM-dd");
+              return (
+                <div key={d.date} className={`flex-1 py-2 rounded-lg text-center relative ${isToday ? "bg-primary/10 border border-primary/30" : "bg-card border border-border"}`}>
+                  <span className="font-display text-xs text-muted-foreground block">{d.label}</span>
+                  <span className="font-body text-xs text-foreground">{d.day}</span>
+                  <div className="flex justify-center gap-0.5 mt-1">
+                    {dayBookings.slice(0, 3).map((_, i) => (
+                      <span key={i} className="w-1.5 h-1.5 rounded-full bg-primary" />
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </motion.div>
 
         {/* Coaching Requests */}
         {requests.length > 0 && (
-          <div className="mb-6">
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="mb-6">
             <div className="flex items-center justify-between mb-3">
-              <h2 className="font-display text-xl text-foreground flex items-center gap-2">
-                <Mail size={20} className="text-primary" /> COACHING REQUESTS
+              <h2 className="font-display text-sm tracking-wider text-foreground flex items-center gap-2">
+                <Mail size={16} className="text-primary" /> COACHING REQUESTS
               </h2>
               <span className="text-xs font-body text-primary">{requests.length} pending</span>
             </div>
             <div className="space-y-2">
-              {requests.map((req) => (
+              {requests.map(req => (
                 <div key={req.id} className="bg-card border border-border rounded-xl p-4 space-y-2">
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-display text-xs">{req.player_name.charAt(0)}</div>
@@ -276,15 +308,13 @@ const CoachDashboard = () => {
                     <button onClick={async () => {
                       await supabase.from("coach_requests").update({ status: "accepted", responded_at: new Date().toISOString() }).eq("id", req.id);
                       await supabase.from("coach_player_assignments").insert({ coach_id: user!.id, player_id: req.player_id });
-                      toast.success("Request accepted!");
-                      setRequests((prev) => prev.filter((r) => r.id !== req.id));
+                      toast.success("Request accepted!"); setRequests(prev => prev.filter(r => r.id !== req.id));
                     }} className="flex-1 py-2 rounded-lg bg-primary text-primary-foreground font-display text-[10px] tracking-wider flex items-center justify-center gap-1">
                       <Check size={12} /> ACCEPT
                     </button>
                     <button onClick={async () => {
                       await supabase.from("coach_requests").update({ status: "declined", responded_at: new Date().toISOString() }).eq("id", req.id);
-                      toast.success("Request declined");
-                      setRequests((prev) => prev.filter((r) => r.id !== req.id));
+                      toast.success("Request declined"); setRequests(prev => prev.filter(r => r.id !== req.id));
                     }} className="flex-1 py-2 rounded-lg border border-border text-muted-foreground font-display text-[10px] tracking-wider flex items-center justify-center gap-1">
                       <XIcon size={12} /> DECLINE
                     </button>
@@ -292,67 +322,11 @@ const CoachDashboard = () => {
                 </div>
               ))}
             </div>
-          </div>
+          </motion.div>
         )}
 
         {/* Incoming Bookings */}
         <IncomingBookings />
-
-        {/* Upcoming Plans */}
-        {upcomingPlans.length > 0 && (
-          <div className="mb-6">
-            <h2 className="font-display text-xl text-foreground flex items-center gap-2 mb-3">
-              <Calendar size={20} className="text-primary" /> UPCOMING SESSIONS
-            </h2>
-            <div className="space-y-2">
-              {upcomingPlans.map((plan) => (
-                <div key={plan.id} className="flex items-center gap-3 bg-card border border-border rounded-xl p-3">
-                  <div className="text-center min-w-[40px]">
-                    <p className="font-display text-sm text-primary">{format(new Date(plan.plan_date + "T00:00:00"), "d")}</p>
-                    <p className="font-display text-[9px] text-muted-foreground">{format(new Date(plan.plan_date + "T00:00:00"), "EEE").toUpperCase()}</p>
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-display text-sm text-foreground">{plan.player_name}</p>
-                    <p className="font-body text-[10px] text-muted-foreground">
-                      {plan.start_time?.slice(0, 5) || "—"} · {plan.item_count} modules
-                    </p>
-                    {plan.program_author && (
-                      <div className="flex items-center gap-1 mt-0.5">
-                        <span className="font-body text-[10px] text-muted-foreground">
-                          Via program by {plan.program_author}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Marketplace Stats */}
-        <div className="mb-6">
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="font-display text-xl text-foreground flex items-center gap-2">
-              <ShoppingBag size={20} className="text-primary" /> MY MARKETPLACE
-            </h2>
-            <Link to="/coach/marketplace" className="text-primary text-xs font-body hover:underline">Manage →</Link>
-          </div>
-          <div className="grid grid-cols-3 gap-3">
-            <div className="bg-card border border-border rounded-xl p-3 text-center">
-              <p className="font-display text-xl text-foreground">{marketplaceStats.published}</p>
-              <p className="font-body text-[9px] text-muted-foreground uppercase">Published</p>
-            </div>
-            <div className="bg-card border border-border rounded-xl p-3 text-center">
-              <p className="font-display text-xl text-foreground">{marketplaceStats.sales}</p>
-              <p className="font-body text-[9px] text-muted-foreground uppercase">Sales</p>
-            </div>
-            <div className="bg-card border border-border rounded-xl p-3 text-center">
-              <p className="font-display text-xl text-foreground">€{marketplaceStats.revenue.toFixed(0)}</p>
-              <p className="font-body text-[9px] text-muted-foreground uppercase">Revenue</p>
-            </div>
-          </div>
-        </div>
       </div>
     </PortalLayout>
   );
