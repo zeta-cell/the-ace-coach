@@ -14,6 +14,54 @@ export type Database = {
   }
   public: {
     Tables: {
+      coach_packages: {
+        Row: {
+          coach_id: string
+          created_at: string
+          currency: string
+          description: string | null
+          duration_minutes: number
+          id: string
+          is_active: boolean
+          max_group_size: number | null
+          price_per_session: number
+          session_type: Database["public"]["Enums"]["session_type"]
+          sport: Database["public"]["Enums"]["sport_type"]
+          title: string
+          total_sessions: number | null
+        }
+        Insert: {
+          coach_id: string
+          created_at?: string
+          currency?: string
+          description?: string | null
+          duration_minutes?: number
+          id?: string
+          is_active?: boolean
+          max_group_size?: number | null
+          price_per_session?: number
+          session_type?: Database["public"]["Enums"]["session_type"]
+          sport?: Database["public"]["Enums"]["sport_type"]
+          title: string
+          total_sessions?: number | null
+        }
+        Update: {
+          coach_id?: string
+          created_at?: string
+          currency?: string
+          description?: string | null
+          duration_minutes?: number
+          id?: string
+          is_active?: boolean
+          max_group_size?: number | null
+          price_per_session?: number
+          session_type?: Database["public"]["Enums"]["session_type"]
+          sport?: Database["public"]["Enums"]["sport_type"]
+          title?: string
+          total_sessions?: number | null
+        }
+        Relationships: []
+      }
       coach_player_assignments: {
         Row: {
           assigned_at: string
@@ -38,6 +86,7 @@ export type Database = {
       coach_profiles: {
         Row: {
           backhand_pct: number | null
+          badge_level: Database["public"]["Enums"]["badge_level"]
           best_shot: string | null
           bio: string | null
           certifications: string[] | null
@@ -45,20 +94,29 @@ export type Database = {
           created_at: string
           dominant_hand: Database["public"]["Enums"]["dominant_hand"] | null
           forehand_pct: number | null
+          hourly_rate_from: number | null
           id: string
+          is_verified: boolean
           languages: string[] | null
           lob_pct: number | null
+          location_city: string | null
+          location_country: string | null
+          location_lat: number | null
+          location_lng: number | null
           nationality: string | null
           phone: string | null
           playtomic_level: number | null
           playtomic_url: string | null
           preferred_side: string | null
+          profile_slug: string | null
           racket_brand: string | null
           racket_model: string | null
           racket_type: Database["public"]["Enums"]["racket_type"] | null
+          response_time_hours: number
           serve_pct: number | null
           smash_pct: number | null
           specializations: string[] | null
+          total_sessions_coached: number
           updated_at: string
           user_id: string
           volley_pct: number | null
@@ -67,6 +125,7 @@ export type Database = {
         }
         Insert: {
           backhand_pct?: number | null
+          badge_level?: Database["public"]["Enums"]["badge_level"]
           best_shot?: string | null
           bio?: string | null
           certifications?: string[] | null
@@ -74,20 +133,29 @@ export type Database = {
           created_at?: string
           dominant_hand?: Database["public"]["Enums"]["dominant_hand"] | null
           forehand_pct?: number | null
+          hourly_rate_from?: number | null
           id?: string
+          is_verified?: boolean
           languages?: string[] | null
           lob_pct?: number | null
+          location_city?: string | null
+          location_country?: string | null
+          location_lat?: number | null
+          location_lng?: number | null
           nationality?: string | null
           phone?: string | null
           playtomic_level?: number | null
           playtomic_url?: string | null
           preferred_side?: string | null
+          profile_slug?: string | null
           racket_brand?: string | null
           racket_model?: string | null
           racket_type?: Database["public"]["Enums"]["racket_type"] | null
+          response_time_hours?: number
           serve_pct?: number | null
           smash_pct?: number | null
           specializations?: string[] | null
+          total_sessions_coached?: number
           updated_at?: string
           user_id: string
           volley_pct?: number | null
@@ -96,6 +164,7 @@ export type Database = {
         }
         Update: {
           backhand_pct?: number | null
+          badge_level?: Database["public"]["Enums"]["badge_level"]
           best_shot?: string | null
           bio?: string | null
           certifications?: string[] | null
@@ -103,20 +172,29 @@ export type Database = {
           created_at?: string
           dominant_hand?: Database["public"]["Enums"]["dominant_hand"] | null
           forehand_pct?: number | null
+          hourly_rate_from?: number | null
           id?: string
+          is_verified?: boolean
           languages?: string[] | null
           lob_pct?: number | null
+          location_city?: string | null
+          location_country?: string | null
+          location_lat?: number | null
+          location_lng?: number | null
           nationality?: string | null
           phone?: string | null
           playtomic_level?: number | null
           playtomic_url?: string | null
           preferred_side?: string | null
+          profile_slug?: string | null
           racket_brand?: string | null
           racket_model?: string | null
           racket_type?: Database["public"]["Enums"]["racket_type"] | null
+          response_time_hours?: number
           serve_pct?: number | null
           smash_pct?: number | null
           specializations?: string[] | null
+          total_sessions_coached?: number
           updated_at?: string
           user_id?: string
           volley_pct?: number | null
@@ -638,6 +716,7 @@ export type Database = {
     }
     Enums: {
       app_role: "player" | "coach" | "admin"
+      badge_level: "starter" | "pro" | "elite" | "legend"
       dominant_hand: "left" | "right"
       fitness_level: "beginner" | "intermediate" | "advanced" | "elite"
       module_category:
@@ -655,7 +734,9 @@ export type Database = {
       payment_status: "pending" | "completed" | "failed" | "refunded"
       payment_type: "camp" | "monthly" | "annual" | "session" | "other"
       racket_type: "power" | "control" | "mixed"
+      session_type: "individual" | "group" | "kids" | "online"
       shot_data_source: "player" | "coach"
+      sport_type: "tennis" | "padel" | "both"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -784,6 +865,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["player", "coach", "admin"],
+      badge_level: ["starter", "pro", "elite", "legend"],
       dominant_hand: ["left", "right"],
       fitness_level: ["beginner", "intermediate", "advanced", "elite"],
       module_category: [
@@ -802,7 +884,9 @@ export const Constants = {
       payment_status: ["pending", "completed", "failed", "refunded"],
       payment_type: ["camp", "monthly", "annual", "session", "other"],
       racket_type: ["power", "control", "mixed"],
+      session_type: ["individual", "group", "kids", "online"],
       shot_data_source: ["player", "coach"],
+      sport_type: ["tennis", "padel", "both"],
     },
   },
 } as const
