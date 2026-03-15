@@ -585,6 +585,13 @@ const Training = () => {
           </>
         )}
       </AnimatePresence>
+
+      <CoachVideoModal
+        open={coachVideoOpen}
+        onClose={() => setCoachVideoOpen(false)}
+        videoUrl={coachVideoUrl}
+        moduleTitle={coachVideoTitle}
+      />
     </PortalLayout>
   );
 };
