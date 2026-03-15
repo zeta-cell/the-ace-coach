@@ -43,6 +43,14 @@ const VideoThumbnail = ({ path, className }: { path: string; className?: string 
   return <video src={src} className={className} preload="metadata" />;
 };
 
+interface VideoComment {
+  id: string;
+  comment: string;
+  created_at: string;
+  author_id: string;
+  author_name?: string;
+}
+
 const CoachVideos = () => {
   const { user } = useAuth();
   const [videos, setVideos] = useState<PlayerVideo[]>([]);
@@ -50,6 +58,10 @@ const CoachVideos = () => {
   const [selectedVideo, setSelectedVideo] = useState<PlayerVideo | null>(null);
   const [feedback, setFeedback] = useState("");
   const [saving, setSaving] = useState(false);
+  const [comments, setComments] = useState<VideoComment[]>([]);
+  const [newComment, setNewComment] = useState("");
+  const [showComments, setShowComments] = useState(false);
+  const [sendingComment, setSendingComment] = useState(false);
 
   useEffect(() => {
     if (user) fetchVideos();
