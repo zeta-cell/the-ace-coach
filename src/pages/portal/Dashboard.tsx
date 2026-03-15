@@ -200,6 +200,25 @@ const Dashboard = () => {
     toast.success("Request cancelled"); fetchPrograms();
   };
 
+  const fetchUpcomingEvents = async () => {
+    if (!user) return;
+    const { data: regs } = await supabase
+      .from("event_registrations")
+      .select("event_id, status")
+      .eq("player_id", user.id)
+      .eq("status", "registered");
+    if (!regs || regs.length === 0) return;
+    const eventIds = regs.map(r => r.event_id);
+    const { data: events } = await supabase
+      .from("events")
+      .select("id, title, event_type, sport, start_datetime, end_datetime, location_city, is_online, price_per_person, currency")
+      .in("id", eventIds)
+      .gte("start_datetime", new Date().toISOString())
+      .order("start_datetime", { ascending: true })
+      .limit(5);
+    setUpcomingEvents((events as any[]) || []);
+  };
+
   const fetchPlans = async () => {
     if (!user) return;
     const todayStr = format(today, "yyyy-MM-dd");
