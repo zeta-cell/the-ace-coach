@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, Link, useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -62,11 +62,13 @@ const SortablePlanItem = ({
   onRemove,
   onNoteChange,
   onDurationChange,
+  onDurationSave,
 }: {
   item: PlanItem;
   onRemove: (id: string) => void;
   onNoteChange: (id: string, note: string) => void;
   onDurationChange: (id: string, duration: number) => void;
+  onDurationSave: (id: string, moduleId: string, duration: number) => void;
 }) => {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
     id: item.tempId,
@@ -75,6 +77,20 @@ const SortablePlanItem = ({
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
+  };
+
+  const handleDurationKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      (e.target as HTMLInputElement).blur();
+    }
+  };
+
+  const handleDurationBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    let val = parseInt(e.target.value);
+    if (!val || val < 5) val = 5;
+    if (val > 300) val = 300;
+    onDurationChange(item.tempId, val);
+    onDurationSave(item.tempId, item.module.id, val);
   };
 
   return (
@@ -95,20 +111,18 @@ const SortablePlanItem = ({
                   <Clock size={10} />
                   <input
                     type="number"
-                    min={1}
-                    max={120}
+                    min={5}
+                    max={300}
                     value={item.custom_duration === 0 ? "" : item.custom_duration}
                     onChange={(e) => {
                       const raw = e.target.value;
                       onDurationChange(item.tempId, raw === "" ? 0 : parseInt(raw) || 0);
                     }}
-                    onBlur={(e) => {
-                      const val = parseInt(e.target.value);
-                      if (!val || val < 1) onDurationChange(item.tempId, 1);
-                    }}
-                    className="w-10 bg-transparent text-center text-foreground font-body text-xs focus:outline-none focus:ring-1 focus:ring-primary rounded"
+                    onBlur={handleDurationBlur}
+                    onKeyDown={handleDurationKeyDown}
+                    className="w-[52px] bg-transparent text-center text-foreground font-body text-xs focus:outline-none focus:ring-1 focus:ring-primary rounded"
                   />
-                  <span>m</span>
+                  <span>min</span>
                 </div>
               </div>
               <p className="font-display text-foreground mt-0.5">{item.module.title}</p>
@@ -125,6 +139,93 @@ const SortablePlanItem = ({
           />
         </div>
       </div>
+    </div>
+  );
+};
+
+/* ── Inline Add Module Row ── */
+const InlineAddModule = ({
+  onAdd,
+  userId,
+}: {
+  onAdd: (mod: ModuleItem) => void;
+  userId: string;
+}) => {
+  const [open, setOpen] = useState(false);
+  const [search, setSearch] = useState("");
+  const [results, setResults] = useState<ModuleItem[]>([]);
+  const inputRef = React.useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (open && inputRef.current) inputRef.current.focus();
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    const term = search.trim();
+    if (term.length < 1) { setResults([]); return; }
+    const t = setTimeout(async () => {
+      const { data } = await supabase
+        .from("modules")
+        .select("id, title, duration_minutes, category")
+        .or(`created_by.eq.${userId},is_shared.eq.true`)
+        .ilike("title", `%${term}%`)
+        .limit(8);
+      setResults((data as ModuleItem[]) || []);
+    }, 200);
+    return () => clearTimeout(t);
+  }, [search, open, userId]);
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Escape") { setOpen(false); setSearch(""); }
+  };
+
+  if (!open) {
+    return (
+      <button
+        onClick={() => setOpen(true)}
+        className="w-full py-3 rounded-xl border-2 border-dashed border-border text-muted-foreground font-display text-xs tracking-wider hover:border-primary hover:text-primary transition-colors flex items-center justify-center gap-2"
+      >
+        <Plus size={14} /> MODUL HINZUFÜGEN
+      </button>
+    );
+  }
+
+  return (
+    <div className="rounded-xl border border-border bg-card overflow-hidden">
+      <div className="flex items-center gap-2 px-3 py-2 border-b border-border">
+        <Search size={12} className="text-muted-foreground shrink-0" />
+        <input
+          ref={inputRef}
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder="Modul suchen..."
+          className="flex-1 bg-transparent text-foreground font-body text-xs focus:outline-none placeholder:text-muted-foreground"
+        />
+        <button onClick={() => { setOpen(false); setSearch(""); }} className="p-0.5">
+          <X size={12} className="text-muted-foreground" />
+        </button>
+      </div>
+      {results.length > 0 && (
+        <div className="max-h-48 overflow-y-auto p-1 space-y-0.5">
+          {results.map((mod) => (
+            <button
+              key={mod.id}
+              onClick={() => { onAdd(mod); setSearch(""); }}
+              className="w-full text-left flex items-center gap-2 p-2 rounded-lg hover:bg-secondary transition-colors"
+            >
+              <div className={`w-2 h-2 rounded-full shrink-0 ${CATEGORY_COLORS[mod.category] || "bg-muted"}`} />
+              <span className="font-body text-xs text-foreground flex-1 truncate">{mod.title}</span>
+              <span className="text-[10px] text-muted-foreground font-body">{mod.duration_minutes || 0}m</span>
+              <Plus size={12} className="text-primary shrink-0" />
+            </button>
+          ))}
+        </div>
+      )}
+      {search.length > 0 && results.length === 0 && (
+        <p className="text-center text-[10px] font-body text-muted-foreground py-3">Keine Module gefunden</p>
+      )}
     </div>
   );
 };
@@ -306,8 +407,27 @@ const CoachPlanBuilder = () => {
     }
   };
 
-  const removeItem = (tempId: string) => {
-    setPlanItems((prev) => prev.filter((i) => i.tempId !== tempId));
+  const removeItem = async (tempId: string) => {
+    const prev = planItems;
+    setPlanItems((p) => p.filter((i) => i.tempId !== tempId));
+
+    // If this item exists in DB (existingPlanId means plan is saved, tempId is the DB id)
+    if (existingPlanId) {
+      const { error } = await supabase.from("player_day_plan_items").delete().eq("id", tempId);
+      if (error) {
+        setPlanItems(prev);
+        toast.error("Fehler beim Löschen");
+        return;
+      }
+      toast.success("Modul entfernt", { duration: 1500 });
+
+      // If no items left, delete the plan itself
+      const remaining = prev.filter((i) => i.tempId !== tempId);
+      if (remaining.length === 0) {
+        await supabase.from("player_day_plans").delete().eq("id", existingPlanId);
+        setExistingPlanId(null);
+      }
+    }
   };
 
   const updateNote = (tempId: string, note: string) => {
@@ -316,6 +436,22 @@ const CoachPlanBuilder = () => {
 
   const updateDuration = (tempId: string, duration: number) => {
     setPlanItems((prev) => prev.map((i) => (i.tempId === tempId ? { ...i, custom_duration: duration } : i)));
+  };
+
+  const saveDurationToDB = async (_tempId: string, moduleId: string, duration: number) => {
+    const { error } = await supabase
+      .from("modules")
+      .update({ duration_minutes: duration })
+      .eq("id", moduleId);
+    if (error) {
+      toast.error("Fehler beim Speichern");
+    } else {
+      toast.success("Saved ✓", { duration: 1500 });
+    }
+  };
+
+  const handleInlineAdd = (mod: ModuleItem) => {
+    addModule(mod);
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -712,11 +848,18 @@ const CoachPlanBuilder = () => {
             <SortableContext items={planItems.map((i) => i.tempId)} strategy={verticalListSortingStrategy}>
               <div className="space-y-2 mb-4">
                 {planItems.map((item) => (
-                  <SortablePlanItem key={item.tempId} item={item} onRemove={removeItem} onNoteChange={updateNote} onDurationChange={updateDuration} />
+                  <SortablePlanItem key={item.tempId} item={item} onRemove={removeItem} onNoteChange={updateNote} onDurationChange={updateDuration} onDurationSave={saveDurationToDB} />
                 ))}
               </div>
             </SortableContext>
           </DndContext>
+        )}
+
+        {/* Inline add module row */}
+        {user && (
+          <div className="mb-4">
+            <InlineAddModule onAdd={handleInlineAdd} userId={user.id} />
+          </div>
         )}
 
         {/* Summary & Save */}
