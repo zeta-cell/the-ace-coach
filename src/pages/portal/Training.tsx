@@ -130,7 +130,7 @@ const Training = () => {
     setPlanNotes(plan.notes || "");
     setEditStartTime(plan.start_time || "");
     setEditEndTime(plan.end_time || "");
-    setEditLocation((plan as any).location_name || "");
+    setEditLocation(plan.location_name || "");
 
     const { data: items } = await supabase
       .from("player_day_plan_items")
