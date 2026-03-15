@@ -35,6 +35,13 @@ const CreateTrainingBlockDrawer = ({ open, onClose, onCreated }: Props) => {
   const [goals, setGoals] = useState<string[]>([]);
   const [exercises, setExercises] = useState<Exercise[]>([{ name: "", sets: 3, reps: 10, notes: "" }]);
   const [saving, setSaving] = useState(false);
+  const [blockType, setBlockType] = useState("session");
+  const [weekCount, setWeekCount] = useState(1);
+  const [targetLevel, setTargetLevel] = useState("intermediate");
+  const [visibility, setVisibility] = useState<"private" | "public" | "for_sale">("private");
+  const [price, setPrice] = useState(0);
+  const [currency, setCurrency] = useState("EUR");
+  const [termsAccepted, setTermsAccepted] = useState(false);
 
   const addGoal = () => {
     if (goalInput.trim() && !goals.includes(goalInput.trim())) {
