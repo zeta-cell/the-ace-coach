@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion } from "framer-motion";
-import { Users, BookOpen, Calendar, ChevronRight } from "lucide-react";
+import { Users, BookOpen, Calendar, ChevronRight, ShoppingBag, Mail, Check, X as XIcon } from "lucide-react";
 import { format } from "date-fns";
 import PortalLayout from "@/components/portal/PortalLayout";
 
