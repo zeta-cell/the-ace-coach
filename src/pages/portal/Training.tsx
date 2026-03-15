@@ -148,7 +148,7 @@ const Training = () => {
     const moduleIds = items?.map((i) => i.module_id) || [];
     const { data: mods } = await supabase
       .from("modules")
-      .select("id, title, category, duration_minutes, description, instructions, video_url")
+      .select("id, title, category, duration_minutes, description, instructions, video_url, coach_video_url")
       .in("id", moduleIds.length > 0 ? moduleIds : ["00000000-0000-0000-0000-000000000000"]);
 
     const moduleMap = new Map(mods?.map((m) => [m.id, m]) || []);
