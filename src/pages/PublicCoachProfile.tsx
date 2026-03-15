@@ -138,6 +138,7 @@ const PublicCoachProfile = () => {
 
     if (profileRes.data) setProfile(profileRes.data as Profile);
     if (packagesRes.data) setPackages(packagesRes.data as unknown as Package[]);
+    if (eventsRes.data) setCoachEvents(eventsRes.data as any[]);
 
     // Fetch player names for reviews
     if (reviewsRes.data && reviewsRes.data.length > 0) {
