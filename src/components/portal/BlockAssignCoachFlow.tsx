@@ -104,8 +104,8 @@ const BlockAssignCoachFlow = ({ block, coachProfile, onClose, onBack }: Props) =
     setStep(3);
   };
 
-  // Fetch coaches on mount
-  if (!coachesFetched && step === 1) fetchAllCoaches();
+  // Fetch coaches when component mounts
+  useState(() => { fetchAllCoaches(); });
 
   const filteredCoaches = allCoaches.filter((c) =>
     !coachSearch.trim() || c.full_name.toLowerCase().includes(coachSearch.toLowerCase())
