@@ -34,6 +34,7 @@ interface PlanItem {
   module: {
     id: string; title: string; category: string; duration_minutes: number;
     description: string | null; instructions: string | null; video_url: string | null;
+    coach_video_url?: string | null;
   };
 }
 
