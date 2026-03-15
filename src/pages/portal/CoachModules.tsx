@@ -134,7 +134,30 @@ const CoachModules = () => {
   };
 
   const handleDelete = async (id: string) => {
+    if (!confirm("Delete this module?")) return;
     await supabase.from("modules").delete().eq("id", id);
+    toast.success("Module deleted", { duration: 1500 });
+    fetchModules();
+  };
+
+  const handleCoachVideoUpload = async (moduleId: string, file: File) => {
+    if (!user) return;
+    if (file.size > 100 * 1024 * 1024) {
+      toast.error("File too large (max 100MB)");
+      return;
+    }
+    setUploadingVideoId(moduleId);
+    const ext = file.name.split(".").pop();
+    const path = `modules/${moduleId}/${Date.now()}.${ext}`;
+    const { error } = await supabase.storage.from("coach-videos").upload(path, file, { contentType: file.type });
+    if (error) {
+      toast.error("Upload failed");
+      setUploadingVideoId(null);
+      return;
+    }
+    await supabase.from("modules").update({ coach_video_url: path } as any).eq("id", moduleId);
+    toast.success("Demo video uploaded!", { duration: 1500 });
+    setUploadingVideoId(null);
     fetchModules();
   };
 
