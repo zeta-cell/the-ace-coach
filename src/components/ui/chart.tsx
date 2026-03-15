@@ -232,8 +232,6 @@ ChartTooltipContent.displayName = "ChartTooltip";
 
 const ChartLegend = RechartsPrimitive.Legend;
 
-const ChartLegend = RechartsPrimitive.Legend;
-
 interface ChartLegendContentProps extends React.ComponentPropsWithoutRef<"div"> {
   payload?: Array<Record<string, any>>;
   verticalAlign?: "top" | "bottom";
