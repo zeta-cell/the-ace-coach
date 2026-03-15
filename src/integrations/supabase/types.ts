@@ -1481,10 +1481,16 @@ export type Database = {
         Args: { p_block_id: string }
         Returns: undefined
       }
+      increment_raffle_tickets: {
+        Args: { p_user_id: string }
+        Returns: undefined
+      }
+      recalculate_rankings: { Args: never; Returns: undefined }
       update_block_rating_avg: {
         Args: { p_block_id: string }
         Returns: undefined
       }
+      update_streak: { Args: { p_user_id: string }; Returns: undefined }
     }
     Enums: {
       app_role: "player" | "coach" | "admin"
