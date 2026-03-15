@@ -81,6 +81,41 @@ const CoachProfile = () => {
     }
   };
 
+  const handleSavePkg = async (data: any) => {
+    if (!user) return;
+    setPkgSaving(true);
+    try {
+      if (editingPkg) {
+        const { error } = await supabase.from("coach_packages").update(data as any).eq("id", editingPkg.id);
+        if (error) throw error;
+        toast({ title: "Package updated" });
+      } else {
+        const { error } = await supabase.from("coach_packages").insert({ ...data, coach_id: user.id } as any);
+        if (error) throw error;
+        toast({ title: "Package created" });
+      }
+      setPkgDialogOpen(false);
+      setEditingPkg(null);
+      fetchData();
+    } catch (err: any) {
+      toast({ title: "Error", description: err.message, variant: "destructive" });
+    } finally {
+      setPkgSaving(false);
+    }
+  };
+
+  const handleDeletePkg = async (id: string) => {
+    const { error } = await supabase.from("coach_packages").delete().eq("id", id);
+    if (error) toast({ title: "Error", description: error.message, variant: "destructive" });
+    else fetchData();
+  };
+
+  const handleTogglePkg = async (id: string, active: boolean) => {
+    const { error } = await supabase.from("coach_packages").update({ is_active: active } as any).eq("id", id);
+    if (error) toast({ title: "Error", description: error.message, variant: "destructive" });
+    else fetchData();
+  };
+
   const shots = coachData
     ? [
         { name: "Volley", pct: coachData.volley_pct },
