@@ -17,9 +17,16 @@ interface ProgressVideo {
   created_at: string;
 }
 
+interface VideoComment {
+  id: string;
+  comment: string;
+  created_at: string;
+  author_id: string;
+  author_name?: string;
+}
+
 const SHOT_TAGS = ["Forehand", "Backhand", "Serve", "Volley", "Smash", "Lob", "Footwork", "Rally", "Match"];
 
-// FIX 4: resolve storage path to signed URL on-the-fly
 const getVideoUrl = async (path: string): Promise<string> => {
   if (!path) return "";
   if (path.startsWith("http")) return path;
@@ -31,22 +38,14 @@ const getVideoUrl = async (path: string): Promise<string> => {
 
 const VideoPlayer = ({ path, className }: { path: string; className?: string }) => {
   const [src, setSrc] = useState("");
-
-  useEffect(() => {
-    getVideoUrl(path).then(setSrc);
-  }, [path]);
-
+  useEffect(() => { getVideoUrl(path).then(setSrc); }, [path]);
   if (!src) return <div className={`bg-secondary animate-pulse ${className}`} />;
   return <video src={src} controls className={className} />;
 };
 
 const VideoThumbnail = ({ path, className }: { path: string; className?: string }) => {
   const [src, setSrc] = useState("");
-
-  useEffect(() => {
-    getVideoUrl(path).then(setSrc);
-  }, [path]);
-
+  useEffect(() => { getVideoUrl(path).then(setSrc); }, [path]);
   if (!src) return <div className={`bg-secondary animate-pulse ${className}`} />;
   return <video src={src} className={className} preload="metadata" />;
 };
@@ -64,6 +63,10 @@ const PlayerVideos = () => {
   const [selectedVideo, setSelectedVideo] = useState<ProgressVideo | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
+  // Comments state
+  const [videoComments, setVideoComments] = useState<Record<string, VideoComment[]>>({});
+  const [commentCounts, setCommentCounts] = useState<Record<string, number>>({});
+
   useEffect(() => {
     if (user) fetchVideos();
   }, [user]);
@@ -75,8 +78,43 @@ const PlayerVideos = () => {
       .select("*")
       .eq("player_id", user.id)
       .order("created_at", { ascending: false });
-    setVideos((data as ProgressVideo[]) || []);
+    const vids = (data as ProgressVideo[]) || [];
+    setVideos(vids);
     setLoading(false);
+
+    // Fetch comment counts for all videos
+    if (vids.length > 0) {
+      const videoIds = vids.map(v => v.id);
+      const { data: comments } = await supabase
+        .from("video_comments")
+        .select("id, video_id, comment, created_at, author_id")
+        .in("video_id", videoIds)
+        .order("created_at", { ascending: true });
+
+      if (comments && comments.length > 0) {
+        const counts: Record<string, number> = {};
+        const grouped: Record<string, VideoComment[]> = {};
+        const authorIds = [...new Set(comments.map(c => c.author_id))];
+
+        const { data: authors } = await supabase
+          .from("profiles")
+          .select("user_id, full_name")
+          .in("user_id", authorIds);
+        const authorMap = new Map(authors?.map(a => [a.user_id, a.full_name]) || []);
+
+        comments.forEach(c => {
+          counts[c.video_id] = (counts[c.video_id] || 0) + 1;
+          if (!grouped[c.video_id]) grouped[c.video_id] = [];
+          grouped[c.video_id].push({
+            ...c,
+            author_name: authorMap.get(c.author_id) || "Coach",
+          });
+        });
+
+        setCommentCounts(counts);
+        setVideoComments(grouped);
+      }
+    }
   };
 
   const handleUpload = async () => {
@@ -96,7 +134,6 @@ const PlayerVideos = () => {
       return;
     }
 
-    // FIX 4: store only the path, not a signed URL
     await supabase.from("progress_videos").insert({
       player_id: user.id,
       title: title.trim(),
@@ -105,7 +142,6 @@ const PlayerVideos = () => {
       shot_tag: shotTag || null,
     });
 
-    // Award XP for video upload
     await supabase.rpc('award_xp', {
       p_user_id: user.id,
       p_amount: 15,
@@ -121,6 +157,19 @@ const PlayerVideos = () => {
     setUploading(false);
     fetchVideos();
   };
+
+  const isNewComment = (videoId: string, commentDate: string) => {
+    const lastViewed = localStorage.getItem(`last_viewed_video_${videoId}`);
+    if (!lastViewed) return true;
+    return new Date(commentDate) > new Date(lastViewed);
+  };
+
+  const handleSelectVideo = (v: ProgressVideo) => {
+    setSelectedVideo(v);
+    localStorage.setItem(`last_viewed_video_${v.id}`, new Date().toISOString());
+  };
+
+  const hasCoachComments = (videoId: string) => (commentCounts[videoId] || 0) > 0;
 
   return (
     <PortalLayout>
@@ -153,7 +202,7 @@ const PlayerVideos = () => {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.03 }}
-                onClick={() => setSelectedVideo(v)}
+                onClick={() => handleSelectVideo(v)}
                 className="bg-card border border-border rounded-xl overflow-hidden cursor-pointer hover:border-primary/30 transition-colors"
               >
                 <div className="aspect-video bg-secondary flex items-center justify-center relative">
@@ -165,11 +214,22 @@ const PlayerVideos = () => {
                   <div className="absolute inset-0 flex items-center justify-center bg-black/20">
                     <Play size={32} className="text-white/80" />
                   </div>
-                  {v.coach_feedback && (
-                    <div className="absolute top-2 right-2">
+                  {/* Badges */}
+                  <div className="absolute top-2 right-2 flex items-center gap-1">
+                    {hasCoachComments(v.id) && (
+                      <span className="flex items-center gap-0.5 bg-green-500/90 text-white text-[8px] font-display px-1.5 py-0.5 rounded-full">
+                        FEEDBACK RECEIVED
+                      </span>
+                    )}
+                    {(commentCounts[v.id] || 0) > 0 && (
+                      <span className="flex items-center gap-0.5 bg-card/90 text-foreground text-[9px] font-body px-1.5 py-0.5 rounded-full">
+                        💬 {commentCounts[v.id]}
+                      </span>
+                    )}
+                    {v.coach_feedback && !hasCoachComments(v.id) && (
                       <MessageSquare size={16} className="text-primary" />
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </div>
                 <div className="p-3">
                   <div className="flex items-center gap-2 mb-1">
@@ -237,6 +297,39 @@ const PlayerVideos = () => {
                       <p className="font-body text-sm text-foreground">{selectedVideo.coach_feedback}</p>
                     </div>
                   )}
+
+                  {/* Coach comments section */}
+                  {(videoComments[selectedVideo.id]?.length || 0) > 0 && (
+                    <div className="mt-4">
+                      <p className="text-xs font-display text-foreground mb-2 uppercase tracking-wider">COACH COMMENTS</p>
+                      <div className="space-y-2">
+                        {videoComments[selectedVideo.id]?.map(c => {
+                          const isNew = isNewComment(selectedVideo.id, c.created_at);
+                          return (
+                            <div key={c.id} className="bg-secondary rounded-lg p-3 relative">
+                              {isNew && (
+                                <span className="absolute top-2 right-2 text-[8px] font-display bg-primary text-primary-foreground px-1.5 py-0.5 rounded-full">
+                                  NEW
+                                </span>
+                              )}
+                              <div className="flex items-center gap-2 mb-1">
+                                <div className="w-5 h-5 rounded-full bg-primary/20 flex items-center justify-center">
+                                  <span className="text-primary font-display text-[8px]">
+                                    {(c.author_name || "C").charAt(0)}
+                                  </span>
+                                </div>
+                                <span className="font-display text-[10px] text-foreground">{c.author_name}</span>
+                                <span className="text-[9px] font-body text-muted-foreground">
+                                  {format(new Date(c.created_at), "d MMM HH:mm")}
+                                </span>
+                              </div>
+                              <p className="font-body text-xs text-foreground">{c.comment}</p>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </motion.div>
             </motion.div>
@@ -292,7 +385,6 @@ const PlayerVideos = () => {
                     ))}
                   </select>
 
-                  {/* FIX 5: file size validation */}
                   <input
                     ref={fileRef}
                     type="file"

@@ -2,11 +2,11 @@
 // See supabase/functions/create-checkout/index.ts (to be created)
 
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, ArrowRight, Check, Clock, MapPin, Star, Shield, Award, Zap, CheckCircle2, AlertTriangle, Calendar as CalendarIcon, User } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, Clock, MapPin, Star, Shield, Award, Zap, CheckCircle2, AlertTriangle, Calendar as CalendarIcon, User, Users } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { format, addDays, getDay } from "date-fns";
 import { toast } from "sonner";
@@ -34,6 +34,8 @@ interface Package {
   price_per_session: number;
   currency: string;
   description: string | null;
+  max_group_size?: number | null;
+  pricing_type?: string | null;
 }
 
 interface AvailabilitySlot {
@@ -59,6 +61,7 @@ const BADGE_LABELS: Record<string, string> = {
 
 const BookCoach = () => {
   const { coachSlug } = useParams<{ coachSlug: string }>();
+  const [searchParams] = useSearchParams();
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -79,11 +82,20 @@ const BookCoach = () => {
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [bookedTimes, setBookedTimes] = useState<string[]>([]);
 
+  // Group spots
+  const [groupSpotsTaken, setGroupSpotsTaken] = useState(0);
+  const [groupSpotsLoading, setGroupSpotsLoading] = useState(false);
+  const [joiningWaitlist, setJoiningWaitlist] = useState(false);
+
   // Step 3
   const [notes, setNotes] = useState("");
   const [locationType, setLocationType] = useState<"in_person" | "online">("in_person");
   const [locationAddress, setLocationAddress] = useState("");
   const [confirming, setConfirming] = useState(false);
+
+  const isGroupPackage = selectedPackage?.session_type === "group" && (selectedPackage?.max_group_size || 0) > 1;
+  const spotsTotal = selectedPackage?.max_group_size || 0;
+  const spotsLeft = spotsTotal - groupSpotsTaken;
 
   useEffect(() => {
     if (coachSlug) fetchCoachData();
@@ -92,6 +104,29 @@ const BookCoach = () => {
   useEffect(() => {
     if (selectedDate && coach) fetchBookedTimes();
   }, [selectedDate, coach]);
+
+  // Fetch group spots when date or package changes
+  useEffect(() => {
+    if (selectedDate && selectedPackage && isGroupPackage) {
+      fetchGroupSpots();
+    }
+  }, [selectedDate, selectedPackage]);
+
+  // Auto-select package from URL params
+  useEffect(() => {
+    const pkgParam = searchParams.get("package");
+    const dateParam = searchParams.get("date");
+    if (pkgParam && packages.length > 0) {
+      const pkg = packages.find(p => p.id === pkgParam);
+      if (pkg) {
+        setSelectedPackage(pkg);
+        setStep(2);
+      }
+    }
+    if (dateParam) {
+      setSelectedDate(new Date(dateParam + "T00:00:00"));
+    }
+  }, [packages, searchParams]);
 
   const fetchCoachData = async () => {
     setLoading(true);
@@ -106,7 +141,7 @@ const BookCoach = () => {
 
     const [profileRes, packagesRes, slotsRes, reviewsRes] = await Promise.all([
       supabase.from("profiles").select("full_name, avatar_url").eq("user_id", coachData.user_id).single(),
-      supabase.from("coach_packages").select("id, title, session_type, sport, duration_minutes, price_per_session, currency, description").eq("coach_id", coachData.user_id).eq("is_active", true).order("price_per_session"),
+      supabase.from("coach_packages").select("id, title, session_type, sport, duration_minutes, price_per_session, currency, description, max_group_size, pricing_type").eq("coach_id", coachData.user_id).eq("is_active", true).order("price_per_session"),
       supabase.from("coach_availability_slots").select("*").eq("coach_id", coachData.user_id),
       supabase.from("reviews").select("rating").eq("coach_id", coachData.user_id),
     ]);
@@ -131,6 +166,55 @@ const BookCoach = () => {
       .eq("booking_date", dateStr)
       .in("status", ["pending", "confirmed"]);
     setBookedTimes((data || []).map(b => b.start_time));
+  };
+
+  const fetchGroupSpots = async () => {
+    if (!selectedDate || !selectedPackage) return;
+    setGroupSpotsLoading(true);
+    const dateStr = format(selectedDate, "yyyy-MM-dd");
+    const { count } = await supabase
+      .from("bookings")
+      .select("id", { count: "exact", head: true })
+      .eq("package_id", selectedPackage.id)
+      .eq("booking_date", dateStr)
+      .in("status", ["confirmed", "pending"]);
+    setGroupSpotsTaken(count || 0);
+    setGroupSpotsLoading(false);
+  };
+
+  const handleJoinWaitlist = async () => {
+    if (!user || !coach || !selectedPackage || !selectedDate) return;
+    setJoiningWaitlist(true);
+    const dateStr = format(selectedDate, "yyyy-MM-dd");
+
+    const { error } = await supabase.from("booking_waitlist").insert({
+      player_id: user.id,
+      coach_id: coach.user_id,
+      package_id: selectedPackage.id,
+      requested_date: dateStr,
+      status: "waiting",
+    });
+
+    if (error) {
+      if (error.code === "23505") {
+        toast.info("You're already on the waitlist for this session");
+      } else {
+        toast.error("Failed to join waitlist");
+      }
+      setJoiningWaitlist(false);
+      return;
+    }
+
+    // Notify coach
+    await supabase.from("notifications").insert({
+      user_id: coach.user_id,
+      title: "New waitlist entry",
+      body: `A player joined the waitlist for your group session on ${format(selectedDate, "d MMM")}`,
+      link: "/coach",
+    });
+
+    toast.success("You're on the waitlist! We'll notify you if a spot opens.");
+    setJoiningWaitlist(false);
   };
 
   const getAvailableTimesForDate = (date: Date): string[] => {
@@ -170,11 +254,20 @@ const BookCoach = () => {
     });
   };
 
+  const getDisplayPrice = () => {
+    if (!selectedPackage) return 0;
+    if (isGroupPackage && selectedPackage.pricing_type === "fixed_total") {
+      const participants = groupSpotsTaken + 1;
+      return Number(selectedPackage.price_per_session) / participants;
+    }
+    return Number(selectedPackage.price_per_session);
+  };
+
   const handleConfirmBooking = async () => {
     if (!user || !coach || !selectedPackage || !selectedDate || !selectedTime) return;
     setConfirming(true);
 
-    const totalPrice = Number(selectedPackage.price_per_session);
+    const totalPrice = getDisplayPrice();
     const platformFee = +(totalPrice * 0.15).toFixed(2);
     const coachPayout = +(totalPrice - platformFee).toFixed(2);
     const dateStr = format(selectedDate, "yyyy-MM-dd");
@@ -190,7 +283,6 @@ const BookCoach = () => {
       .single();
 
     if (pkg?.auto_confirm) {
-      // Check if the requested slot is in coach_availability_slots
       const { data: slot } = await supabase
         .from("coach_availability_slots")
         .select("id")
@@ -281,7 +373,6 @@ const BookCoach = () => {
         .maybeSingle();
 
       if (referral) {
-        // Credit referrer €10
         await supabase.rpc('credit_wallet', {
           p_user_id: referral.referrer_id,
           p_amount: 10,
@@ -289,18 +380,15 @@ const BookCoach = () => {
           p_description: 'Referred friend completed first booking',
           p_reference_id: booking.id,
         });
-        // Award referrer 150 XP
         await supabase.rpc('award_xp', {
           p_user_id: referral.referrer_id,
           p_amount: 150,
           p_event_type: 'referral_booking',
           p_description: 'Your referred friend booked their first session',
         });
-        // Mark referral complete
         await supabase.from('referrals')
           .update({ booking_reward_paid: true, status: 'completed' })
           .eq('id', referral.id);
-        // Notify referrer
         await supabase.from('notifications').insert({
           user_id: referral.referrer_id,
           title: 'Referral reward unlocked!',
@@ -325,6 +413,9 @@ const BookCoach = () => {
         link: "/coach",
       }),
     ]);
+
+    // If group booking, check waitlist and notify next person if spot was taken by non-waitlist user
+    // (waitlist notifications happen on cancellation, not on new booking)
 
     setConfirming(false);
     navigate(`/booking-success?booking_id=${booking.id}`);
@@ -410,13 +501,20 @@ const BookCoach = () => {
                             <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase ${SESSION_COLORS[pkg.session_type] || "bg-secondary text-foreground"}`}>{pkg.session_type}</span>
                             <span className="px-2 py-0.5 rounded-full bg-secondary text-muted-foreground text-[10px] font-semibold uppercase">{pkg.sport}</span>
                             <span className="px-2 py-0.5 rounded-full bg-secondary text-muted-foreground text-[10px] font-semibold">{pkg.duration_minutes}min</span>
+                            {pkg.session_type === "group" && pkg.max_group_size && (
+                              <span className="px-2 py-0.5 rounded-full bg-chart-2/10 text-chart-2 text-[10px] font-semibold flex items-center gap-0.5">
+                                <Users size={9} /> Max {pkg.max_group_size}
+                              </span>
+                            )}
                           </div>
                           <h3 className="font-display text-foreground tracking-wider">{pkg.title.toUpperCase()}</h3>
                           {pkg.description && <p className="font-body text-xs text-muted-foreground mt-1 line-clamp-2">{pkg.description}</p>}
                         </div>
                         <div className="text-right shrink-0 ml-4">
                           <span className="font-display text-2xl text-foreground">{currencySymbol(pkg.currency)}{Number(pkg.price_per_session).toFixed(0)}</span>
-                          <p className="font-body text-[10px] text-muted-foreground">/session</p>
+                          <p className="font-body text-[10px] text-muted-foreground">
+                            {pkg.pricing_type === "fixed_total" ? "/total" : "/session"}
+                          </p>
                         </div>
                       </div>
                       {selectedPackage?.id === pkg.id && (
@@ -450,9 +548,58 @@ const BookCoach = () => {
                   selected={selectedDate}
                   onSelect={(d) => { setSelectedDate(d); setSelectedTime(null); }}
                   disabled={(date) => date < new Date() || date > addDays(new Date(), 60) || !hasAvailability(date)}
-                  className="mx-auto"
+                  className="mx-auto pointer-events-auto"
                 />
               </div>
+
+              {/* Group spots display */}
+              {selectedDate && isGroupPackage && (
+                <div className="bg-card border border-border rounded-xl p-4 mb-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Users size={16} className="text-chart-2" />
+                    <span className="font-display text-sm tracking-wider text-foreground">GROUP SESSION</span>
+                  </div>
+                  {groupSpotsLoading ? (
+                    <div className="flex gap-1.5">
+                      {Array.from({ length: spotsTotal }).map((_, i) => (
+                        <div key={i} className="w-5 h-5 rounded-full bg-muted animate-pulse" />
+                      ))}
+                    </div>
+                  ) : (
+                    <>
+                      <div className="flex items-center gap-1.5 mb-2">
+                        {Array.from({ length: spotsTotal }).map((_, i) => (
+                          <div
+                            key={i}
+                            className={`w-5 h-5 rounded-full transition-colors ${
+                              i < groupSpotsTaken ? "bg-primary" : "bg-muted border border-border"
+                            }`}
+                          />
+                        ))}
+                        <span className="ml-2 font-body text-xs text-muted-foreground">
+                          {groupSpotsTaken} of {spotsTotal} spots taken
+                        </span>
+                      </div>
+                      {spotsLeft === 0 ? (
+                        <div className="flex items-center gap-2">
+                          <span className="font-display text-xs tracking-wider text-destructive bg-destructive/10 px-3 py-1 rounded-full">SESSION FULL</span>
+                        </div>
+                      ) : spotsLeft <= 2 ? (
+                        <p className="font-body text-xs text-chart-4">Only {spotsLeft} spot{spotsLeft > 1 ? "s" : ""} left!</p>
+                      ) : (
+                        <p className="font-body text-xs text-muted-foreground">{spotsLeft} spots available</p>
+                      )}
+
+                      {/* Pricing for fixed_total */}
+                      {selectedPackage?.pricing_type === "fixed_total" && spotsLeft > 0 && (
+                        <p className="font-body text-xs text-muted-foreground mt-2">
+                          Your share: {currencySymbol(selectedPackage.currency)}{getDisplayPrice().toFixed(0)} (total {currencySymbol(selectedPackage.currency)}{Number(selectedPackage.price_per_session).toFixed(0)} split between {groupSpotsTaken + 1} players)
+                        </p>
+                      )}
+                    </>
+                  )}
+                </div>
+              )}
 
               {selectedDate && (
                 <div className="mb-4">
@@ -475,13 +622,24 @@ const BookCoach = () => {
                 </div>
               )}
 
-              <button
-                onClick={() => setStep(3)}
-                disabled={!selectedDate || !selectedTime}
-                className="w-full mt-4 py-3 rounded-xl bg-primary text-primary-foreground font-display tracking-wider hover:bg-primary/90 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
-              >
-                CONTINUE <ArrowRight size={16} />
-              </button>
+              {/* Waitlist button for full group sessions */}
+              {selectedDate && isGroupPackage && spotsLeft === 0 ? (
+                <button
+                  onClick={handleJoinWaitlist}
+                  disabled={joiningWaitlist}
+                  className="w-full mt-4 py-3 rounded-xl bg-chart-4 text-chart-4-foreground font-display tracking-wider hover:bg-chart-4/90 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                >
+                  {joiningWaitlist ? "JOINING..." : "JOIN WAITLIST"}
+                </button>
+              ) : (
+                <button
+                  onClick={() => setStep(3)}
+                  disabled={!selectedDate || !selectedTime}
+                  className="w-full mt-4 py-3 rounded-xl bg-primary text-primary-foreground font-display tracking-wider hover:bg-primary/90 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                >
+                  CONTINUE <ArrowRight size={16} />
+                </button>
+              )}
             </motion.div>
           )}
 
@@ -533,12 +691,23 @@ const BookCoach = () => {
                     <span className="text-muted-foreground">Duration</span>
                     <span className="text-foreground">{selectedPackage.duration_minutes} minutes</span>
                   </div>
+                  {isGroupPackage && (
+                    <div className="flex justify-between text-sm font-body">
+                      <span className="text-muted-foreground">Group spots</span>
+                      <span className="text-foreground">{groupSpotsTaken + 1} / {spotsTotal}</span>
+                    </div>
+                  )}
                 </div>
 
                 <div className="border-t border-border pt-3 flex justify-between items-center">
                   <span className="font-body text-sm text-muted-foreground">Total</span>
-                  <span className="font-display text-2xl text-foreground">{currencySymbol(selectedPackage.currency)}{Number(selectedPackage.price_per_session).toFixed(2)}</span>
+                  <span className="font-display text-2xl text-foreground">{currencySymbol(selectedPackage.currency)}{getDisplayPrice().toFixed(2)}</span>
                 </div>
+                {isGroupPackage && selectedPackage.pricing_type === "fixed_total" && (
+                  <p className="font-body text-[10px] text-muted-foreground">
+                    Total {currencySymbol(selectedPackage.currency)}{Number(selectedPackage.price_per_session).toFixed(0)} split between {groupSpotsTaken + 1} players
+                  </p>
+                )}
                 <p className="font-body text-[10px] text-muted-foreground">Secure payment via Stripe</p>
               </div>
 

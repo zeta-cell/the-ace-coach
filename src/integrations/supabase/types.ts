@@ -128,6 +128,50 @@ export type Database = {
           },
         ]
       }
+      booking_waitlist: {
+        Row: {
+          coach_id: string
+          created_at: string | null
+          expires_at: string | null
+          id: string
+          notified_at: string | null
+          package_id: string
+          player_id: string
+          requested_date: string
+          status: string | null
+        }
+        Insert: {
+          coach_id: string
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string
+          notified_at?: string | null
+          package_id: string
+          player_id: string
+          requested_date: string
+          status?: string | null
+        }
+        Update: {
+          coach_id?: string
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string
+          notified_at?: string | null
+          package_id?: string
+          player_id?: string
+          requested_date?: string
+          status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "booking_waitlist_package_id_fkey"
+            columns: ["package_id"]
+            isOneToOne: false
+            referencedRelation: "coach_packages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       bookings: {
         Row: {
           booking_date: string
@@ -259,6 +303,7 @@ export type Database = {
           is_active: boolean
           max_group_size: number | null
           price_per_session: number
+          pricing_type: string | null
           session_type: Database["public"]["Enums"]["session_type"]
           sport: Database["public"]["Enums"]["sport_type"]
           title: string
@@ -275,6 +320,7 @@ export type Database = {
           is_active?: boolean
           max_group_size?: number | null
           price_per_session?: number
+          pricing_type?: string | null
           session_type?: Database["public"]["Enums"]["session_type"]
           sport?: Database["public"]["Enums"]["sport_type"]
           title: string
@@ -291,6 +337,7 @@ export type Database = {
           is_active?: boolean
           max_group_size?: number | null
           price_per_session?: number
+          pricing_type?: string | null
           session_type?: Database["public"]["Enums"]["session_type"]
           sport?: Database["public"]["Enums"]["sport_type"]
           title?: string
