@@ -4,7 +4,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { motion } from "framer-motion";
 import {
   Users, BookOpen, Video, CreditCard, TrendingUp, Activity, Database, Loader2,
-  DollarSign, BarChart3, UserCheck, ShieldCheck, ArrowRight, RefreshCw
+  DollarSign, BarChart3, UserCheck, ShieldCheck, ArrowRight, RefreshCw, Calendar
 } from "lucide-react";
 import {
   AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
