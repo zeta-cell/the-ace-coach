@@ -794,6 +794,48 @@ export type Database = {
         }
         Relationships: []
       }
+      training_blocks: {
+        Row: {
+          category: string
+          coach_id: string | null
+          created_at: string | null
+          description: string | null
+          goal: string
+          id: string
+          is_system: boolean | null
+          module_durations: number[]
+          module_ids: string[]
+          module_notes: string[]
+          title: string
+        }
+        Insert: {
+          category?: string
+          coach_id?: string | null
+          created_at?: string | null
+          description?: string | null
+          goal: string
+          id?: string
+          is_system?: boolean | null
+          module_durations?: number[]
+          module_ids?: string[]
+          module_notes?: string[]
+          title: string
+        }
+        Update: {
+          category?: string
+          coach_id?: string | null
+          created_at?: string | null
+          description?: string | null
+          goal?: string
+          id?: string
+          is_system?: boolean | null
+          module_durations?: number[]
+          module_ids?: string[]
+          module_notes?: string[]
+          title?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: string

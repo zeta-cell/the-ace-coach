@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, Link, useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion } from "framer-motion";
@@ -24,6 +24,7 @@ import { ArrowLeft, Plus, X, GripVertical, Clock, Save, Check, Search, CalendarD
 import { toast } from "sonner";
 import { format, addDays, startOfWeek, startOfMonth, endOfMonth, isSameDay, isSameMonth, getWeek, subMonths, addMonths } from "date-fns";
 import PortalLayout from "@/components/portal/PortalLayout";
+import TrainingBlocksPanel from "@/components/portal/TrainingBlocksPanel";
 import type { Database } from "@/integrations/supabase/types";
 
 type ModuleCategory = Database["public"]["Enums"]["module_category"];
@@ -137,10 +138,12 @@ const CATEGORY_LABELS: Record<string, string> = {
 /* ── Main component ── */
 const CoachPlanBuilder = () => {
   const { playerId } = useParams<{ playerId: string }>();
+  const [searchParams] = useSearchParams();
   const { user } = useAuth();
   const navigate = useNavigate();
   const [playerName, setPlayerName] = useState("");
-  const [planDate, setPlanDate] = useState(format(new Date(), "yyyy-MM-dd"));
+  const initialDate = searchParams.get("date") || format(new Date(), "yyyy-MM-dd");
+  const [planDate, setPlanDate] = useState(initialDate);
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [planNotes, setPlanNotes] = useState("");
@@ -161,6 +164,10 @@ const CoachPlanBuilder = () => {
   const [calMonth, setCalMonth] = useState(new Date());
   const [existingPlanId, setExistingPlanId] = useState<string | null>(null);
   const [weekPlanDates, setWeekPlanDates] = useState<Set<string>>(new Set());
+  const [showSaveBlock, setShowSaveBlock] = useState(false);
+  const [blockTitle, setBlockTitle] = useState("");
+  const [blockGoal, setBlockGoal] = useState("Technique");
+  const [blockDesc, setBlockDesc] = useState("");
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -374,6 +381,32 @@ const CoachPlanBuilder = () => {
     setTimeout(() => setSaved(false), 2000);
   };
 
+  const handleSaveAsBlock = async () => {
+    if (!user || planItems.length === 0 || !blockTitle.trim()) {
+      toast.error("Add a title and at least one module");
+      return;
+    }
+    await supabase.from("training_blocks").insert({
+      coach_id: user.id,
+      title: blockTitle.trim(),
+      description: blockDesc.trim() || null,
+      goal: blockGoal,
+      category: "custom",
+      module_ids: planItems.map((i) => i.module.id),
+      module_durations: planItems.map((i) => i.custom_duration),
+      module_notes: planItems.map((i) => i.coach_note),
+      is_system: false,
+    } as any);
+    toast.success("Training block saved!");
+    setShowSaveBlock(false);
+    setBlockTitle("");
+    setBlockDesc("");
+  };
+
+  const handleApplyBlock = (items: PlanItem[]) => {
+    setPlanItems((prev) => [...prev, ...items]);
+  };
+
   const totalDuration = planItems.reduce((sum, i) => sum + (i.custom_duration || 0), 0);
   const filteredModules = modules.filter((m) => {
     const matchSearch = m.title.toLowerCase().includes(moduleSearch.toLowerCase());
@@ -455,7 +488,18 @@ const CoachPlanBuilder = () => {
 
   return (
     <PortalLayout>
-      <div className="max-w-3xl mx-auto">
+      <div className="flex gap-6">
+        {/* Left: Training Blocks Panel (desktop only) */}
+        <aside className="hidden lg:block w-[260px] shrink-0 sticky top-[80px] self-start max-h-[calc(100vh-96px)] overflow-y-auto pr-2 scrollbar-none">
+          <TrainingBlocksPanel
+            onApplyBlock={handleApplyBlock}
+            onSaveAsBlock={() => setShowSaveBlock(true)}
+            modules={modules}
+          />
+        </aside>
+
+        {/* Right: Plan builder */}
+        <div className="flex-1 max-w-3xl min-w-0">
         <Link to={`/coach/players/${playerId}`} className="flex items-center gap-2 text-muted-foreground hover:text-foreground font-body text-sm mb-4 transition-colors">
           <ArrowLeft size={16} /> Back to {playerName}
         </Link>
@@ -744,6 +788,74 @@ const CoachPlanBuilder = () => {
             </motion.div>
           </motion.div>
         )}
+      </div>
+
+      {/* Save as block modal */}
+      {showSaveBlock && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm"
+          onClick={() => setShowSaveBlock(false)}
+        >
+          <motion.div
+            initial={{ scale: 0.95, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            onClick={(e) => e.stopPropagation()}
+            className="w-full max-w-md bg-card border border-border rounded-xl p-5 space-y-4"
+          >
+            <h3 className="font-display text-lg text-foreground">SAVE AS TRAINING BLOCK</h3>
+            <input
+              placeholder="Block title..."
+              value={blockTitle}
+              onChange={(e) => setBlockTitle(e.target.value)}
+              className="w-full px-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+            />
+            <input
+              placeholder="Short description..."
+              value={blockDesc}
+              onChange={(e) => setBlockDesc(e.target.value)}
+              className="w-full px-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+            />
+            <div>
+              <p className="font-display text-[10px] tracking-wider text-muted-foreground mb-2">GOAL</p>
+              <div className="flex flex-wrap gap-1.5">
+                {["Technique", "Match Preparation", "Fitness", "Recovery", "Warm Up", "Footwork", "Mental", "Kids", "Beginner", "Advanced"].map((g) => (
+                  <button
+                    key={g}
+                    onClick={() => setBlockGoal(g)}
+                    className={`px-3 py-1.5 rounded-lg font-display text-[10px] tracking-wider transition-colors ${
+                      blockGoal === g ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    {g.toUpperCase()}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <p className="text-xs font-body text-muted-foreground">{planItems.length} modules will be saved in this block</p>
+            <div className="flex gap-2">
+              <button onClick={() => setShowSaveBlock(false)} className="flex-1 py-2.5 rounded-xl border border-border font-display text-xs tracking-wider text-muted-foreground hover:text-foreground transition-colors">
+                CANCEL
+              </button>
+              <button onClick={handleSaveAsBlock} className="flex-1 py-2.5 rounded-xl bg-primary font-display text-xs tracking-wider text-primary-foreground hover:bg-primary/90 transition-colors">
+                SAVE BLOCK
+              </button>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+
+      {/* Mobile: Training blocks button */}
+      <div className="lg:hidden fixed bottom-20 right-4 z-40">
+        <button
+          onClick={() => setShowSaveBlock(true)}
+          className="w-12 h-12 rounded-full bg-primary text-primary-foreground shadow-lg flex items-center justify-center"
+          title="Save as block"
+        >
+          <Save size={20} />
+        </button>
+      </div>
       </div>
     </PortalLayout>
   );
