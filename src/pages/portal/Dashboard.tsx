@@ -74,6 +74,7 @@ const Dashboard = () => {
   const [myRank, setMyRank] = useState<number | null>(null);
   const [heatmapData, setHeatmapData] = useState<Record<string, number>>({});
   const [myCoaches, setMyCoaches] = useState<CoachInfo[]>([]);
+  const [upcomingEvents, setUpcomingEvents] = useState<any[]>([]);
 
   const today = new Date();
   const weekStart = startOfWeek(today, { weekStartsOn: 1 });
@@ -93,6 +94,7 @@ const Dashboard = () => {
       fetchPlans();
       fetchPrograms();
       fetchGamificationData();
+      fetchUpcomingEvents();
     }
   }, [user]);
 
@@ -196,6 +198,25 @@ const Dashboard = () => {
   const cancelRequest = async (requestId: string) => {
     await supabase.from("coach_requests").update({ status: "cancelled" } as any).eq("id", requestId);
     toast.success("Request cancelled"); fetchPrograms();
+  };
+
+  const fetchUpcomingEvents = async () => {
+    if (!user) return;
+    const { data: regs } = await supabase
+      .from("event_registrations")
+      .select("event_id, status")
+      .eq("player_id", user.id)
+      .eq("status", "registered");
+    if (!regs || regs.length === 0) return;
+    const eventIds = regs.map(r => r.event_id);
+    const { data: events } = await supabase
+      .from("events")
+      .select("id, title, event_type, sport, start_datetime, end_datetime, location_city, is_online, price_per_person, currency")
+      .in("id", eventIds)
+      .gte("start_datetime", new Date().toISOString())
+      .order("start_datetime", { ascending: true })
+      .limit(5);
+    setUpcomingEvents((events as any[]) || []);
   };
 
   const fetchPlans = async () => {
@@ -456,6 +477,36 @@ const Dashboard = () => {
         </motion.div>
 
         <UpcomingBookings />
+
+        {/* Upcoming Events */}
+        {upcomingEvents.length > 0 && (
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.32 }} className="mb-6">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="font-display text-sm tracking-wider text-foreground flex items-center gap-2"><Calendar size={16} className="text-primary" /> UPCOMING EVENTS</h3>
+              <Link to="/events" className="text-xs font-body text-primary hover:underline">View all</Link>
+            </div>
+            <div className="space-y-2">
+              {upcomingEvents.map((ev: any) => (
+                <div key={ev.id} className="bg-card border border-border rounded-xl p-4 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                      <Calendar size={18} className="text-primary" />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <p className="font-display text-sm text-foreground">{ev.title}</p>
+                        <span className="px-1.5 py-0.5 rounded text-[9px] font-display tracking-wider bg-violet-500/20 text-violet-400">EVENT</span>
+                      </div>
+                      <p className="font-body text-xs text-muted-foreground">
+                        {format(new Date(ev.start_datetime), "EEE, d MMM · HH:mm")} · {ev.is_online ? "Online" : ev.location_city || "TBA"}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        )}
 
         {/* Programs */}
         {programs.length > 0 && (
