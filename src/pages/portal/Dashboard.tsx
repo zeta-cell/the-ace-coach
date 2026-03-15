@@ -37,7 +37,7 @@ interface PurchasedProgram {
 interface UserStats {
   total_xp: number; current_level: string; current_streak_days: number;
   total_sessions: number; wallet_balance: number; raffle_tickets: number;
-  total_minutes: number;
+  total_minutes: number; total_calories: number;
 }
 
 interface EarnedBadge { badge_key: string; badge_name: string; earned_at: string; }
@@ -67,7 +67,7 @@ const Dashboard = () => {
   const [weekPlans, setWeekPlans] = useState<string[]>([]);
   const [selectedDay, setSelectedDay] = useState(new Date());
   const [programs, setPrograms] = useState<PurchasedProgram[]>([]);
-  const [userStats, setUserStats] = useState<UserStats>({ total_xp: 0, current_level: 'bronze', current_streak_days: 0, total_sessions: 0, wallet_balance: 0, raffle_tickets: 0, total_minutes: 0 });
+  const [userStats, setUserStats] = useState<UserStats>({ total_xp: 0, current_level: 'bronze', current_streak_days: 0, total_sessions: 0, wallet_balance: 0, raffle_tickets: 0, total_minutes: 0, total_calories: 0 });
   const [earnedBadges, setEarnedBadges] = useState<EarnedBadge[]>([]);
   const [activityData, setActivityData] = useState<any[]>([]);
   const [topPlayers, setTopPlayers] = useState<any[]>([]);
@@ -224,7 +224,7 @@ const Dashboard = () => {
   const xpToNext = nextLvl ? nextLvl.xpMin - userStats.total_xp : 0;
   const isGoldPlus = ['gold', 'platinum', 'diamond', 'legend'].includes(userStats.current_level);
   const improvementScore = (userStats.total_sessions * 2) + (userStats.current_streak_days * 5) + Math.floor(userStats.total_xp / 100);
-  const estimatedCalories = (userStats.total_minutes || 0) * 8;
+  const estimatedCalories = userStats.total_calories || (userStats.total_minutes || 0) * 8;
 
   // Heatmap rendering
   const heatmapStart = subMonths(today, 3);
@@ -275,8 +275,8 @@ const Dashboard = () => {
           </div>
           <div className="bg-card border border-border rounded-xl p-3 text-center">
             <Activity size={16} className="text-rose-400 mx-auto mb-0.5" />
-            <p className="font-display text-xl text-foreground"><AnimatedNumber value={estimatedCalories} /></p>
-            <p className="font-body text-[9px] text-muted-foreground uppercase">Calories</p>
+            <p className="font-display text-xl text-foreground">{estimatedCalories.toLocaleString()}</p>
+            <p className="font-body text-[9px] text-muted-foreground uppercase">KCAL BURNED</p>
           </div>
         </motion.div>
 
