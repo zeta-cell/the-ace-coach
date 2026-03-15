@@ -175,6 +175,7 @@ const Marketplace = () => {
             <Link to="/marketplace?type=program" className="font-display text-xs tracking-wider text-muted-foreground hover:text-foreground transition-colors">PROGRAMS</Link>
             <Link to="/marketplace" className="font-display text-xs tracking-wider text-primary">MARKETPLACE</Link>
             <Link to="/events" className="font-display text-xs tracking-wider text-muted-foreground hover:text-foreground transition-colors">EVENTS</Link>
+            <Link to="/community" className="font-display text-xs tracking-wider text-muted-foreground hover:text-foreground transition-colors">COMMUNITY</Link>
           </div>
           <div className="hidden md:flex items-center gap-3 shrink-0">
             <Link to="/login" className="font-display text-sm tracking-wider text-muted-foreground hover:text-foreground transition-colors">LOG IN</Link>
