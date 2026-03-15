@@ -596,6 +596,7 @@ export type Database = {
       }
       player_day_plan_items: {
         Row: {
+          block_id: string | null
           coach_note: string | null
           completed_at: string | null
           id: string
@@ -605,6 +606,7 @@ export type Database = {
           plan_id: string
         }
         Insert: {
+          block_id?: string | null
           coach_note?: string | null
           completed_at?: string | null
           id?: string
@@ -614,6 +616,7 @@ export type Database = {
           plan_id: string
         }
         Update: {
+          block_id?: string | null
           coach_note?: string | null
           completed_at?: string | null
           id?: string
@@ -623,6 +626,13 @@ export type Database = {
           plan_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "player_day_plan_items_block_id_fkey"
+            columns: ["block_id"]
+            isOneToOne: false
+            referencedRelation: "training_blocks"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "player_day_plan_items_module_id_fkey"
             columns: ["module_id"]

@@ -21,6 +21,7 @@ import {
 interface DayPlan {
   id: string; plan_date: string; player_id: string; player_name: string;
   item_count: number; start_time: string | null; end_time: string | null;
+  program_author?: string | null; program_title?: string | null; program_author_avatar?: string | null;
 }
 
 interface AssignedPlayer { player_id: string; full_name: string; }
@@ -33,7 +34,7 @@ interface TrainingBlock {
   is_public: boolean; is_for_sale: boolean; price: number; currency: string;
 }
 
-interface PlanBlock { tempId: string; block: TrainingBlock; coach_note: string; }
+interface PlanBlock { tempId: string; block: TrainingBlock; coach_note: string; block_id: string; }
 
 const CATEGORY_LABELS: Record<string, string> = {
   warm_up: "WARM UP", padel_drill: "TECHNICAL", footwork: "FOOTWORK",
@@ -143,19 +144,41 @@ const CoachCalendar = () => {
     const playerIds = [...new Set(dayPlans.map(p => p.player_id))];
     const [profilesRes, itemsRes] = await Promise.all([
       supabase.from("profiles").select("user_id, full_name").in("user_id", playerIds),
-      supabase.from("player_day_plan_items").select("plan_id").in("plan_id", dayPlans.map(p => p.id)),
+      supabase.from("player_day_plan_items").select("plan_id, block_id").in("plan_id", dayPlans.map(p => p.id)),
     ]);
 
     const nameMap = new Map(profilesRes.data?.map(p => [p.user_id, p.full_name]) || []);
     const countMap = new Map<string, number>();
-    itemsRes.data?.forEach(item => { countMap.set(item.plan_id, (countMap.get(item.plan_id) || 0) + 1); });
+    const planBlockIds = new Map<string, string>(); // plan_id -> first block_id
+    (itemsRes.data as any[])?.forEach((item: any) => {
+      countMap.set(item.plan_id, (countMap.get(item.plan_id) || 0) + 1);
+      if (item.block_id && !planBlockIds.has(item.plan_id)) planBlockIds.set(item.plan_id, item.block_id);
+    });
 
-    const result = dayPlans.map(p => ({
-      id: p.id, plan_date: p.plan_date, player_id: p.player_id,
-      player_name: nameMap.get(p.player_id) || "Unknown",
-      item_count: countMap.get(p.id) || 0,
-      start_time: p.start_time || null, end_time: p.end_time || null,
-    }));
+    // Fetch block author info for program credit
+    const uniqueBlockIds = [...new Set(planBlockIds.values())];
+    let blockAuthorMap = new Map<string, { title: string; author_name: string | null; author_avatar_url: string | null; author_id: string | null }>();
+    if (uniqueBlockIds.length > 0) {
+      const { data: blockData } = await supabase.from("training_blocks")
+        .select("id, title, author_name, author_avatar_url, author_id")
+        .in("id", uniqueBlockIds);
+      blockData?.forEach(b => blockAuthorMap.set(b.id, { title: b.title, author_name: b.author_name, author_avatar_url: b.author_avatar_url, author_id: b.author_id }));
+    }
+
+    const result: DayPlan[] = dayPlans.map(p => {
+      const blockId = planBlockIds.get(p.id);
+      const blockInfo = blockId ? blockAuthorMap.get(blockId) : null;
+      const isExternalAuthor = blockInfo && blockInfo.author_id && blockInfo.author_id !== targetCoachId;
+      return {
+        id: p.id, plan_date: p.plan_date, player_id: p.player_id,
+        player_name: nameMap.get(p.player_id) || "Unknown",
+        item_count: countMap.get(p.id) || 0,
+        start_time: p.start_time || null, end_time: p.end_time || null,
+        program_author: isExternalAuthor ? blockInfo!.author_name : null,
+        program_title: isExternalAuthor ? blockInfo!.title : null,
+        program_author_avatar: isExternalAuthor ? blockInfo!.author_avatar_url : null,
+      };
+    });
     result.sort((a, b) => (a.start_time || "99:99").localeCompare(b.start_time || "99:99"));
     setPlans(result);
     setLoading(false);
@@ -197,7 +220,7 @@ const CoachCalendar = () => {
 
   const addBlockToPlan = (block: TrainingBlock) => {
     if (!selectedDay) { toast.error("Select a day first"); return; }
-    setPlanBlocks((prev) => [...prev, { tempId: crypto.randomUUID(), block, coach_note: "" }]);
+    setPlanBlocks((prev) => [...prev, { tempId: crypto.randomUUID(), block, coach_note: "", block_id: block.id }]);
     toast.success(`Added "${block.title}"`);
   };
 
@@ -314,7 +337,8 @@ const CoachCalendar = () => {
       if (mod) {
         await supabase.from("player_day_plan_items").insert({
           plan_id: planId, module_id: mod.id, order_index: i, coach_note: pb.coach_note || null,
-        });
+          block_id: pb.block_id || null,
+        } as any);
       }
     }
 
@@ -343,7 +367,8 @@ const CoachCalendar = () => {
         if (mod) {
           await supabase.from("player_day_plan_items").insert({
             plan_id: newPlan.id, module_id: mod.id, order_index: i, coach_note: pb.coach_note || null,
-          });
+            block_id: pb.block_id || null,
+          } as any);
         }
       }
       toast.success(`Plan copied to ${copyDate}`);
@@ -602,9 +627,23 @@ const CoachCalendar = () => {
                           </div>
                           <div className="flex-1 min-w-0">
                             <p className="text-xs font-display text-foreground truncate">{plan.player_name}</p>
-                            <p className="text-[9px] font-body text-muted-foreground">
+                          <p className="text-[9px] font-body text-muted-foreground">
                               {formatTime(plan.start_time) || "—"} · {plan.item_count} modules
                             </p>
+                            {plan.program_author && (
+                              <div className="flex items-center gap-1 mt-0.5">
+                                {plan.program_author_avatar ? (
+                                  <img src={plan.program_author_avatar} className="w-3 h-3 rounded-full" />
+                                ) : (
+                                  <div className="w-3 h-3 rounded-full bg-primary/20 flex items-center justify-center text-primary font-display text-[6px]">
+                                    {plan.program_author.charAt(0)}
+                                  </div>
+                                )}
+                                <span className="font-body text-[8px] text-muted-foreground">
+                                  Program by {plan.program_author}
+                                </span>
+                              </div>
+                            )}
                           </div>
                           <ChevronRight size={14} className="text-muted-foreground" />
                         </div>
