@@ -222,8 +222,8 @@ const FoundersDashboard = () => {
         supabase.from("events").select("*"),
         supabase.from("event_registrations").select("*"),
         supabase.from("notifications").select("id"),
-        supabase.from("founder_spend" as any).select("*").order("month", { ascending: false }),
-        supabase.from("page_views" as any).select("*"),
+        supabase.from("founder_spend").select("*").order("month", { ascending: false }),
+        supabase.from("page_views").select("*"),
         supabase.from("progress_videos").select("id"),
       ]);
 
