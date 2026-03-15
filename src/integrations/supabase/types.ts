@@ -249,6 +249,7 @@ export type Database = {
       }
       coach_packages: {
         Row: {
+          auto_confirm: boolean | null
           coach_id: string
           created_at: string
           currency: string
@@ -264,6 +265,7 @@ export type Database = {
           total_sessions: number | null
         }
         Insert: {
+          auto_confirm?: boolean | null
           coach_id: string
           created_at?: string
           currency?: string
@@ -279,6 +281,7 @@ export type Database = {
           total_sessions?: number | null
         }
         Update: {
+          auto_confirm?: boolean | null
           coach_id?: string
           created_at?: string
           currency?: string
@@ -877,6 +880,7 @@ export type Database = {
       modules: {
         Row: {
           category: Database["public"]["Enums"]["module_category"]
+          coach_video_url: string | null
           created_at: string
           created_by: string
           description: string | null
@@ -892,6 +896,7 @@ export type Database = {
         }
         Insert: {
           category: Database["public"]["Enums"]["module_category"]
+          coach_video_url?: string | null
           created_at?: string
           created_by: string
           description?: string | null
@@ -907,6 +912,7 @@ export type Database = {
         }
         Update: {
           category?: Database["public"]["Enums"]["module_category"]
+          coach_video_url?: string | null
           created_at?: string
           created_by?: string
           description?: string | null
@@ -1700,6 +1706,38 @@ export type Database = {
           xp_amount?: number
         }
         Relationships: []
+      }
+      video_comments: {
+        Row: {
+          author_id: string
+          comment: string
+          created_at: string | null
+          id: string
+          video_id: string
+        }
+        Insert: {
+          author_id: string
+          comment: string
+          created_at?: string | null
+          id?: string
+          video_id: string
+        }
+        Update: {
+          author_id?: string
+          comment?: string
+          created_at?: string | null
+          id?: string
+          video_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "video_comments_video_id_fkey"
+            columns: ["video_id"]
+            isOneToOne: false
+            referencedRelation: "progress_videos"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       wallet_transactions: {
         Row: {
