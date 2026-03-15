@@ -49,7 +49,40 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       .select("*")
       .eq("user_id", userId)
       .single();
-    if (data) setProfile(data as Profile);
+    if (data) {
+      setProfile(data as Profile);
+      // Initialize gamification records if needed
+      await initializeGamification(userId, data as Profile);
+    }
+  };
+
+  const initializeGamification = async (userId: string, prof: Profile) => {
+    // Create user_stats row if not exists
+    await supabase.from("user_stats").upsert(
+      { user_id: userId, total_xp: 0, current_level: 'bronze' },
+      { onConflict: 'user_id', ignoreDuplicates: true }
+    );
+    // Create leaderboard entry if not exists
+    await supabase.from("leaderboard").upsert(
+      {
+        user_id: userId,
+        display_name: prof.full_name,
+        avatar_url: prof.avatar_url,
+        total_xp: 0,
+        current_level: 'bronze',
+      },
+      { onConflict: 'user_id', ignoreDuplicates: true }
+    );
+    // Generate referral code if missing
+    if (!(prof as any).referral_code) {
+      const code = prof.full_name
+        .toLowerCase()
+        .replace(/[^a-z]/g, '')
+        .substring(0, 6) + Math.random().toString(36).substring(2, 6);
+      await supabase.from("profiles")
+        .update({ referral_code: code })
+        .eq("user_id", userId);
+    }
   };
 
   const fetchRole = async (userId: string) => {

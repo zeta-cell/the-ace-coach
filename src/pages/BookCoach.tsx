@@ -216,6 +216,40 @@ const BookCoach = () => {
       description: `Coaching session with ${profile?.full_name} on ${dateStr}`,
     });
 
+    // Award XP for booking
+    await supabase.rpc('award_xp', {
+      p_user_id: user.id,
+      p_amount: 50,
+      p_event_type: 'session_booked',
+      p_description: 'Booked a coaching session',
+    });
+
+    // Check referral bonus
+    const { data: referral } = await supabase
+      .from("referrals")
+      .select("*")
+      .eq("referred_id", user.id)
+      .eq("status", "signed_up")
+      .eq("booking_reward_paid", false)
+      .maybeSingle();
+
+    if (referral) {
+      await supabase.rpc('credit_wallet', {
+        p_user_id: referral.referrer_id,
+        p_amount: 10,
+        p_type: 'credit_referral',
+        p_description: 'Friend completed first booking',
+      });
+      await supabase.rpc('award_xp', {
+        p_user_id: referral.referrer_id,
+        p_amount: 150,
+        p_event_type: 'referral_booking',
+      });
+      await supabase.from("referrals")
+        .update({ booking_reward_paid: true, status: "completed" })
+        .eq("id", referral.id);
+    }
+
     // Notifications
     await Promise.all([
       supabase.from("notifications").insert({

@@ -164,6 +164,23 @@ const Training = () => {
     setPlanItems((prev) =>
       prev.map((item) => item.id === itemId ? { ...item, is_completed: true, completed_at: new Date().toISOString() } : item)
     );
+    // Award XP for completing a session module
+    if (user) {
+      await supabase.rpc('award_xp', {
+        p_user_id: user.id,
+        p_amount: 25,
+        p_event_type: 'session_complete',
+        p_description: 'Completed a training session',
+      });
+      // Increment raffle tickets
+      await supabase.from("user_stats").upsert(
+        { user_id: user.id },
+        { onConflict: 'user_id', ignoreDuplicates: true }
+      );
+      await supabase.from("user_stats")
+        .update({ raffle_tickets: (await supabase.from("user_stats").select("raffle_tickets").eq("user_id", user.id).single()).data?.raffle_tickets + 1 || 1 })
+        .eq("user_id", user.id);
+    }
   };
 
   /* ── Coach actions ── */

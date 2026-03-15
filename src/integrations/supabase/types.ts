@@ -492,6 +492,48 @@ export type Database = {
           },
         ]
       }
+      leaderboard: {
+        Row: {
+          avatar_url: string | null
+          city: string | null
+          current_level: string | null
+          current_streak_days: number | null
+          display_name: string | null
+          rank_global: number | null
+          rank_updated_at: string | null
+          sport: string | null
+          total_sessions: number | null
+          total_xp: number | null
+          user_id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          city?: string | null
+          current_level?: string | null
+          current_streak_days?: number | null
+          display_name?: string | null
+          rank_global?: number | null
+          rank_updated_at?: string | null
+          sport?: string | null
+          total_sessions?: number | null
+          total_xp?: number | null
+          user_id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          city?: string | null
+          current_level?: string | null
+          current_streak_days?: number | null
+          display_name?: string | null
+          rank_global?: number | null
+          rank_updated_at?: string | null
+          sport?: string | null
+          total_sessions?: number | null
+          total_xp?: number | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       messages: {
         Row: {
           attachment_url: string | null
@@ -960,6 +1002,7 @@ export type Database = {
           notification_preferences: Json | null
           onboarding_completed: boolean
           phone: string | null
+          referral_code: string | null
           updated_at: string
           user_id: string
         }
@@ -973,6 +1016,7 @@ export type Database = {
           notification_preferences?: Json | null
           onboarding_completed?: boolean
           phone?: string | null
+          referral_code?: string | null
           updated_at?: string
           user_id: string
         }
@@ -986,6 +1030,7 @@ export type Database = {
           notification_preferences?: Json | null
           onboarding_completed?: boolean
           phone?: string | null
+          referral_code?: string | null
           updated_at?: string
           user_id?: string
         }
@@ -1027,6 +1072,39 @@ export type Database = {
           title?: string
           video_url?: string | null
           youtube_url?: string | null
+        }
+        Relationships: []
+      }
+      referrals: {
+        Row: {
+          booking_reward_paid: boolean | null
+          created_at: string | null
+          id: string
+          referral_code: string
+          referred_id: string | null
+          referrer_id: string
+          signup_reward_paid: boolean | null
+          status: string | null
+        }
+        Insert: {
+          booking_reward_paid?: boolean | null
+          created_at?: string | null
+          id?: string
+          referral_code: string
+          referred_id?: string | null
+          referrer_id: string
+          signup_reward_paid?: boolean | null
+          status?: string | null
+        }
+        Update: {
+          booking_reward_paid?: boolean | null
+          created_at?: string | null
+          id?: string
+          referral_code?: string
+          referred_id?: string | null
+          referrer_id?: string
+          signup_reward_paid?: boolean | null
+          status?: string | null
         }
         Relationships: []
       }
@@ -1192,6 +1270,33 @@ export type Database = {
         }
         Relationships: []
       }
+      user_badges: {
+        Row: {
+          badge_description: string | null
+          badge_key: string
+          badge_name: string
+          earned_at: string | null
+          id: string
+          user_id: string
+        }
+        Insert: {
+          badge_description?: string | null
+          badge_key: string
+          badge_name: string
+          earned_at?: string | null
+          id?: string
+          user_id: string
+        }
+        Update: {
+          badge_description?: string | null
+          badge_key?: string
+          badge_name?: string
+          earned_at?: string | null
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: string
@@ -1206,6 +1311,120 @@ export type Database = {
         Update: {
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_stats: {
+        Row: {
+          calories_estimate: number | null
+          cities_trained_in: string[] | null
+          current_level: string | null
+          current_streak_days: number | null
+          longest_streak_days: number | null
+          raffle_tickets: number | null
+          total_coaches: number | null
+          total_minutes: number | null
+          total_sessions: number | null
+          total_xp: number | null
+          updated_at: string | null
+          user_id: string
+          wallet_balance: number | null
+        }
+        Insert: {
+          calories_estimate?: number | null
+          cities_trained_in?: string[] | null
+          current_level?: string | null
+          current_streak_days?: number | null
+          longest_streak_days?: number | null
+          raffle_tickets?: number | null
+          total_coaches?: number | null
+          total_minutes?: number | null
+          total_sessions?: number | null
+          total_xp?: number | null
+          updated_at?: string | null
+          user_id: string
+          wallet_balance?: number | null
+        }
+        Update: {
+          calories_estimate?: number | null
+          cities_trained_in?: string[] | null
+          current_level?: string | null
+          current_streak_days?: number | null
+          longest_streak_days?: number | null
+          raffle_tickets?: number | null
+          total_coaches?: number | null
+          total_minutes?: number | null
+          total_sessions?: number | null
+          total_xp?: number | null
+          updated_at?: string | null
+          user_id?: string
+          wallet_balance?: number | null
+        }
+        Relationships: []
+      }
+      user_xp_events: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          event_type: string
+          id: string
+          reference_id: string | null
+          reference_type: string | null
+          user_id: string
+          xp_amount: number
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          event_type: string
+          id?: string
+          reference_id?: string | null
+          reference_type?: string | null
+          user_id: string
+          xp_amount: number
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          event_type?: string
+          id?: string
+          reference_id?: string | null
+          reference_type?: string | null
+          user_id?: string
+          xp_amount?: number
+        }
+        Relationships: []
+      }
+      wallet_transactions: {
+        Row: {
+          amount: number
+          balance_after: number
+          created_at: string | null
+          description: string | null
+          id: string
+          reference_id: string | null
+          type: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          balance_after?: number
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          reference_id?: string | null
+          type: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          balance_after?: number
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          reference_id?: string | null
+          type?: string
           user_id?: string
         }
         Relationships: []
@@ -1226,6 +1445,26 @@ export type Database = {
           role: Database["public"]["Enums"]["app_role"]
           user_id: string
         }[]
+      }
+      award_xp: {
+        Args: {
+          p_amount: number
+          p_description?: string
+          p_event_type: string
+          p_reference_id?: string
+          p_user_id: string
+        }
+        Returns: undefined
+      }
+      credit_wallet: {
+        Args: {
+          p_amount: number
+          p_description?: string
+          p_reference_id?: string
+          p_type: string
+          p_user_id: string
+        }
+        Returns: undefined
       }
       get_user_role: {
         Args: { _user_id: string }

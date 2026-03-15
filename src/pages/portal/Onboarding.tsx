@@ -52,6 +52,7 @@ const Onboarding = () => {
   // Step 4
   const [playtomicUrl, setPlaytomicUrl] = useState("");
   const [playtomicLevel, setPlaytomicLevel] = useState("");
+  const [referralCode, setReferralCode] = useState("");
   const [rackets, setRackets] = useState<Racket[]>([
     { brand: "", model: "", type: "mixed", is_favorite: true },
   ]);
@@ -161,6 +162,23 @@ const Onboarding = () => {
             is_favorite: r.is_favorite,
           }))
         );
+      }
+
+      // Referral code redemption
+      if (referralCode.trim()) {
+        const { data: ref } = await supabase
+          .from("referrals")
+          .select("*")
+          .eq("referral_code", referralCode.trim().toLowerCase())
+          .maybeSingle();
+        if (ref && ref.referrer_id !== user.id) {
+          await supabase.from("referrals")
+            .update({ referred_id: user.id, status: "signed_up", signup_reward_paid: true })
+            .eq("id", ref.id);
+          await supabase.rpc("credit_wallet", { p_user_id: ref.referrer_id, p_amount: 5, p_type: "credit_referral", p_description: "Friend signed up with your code" });
+          await supabase.rpc("award_xp", { p_user_id: ref.referrer_id, p_amount: 100, p_event_type: "referral_signup", p_description: "Referral signup bonus" });
+          await supabase.from("notifications").insert({ user_id: ref.referrer_id, title: "A friend signed up!", body: "Someone used your referral code. You earned €5 + 100 XP!" });
+        }
       }
 
       await refreshProfile();
@@ -383,6 +401,17 @@ const Onboarding = () => {
       case 4:
         return (
           <div className="space-y-6">
+            <div>
+              <label className="block font-display text-xs tracking-wider text-muted-foreground mb-1.5">REFERRAL CODE (OPTIONAL)</label>
+              <input
+                value={referralCode}
+                onChange={(e) => setReferralCode(e.target.value)}
+                className="w-full bg-card border border-border rounded-lg px-4 py-3 text-foreground font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-muted-foreground"
+                placeholder="Enter a friend's referral code"
+              />
+              <p className="text-xs text-muted-foreground mt-1 font-body">Were you referred by a friend?</p>
+            </div>
+
             <div>
               <label className="block font-display text-xs tracking-wider text-muted-foreground mb-1.5">PLAYTOMIC PROFILE</label>
               <input
