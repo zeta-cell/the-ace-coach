@@ -3,13 +3,14 @@ import { useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion } from "framer-motion";
-import { Search, UserCheck, UserX } from "lucide-react";
+import { Search, UserCheck, UserX, CheckCircle2 } from "lucide-react";
 import { format } from "date-fns";
 import { toast } from "sonner";
 import PortalLayout from "@/components/portal/PortalLayout";
 import UserDetailDrawer from "@/components/portal/UserDetailDrawer";
 
 type AppRole = "player" | "coach" | "admin";
+type BadgeLevel = "starter" | "pro" | "elite" | "legend";
 
 interface UserRow {
   user_id: string;
@@ -18,12 +19,21 @@ interface UserRow {
   is_active: boolean;
   created_at: string;
   role: AppRole;
+  badge_level?: BadgeLevel;
+  is_verified?: boolean;
 }
 
 const ROLE_COLORS: Record<AppRole, string> = {
   player: "bg-blue-500/10 text-blue-400",
   coach: "bg-purple-500/10 text-purple-400",
   admin: "bg-primary/10 text-primary",
+};
+
+const BADGE_COLORS: Record<BadgeLevel, string> = {
+  starter: "bg-secondary text-muted-foreground",
+  pro: "bg-chart-2/20 text-chart-2",
+  elite: "bg-chart-4/20 text-chart-4",
+  legend: "bg-primary/20 text-primary",
 };
 
 const AdminUsers = () => {
@@ -54,16 +64,29 @@ const AdminUsers = () => {
       .from("user_roles")
       .select("user_id, role");
 
-    const roleMap = new Map(rolesData?.map((r) => [r.user_id, r.role]) || []);
+    const { data: coachData } = await supabase
+      .from("coach_profiles")
+      .select("user_id, badge_level, is_verified");
 
-    const allUsers: UserRow[] = (profilesData || []).map((p) => ({
-      user_id: p.user_id,
-      full_name: p.full_name || "No name",
-      email: p.email || "",
-      is_active: p.is_active,
-      created_at: p.created_at,
-      role: (roleMap.get(p.user_id) as AppRole) || "player",
-    }));
+    const roleMap = new Map(rolesData?.map((r) => [r.user_id, r.role]) || []);
+    const coachMap = new Map(
+      (coachData || []).map((c: any) => [c.user_id, { badge_level: c.badge_level, is_verified: c.is_verified }])
+    );
+
+    const allUsers: UserRow[] = (profilesData || []).map((p) => {
+      const role = (roleMap.get(p.user_id) as AppRole) || "player";
+      const coachInfo = coachMap.get(p.user_id);
+      return {
+        user_id: p.user_id,
+        full_name: p.full_name || "No name",
+        email: p.email || "",
+        is_active: p.is_active,
+        created_at: p.created_at,
+        role,
+        badge_level: role === "coach" ? (coachInfo?.badge_level || "starter") : undefined,
+        is_verified: role === "coach" ? (coachInfo?.is_verified || false) : undefined,
+      };
+    });
 
     setUsers(allUsers);
     setLoading(false);
@@ -76,7 +99,6 @@ const AdminUsers = () => {
 
   const handleUserUpdate = (userId: string, updates: Partial<UserRow>) => {
     setUsers((prev) => prev.map((u) => (u.user_id === userId ? { ...u, ...updates } : u)));
-    // Also update selected user in drawer
     setSelectedUser((prev) => prev && prev.user_id === userId ? { ...prev, ...updates } : prev);
   };
 
@@ -94,6 +116,26 @@ const AdminUsers = () => {
     if (error) { toast.error("Failed to update status"); return; }
     toast.success(currentActive ? "User deactivated" : "User activated");
     handleUserUpdate(userId, { is_active: !currentActive });
+  };
+
+  const changeBadgeLevel = async (userId: string, fullName: string, newBadge: BadgeLevel) => {
+    const { error } = await supabase
+      .from("coach_profiles")
+      .update({ badge_level: newBadge })
+      .eq("user_id", userId);
+    if (error) { toast.error("Failed to update badge"); return; }
+    toast.success(`Badge updated for ${fullName}`);
+    handleUserUpdate(userId, { badge_level: newBadge });
+  };
+
+  const toggleVerified = async (userId: string, currentVerified: boolean) => {
+    const { error } = await supabase
+      .from("coach_profiles")
+      .update({ is_verified: !currentVerified })
+      .eq("user_id", userId);
+    if (error) { toast.error("Failed to update verification"); return; }
+    toast.success(!currentVerified ? "Coach verified" : "Verification removed");
+    handleUserUpdate(userId, { is_verified: !currentVerified });
   };
 
   const filtered = users.filter((u) => {
@@ -167,7 +209,12 @@ const AdminUsers = () => {
                     {u.full_name?.charAt(0)?.toUpperCase() || "?"}
                   </div>
                   <div className="min-w-0">
-                    <p className="font-display text-foreground truncate">{u.full_name || "No name"}</p>
+                    <div className="flex items-center gap-1.5">
+                      <p className="font-display text-foreground truncate">{u.full_name || "No name"}</p>
+                      {u.role === "coach" && u.is_verified && (
+                        <CheckCircle2 size={14} className="text-chart-2 shrink-0" />
+                      )}
+                    </div>
                     <p className="text-xs font-body text-muted-foreground truncate">{u.email}</p>
                     <p className="text-[10px] font-body text-muted-foreground">
                       Joined {format(new Date(u.created_at), "d MMM yyyy")}
@@ -175,8 +222,35 @@ const AdminUsers = () => {
                   </div>
                 </div>
 
-                {/* Role badge + selector */}
-                <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+                {/* Controls */}
+                <div className="flex items-center gap-2 flex-wrap" onClick={(e) => e.stopPropagation()}>
+                  {/* Badge level for coaches */}
+                  {u.role === "coach" && (
+                    <>
+                      <select
+                        value={u.badge_level || "starter"}
+                        onChange={(e) => changeBadgeLevel(u.user_id, u.full_name, e.target.value as BadgeLevel)}
+                        className={`px-2 py-1 rounded-lg font-body text-xs uppercase tracking-wider border-0 cursor-pointer ${BADGE_COLORS[u.badge_level || "starter"]}`}
+                      >
+                        <option value="starter">Starter</option>
+                        <option value="pro">Pro</option>
+                        <option value="elite">Elite</option>
+                        <option value="legend">Legend</option>
+                      </select>
+                      <button
+                        onClick={() => toggleVerified(u.user_id, u.is_verified || false)}
+                        className={`p-1.5 rounded-lg transition-colors ${
+                          u.is_verified
+                            ? "bg-chart-2/20 text-chart-2"
+                            : "bg-secondary text-muted-foreground hover:bg-secondary/80"
+                        }`}
+                        title={u.is_verified ? "Verified — click to remove" : "Not verified — click to verify"}
+                      >
+                        <CheckCircle2 size={14} />
+                      </button>
+                    </>
+                  )}
+
                   <select
                     value={u.role}
                     onChange={(e) => changeRole(u.user_id, e.target.value as AppRole)}

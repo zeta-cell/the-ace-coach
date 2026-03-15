@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
@@ -8,6 +8,10 @@ import { toast } from "@/hooks/use-toast";
 import { X, Plus } from "lucide-react";
 
 interface CoachEditData {
+  profile_slug: string;
+  location_city: string;
+  location_country: string;
+  response_time_hours: number;
   bio: string;
   coaching_style: string;
   phone: string;
@@ -72,10 +76,17 @@ const TagInput = ({ label, tags, onChange }: { label: string; tags: string[]; on
   );
 };
 
+const RESPONSE_TIME_OPTIONS = [1, 6, 12, 24, 48];
+
 const CoachProfileEdit = ({ open, onClose, coachData, onSaved }: Props) => {
-  const { user, refreshProfile } = useAuth();
+  const { user, profile, refreshProfile } = useAuth();
   const [saving, setSaving] = useState(false);
+  const [slugError, setSlugError] = useState("");
   const [form, setForm] = useState<CoachEditData>({
+    profile_slug: coachData?.profile_slug || "",
+    location_city: coachData?.location_city || "",
+    location_country: coachData?.location_country || "",
+    response_time_hours: coachData?.response_time_hours || 24,
     bio: coachData?.bio || "",
     coaching_style: coachData?.coaching_style || "",
     phone: coachData?.phone || "",
@@ -95,15 +106,48 @@ const CoachProfileEdit = ({ open, onClose, coachData, onSaved }: Props) => {
     weakest_shot: coachData?.weakest_shot || "",
   });
 
+  // Auto-suggest slug from full name if empty
+  useEffect(() => {
+    if (!form.profile_slug && profile?.full_name) {
+      const suggested = profile.full_name
+        .toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, "")
+        .replace(/\s+/g, "-")
+        .replace(/-+/g, "-")
+        .replace(/^-|-$/g, "");
+      if (suggested) {
+        setForm((f) => ({ ...f, profile_slug: suggested }));
+      }
+    }
+  }, [open]);
+
   const set = (key: keyof CoachEditData, value: any) => setForm((f) => ({ ...f, [key]: value }));
+
+  const handleSlugChange = (value: string) => {
+    const cleaned = value.toLowerCase().replace(/[^a-z0-9-]/g, "");
+    set("profile_slug", cleaned);
+    if (cleaned && !/^[a-z0-9-]+$/.test(cleaned)) {
+      setSlugError("Only lowercase letters, numbers, and hyphens allowed");
+    } else {
+      setSlugError("");
+    }
+  };
 
   const handleSave = async () => {
     if (!user) return;
+    if (form.profile_slug && !/^[a-z0-9-]+$/.test(form.profile_slug)) {
+      setSlugError("Only lowercase letters, numbers, and hyphens allowed");
+      return;
+    }
     setSaving(true);
     try {
       const { error } = await supabase
         .from("coach_profiles")
         .update({
+          profile_slug: form.profile_slug || null,
+          location_city: form.location_city || null,
+          location_country: form.location_country || null,
+          response_time_hours: form.response_time_hours,
           bio: form.bio || null,
           coaching_style: form.coaching_style || null,
           phone: form.phone || null,
@@ -157,6 +201,48 @@ const CoachProfileEdit = ({ open, onClose, coachData, onSaved }: Props) => {
         </SheetHeader>
 
         <div className="space-y-5 pb-24">
+          {/* PUBLIC PROFILE */}
+          <section className="space-y-3">
+            <h3 className="font-display text-xs tracking-wider text-muted-foreground border-b border-border pb-2">PUBLIC PROFILE</h3>
+            <div>
+              <label className="font-display text-xs tracking-wider text-muted-foreground">YOUR PUBLIC PROFILE URL</label>
+              <div className="flex items-center mt-1.5">
+                <span className="h-9 px-3 flex items-center rounded-l-md border border-r-0 border-input bg-muted text-muted-foreground text-sm font-body whitespace-nowrap">
+                  app.com/coach/
+                </span>
+                <Input
+                  value={form.profile_slug}
+                  onChange={(e) => handleSlugChange(e.target.value)}
+                  placeholder="patrick-mouratoglou"
+                  className="h-9 text-sm rounded-l-none"
+                />
+              </div>
+              {slugError && <p className="text-destructive text-xs font-body mt-1">{slugError}</p>}
+              <p className="text-muted-foreground text-[10px] font-body mt-1">
+                This is your shareable profile link. Use your real name e.g. patrick-mouratoglou
+              </p>
+            </div>
+            <Field label="CITY" field="location_city" placeholder="e.g. Barcelona" />
+            <Field label="COUNTRY" field="location_country" placeholder="e.g. Spain" />
+            <div>
+              <label className="font-display text-xs tracking-wider text-muted-foreground">TYPICAL RESPONSE TIME</label>
+              <div className="flex gap-2 mt-1.5">
+                {RESPONSE_TIME_OPTIONS.map((h) => (
+                  <button
+                    key={h}
+                    type="button"
+                    onClick={() => set("response_time_hours", h)}
+                    className={`flex-1 py-2 rounded-lg text-sm font-display tracking-wider transition-colors ${
+                      form.response_time_hours === h ? "bg-primary text-primary-foreground" : "bg-secondary text-foreground"
+                    }`}
+                  >
+                    {h}H
+                  </button>
+                ))}
+              </div>
+            </div>
+          </section>
+
           {/* Personal */}
           <section className="space-y-3">
             <h3 className="font-display text-xs tracking-wider text-muted-foreground border-b border-border pb-2">PERSONAL</h3>

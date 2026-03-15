@@ -5,7 +5,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { motion } from "framer-motion";
 import {
   Camera, ExternalLink, Target, TrendingDown,
-  Bell, BellOff, LogOut, Mail, Phone, Globe, Award, BookOpen, MessageCircle, Pencil, Plus
+  Bell, BellOff, LogOut, Mail, Phone, Globe, Award, BookOpen, MessageCircle, Pencil, Plus,
+  Copy, ExternalLink as ExtLink, Link2
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import PortalLayout from "@/components/portal/PortalLayout";
@@ -37,6 +38,14 @@ interface CoachData {
   lob_pct: number;
   best_shot: string | null;
   weakest_shot: string | null;
+  profile_slug: string | null;
+  location_city: string | null;
+  location_country: string | null;
+  response_time_hours: number;
+  hourly_rate_from: number | null;
+  is_verified: boolean;
+  badge_level: string;
+  total_sessions_coached: number;
 }
 
 const CoachProfile = () => {
@@ -66,7 +75,7 @@ const CoachProfile = () => {
       supabase.from("profiles").select("notification_preferences").eq("user_id", user.id).single(),
       supabase.from("coach_packages").select("*").eq("coach_id", user.id).order("created_at", { ascending: false }),
     ]);
-    if (coach) setCoachData(coach as CoachData);
+    if (coach) setCoachData(coach as unknown as CoachData);
     if (prof?.notification_preferences) {
       setNotifPrefs(prof.notification_preferences as typeof notifPrefs);
     }
@@ -81,19 +90,36 @@ const CoachProfile = () => {
     }
   };
 
+  const syncHourlyRate = async () => {
+    if (!user) return;
+    const { data: minPkg } = await supabase
+      .from('coach_packages')
+      .select('price_per_session')
+      .eq('coach_id', user.id)
+      .eq('is_active', true)
+      .order('price_per_session', { ascending: true })
+      .limit(1)
+      .maybeSingle();
+    await supabase
+      .from('coach_profiles')
+      .update({ hourly_rate_from: minPkg?.price_per_session ?? null })
+      .eq('user_id', user.id);
+  };
+
   const handleSavePkg = async (data: any) => {
     if (!user) return;
     setPkgSaving(true);
     try {
       if (editingPkg) {
-        const { error } = await supabase.from("coach_packages").update(data as any).eq("id", editingPkg.id);
+        const { error } = await supabase.from("coach_packages").update(data).eq("id", editingPkg.id);
         if (error) throw error;
         toast({ title: "Package updated" });
       } else {
-        const { error } = await supabase.from("coach_packages").insert({ ...data, coach_id: user.id } as any);
+        const { error } = await supabase.from("coach_packages").insert({ ...data, coach_id: user.id });
         if (error) throw error;
         toast({ title: "Package created" });
       }
+      await syncHourlyRate();
       setPkgDialogOpen(false);
       setEditingPkg(null);
       fetchData();
@@ -106,14 +132,29 @@ const CoachProfile = () => {
 
   const handleDeletePkg = async (id: string) => {
     const { error } = await supabase.from("coach_packages").delete().eq("id", id);
-    if (error) toast({ title: "Error", description: error.message, variant: "destructive" });
-    else fetchData();
+    if (error) {
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+    } else {
+      await syncHourlyRate();
+      fetchData();
+    }
   };
 
   const handleTogglePkg = async (id: string, active: boolean) => {
-    const { error } = await supabase.from("coach_packages").update({ is_active: active } as any).eq("id", id);
-    if (error) toast({ title: "Error", description: error.message, variant: "destructive" });
-    else fetchData();
+    const { error } = await supabase.from("coach_packages").update({ is_active: active }).eq("id", id);
+    if (error) {
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+    } else {
+      await syncHourlyRate();
+      fetchData();
+    }
+  };
+
+  const copyProfileUrl = () => {
+    if (coachData?.profile_slug) {
+      navigator.clipboard.writeText(`${window.location.origin}/coach/${coachData.profile_slug}`);
+      toast({ title: "Link copied!" });
+    }
   };
 
   const shots = coachData
@@ -189,6 +230,37 @@ const CoachProfile = () => {
               </div>
             )}
           </div>
+        </motion.div>
+
+        {/* Public profile link info box */}
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="bg-card border border-border rounded-xl p-4">
+          <div className="flex items-center gap-2 mb-1">
+            <Link2 size={14} className="text-primary shrink-0" />
+            <span className="font-display text-xs tracking-wider text-muted-foreground">PUBLIC PROFILE</span>
+          </div>
+          {coachData?.profile_slug ? (
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="font-body text-sm text-foreground">/coach/{coachData.profile_slug}</span>
+              <button
+                onClick={copyProfileUrl}
+                className="flex items-center gap-1 px-2 py-1 rounded-md bg-secondary text-foreground text-[10px] font-display tracking-wider hover:bg-secondary/80 transition-colors"
+              >
+                <Copy size={10} /> COPY
+              </button>
+              <a
+                href={`/coach/${coachData.profile_slug}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1 px-2 py-1 rounded-md bg-primary/10 text-primary text-[10px] font-display tracking-wider hover:bg-primary/20 transition-colors"
+              >
+                <ExternalLink size={10} /> OPEN
+              </a>
+            </div>
+          ) : (
+            <p className="font-body text-xs text-muted-foreground">
+              Set your profile URL in Edit Profile to get a shareable link
+            </p>
+          )}
         </motion.div>
 
         {/* Bio & Style */}
