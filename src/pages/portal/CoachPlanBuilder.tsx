@@ -193,6 +193,15 @@ const CoachPlanBuilder = () => {
     }
   }, [user, playerId, planDate]);
 
+  useEffect(() => {
+    if (blockIdParam) {
+      supabase.from("training_blocks").select("title, week_count, weekly_structure")
+        .eq("id", blockIdParam).single().then(({ data }) => {
+          if (data) setWeekBlockData(data);
+        });
+    }
+  }, [blockIdParam]);
+
   const fetchPlayerName = async () => {
     if (!playerId) return;
     const { data } = await supabase.from("profiles").select("full_name").eq("user_id", playerId).single();
