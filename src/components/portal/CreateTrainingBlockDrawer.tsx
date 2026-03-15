@@ -91,9 +91,8 @@ const CreateTrainingBlockDrawer = ({ open, onClose, onCreated }: Props) => {
     if (error) {
       toast.error("Failed to create block");
     } else {
-      toast.success("Custom block created!");
-      onCreated();
-      onClose();
+      toast.success(visibility === "for_sale" ? "Program published to Marketplace!" : visibility === "public" ? "Block published!" : "Block created!");
+      onCreated(); onClose();
       // Reset
       setTitle(""); setDescription(""); setGoals([]); setExercises([{ name: "", sets: 3, reps: 10, notes: "" }]);
     }
