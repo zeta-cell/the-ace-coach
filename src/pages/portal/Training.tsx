@@ -5,7 +5,7 @@ import { useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Check, ChevronDown, ChevronUp, ChevronLeft, ChevronRight,
-  Play, Clock, Layers, CalendarDays, MapPin, Save, Trash2, Plus, X,
+  Play, Clock, Layers, CalendarDays, MapPin, Save, Trash2, Plus, X, Video,
 } from "lucide-react";
 import {
   format, startOfWeek, addDays, isSameDay, parseISO, isValid,
@@ -14,6 +14,7 @@ import {
 import PortalLayout from "@/components/portal/PortalLayout";
 import TrainingDayInfo from "@/components/portal/TrainingDayInfo";
 import TrainingBlocksPanel from "@/components/portal/TrainingBlocksPanel";
+import CoachVideoModal from "@/components/portal/CoachVideoModal";
 import type { BlockPlanItem, ModuleItem as BlockModuleItem } from "@/types/training";
 import { toast } from "sonner";
 
