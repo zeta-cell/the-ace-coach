@@ -101,7 +101,7 @@ const Dashboard = () => {
 
     // Earned badges
     const { data: badges } = await supabase.from("user_badges").select("badge_key, badge_name, earned_at").eq("user_id", user.id).order("earned_at", { ascending: false });
-    setEarnedBadges((badges as unknown as EarnedBadge[]) || []);
+    setEarnedBadges((badges || []) as EarnedBadge[]);
 
     // Activity chart (last 8 weeks)
     const weeks: any[] = [];
