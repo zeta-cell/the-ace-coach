@@ -492,6 +492,99 @@ export type Database = {
           },
         ]
       }
+      health_connections: {
+        Row: {
+          access_token: string | null
+          created_at: string | null
+          id: string
+          is_connected: boolean | null
+          last_synced_at: string | null
+          provider: string
+          provider_user_id: string | null
+          refresh_token: string | null
+          token_expires_at: string | null
+          user_id: string
+        }
+        Insert: {
+          access_token?: string | null
+          created_at?: string | null
+          id?: string
+          is_connected?: boolean | null
+          last_synced_at?: string | null
+          provider: string
+          provider_user_id?: string | null
+          refresh_token?: string | null
+          token_expires_at?: string | null
+          user_id: string
+        }
+        Update: {
+          access_token?: string | null
+          created_at?: string | null
+          id?: string
+          is_connected?: boolean | null
+          last_synced_at?: string | null
+          provider?: string
+          provider_user_id?: string | null
+          refresh_token?: string | null
+          token_expires_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      health_data: {
+        Row: {
+          calories_active: number | null
+          date: string
+          hrv_ms: number | null
+          id: string
+          provider: string
+          raw_data: Json | null
+          readiness_score: number | null
+          recovery_score: number | null
+          resting_hr: number | null
+          sleep_hours: number | null
+          sleep_score: number | null
+          steps: number | null
+          strain_score: number | null
+          synced_at: string | null
+          user_id: string
+        }
+        Insert: {
+          calories_active?: number | null
+          date: string
+          hrv_ms?: number | null
+          id?: string
+          provider: string
+          raw_data?: Json | null
+          readiness_score?: number | null
+          recovery_score?: number | null
+          resting_hr?: number | null
+          sleep_hours?: number | null
+          sleep_score?: number | null
+          steps?: number | null
+          strain_score?: number | null
+          synced_at?: string | null
+          user_id: string
+        }
+        Update: {
+          calories_active?: number | null
+          date?: string
+          hrv_ms?: number | null
+          id?: string
+          provider?: string
+          raw_data?: Json | null
+          readiness_score?: number | null
+          recovery_score?: number | null
+          resting_hr?: number | null
+          sleep_hours?: number | null
+          sleep_score?: number | null
+          steps?: number | null
+          strain_score?: number | null
+          synced_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       leaderboard: {
         Row: {
           avatar_url: string | null
@@ -1317,45 +1410,60 @@ export type Database = {
       }
       user_stats: {
         Row: {
+          avg_hrv: number | null
+          avg_recovery_score: number | null
+          avg_sleep_hours: number | null
           calories_estimate: number | null
           cities_trained_in: string[] | null
           current_level: string | null
           current_streak_days: number | null
           longest_streak_days: number | null
           raffle_tickets: number | null
+          total_calories: number | null
           total_coaches: number | null
           total_minutes: number | null
           total_sessions: number | null
+          total_steps: number | null
           total_xp: number | null
           updated_at: string | null
           user_id: string
           wallet_balance: number | null
         }
         Insert: {
+          avg_hrv?: number | null
+          avg_recovery_score?: number | null
+          avg_sleep_hours?: number | null
           calories_estimate?: number | null
           cities_trained_in?: string[] | null
           current_level?: string | null
           current_streak_days?: number | null
           longest_streak_days?: number | null
           raffle_tickets?: number | null
+          total_calories?: number | null
           total_coaches?: number | null
           total_minutes?: number | null
           total_sessions?: number | null
+          total_steps?: number | null
           total_xp?: number | null
           updated_at?: string | null
           user_id: string
           wallet_balance?: number | null
         }
         Update: {
+          avg_hrv?: number | null
+          avg_recovery_score?: number | null
+          avg_sleep_hours?: number | null
           calories_estimate?: number | null
           cities_trained_in?: string[] | null
           current_level?: string | null
           current_streak_days?: number | null
           longest_streak_days?: number | null
           raffle_tickets?: number | null
+          total_calories?: number | null
           total_coaches?: number | null
           total_minutes?: number | null
           total_sessions?: number | null
+          total_steps?: number | null
           total_xp?: number | null
           updated_at?: string | null
           user_id?: string
