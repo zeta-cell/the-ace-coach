@@ -400,6 +400,14 @@ const CoachModules = () => {
             </motion.div>
           )}
         </AnimatePresence>
+
+        <CoachVideoModal
+          open={videoModalOpen}
+          onClose={() => setVideoModalOpen(false)}
+          videoUrl={videoModalUrl}
+          moduleTitle={videoModalTitle}
+          coachName={user ? "You" : undefined}
+        />
       </div>
     </PortalLayout>
   );
