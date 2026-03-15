@@ -488,7 +488,18 @@ const CoachPlanBuilder = () => {
 
   return (
     <PortalLayout>
-      <div className="max-w-3xl mx-auto">
+      <div className="flex gap-6">
+        {/* Left: Training Blocks Panel (desktop only) */}
+        <aside className="hidden lg:block w-[260px] shrink-0 sticky top-[80px] self-start max-h-[calc(100vh-96px)] overflow-y-auto pr-2 scrollbar-none">
+          <TrainingBlocksPanel
+            onApplyBlock={handleApplyBlock}
+            onSaveAsBlock={() => setShowSaveBlock(true)}
+            modules={modules}
+          />
+        </aside>
+
+        {/* Right: Plan builder */}
+        <div className="flex-1 max-w-3xl min-w-0">
         <Link to={`/coach/players/${playerId}`} className="flex items-center gap-2 text-muted-foreground hover:text-foreground font-body text-sm mb-4 transition-colors">
           <ArrowLeft size={16} /> Back to {playerName}
         </Link>
