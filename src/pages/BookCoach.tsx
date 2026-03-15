@@ -198,7 +198,7 @@ const BookCoach = () => {
       notes: notes.trim() || null,
       location_type: locationType,
       location_address: locationType === "in_person" ? locationAddress.trim() || null : null,
-    } as any).select("id").single();
+    }).select("id").single();
 
     if (error || !booking) {
       toast.error("Failed to create booking", { description: error?.message });
