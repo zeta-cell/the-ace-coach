@@ -7,6 +7,7 @@ import { Play, Calendar, TrendingUp, Flame, CheckCircle, ShoppingBag, ChevronRig
 import { format, startOfWeek, addDays, isSameDay } from "date-fns";
 import PortalLayout from "@/components/portal/PortalLayout";
 import TrainingDayInfo from "@/components/portal/TrainingDayInfo";
+import UpcomingBookings from "@/components/portal/UpcomingBookings";
 import { toast } from "sonner";
 
 interface DayPlan {
