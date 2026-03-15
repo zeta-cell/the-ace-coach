@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { Play, Calendar, TrendingUp, Flame, CheckCircle } from "lucide-react";
 import { format, startOfWeek, addDays, isSameDay } from "date-fns";
 import PortalLayout from "@/components/portal/PortalLayout";
+import TrainingDayInfo from "@/components/portal/TrainingDayInfo";
 
 interface DayPlan {
   id: string;
