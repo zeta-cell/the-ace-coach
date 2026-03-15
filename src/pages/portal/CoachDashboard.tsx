@@ -88,6 +88,39 @@ const CoachDashboard = () => {
       .eq("coach_id", user.id)
       .eq("plan_date", todayStr);
     setTodayPlansCount(plansCount || 0);
+
+    // Fetch coaching requests
+    const { data: reqData } = await supabase
+      .from("coach_requests").select("id, player_id, block_id, message, request_type, created_at")
+      .eq("coach_id", user.id).eq("status", "pending").order("created_at", { ascending: false });
+    if (reqData && reqData.length > 0) {
+      const playerIds = reqData.map((r) => r.player_id);
+      const blockIds = reqData.filter((r) => r.block_id).map((r) => r.block_id);
+      const [profilesR, blocksR] = await Promise.all([
+        supabase.from("profiles").select("user_id, full_name").in("user_id", playerIds),
+        blockIds.length > 0 ? supabase.from("training_blocks").select("id, title").in("id", blockIds) : { data: [] },
+      ]);
+      const nameMap = new Map(profilesR.data?.map((p) => [p.user_id, p.full_name]) || []);
+      const blockMap = new Map((blocksR.data as any[])?.map((b: any) => [b.id, b.title]) || []);
+      setRequests(reqData.map((r) => ({
+        ...r,
+        player_name: nameMap.get(r.player_id) || "Player",
+        block_title: r.block_id ? blockMap.get(r.block_id) || null : null,
+      })));
+    }
+
+    // Marketplace stats
+    const { count: pubCount } = await supabase
+      .from("training_blocks").select("id", { count: "exact", head: true })
+      .eq("coach_id", user.id).eq("is_public", true);
+    const { data: salesData } = await supabase
+      .from("block_purchases").select("amount_paid, platform_fee")
+      .eq("seller_id", user.id);
+    setMarketplaceStats({
+      published: pubCount || 0,
+      sales: salesData?.length || 0,
+      revenue: salesData?.reduce((s, p) => s + (Number(p.amount_paid) - Number(p.platform_fee || 0)), 0) || 0,
+    });
   };
 
   const firstName = profile?.full_name?.split(" ")[0]?.toUpperCase() || "COACH";
