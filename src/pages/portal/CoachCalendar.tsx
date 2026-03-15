@@ -19,6 +19,18 @@ interface DayPlan {
   end_time: string | null;
 }
 
+interface AssignedPlayer {
+  player_id: string;
+  full_name: string;
+}
+  plan_date: string;
+  player_id: string;
+  player_name: string;
+  item_count: number;
+  start_time: string | null;
+  end_time: string | null;
+}
+
 const formatTime = (t: string | null) => {
   if (!t) return null;
   return t.slice(0, 5);
