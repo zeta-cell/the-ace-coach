@@ -381,6 +381,32 @@ const CoachPlanBuilder = () => {
     setTimeout(() => setSaved(false), 2000);
   };
 
+  const handleSaveAsBlock = async () => {
+    if (!user || planItems.length === 0 || !blockTitle.trim()) {
+      toast.error("Add a title and at least one module");
+      return;
+    }
+    await supabase.from("training_blocks").insert({
+      coach_id: user.id,
+      title: blockTitle.trim(),
+      description: blockDesc.trim() || null,
+      goal: blockGoal,
+      category: "custom",
+      module_ids: planItems.map((i) => i.module.id),
+      module_durations: planItems.map((i) => i.custom_duration),
+      module_notes: planItems.map((i) => i.coach_note),
+      is_system: false,
+    } as any);
+    toast.success("Training block saved!");
+    setShowSaveBlock(false);
+    setBlockTitle("");
+    setBlockDesc("");
+  };
+
+  const handleApplyBlock = (items: PlanItem[]) => {
+    setPlanItems((prev) => [...prev, ...items]);
+  };
+
   const totalDuration = planItems.reduce((sum, i) => sum + (i.custom_duration || 0), 0);
   const filteredModules = modules.filter((m) => {
     const matchSearch = m.title.toLowerCase().includes(moduleSearch.toLowerCase());
