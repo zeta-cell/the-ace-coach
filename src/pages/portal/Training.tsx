@@ -80,6 +80,11 @@ const Training = () => {
   const [blockTitle, setBlockTitle] = useState("");
   const [blockGoal, setBlockGoal] = useState("Technique");
 
+  // Coach video modal
+  const [coachVideoOpen, setCoachVideoOpen] = useState(false);
+  const [coachVideoUrl, setCoachVideoUrl] = useState("");
+  const [coachVideoTitle, setCoachVideoTitle] = useState("");
+
   const weekStart = startOfWeek(selectedDay, { weekStartsOn: 1 });
   const weekDays = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
 
