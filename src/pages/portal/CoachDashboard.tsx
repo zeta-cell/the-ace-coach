@@ -294,6 +294,38 @@ const CoachDashboard = () => {
           </div>
         )}
 
+        {/* Upcoming Plans */}
+        {upcomingPlans.length > 0 && (
+          <div className="mb-6">
+            <h2 className="font-display text-xl text-foreground flex items-center gap-2 mb-3">
+              <Calendar size={20} className="text-primary" /> UPCOMING SESSIONS
+            </h2>
+            <div className="space-y-2">
+              {upcomingPlans.map((plan) => (
+                <div key={plan.id} className="flex items-center gap-3 bg-card border border-border rounded-xl p-3">
+                  <div className="text-center min-w-[40px]">
+                    <p className="font-display text-sm text-primary">{format(new Date(plan.plan_date + "T00:00:00"), "d")}</p>
+                    <p className="font-display text-[9px] text-muted-foreground">{format(new Date(plan.plan_date + "T00:00:00"), "EEE").toUpperCase()}</p>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-display text-sm text-foreground">{plan.player_name}</p>
+                    <p className="font-body text-[10px] text-muted-foreground">
+                      {plan.start_time?.slice(0, 5) || "—"} · {plan.item_count} modules
+                    </p>
+                    {plan.program_author && (
+                      <div className="flex items-center gap-1 mt-0.5">
+                        <span className="font-body text-[10px] text-muted-foreground">
+                          Via program by {plan.program_author}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Marketplace Stats */}
         <div className="mb-6">
           <div className="flex items-center justify-between mb-3">
