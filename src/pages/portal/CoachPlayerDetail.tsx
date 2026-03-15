@@ -87,8 +87,8 @@ const CoachPlayerDetail = () => {
 
   const markWeekComplete = async (prog: ActiveProgram) => {
     const nextWeek = Math.min(prog.current_week + 1, prog.week_count);
-    await supabase.from("block_purchases").update({ current_week: nextWeek } as any)
-      .eq("buyer_id", playerId).eq("block_id", prog.block_id);
+    await supabase.from("block_purchases").update({ current_week: nextWeek })
+      .eq("buyer_id", playerId!).eq("block_id", prog.block_id);
     toast.success(`Week ${prog.current_week} completed!`);
     setActivePrograms((prev) => prev.map((p) => p.block_id === prog.block_id ? { ...p, current_week: nextWeek } : p));
   };
