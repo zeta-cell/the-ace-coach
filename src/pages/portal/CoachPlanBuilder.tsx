@@ -593,8 +593,40 @@ const CoachPlanBuilder = () => {
           placeholder="Plan notes (optional)..."
           value={planNotes}
           onChange={(e) => setPlanNotes(e.target.value)}
-          className="w-full px-3 py-2 rounded-lg bg-card border border-border text-foreground font-body text-sm mb-4 focus:outline-none focus:ring-1 focus:ring-primary"
+          className="w-full px-3 py-2 rounded-lg bg-card border border-border text-foreground font-body text-sm mb-3 focus:outline-none focus:ring-1 focus:ring-primary"
         />
+
+        {/* Location fields */}
+        <div className="grid grid-cols-2 gap-3 mb-4">
+          <input
+            placeholder="Location name (e.g. Padel Club)"
+            value={locationName}
+            onChange={(e) => setLocationName(e.target.value)}
+            className="w-full px-3 py-2 rounded-lg bg-card border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+          />
+          <input
+            placeholder="Address (for Google Maps)"
+            value={locationAddress}
+            onChange={(e) => setLocationAddress(e.target.value)}
+            className="w-full px-3 py-2 rounded-lg bg-card border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+          />
+          <input
+            placeholder="Latitude (optional)"
+            type="number"
+            step="any"
+            value={locationLat}
+            onChange={(e) => setLocationLat(e.target.value)}
+            className="w-full px-3 py-2 rounded-lg bg-card border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+          />
+          <input
+            placeholder="Longitude (optional)"
+            type="number"
+            step="any"
+            value={locationLng}
+            onChange={(e) => setLocationLng(e.target.value)}
+            className="w-full px-3 py-2 rounded-lg bg-card border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+          />
+        </div>
 
         {/* Module browser — on mobile appears before plan items, on desktop after */}
         {renderModuleBrowser()}
