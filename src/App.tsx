@@ -41,6 +41,13 @@ const CoachMarketplace = lazy(() => import("./pages/portal/CoachMarketplace"));
 const Rankings = lazy(() => import("./pages/Rankings"));
 const Rewards = lazy(() => import("./pages/Rewards"));
 
+// Events & Community (lazy-loaded)
+const Events = lazy(() => import("./pages/Events"));
+const Community = lazy(() => import("./pages/Community"));
+
+// Coach Events (lazy-loaded)
+const CoachEvents = lazy(() => import("./pages/portal/CoachEvents"));
+
 // Admin pages (lazy-loaded)
 const AdminDashboard = lazy(() => import("./pages/portal/AdminDashboard"));
 const AdminUsers = lazy(() => import("./pages/portal/AdminUsers"));
