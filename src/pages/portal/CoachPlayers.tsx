@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion } from "framer-motion";
-import { ChevronRight, Search, Users } from "lucide-react";
+import { ChevronRight, Search, Users, BookOpen } from "lucide-react";
 import PortalLayout from "@/components/portal/PortalLayout";
 
 interface PlayerRow {
@@ -14,6 +14,7 @@ interface PlayerRow {
   fitness_level: string | null;
   best_shot: string | null;
   weakest_shot: string | null;
+  program_name: string | null;
 }
 
 const CoachPlayers = () => {
@@ -46,6 +47,19 @@ const CoachPlayers = () => {
       .select("user_id, playtomic_level, fitness_level, best_shot, weakest_shot")
       .in("user_id", ids);
 
+    // Fetch program assignments via coach_requests
+    const { data: requests } = await supabase
+      .from("coach_requests").select("player_id, block_id, status")
+      .eq("coach_id", user.id).eq("status", "accepted").not("block_id", "is", null);
+    const blockIds = [...new Set(requests?.map((r) => r.block_id).filter(Boolean) || [])];
+    const blockMap = new Map<string, string>();
+    if (blockIds.length > 0) {
+      const { data: blocks } = await supabase.from("training_blocks").select("id, title").in("id", blockIds);
+      blocks?.forEach((b: any) => blockMap.set(b.id, b.title));
+    }
+    const playerProgramMap = new Map<string, string>();
+    requests?.forEach((r) => { if (r.block_id && blockMap.has(r.block_id)) playerProgramMap.set(r.player_id, blockMap.get(r.block_id)!); });
+
     const ppMap = new Map(pp?.map((p) => [p.user_id, p]) || []);
 
     setPlayers(
@@ -57,6 +71,7 @@ const CoachPlayers = () => {
         fitness_level: ppMap.get(p.user_id)?.fitness_level ?? null,
         best_shot: ppMap.get(p.user_id)?.best_shot ?? null,
         weakest_shot: ppMap.get(p.user_id)?.weakest_shot ?? null,
+        program_name: playerProgramMap.get(p.user_id) || null,
       }))
     );
     setLoading(false);
@@ -129,6 +144,12 @@ const CoachPlayers = () => {
                       <span>Level {player.playtomic_level ?? "—"}</span>
                       {player.best_shot && <span className="text-primary">Best: {player.best_shot}</span>}
                     </div>
+                    {player.program_name && (
+                      <div className="flex items-center gap-1 mt-0.5">
+                        <BookOpen size={10} className="text-primary" />
+                        <span className="text-[9px] font-body text-primary">Via: {player.program_name}</span>
+                      </div>
+                    )}
                   </div>
                   <ChevronRight size={18} className="text-muted-foreground flex-shrink-0" />
                 </Link>

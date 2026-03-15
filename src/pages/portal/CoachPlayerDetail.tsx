@@ -3,10 +3,22 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion } from "framer-motion";
-import { ArrowLeft, Target, TrendingDown, Calendar, CalendarDays, Plus, Mail, Phone, MessageCircle, ChevronDown, ChevronUp, User } from "lucide-react";
+import { ArrowLeft, Target, TrendingDown, Calendar, CalendarDays, Plus, Mail, Phone, MessageCircle, ChevronDown, ChevronUp, User, BookOpen, CheckCircle } from "lucide-react";
 import UpcomingSchedule from "@/components/portal/UpcomingSchedule";
-import { format, startOfWeek, addDays } from "date-fns";
+import { format } from "date-fns";
 import PortalLayout from "@/components/portal/PortalLayout";
+import { toast } from "sonner";
+
+interface ActiveProgram {
+  request_id: string;
+  block_id: string;
+  block_title: string;
+  author_name: string | null;
+  author_avatar_url: string | null;
+  week_count: number;
+  current_week: number;
+  weekly_structure: any;
+}
 
 const CoachPlayerDetail = () => {
   const { playerId } = useParams<{ playerId: string }>();
@@ -17,13 +29,15 @@ const CoachPlayerDetail = () => {
   const [rackets, setRackets] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [infoOpen, setInfoOpen] = useState(false);
+  const [activePrograms, setActivePrograms] = useState<ActiveProgram[]>([]);
+  const [expandedProgram, setExpandedProgram] = useState<string | null>(null);
 
   useEffect(() => {
     if (user && playerId) fetchAll();
   }, [user, playerId]);
 
   const fetchAll = async () => {
-    if (!playerId) return;
+    if (!playerId || !user) return;
     const [{ data: prof }, { data: pp }, { data: rk }] = await Promise.all([
       supabase.from("profiles").select("*").eq("user_id", playerId).single(),
       supabase.from("player_profiles").select("*").eq("user_id", playerId).single(),
@@ -32,17 +46,55 @@ const CoachPlayerDetail = () => {
     setProfileData(prof);
     setPlayerData(pp);
     setRackets(rk || []);
+
+    // Fetch active programs (accepted coach_requests with block_id for this player)
+    const { data: requests } = await supabase
+      .from("coach_requests").select("id, block_id")
+      .eq("coach_id", user.id).eq("player_id", playerId)
+      .eq("status", "accepted").not("block_id", "is", null);
+
+    if (requests && requests.length > 0) {
+      const blockIds = requests.map((r) => r.block_id!).filter(Boolean);
+      const { data: blocks } = await supabase
+        .from("training_blocks").select("id, title, author_name, author_avatar_url, week_count, weekly_structure")
+        .in("id", blockIds);
+
+      // Also fetch current_week from block_purchases
+      const { data: purchases } = await supabase
+        .from("block_purchases").select("block_id, current_week")
+        .eq("buyer_id", playerId).in("block_id", blockIds);
+
+      const blockMap = new Map((blocks as any[])?.map((b) => [b.id, b]) || []);
+      const purchaseMap = new Map(purchases?.map((p) => [p.block_id, p.current_week || 1]) || []);
+
+      setActivePrograms(requests.map((r) => {
+        const b = blockMap.get(r.block_id);
+        return {
+          request_id: r.id,
+          block_id: r.block_id!,
+          block_title: b?.title || "Program",
+          author_name: b?.author_name || null,
+          author_avatar_url: b?.author_avatar_url || null,
+          week_count: b?.week_count || 1,
+          current_week: purchaseMap.get(r.block_id) || 1,
+          weekly_structure: b?.weekly_structure,
+        };
+      }));
+    }
+
     setLoading(false);
   };
 
+  const markWeekComplete = async (prog: ActiveProgram) => {
+    const nextWeek = Math.min(prog.current_week + 1, prog.week_count);
+    await supabase.from("block_purchases").update({ current_week: nextWeek } as any)
+      .eq("buyer_id", playerId).eq("block_id", prog.block_id);
+    toast.success(`Week ${prog.current_week} completed!`);
+    setActivePrograms((prev) => prev.map((p) => p.block_id === prog.block_id ? { ...p, current_week: nextWeek } : p));
+  };
+
   if (loading) {
-    return (
-      <PortalLayout>
-        <div className="flex justify-center py-12">
-          <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-        </div>
-      </PortalLayout>
-    );
+    return <PortalLayout><div className="flex justify-center py-12"><div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" /></div></PortalLayout>;
   }
 
   const shots = playerData
@@ -75,20 +127,87 @@ const CoachPlayerDetail = () => {
                 {playerData?.fitness_level || "—"} · Level {playerData?.playtomic_level ?? "—"} · {playerData?.dominant_hand || "—"} hand
               </p>
             </div>
-            <Link
-              to={`/training?player=${playerId}&date=${format(new Date(), "yyyy-MM-dd")}`}
-              className="w-10 h-10 rounded-xl bg-card border border-border flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary transition-colors"
-            >
+            <Link to={`/training?player=${playerId}&date=${format(new Date(), "yyyy-MM-dd")}`}
+              className="w-10 h-10 rounded-xl bg-card border border-border flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary transition-colors">
               <CalendarDays size={18} />
             </Link>
           </div>
 
+          {/* Active Programs */}
+          {activePrograms.length > 0 && (
+            <div className="mb-6 space-y-2">
+              <h3 className="font-display text-sm tracking-wider text-muted-foreground flex items-center gap-2">
+                <BookOpen size={14} className="text-primary" /> ACTIVE PROGRAMS
+              </h3>
+              {activePrograms.map((prog) => {
+                const progress = prog.week_count > 1 ? Math.round((prog.current_week / prog.week_count) * 100) : 100;
+                const isExpanded = expandedProgram === prog.block_id;
+                const ws = prog.weekly_structure as any[] | null;
+                return (
+                  <div key={prog.block_id} className="bg-card border border-border rounded-xl overflow-hidden">
+                    <div className="p-4">
+                      <div className="flex items-center gap-3 mb-2">
+                        <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center shrink-0">
+                          <BookOpen size={16} className="text-primary" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-display text-sm text-foreground truncate">{prog.block_title}</p>
+                          {/* Program credit */}
+                          <div className="flex items-center gap-1.5 mt-0.5">
+                            {prog.author_avatar_url ? <img src={prog.author_avatar_url} className="w-4 h-4 rounded-full" /> : null}
+                            <span className="text-[9px] font-body text-muted-foreground">Program by {prog.author_name || "ACE"}</span>
+                          </div>
+                        </div>
+                        <span className="text-xs font-body text-primary shrink-0">Week {prog.current_week} of {prog.week_count}</span>
+                      </div>
+                      {prog.week_count > 1 && (
+                        <div className="w-full h-1.5 bg-muted rounded-full mb-3">
+                          <div className="h-full bg-primary rounded-full transition-all" style={{ width: `${progress}%` }} />
+                        </div>
+                      )}
+                      <div className="flex gap-2">
+                        <button onClick={() => setExpandedProgram(isExpanded ? null : prog.block_id)}
+                          className="flex-1 py-2 rounded-lg border border-border font-display text-[10px] tracking-wider text-foreground hover:bg-secondary transition-colors">
+                          {isExpanded ? "HIDE STRUCTURE" : "VIEW FULL PROGRAM"}
+                        </button>
+                        <Link to={`/coach/plan/${playerId}`}
+                          className="flex-1 py-2 rounded-lg border border-border font-display text-[10px] tracking-wider text-foreground hover:bg-secondary transition-colors text-center">
+                          ADJUST THIS WEEK
+                        </Link>
+                        <button onClick={() => markWeekComplete(prog)}
+                          className="py-2 px-3 rounded-lg bg-primary text-primary-foreground font-display text-[10px] tracking-wider hover:bg-primary/90 transition-colors flex items-center gap-1">
+                          <CheckCircle size={12} /> COMPLETE WEEK
+                        </button>
+                      </div>
+                    </div>
+                    {/* Expanded weekly structure */}
+                    {isExpanded && ws && (
+                      <div className="border-t border-border px-4 pb-4 pt-3 space-y-2">
+                        {ws.map((week: any, wi: number) => (
+                          <div key={wi} className={`rounded-lg p-3 ${wi + 1 === prog.current_week ? "bg-primary/5 border border-primary/20" : "bg-secondary"}`}>
+                            <p className="font-display text-[10px] tracking-wider text-foreground mb-1.5">
+                              WEEK {week.week || wi + 1} — {week.label || "Training Week"}
+                              {wi + 1 === prog.current_week && <span className="ml-2 text-primary">← CURRENT</span>}
+                            </p>
+                            {week.days && (week.days as any[]).map((day: any, di: number) => (
+                              <div key={di} className="flex items-center gap-2 py-1">
+                                <span className="text-[9px] font-display text-primary w-8">DAY {day.day || di + 1}</span>
+                                <span className="text-[10px] font-body text-foreground">{day.title || "Training Session"}</span>
+                              </div>
+                            ))}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
           {/* Contact Info — collapsible */}
           <div className="bg-card border border-border rounded-xl mb-6 overflow-hidden">
-            <button
-              onClick={() => setInfoOpen(!infoOpen)}
-              className="w-full flex items-center justify-between p-4 hover:bg-secondary/50 transition-colors"
-            >
+            <button onClick={() => setInfoOpen(!infoOpen)} className="w-full flex items-center justify-between p-4 hover:bg-secondary/50 transition-colors">
               <div className="flex items-center gap-2">
                 <User size={16} className="text-muted-foreground" />
                 <h3 className="font-display text-sm tracking-wider text-muted-foreground">PLAYER INFO</h3>
@@ -99,15 +218,7 @@ const CoachPlayerDetail = () => {
               <div className="px-4 pb-4 space-y-2 border-t border-border pt-3">
                 <div className="flex items-center gap-2 text-sm font-body text-foreground">
                   <Calendar size={14} className="text-muted-foreground shrink-0" />
-                  <span>
-                    {playerData?.date_of_birth
-                      ? (() => {
-                          const dob = new Date(playerData.date_of_birth);
-                          const age = Math.floor((Date.now() - dob.getTime()) / (365.25 * 24 * 60 * 60 * 1000));
-                          return `${dob.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })} (${age} years)`;
-                        })()
-                      : "No date of birth"}
-                  </span>
+                  <span>{playerData?.date_of_birth ? (() => { const dob = new Date(playerData.date_of_birth); const age = Math.floor((Date.now() - dob.getTime()) / (365.25 * 24 * 60 * 60 * 1000)); return `${dob.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })} (${age} years)`; })() : "No date of birth"}</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm font-body text-foreground">
                   <Mail size={14} className="text-muted-foreground shrink-0" />
@@ -127,13 +238,10 @@ const CoachPlayerDetail = () => {
             )}
           </div>
 
-          {/* Message button — always visible */}
-          <button
-            onClick={() => navigate(`/messages?to=${playerId}`)}
-            className="w-full py-2.5 rounded-xl bg-primary text-primary-foreground font-display text-sm tracking-widest hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 mb-6"
-          >
-            <MessageCircle size={16} />
-            MESSAGE PLAYER
+          {/* Message button */}
+          <button onClick={() => navigate(`/messages?to=${playerId}`)}
+            className="w-full py-2.5 rounded-xl bg-primary text-primary-foreground font-display text-sm tracking-widest hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 mb-6">
+            <MessageCircle size={16} /> MESSAGE PLAYER
           </button>
 
           {/* Best / Weakest */}
@@ -164,11 +272,8 @@ const CoachPlayerDetail = () => {
                     <span className="font-body text-xs text-foreground">{shot.name}</span>
                     <span className="font-body text-xs text-muted-foreground">{shot.pct}%</span>
                   </div>
-                   <div className="h-1.5 w-full rounded-full bg-[#222222]">
-                    <div
-                      className="h-1.5 rounded-full transition-all duration-500"
-                      style={{ width: `${shot.pct}%`, backgroundColor: idx < 2 ? '#e31e24' : '#444444' }}
-                    />
+                  <div className="h-1.5 w-full rounded-full bg-muted">
+                    <div className="h-1.5 rounded-full transition-all duration-500" style={{ width: `${shot.pct}%`, backgroundColor: idx < 2 ? 'hsl(var(--primary))' : 'hsl(var(--muted-foreground) / 0.3)' }} />
                   </div>
                 </div>
               ))}
@@ -208,15 +313,11 @@ const CoachPlayerDetail = () => {
           )}
 
           {/* Upcoming schedule */}
-          {playerId && (
-            <UpcomingSchedule playerId={playerId} linkPrefix="coach-plan" showCoach={false} daysAhead={21} />
-          )}
+          {playerId && <UpcomingSchedule playerId={playerId} linkPrefix="coach-plan" showCoach={false} daysAhead={21} />}
 
           {/* Quick plan link */}
-          <Link
-            to={`/coach/plan/${playerId}`}
-            className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-primary text-primary-foreground font-display text-sm tracking-widest hover:bg-primary/90 transition-colors"
-          >
+          <Link to={`/coach/plan/${playerId}`}
+            className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-primary text-primary-foreground font-display text-sm tracking-widest hover:bg-primary/90 transition-colors">
             <Plus size={16} /> CREATE DAY PLAN
           </Link>
         </motion.div>
