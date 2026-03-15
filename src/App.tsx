@@ -11,6 +11,7 @@ import { lazy, Suspense } from "react";
 // Public
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
+const PublicCoachProfile = lazy(() => import("./pages/PublicCoachProfile"));
 
 // Portal pages (lazy-loaded)
 const Login = lazy(() => import("./pages/portal/Login"));
