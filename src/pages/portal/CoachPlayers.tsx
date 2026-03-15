@@ -20,9 +20,12 @@ interface PlayerRow {
 
 const CoachPlayers = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [players, setPlayers] = useState<PlayerRow[]>([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
+  const [trainDrawerOpen, setTrainDrawerOpen] = useState(false);
+  const [trainPlayerId, setTrainPlayerId] = useState<string | undefined>();
 
   useEffect(() => {
     if (user) fetchPlayers();
