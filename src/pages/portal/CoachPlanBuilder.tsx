@@ -323,6 +323,10 @@ const CoachPlanBuilder = () => {
         notes: planNotes || null,
         start_time: startTime || null,
         end_time: endTime || null,
+        location_name: locationName || null,
+        location_address: locationAddress || null,
+        location_lat: locationLat ? parseFloat(locationLat) : null,
+        location_lng: locationLng ? parseFloat(locationLng) : null,
       } as any).eq("id", planId);
     } else {
       const { data } = await supabase
