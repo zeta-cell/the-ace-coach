@@ -199,7 +199,7 @@ const CoachVideos = () => {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.03 }}
-                onClick={() => { setSelectedVideo(v); setFeedback(v.coach_feedback || ""); }}
+                onClick={() => { setSelectedVideo(v); setFeedback(v.coach_feedback || ""); setShowComments(false); fetchComments(v.id); }}
                 className="bg-card border border-border rounded-xl overflow-hidden cursor-pointer hover:border-primary/30 transition-colors"
               >
                 <div className="aspect-video bg-secondary flex items-center justify-center relative">
