@@ -16,6 +16,16 @@ interface AssignedPlayer {
   fitness_level: string | null;
 }
 
+interface CoachRequest {
+  id: string;
+  player_id: string;
+  player_name: string;
+  block_title: string | null;
+  message: string | null;
+  request_type: string;
+  created_at: string;
+}
+
 const CoachDashboard = () => {
   const { user, profile } = useAuth();
   const [players, setPlayers] = useState<AssignedPlayer[]>([]);
