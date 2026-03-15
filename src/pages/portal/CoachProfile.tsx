@@ -5,10 +5,13 @@ import { useAuth } from "@/contexts/AuthContext";
 import { motion } from "framer-motion";
 import {
   Camera, ExternalLink, Target, TrendingDown,
-  Bell, BellOff, LogOut, Mail, Phone, Globe, Award, BookOpen, MessageCircle, Pencil
+  Bell, BellOff, LogOut, Mail, Phone, Globe, Award, BookOpen, MessageCircle, Pencil, Plus
 } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
 import PortalLayout from "@/components/portal/PortalLayout";
 import CoachProfileEdit from "@/components/portal/CoachProfileEdit";
+import CoachPackageCard, { type CoachPackage } from "@/components/portal/CoachPackageCard";
+import CoachPackageDialog from "@/components/portal/CoachPackageDialog";
 
 interface CoachData {
   bio: string | null;
