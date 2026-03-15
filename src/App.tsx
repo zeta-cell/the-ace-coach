@@ -33,6 +33,7 @@ const CoachPlanBuilder = lazy(() => import("./pages/portal/CoachPlanBuilder"));
 const CoachVideos = lazy(() => import("./pages/portal/CoachVideos"));
 const CoachCalendar = lazy(() => import("./pages/portal/CoachCalendar"));
 const CoachProfile = lazy(() => import("./pages/portal/CoachProfile"));
+const CoachMarketplace = lazy(() => import("./pages/portal/CoachMarketplace"));
 
 // Admin pages (lazy-loaded)
 const AdminDashboard = lazy(() => import("./pages/portal/AdminDashboard"));
