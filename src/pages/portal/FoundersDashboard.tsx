@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate, useSearchParams } from "react-router-dom";
 import {
   RefreshCw, Download, ChevronDown, ChevronRight, TrendingUp, Users,
   AlertTriangle, Zap, Target, Send, Copy, MapPin, Crown, Eye,
