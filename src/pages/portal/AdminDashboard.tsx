@@ -51,6 +51,8 @@ const AdminDashboard = () => {
   const [topPlayers, setTopPlayers] = useState<any[]>([]);
   const [activityFeed, setActivityFeed] = useState<BookingFeed[]>([]);
   const [unverifiedCoaches, setUnverifiedCoaches] = useState<UnverifiedCoach[]>([]);
+  const [eventStats, setEventStats] = useState({ total: 0, thisMonth: 0, totalRegs: 0, revenue: 0 });
+  const [recentEvents, setRecentEvents] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [seeding, setSeeding] = useState(false);
   const [skippedCoaches, setSkippedCoaches] = useState<string[]>(() => {
