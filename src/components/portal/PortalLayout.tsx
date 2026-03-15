@@ -13,6 +13,7 @@ import NotificationBell from "@/components/portal/NotificationBell";
 const playerNav = [
   { label: "Find a Coach", icon: Search, href: "/find-a-coach" },
   { label: "Marketplace", icon: ShoppingBag, href: "/marketplace" },
+  { label: "Events", icon: CalendarDays, href: "/events" },
   { label: "Home", icon: Home, href: "/dashboard" },
   { label: "My Programs", icon: BookOpen, href: "/dashboard#programs" },
   { label: "Training", icon: Calendar, href: "/training" },
