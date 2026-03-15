@@ -224,7 +224,7 @@ const Dashboard = () => {
   const xpToNext = nextLvl ? nextLvl.xpMin - userStats.total_xp : 0;
   const isGoldPlus = ['gold', 'platinum', 'diamond', 'legend'].includes(userStats.current_level);
   const improvementScore = (userStats.total_sessions * 2) + (userStats.current_streak_days * 5) + Math.floor(userStats.total_xp / 100);
-  const estimatedCalories = (userStats.total_minutes || 0) * 8;
+  const estimatedCalories = userStats.total_calories || (userStats.total_minutes || 0) * 8;
 
   // Heatmap rendering
   const heatmapStart = subMonths(today, 3);
