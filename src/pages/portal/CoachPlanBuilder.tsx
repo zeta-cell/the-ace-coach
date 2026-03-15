@@ -410,7 +410,7 @@ const CoachPlanBuilder = () => {
       module_durations: planItems.map((i) => i.custom_duration),
       module_notes: planItems.map((i) => i.coach_note),
       is_system: false,
-    } as any);
+    });
     toast.success("Training block saved!");
     setShowSaveBlock(false);
     setBlockTitle("");
