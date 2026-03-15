@@ -211,8 +211,8 @@ const BookCoach = () => {
       user_id: user.id,
       amount: totalPrice,
       currency: selectedPackage.currency,
-      status: "completed" as any,
-      type: "session" as any,
+      status: "completed",
+      type: "session",
       description: `Coaching session with ${profile?.full_name} on ${dateStr}`,
     });
 
