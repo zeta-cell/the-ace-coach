@@ -203,6 +203,28 @@ const AdminDashboard = () => {
     })));
   };
 
+  const fetchEventStats = async () => {
+    const now = new Date();
+    const monthStart = format(startOfMonth(now), "yyyy-MM-dd'T'HH:mm:ss");
+    const [eventsRes, regsRes, recentRes] = await Promise.all([
+      supabase.from("events").select("id, start_datetime"),
+      supabase.from("event_registrations").select("id, amount_paid, payment_status"),
+      supabase.from("events").select("id, title, coach_id, start_datetime, event_type, current_participants, status").order("created_at", { ascending: false }).limit(5),
+    ]);
+    const allEvents = eventsRes.data || [];
+    const thisMonthEvents = allEvents.filter((e: any) => e.start_datetime >= monthStart);
+    const regs = regsRes.data || [];
+    const paidRegs = regs.filter((r: any) => r.payment_status === "paid");
+    const revenue = paidRegs.reduce((sum: number, r: any) => sum + Number(r.amount_paid), 0);
+    setEventStats({ total: allEvents.length, thisMonth: thisMonthEvents.length, totalRegs: regs.length, revenue });
+    if (recentRes.data && recentRes.data.length > 0) {
+      const coachIds = [...new Set((recentRes.data as any[]).map((e: any) => e.coach_id))];
+      const { data: profiles } = await supabase.from("profiles").select("user_id, full_name").in("user_id", coachIds);
+      const nameMap = new Map((profiles || []).map((p: any) => [p.user_id, p.full_name]));
+      setRecentEvents((recentRes.data as any[]).map((e: any) => ({ ...e, coach_name: nameMap.get(e.coach_id) || "Coach" })));
+    }
+  };
+
   const verifyCoach = async (userId: string) => {
     await supabase.from("coach_profiles").update({ is_verified: true }).eq("user_id", userId);
     await supabase.rpc("award_xp", { p_user_id: userId, p_amount: 50, p_event_type: "profile_verified", p_description: "Profile verified by ACE" });
