@@ -1122,6 +1122,25 @@ const FoundersDashboard = () => {
     toast("Copied to clipboard");
   };
 
+  // Auth guard — share token or admin
+  if (checkingToken || authLoading) {
+    return (
+      <PortalLayout>
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+        </div>
+      </PortalLayout>
+    );
+  }
+
+  if (!user && !tokenValid) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (user && role !== "admin" && !tokenValid) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
   if (loading) {
     return (
       <PortalLayout>
@@ -1139,6 +1158,12 @@ const FoundersDashboard = () => {
     const g = Math.round(68 + (185 - 68) * (pct / 100));
     const b = Math.round(68 + (129 - 68) * (pct / 100));
     return `rgb(${r},${g},${b})`;
+  };
+
+  // Calculate share token expiry for banner
+  const getTokenExpiryText = () => {
+    if (!shareToken || !tokenValid) return "";
+    return "less than 24 hours";
   };
 
   return (
