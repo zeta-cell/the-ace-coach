@@ -260,6 +260,34 @@ const CoachProfile = () => {
           </motion.div>
         )}
 
+        {/* My Packages */}
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.22 }} className="bg-card border border-border rounded-xl p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="font-display text-sm tracking-wider text-muted-foreground">MY PACKAGES</h2>
+            <button
+              onClick={() => { setEditingPkg(null); setPkgDialogOpen(true); }}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-display tracking-wider hover:bg-primary/90 transition-colors"
+            >
+              <Plus size={12} /> CREATE
+            </button>
+          </div>
+          {packages.length === 0 ? (
+            <p className="font-body text-sm text-muted-foreground text-center py-8">No packages yet. Create your first coaching package!</p>
+          ) : (
+            <div className="grid gap-3 sm:grid-cols-2">
+              {packages.map((pkg) => (
+                <CoachPackageCard
+                  key={pkg.id}
+                  pkg={pkg}
+                  onEdit={(p) => { setEditingPkg(p); setPkgDialogOpen(true); }}
+                  onDelete={handleDeletePkg}
+                  onToggleActive={handleTogglePkg}
+                />
+              ))}
+            </div>
+          )}
+        </motion.div>
+
         {/* Shot confidence */}
         {coachData && (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }} className="bg-card border border-border rounded-xl p-6">
