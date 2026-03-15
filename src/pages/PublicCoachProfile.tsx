@@ -140,6 +140,13 @@ const PublicCoachProfile = () => {
     if (packagesRes.data) setPackages(packagesRes.data as unknown as Package[]);
     if (eventsRes.data) setCoachEvents(eventsRes.data as any[]);
 
+    // Track page view for founder analytics
+    supabase.from('page_views').insert({
+      page_type: 'coach_profile',
+      reference_id: coachData.user_id,
+      viewer_id: user?.id || null,
+    } as any).then(() => {});
+
     // Fetch player names for reviews
     if (reviewsRes.data && reviewsRes.data.length > 0) {
       const playerIds = [...new Set((reviewsRes.data as any[]).map((r: any) => r.player_id))];
