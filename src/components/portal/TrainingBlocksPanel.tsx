@@ -4,6 +4,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import { Layers, Plus, Search, ChevronDown, ChevronRight, Save, X, Trash2 } from "lucide-react";
+import type { ModuleItem, BlockPlanItem as PlanItem } from "@/types/training";
 
 /* ── types ── */
 interface TrainingBlock {
