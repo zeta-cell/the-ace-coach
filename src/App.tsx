@@ -50,6 +50,7 @@ const CoachEvents = lazy(() => import("./pages/portal/CoachEvents"));
 
 // Admin pages (lazy-loaded)
 const AdminDashboard = lazy(() => import("./pages/portal/AdminDashboard"));
+const FoundersDashboard = lazy(() => import("./pages/portal/FoundersDashboard"));
 const AdminUsers = lazy(() => import("./pages/portal/AdminUsers"));
 const AdminAssignments = lazy(() => import("./pages/portal/AdminAssignments"));
 const AdminPayments = lazy(() => import("./pages/portal/AdminPayments"));
