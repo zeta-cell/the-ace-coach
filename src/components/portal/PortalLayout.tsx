@@ -25,6 +25,7 @@ const coachNav = [
   { label: "Modules", icon: BookOpen, href: "/coach/modules" },
   { label: "Videos", icon: Video, href: "/coach/videos" },
   { label: "Calendar", icon: CalendarDays, href: "/coach/calendar" },
+  { label: "Marketplace", icon: ShoppingBag, href: "/coach/marketplace" },
   { label: "Messages", icon: MessageSquare, href: "/coach/messages" },
 ];
 

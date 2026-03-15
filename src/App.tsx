@@ -148,6 +148,11 @@ const App = () => (
                 <ProtectedRoute requiredRole="coach"><CoachProfile /></ProtectedRoute>
               </Suspense>
             } />
+            <Route path="/coach/marketplace" element={
+              <Suspense fallback={<PortalLoader />}>
+                <ProtectedRoute requiredRole="coach"><CoachMarketplace /></ProtectedRoute>
+              </Suspense>
+            } />
 
             {/* Admin */}
             <Route path="/admin" element={
