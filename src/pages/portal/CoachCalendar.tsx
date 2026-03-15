@@ -223,6 +223,40 @@ const CoachCalendar = () => {
     setDragOverIdx(null);
   };
 
+  // Touch reorder handlers (mobile/tablet)
+  const handleTouchStart = (idx: number, e: React.TouchEvent) => {
+    const touch = e.touches[0];
+    const target = e.currentTarget as HTMLElement;
+    touchStartRef.current = { idx, y: touch.clientY, height: target.offsetHeight };
+    setTouchDragIdx(idx);
+  };
+
+  const handleTouchMove = useCallback((e: React.TouchEvent) => {
+    if (!touchStartRef.current) return;
+    e.preventDefault();
+    const touch = e.touches[0];
+    const deltaY = touch.clientY - touchStartRef.current.y;
+    setTouchDragY(deltaY);
+    const moveBySlots = Math.round(deltaY / (touchStartRef.current.height + 8));
+    const newIdx = Math.max(0, Math.min(planBlocks.length - 1, touchStartRef.current.idx + moveBySlots));
+    setDragOverIdx(newIdx);
+  }, [planBlocks.length]);
+
+  const handleTouchEnd = () => {
+    if (touchStartRef.current !== null && touchDragIdx !== null && dragOverIdx !== null && touchDragIdx !== dragOverIdx) {
+      setPlanBlocks((prev) => {
+        const next = [...prev];
+        const [moved] = next.splice(touchDragIdx, 1);
+        next.splice(dragOverIdx, 0, moved);
+        return next;
+      });
+    }
+    setTouchDragIdx(null);
+    setTouchDragY(0);
+    setDragOverIdx(null);
+    touchStartRef.current = null;
+  };
+
   // Drag from library block into plan area
   const handleBlockDragStart = (e: React.DragEvent, block: TrainingBlock) => {
     setDraggingBlock(block);
