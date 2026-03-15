@@ -18,6 +18,7 @@ const playerNav = [
   { label: "Training", icon: Calendar, href: "/training" },
   { label: "Videos", icon: Video, href: "/videos" },
   { label: "Messages", icon: MessageSquare, href: "/messages" },
+  { label: "Rewards", icon: CreditCard, href: "/rewards" },
 ];
 
 const coachNav = [

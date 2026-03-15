@@ -105,6 +105,14 @@ const PlayerVideos = () => {
       shot_tag: shotTag || null,
     });
 
+    // Award XP for video upload
+    await supabase.rpc('award_xp', {
+      p_user_id: user.id,
+      p_amount: 15,
+      p_event_type: 'video_uploaded',
+      p_description: 'Uploaded a progress video',
+    });
+
     setShowUpload(false);
     setTitle("");
     setDescription("");
