@@ -141,9 +141,9 @@ const Dashboard = () => {
     checkBadges(stats as UserStats | null, (badges || []) as EarnedBadge[]);
   };
 
-  const checkBadges = async (stats: any, existingBadges: any[]) => {
+  const checkBadges = async (stats: UserStats | null, existingBadges: EarnedBadge[]) => {
     if (!user || !stats) return;
-    const earned = new Set((existingBadges || []).map((b: any) => b.badge_key));
+    const earned = new Set(existingBadges.map(b => b.badge_key));
     const newBadges: { key: string; name: string; desc: string }[] = [];
 
     if (stats.total_sessions >= 1 && !earned.has('first_session')) newBadges.push({ key: 'first_session', name: 'First Session', desc: 'Complete your first booked session' });
