@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef, useCallback } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate, useParams, Link } from "react-router-dom";
@@ -14,45 +14,26 @@ import {
 import {
   ChevronLeft, ChevronRight, Users, Clock, ArrowLeft, Plus, X,
   Layers, Search, GripVertical, Trash2, Copy, Save, Dumbbell,
-  Calendar as CalendarIcon,
+  Calendar as CalendarIcon, Edit3,
 } from "lucide-react";
 
 /* ── types ── */
 interface DayPlan {
-  id: string;
-  plan_date: string;
-  player_id: string;
-  player_name: string;
-  item_count: number;
-  start_time: string | null;
-  end_time: string | null;
+  id: string; plan_date: string; player_id: string; player_name: string;
+  item_count: number; start_time: string | null; end_time: string | null;
 }
 
-interface AssignedPlayer {
-  player_id: string;
-  full_name: string;
-}
+interface AssignedPlayer { player_id: string; full_name: string; }
 
 interface TrainingBlock {
-  id: string;
-  title: string;
-  description: string | null;
-  category: string;
-  sport: string;
-  duration_minutes: number;
-  difficulty: string;
-  goals: string[];
-  exercises: any[];
-  is_system: boolean;
-  is_custom: boolean;
-  coach_id: string | null;
+  id: string; title: string; description: string | null; category: string;
+  sport: string; duration_minutes: number; difficulty: string; goals: string[];
+  exercises: any[]; is_system: boolean; is_custom: boolean; coach_id: string | null;
+  block_type: string; week_count: number; target_level: string | null;
+  is_public: boolean; is_for_sale: boolean; price: number; currency: string;
 }
 
-interface PlanBlock {
-  tempId: string;
-  block: TrainingBlock;
-  coach_note: string;
-}
+interface PlanBlock { tempId: string; block: TrainingBlock; coach_note: string; }
 
 const CATEGORY_LABELS: Record<string, string> = {
   warm_up: "WARM UP", padel_drill: "TECHNICAL", footwork: "FOOTWORK",
@@ -101,12 +82,20 @@ const CoachCalendar = () => {
   const [blockCategory, setBlockCategory] = useState("All");
   const [blockTab, setBlockTab] = useState<"system" | "mine">("system");
   const [createBlockOpen, setCreateBlockOpen] = useState(false);
+  const [editingBlock, setEditingBlock] = useState<TrainingBlock | null>(null);
 
   // Day plan builder
   const [planBlocks, setPlanBlocks] = useState<PlanBlock[]>([]);
   const [savingPlan, setSavingPlan] = useState(false);
   const [copyDateOpen, setCopyDateOpen] = useState(false);
   const [copyDate, setCopyDate] = useState("");
+
+  // Drag state for plan reordering
+  const [dragIdx, setDragIdx] = useState<number | null>(null);
+  const [dragOverIdx, setDragOverIdx] = useState<number | null>(null);
+
+  // Drag from block library to plan
+  const [draggingBlock, setDraggingBlock] = useState<TrainingBlock | null>(null);
 
   useEffect(() => {
     if (targetCoachId) {
@@ -198,9 +187,7 @@ const CoachCalendar = () => {
   const days = eachDayOfInterval({ start: calStart, end: calEnd });
 
   const getPlansForDay = (date: Date) => plans.filter(p => p.plan_date === format(date, "yyyy-MM-dd"));
-
   const selectedDayPlans = selectedDay ? plans.filter(p => p.plan_date === selectedDay) : [];
-
   const totalDuration = planBlocks.reduce((s, pb) => s + (pb.block.duration_minutes || 0), 0);
 
   const addBlockToPlan = (block: TrainingBlock) => {
@@ -215,30 +202,50 @@ const CoachCalendar = () => {
     setPlanBlocks((prev) => prev.map((pb) => pb.tempId === tempId ? { ...pb, coach_note: note } : pb));
   };
 
-  const movePlanBlock = (idx: number, dir: -1 | 1) => {
-    const newIdx = idx + dir;
-    if (newIdx < 0 || newIdx >= planBlocks.length) return;
-    setPlanBlocks((prev) => {
-      const next = [...prev];
-      [next[idx], next[newIdx]] = [next[newIdx], next[idx]];
-      return next;
-    });
+  // Drag-and-drop reorder handlers for plan blocks
+  const handleDragStart = (idx: number) => setDragIdx(idx);
+  const handleDragOver = (e: React.DragEvent, idx: number) => { e.preventDefault(); setDragOverIdx(idx); };
+  const handleDragEnd = () => {
+    if (dragIdx !== null && dragOverIdx !== null && dragIdx !== dragOverIdx) {
+      setPlanBlocks((prev) => {
+        const next = [...prev];
+        const [moved] = next.splice(dragIdx, 1);
+        next.splice(dragOverIdx, 0, moved);
+        return next;
+      });
+    }
+    setDragIdx(null);
+    setDragOverIdx(null);
+  };
+
+  // Drag from library block into plan area
+  const handleBlockDragStart = (e: React.DragEvent, block: TrainingBlock) => {
+    setDraggingBlock(block);
+    e.dataTransfer.effectAllowed = "copy";
+  };
+
+  const handlePlanDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    if (draggingBlock) {
+      addBlockToPlan(draggingBlock);
+      setDraggingBlock(null);
+    }
+  };
+
+  const handlePlanDragOver = (e: React.DragEvent) => {
+    if (draggingBlock) e.preventDefault();
   };
 
   const handleSavePlan = async () => {
     if (!selectedDay || !selectedPlayerId || !targetCoachId || planBlocks.length === 0) {
-      toast.error("Select a player and add at least one block");
-      return;
+      toast.error("Select a player and add at least one block"); return;
     }
     setSavingPlan(true);
-
-    // Check for existing plan
     const { data: existingPlans } = await supabase
       .from("player_day_plans").select("id")
       .eq("coach_id", targetCoachId).eq("player_id", selectedPlayerId).eq("plan_date", selectedDay);
 
     let planId: string;
-
     if (existingPlans && existingPlans.length > 0) {
       planId = existingPlans[0].id;
       await supabase.from("player_day_plan_items").delete().eq("plan_id", planId);
@@ -249,37 +256,25 @@ const CoachCalendar = () => {
       }).eq("id", planId);
     } else {
       const { data: newPlan, error } = await supabase.from("player_day_plans").insert({
-        coach_id: targetCoachId,
-        player_id: selectedPlayerId,
-        plan_date: selectedDay,
+        coach_id: targetCoachId, player_id: selectedPlayerId, plan_date: selectedDay,
         notes: planBlocks.map((pb) => pb.block.title).join(", "),
         start_time: "09:00",
         end_time: format(new Date(2000, 0, 1, 9, totalDuration), "HH:mm"),
       }).select("id").single();
-
       if (error || !newPlan) { toast.error("Failed to create plan"); setSavingPlan(false); return; }
       planId = newPlan.id;
     }
 
-    // We need modules for items — create temp modules for each block
     for (let i = 0; i < planBlocks.length; i++) {
       const pb = planBlocks[i];
-      // Create a module for this block
       const { data: mod } = await supabase.from("modules").insert({
-        title: pb.block.title,
-        category: (pb.block.category as any) || "padel_drill",
-        created_by: targetCoachId,
-        duration_minutes: pb.block.duration_minutes,
-        description: pb.block.description,
-        is_shared: false,
+        title: pb.block.title, category: (pb.block.category as any) || "padel_drill",
+        created_by: targetCoachId, duration_minutes: pb.block.duration_minutes,
+        description: pb.block.description, is_shared: false,
       }).select("id").single();
-
       if (mod) {
         await supabase.from("player_day_plan_items").insert({
-          plan_id: planId,
-          module_id: mod.id,
-          order_index: i,
-          coach_note: pb.coach_note || null,
+          plan_id: planId, module_id: mod.id, order_index: i, coach_note: pb.coach_note || null,
         });
       }
     }
@@ -292,16 +287,12 @@ const CoachCalendar = () => {
   const handleCopyPlan = async () => {
     if (!copyDate || !selectedPlayerId || !targetCoachId || planBlocks.length === 0) return;
     setCopyDateOpen(false);
-
     const { data: newPlan } = await supabase.from("player_day_plans").insert({
-      coach_id: targetCoachId,
-      player_id: selectedPlayerId,
-      plan_date: copyDate,
+      coach_id: targetCoachId, player_id: selectedPlayerId, plan_date: copyDate,
       notes: planBlocks.map((pb) => pb.block.title).join(", "),
       start_time: "09:00",
       end_time: format(new Date(2000, 0, 1, 9, totalDuration), "HH:mm"),
     }).select("id").single();
-
     if (newPlan) {
       for (let i = 0; i < planBlocks.length; i++) {
         const pb = planBlocks[i];
@@ -325,39 +316,31 @@ const CoachCalendar = () => {
     if (!user || planBlocks.length === 0) return;
     const blockTitle = prompt("Enter block name:");
     if (!blockTitle) return;
-
     await supabase.from("training_blocks").insert({
-      coach_id: user.id,
-      title: blockTitle,
+      coach_id: user.id, title: blockTitle,
       description: `Custom block with ${planBlocks.length} activities`,
-      category: planBlocks[0].block.category || "padel_drill",
-      sport: "both",
-      duration_minutes: totalDuration,
-      difficulty: "intermediate",
-      goals: [],
+      category: planBlocks[0].block.category || "padel_drill", sport: "both",
+      duration_minutes: totalDuration, difficulty: "intermediate", goals: [],
       exercises: planBlocks.map((pb) => ({ name: pb.block.title, notes: pb.coach_note, duration_min: pb.block.duration_minutes })) as any,
-      is_system: false,
-      is_custom: true,
-      goal: "Custom",
-      module_ids: [],
-      module_durations: planBlocks.map((pb) => pb.block.duration_minutes),
+      is_system: false, is_custom: true, goal: "Custom",
+      module_ids: [], module_durations: planBlocks.map((pb) => pb.block.duration_minutes),
       module_notes: planBlocks.map((pb) => pb.coach_note),
     } as any);
-
     toast.success("Saved as custom block!");
     fetchBlocks();
   };
 
   const handleDayClick = (dateStr: string) => {
     if (selectedDay === dateStr) {
-      setSelectedDay(null);
-      setPlanBlocks([]);
-      setSelectedPlayerId(null);
+      setSelectedDay(null); setPlanBlocks([]); setSelectedPlayerId(null);
     } else {
-      setSelectedDay(dateStr);
-      setPlanBlocks([]);
-      setSelectedPlayerId(null);
+      setSelectedDay(dateStr); setPlanBlocks([]); setSelectedPlayerId(null);
     }
+  };
+
+  const handleEditBlock = (block: TrainingBlock) => {
+    setEditingBlock(block);
+    setCreateBlockOpen(true);
   };
 
   return (
@@ -423,11 +406,29 @@ const CoachCalendar = () => {
               ) : (
                 <div className="space-y-2">
                   {filteredBlocks.map((block) => (
-                    <div key={block.id} className="p-3 rounded-lg border border-border bg-card hover:border-primary/40 transition-colors cursor-pointer group"
-                      onClick={() => addBlockToPlan(block)}>
+                    <div key={block.id}
+                      draggable
+                      onDragStart={(e) => handleBlockDragStart(e, block)}
+                      onDragEnd={() => setDraggingBlock(null)}
+                      className="p-3 rounded-lg border border-border bg-card hover:border-primary/40 transition-colors cursor-grab active:cursor-grabbing group"
+                    >
                       <div className="flex items-center justify-between mb-1">
-                        <p className="font-display text-xs text-foreground truncate flex-1">{block.title}</p>
-                        <Plus size={14} className="text-primary shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
+                        <div className="flex items-center gap-1.5 flex-1 min-w-0">
+                          <GripVertical size={12} className="text-muted-foreground shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
+                          <p className="font-display text-xs text-foreground truncate">{block.title}</p>
+                        </div>
+                        <div className="flex items-center gap-0.5 shrink-0">
+                          {!block.is_system && (
+                            <button onClick={(e) => { e.stopPropagation(); handleEditBlock(block); }}
+                              className="p-1 text-muted-foreground hover:text-foreground opacity-0 group-hover:opacity-100 transition-opacity">
+                              <Edit3 size={11} />
+                            </button>
+                          )}
+                          <button onClick={() => addBlockToPlan(block)}
+                            className="p-1 text-primary opacity-0 group-hover:opacity-100 transition-opacity">
+                            <Plus size={14} />
+                          </button>
+                        </div>
                       </div>
                       <div className="flex items-center gap-1.5 flex-wrap">
                         <span className={`px-1.5 py-0.5 rounded text-[8px] font-display tracking-wider ${CATEGORY_COLORS[block.category] || "bg-muted text-muted-foreground"}`}>
@@ -454,7 +455,7 @@ const CoachCalendar = () => {
               )}
 
               {/* Create custom block */}
-              <button onClick={() => setCreateBlockOpen(true)}
+              <button onClick={() => { setEditingBlock(null); setCreateBlockOpen(true); }}
                 className="mt-3 w-full py-2.5 rounded-xl border border-dashed border-border text-muted-foreground font-display text-[10px] tracking-wider hover:border-primary hover:text-primary transition-colors flex items-center justify-center gap-1.5">
                 <Plus size={12} /> CREATE CUSTOM BLOCK
               </button>
@@ -572,28 +573,33 @@ const CoachCalendar = () => {
                     </div>
                   )}
 
-                  {/* Plan builder */}
-                  <div>
+                  {/* Plan builder - drop zone */}
+                  <div onDrop={handlePlanDrop} onDragOver={handlePlanDragOver}>
                     <p className="font-display text-[10px] tracking-wider text-muted-foreground mb-2">
                       {planBlocks.length > 0 ? `NEW PLAN (${planBlocks.length} BLOCKS)` : "BUILD NEW PLAN"}
                     </p>
 
                     {planBlocks.length === 0 ? (
-                      <div className="text-center py-8 border border-dashed border-border rounded-xl">
+                      <div className={`text-center py-8 border border-dashed rounded-xl transition-colors ${draggingBlock ? "border-primary bg-primary/5" : "border-border"}`}>
                         <Dumbbell size={24} className="text-muted-foreground mx-auto mb-2" />
-                        <p className="text-xs font-body text-muted-foreground">Click + on any block from the left panel</p>
+                        <p className="text-xs font-body text-muted-foreground">
+                          {draggingBlock ? "Drop here to add" : "Drag a block or click + from the left panel"}
+                        </p>
                       </div>
                     ) : (
                       <div className="space-y-2">
                         {planBlocks.map((pb, idx) => (
-                          <div key={pb.tempId} className="p-3 rounded-lg border border-border bg-secondary space-y-2">
+                          <div key={pb.tempId}
+                            draggable
+                            onDragStart={() => handleDragStart(idx)}
+                            onDragOver={(e) => handleDragOver(e, idx)}
+                            onDragEnd={handleDragEnd}
+                            className={`p-3 rounded-lg border bg-secondary space-y-2 cursor-grab active:cursor-grabbing transition-all ${
+                              dragOverIdx === idx ? "border-primary bg-primary/5" : "border-border"
+                            } ${dragIdx === idx ? "opacity-50" : ""}`}
+                          >
                             <div className="flex items-center gap-2">
-                              <div className="flex flex-col gap-0.5">
-                                <button onClick={() => movePlanBlock(idx, -1)} disabled={idx === 0}
-                                  className="text-muted-foreground hover:text-foreground disabled:opacity-30"><ChevronLeft size={10} className="rotate-90" /></button>
-                                <button onClick={() => movePlanBlock(idx, 1)} disabled={idx === planBlocks.length - 1}
-                                  className="text-muted-foreground hover:text-foreground disabled:opacity-30"><ChevronRight size={10} className="rotate-90" /></button>
-                              </div>
+                              <GripVertical size={14} className="text-muted-foreground shrink-0" />
                               <div className="flex-1 min-w-0">
                                 <p className="font-display text-xs text-foreground truncate">{pb.block.title}</p>
                                 <div className="flex items-center gap-1.5">
@@ -611,6 +617,13 @@ const CoachCalendar = () => {
                               className="w-full px-2 py-1.5 rounded bg-card border border-border text-foreground font-body text-[10px] focus:outline-none resize-none" />
                           </div>
                         ))}
+
+                        {/* Drop zone at bottom when blocks exist */}
+                        {draggingBlock && (
+                          <div className="text-center py-3 border border-dashed border-primary rounded-xl bg-primary/5">
+                            <p className="text-[10px] font-body text-primary">Drop here to add</p>
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>
@@ -664,7 +677,12 @@ const CoachCalendar = () => {
         </div>
       </div>
 
-      <CreateTrainingBlockDrawer open={createBlockOpen} onClose={() => setCreateBlockOpen(false)} onCreated={fetchBlocks} />
+      <CreateTrainingBlockDrawer
+        open={createBlockOpen}
+        onClose={() => { setCreateBlockOpen(false); setEditingBlock(null); }}
+        onCreated={fetchBlocks}
+        editBlock={editingBlock}
+      />
     </PortalLayout>
   );
 };

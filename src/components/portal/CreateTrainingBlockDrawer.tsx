@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
@@ -17,13 +17,33 @@ interface Exercise {
   notes: string;
 }
 
+interface EditBlock {
+  id: string;
+  title: string;
+  description: string | null;
+  category: string;
+  sport: string;
+  duration_minutes: number;
+  difficulty: string;
+  goals: string[];
+  exercises: any[];
+  block_type: string;
+  week_count: number;
+  target_level: string | null;
+  is_public: boolean;
+  is_for_sale: boolean;
+  price: number;
+  currency: string;
+}
+
 interface Props {
   open: boolean;
   onClose: () => void;
   onCreated: () => void;
+  editBlock?: EditBlock | null;
 }
 
-const CreateTrainingBlockDrawer = ({ open, onClose, onCreated }: Props) => {
+const CreateTrainingBlockDrawer = ({ open, onClose, onCreated, editBlock }: Props) => {
   const { user } = useAuth();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -42,6 +62,43 @@ const CreateTrainingBlockDrawer = ({ open, onClose, onCreated }: Props) => {
   const [price, setPrice] = useState(0);
   const [currency, setCurrency] = useState("EUR");
   const [termsAccepted, setTermsAccepted] = useState(false);
+
+  const isEditing = !!editBlock;
+
+  // Populate form when editing
+  useEffect(() => {
+    if (editBlock) {
+      setTitle(editBlock.title);
+      setDescription(editBlock.description || "");
+      setCategory(editBlock.category);
+      setSport(editBlock.sport);
+      setDuration(editBlock.duration_minutes);
+      setDifficulty(editBlock.difficulty);
+      setGoals(editBlock.goals || []);
+      setExercises(
+        editBlock.exercises && editBlock.exercises.length > 0
+          ? editBlock.exercises.map((e: any) => ({ name: e.name || "", sets: e.sets || 3, reps: e.reps, duration_sec: e.duration_sec, notes: e.notes || "" }))
+          : [{ name: "", sets: 3, reps: 10, notes: "" }]
+      );
+      setBlockType(editBlock.block_type || "session");
+      setWeekCount(editBlock.week_count || 1);
+      setTargetLevel(editBlock.target_level || "intermediate");
+      setVisibility(editBlock.is_for_sale ? "for_sale" : editBlock.is_public ? "public" : "private");
+      setPrice(editBlock.price || 0);
+      setCurrency(editBlock.currency || "EUR");
+      setTermsAccepted(editBlock.is_for_sale);
+    } else {
+      resetForm();
+    }
+  }, [editBlock, open]);
+
+  const resetForm = () => {
+    setTitle(""); setDescription(""); setCategory("padel_drill"); setSport("both");
+    setDuration(60); setDifficulty("intermediate"); setGoals([]); setGoalInput("");
+    setExercises([{ name: "", sets: 3, reps: 10, notes: "" }]);
+    setBlockType("session"); setWeekCount(1); setTargetLevel("intermediate");
+    setVisibility("private"); setPrice(0); setCurrency("EUR"); setTermsAccepted(false);
+  };
 
   const addGoal = () => {
     if (goalInput.trim() && !goals.includes(goalInput.trim())) {
@@ -64,7 +121,7 @@ const CreateTrainingBlockDrawer = ({ open, onClose, onCreated }: Props) => {
     setSaving(true);
 
     const profileRes = await supabase.from("profiles").select("full_name, avatar_url").eq("user_id", user.id).single();
-    const { error } = await supabase.from("training_blocks").insert({
+    const blockData = {
       coach_id: user.id,
       author_id: user.id,
       author_name: profileRes.data?.full_name || "",
@@ -86,15 +143,27 @@ const CreateTrainingBlockDrawer = ({ open, onClose, onCreated }: Props) => {
       target_sport: sport,
       goal: category.replace("_", " ").replace(/\b\w/g, (c) => c.toUpperCase()),
       module_ids: [], module_durations: [], module_notes: [],
-    } as any);
+    };
+
+    let error;
+    if (isEditing && editBlock) {
+      const { error: updateError } = await supabase.from("training_blocks").update(blockData as any).eq("id", editBlock.id);
+      error = updateError;
+    } else {
+      const { error: insertError } = await supabase.from("training_blocks").insert(blockData as any);
+      error = insertError;
+    }
 
     if (error) {
-      toast.error("Failed to create block");
+      toast.error(isEditing ? "Failed to update block" : "Failed to create block");
     } else {
-      toast.success(visibility === "for_sale" ? "Program published to Marketplace!" : visibility === "public" ? "Block published!" : "Block created!");
+      toast.success(
+        isEditing ? "Block updated!" :
+        visibility === "for_sale" ? "Program published to Marketplace!" :
+        visibility === "public" ? "Block published!" : "Block created!"
+      );
       onCreated(); onClose();
-      // Reset
-      setTitle(""); setDescription(""); setGoals([]); setExercises([{ name: "", sets: 3, reps: 10, notes: "" }]);
+      resetForm();
     }
     setSaving(false);
   };
@@ -110,7 +179,7 @@ const CreateTrainingBlockDrawer = ({ open, onClose, onCreated }: Props) => {
           >
             <div className="p-5 space-y-5">
               <div className="flex items-center justify-between">
-                <h2 className="font-display text-sm tracking-wider text-foreground">CREATE CUSTOM BLOCK</h2>
+                <h2 className="font-display text-sm tracking-wider text-foreground">{isEditing ? "EDIT BLOCK" : "CREATE CUSTOM BLOCK"}</h2>
                 <button onClick={onClose} className="p-1 rounded-lg hover:bg-secondary"><X size={18} /></button>
               </div>
 
@@ -314,8 +383,23 @@ const CreateTrainingBlockDrawer = ({ open, onClose, onCreated }: Props) => {
               {/* Save */}
               <button onClick={handleSave} disabled={!title.trim() || saving || (visibility === "for_sale" && !termsAccepted)}
                 className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-display text-xs tracking-wider hover:bg-primary/90 disabled:opacity-50 transition-colors">
-                {saving ? "SAVING..." : visibility === "for_sale" ? "PUBLISH & SELL" : visibility === "public" ? "PUBLISH TO MARKETPLACE" : "CREATE BLOCK"}
+                {saving ? "SAVING..." :
+                  isEditing ? "UPDATE BLOCK" :
+                  visibility === "for_sale" ? "PUBLISH & SELL" :
+                  visibility === "public" ? "PUBLISH TO MARKETPLACE" : "CREATE BLOCK"}
               </button>
+
+              {/* Delete (editing only, custom blocks) */}
+              {isEditing && editBlock && (
+                <button onClick={async () => {
+                  if (!confirm("Delete this block?")) return;
+                  await supabase.from("training_blocks").delete().eq("id", editBlock.id);
+                  toast.success("Block deleted");
+                  onCreated(); onClose();
+                }} className="w-full py-2.5 rounded-xl border border-destructive/30 text-destructive font-display text-[10px] tracking-wider hover:bg-destructive/10 transition-colors">
+                  DELETE BLOCK
+                </button>
+              )}
             </div>
           </motion.div>
         </>
