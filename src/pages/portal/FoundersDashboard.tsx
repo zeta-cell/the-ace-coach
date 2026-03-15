@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate, useSearchParams } from "react-router-dom";
 import {
   RefreshCw, Download, ChevronDown, ChevronRight, TrendingUp, Users,
   AlertTriangle, Zap, Target, Send, Copy, MapPin, Crown, Eye,
@@ -135,8 +135,31 @@ const ArcGauge = ({ score }: { score: number }) => {
 
 // ─── Main Component ─────────────────────────────────────
 const FoundersDashboard = () => {
-  const { user } = useAuth();
+  const { user, role, loading: authLoading } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const shareToken = searchParams.get("token");
+  const [tokenValid, setTokenValid] = useState(false);
+  const [checkingToken, setCheckingToken] = useState(!!shareToken);
+
+  // Validate share token
+  useEffect(() => {
+    if (!shareToken) return;
+    supabase
+      .from("founder_share_tokens")
+      .select("expires_at")
+      .eq("token", shareToken)
+      .gt("expires_at", new Date().toISOString())
+      .maybeSingle()
+      .then(({ data }) => {
+        setTokenValid(!!data);
+        setCheckingToken(false);
+      });
+  }, [shareToken]);
+
+  const isReadOnly = !!shareToken && tokenValid && !user;
+  const isAdmin = role === "admin";
+
   const [loading, setLoading] = useState(true);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [d, setD] = useState<any>({});
@@ -199,8 +222,8 @@ const FoundersDashboard = () => {
         supabase.from("events").select("*"),
         supabase.from("event_registrations").select("*"),
         supabase.from("notifications").select("id"),
-        supabase.from("founder_spend" as any).select("*").order("month", { ascending: false }),
-        supabase.from("page_views" as any).select("*"),
+        supabase.from("founder_spend").select("*").order("month", { ascending: false }),
+        supabase.from("page_views").select("*"),
         supabase.from("progress_videos").select("id"),
       ]);
 
@@ -1048,11 +1071,11 @@ const FoundersDashboard = () => {
 
   const handleAddSpend = async () => {
     if (!newSpend.month || !newSpend.amount) { toast("Fill in month and amount"); return; }
-    const { error } = await supabase.from("founder_spend" as any).insert({
+    const { error } = await supabase.from("founder_spend").insert({
       month: newSpend.month, category: newSpend.category,
       amount: parseFloat(newSpend.amount), notes: newSpend.notes || null,
       created_by: user?.id,
-    } as any);
+    });
     if (error) { toast("Failed to save"); return; }
     setNewSpend({ month: "", category: "marketing", amount: "", notes: "" });
     setShowSpendForm(false);
@@ -1061,7 +1084,7 @@ const FoundersDashboard = () => {
   };
 
   const handleDeleteSpend = async (id: string) => {
-    await supabase.from("founder_spend" as any).delete().eq("id", id);
+    await supabase.from("founder_spend").delete().eq("id", id);
     fetchAll();
     toast("Deleted");
   };
@@ -1069,9 +1092,9 @@ const FoundersDashboard = () => {
   const handleShareDashboard = async () => {
     const token = crypto.randomUUID();
     const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
-    const { error } = await supabase.from("founder_share_tokens" as any).insert({
+    const { error } = await supabase.from("founder_share_tokens").insert({
       token, created_by: user?.id, expires_at: expiresAt,
-    } as any);
+    });
     if (error) { toast("Failed to create link"); return; }
     const url = `${window.location.origin}/founders?token=${token}`;
     navigator.clipboard.writeText(url);
@@ -1099,6 +1122,25 @@ const FoundersDashboard = () => {
     toast("Copied to clipboard");
   };
 
+  // Auth guard — share token or admin
+  if (checkingToken || authLoading) {
+    return (
+      <PortalLayout>
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+        </div>
+      </PortalLayout>
+    );
+  }
+
+  if (!user && !tokenValid) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (user && role !== "admin" && !tokenValid) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
   if (loading) {
     return (
       <PortalLayout>
@@ -1118,8 +1160,23 @@ const FoundersDashboard = () => {
     return `rgb(${r},${g},${b})`;
   };
 
+  // Calculate share token expiry for banner
+  const getTokenExpiryText = () => {
+    if (!shareToken || !tokenValid) return "";
+    return "less than 24 hours";
+  };
+
   return (
     <PortalLayout>
+      {/* Read-only banner */}
+      {isReadOnly && (
+        <div className="bg-amber-500/20 border border-amber-500/40 rounded-lg px-4 py-3 mb-4 flex items-center gap-2">
+          <Eye className="w-4 h-4 text-amber-400 shrink-0" />
+          <p className="text-sm text-amber-300 font-body">
+            👁 Read-only shared view — expires in {getTokenExpiryText()}
+          </p>
+        </div>
+      )}
       {/* Sticky Header */}
       <div className="sticky top-14 z-30 bg-background/90 backdrop-blur-md border-b border-border -mx-4 md:-mx-6 px-4 md:px-6 py-3 mb-6 flex items-center justify-between">
         <div>
@@ -1329,9 +1386,11 @@ const FoundersDashboard = () => {
                         <p className="text-[10px] text-muted-foreground">{c.location || "No location"} • {c.pkgCount} packages</p>
                       </div>
                     </div>
-                    <Button size="sm" variant="outline" onClick={() => handleSendNudge(c.userId)}>
-                      <Send className="w-3 h-3 mr-1" /> NUDGE
-                    </Button>
+                    {!isReadOnly && (
+                      <Button size="sm" variant="outline" onClick={() => handleSendNudge(c.userId)}>
+                        <Send className="w-3 h-3 mr-1" /> NUDGE
+                      </Button>
+                    )}
                   </div>
                 ))}
               </div>
@@ -1662,9 +1721,11 @@ const FoundersDashboard = () => {
         <Card>
           <CardHeader className="pb-2 flex flex-row items-center justify-between">
             <CardTitle className="text-sm font-body">Expense Tracker</CardTitle>
-            <Button size="sm" variant="outline" onClick={() => setShowSpendForm(!showSpendForm)}>
-              <Plus className="w-3 h-3 mr-1" /> ADD EXPENSE
-            </Button>
+            {!isReadOnly && (
+              <Button size="sm" variant="outline" onClick={() => setShowSpendForm(!showSpendForm)}>
+                <Plus className="w-3 h-3 mr-1" /> ADD EXPENSE
+              </Button>
+            )}
           </CardHeader>
           <CardContent>
             {showSpendForm && (
@@ -1696,7 +1757,7 @@ const FoundersDashboard = () => {
                       <td className="p-2 capitalize">{s.category}</td>
                       <td className="p-2 text-right">€{Number(s.amount).toLocaleString()}</td>
                       <td className="p-2 text-muted-foreground truncate max-w-[150px]">{s.notes || "—"}</td>
-                      <td className="p-2"><Button size="sm" variant="ghost" onClick={() => handleDeleteSpend(s.id)}><Trash2 className="w-3 h-3 text-destructive" /></Button></td>
+                      <td className="p-2">{!isReadOnly && <Button size="sm" variant="ghost" onClick={() => handleDeleteSpend(s.id)}><Trash2 className="w-3 h-3 text-destructive" /></Button>}</td>
                     </tr>
                   ))}
                   {spendRows.length === 0 && <tr><td colSpan={5} className="p-4 text-center text-muted-foreground">No expenses logged yet</td></tr>}
@@ -2019,28 +2080,30 @@ const FoundersDashboard = () => {
       </Section>
 
       {/* ══════ BOTTOM — FOUNDER ACTIONS ══════ */}
-      <div className="sticky bottom-0 md:bottom-0 z-30 bg-card/95 backdrop-blur-md border-t border-border -mx-4 md:-mx-6 px-4 md:px-6 py-3 mb-20 md:mb-0">
-        <div className="flex flex-wrap items-center gap-2">
-          <Button onClick={handleExportFull} variant="outline" size="sm">
-            <Download className="w-3 h-3 mr-1" /> EXPORT FULL REPORT
-          </Button>
-          <Button onClick={() => setInvestorModal(true)} variant="outline" size="sm">
-            <Crown className="w-3 h-3 mr-1" /> INVESTOR SNAPSHOT
-          </Button>
-          <Button onClick={handleFindExpansion} variant="outline" size="sm">
-            <MapPin className="w-3 h-3 mr-1" /> EXPANSION TARGETS
-          </Button>
-          <Button onClick={handleNudgeAllAtRisk} variant="outline" size="sm">
-            <Send className="w-3 h-3 mr-1" /> NUDGE AT-RISK ({coach.atRiskCoaches.length})
-          </Button>
-          <Button onClick={() => { setShowSpendForm(true); document.getElementById("spend")?.scrollIntoView({ behavior: "smooth" }); }} variant="outline" size="sm">
-            <Plus className="w-3 h-3 mr-1" /> LOG EXPENSE
-          </Button>
-          <Button onClick={handleShareDashboard} variant="default" size="sm">
-            <Share2 className="w-3 h-3 mr-1" /> SHARE DASHBOARD
-          </Button>
+      {!isReadOnly && (
+        <div className="sticky bottom-0 md:bottom-0 z-30 bg-card/95 backdrop-blur-md border-t border-border -mx-4 md:-mx-6 px-4 md:px-6 py-3 mb-20 md:mb-0">
+          <div className="flex flex-wrap items-center gap-2">
+            <Button onClick={handleExportFull} variant="outline" size="sm">
+              <Download className="w-3 h-3 mr-1" /> EXPORT FULL REPORT
+            </Button>
+            <Button onClick={() => setInvestorModal(true)} variant="outline" size="sm">
+              <Crown className="w-3 h-3 mr-1" /> INVESTOR SNAPSHOT
+            </Button>
+            <Button onClick={handleFindExpansion} variant="outline" size="sm">
+              <MapPin className="w-3 h-3 mr-1" /> EXPANSION TARGETS
+            </Button>
+            <Button onClick={handleNudgeAllAtRisk} variant="outline" size="sm">
+              <Send className="w-3 h-3 mr-1" /> NUDGE AT-RISK ({coach.atRiskCoaches.length})
+            </Button>
+            <Button onClick={() => { setShowSpendForm(true); document.getElementById("spend")?.scrollIntoView({ behavior: "smooth" }); }} variant="outline" size="sm">
+              <Plus className="w-3 h-3 mr-1" /> LOG EXPENSE
+            </Button>
+            <Button onClick={handleShareDashboard} variant="default" size="sm">
+              <Share2 className="w-3 h-3 mr-1" /> SHARE DASHBOARD
+            </Button>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Expansion Cities Modal */}
       <Dialog open={expansionModal} onOpenChange={setExpansionModal}>

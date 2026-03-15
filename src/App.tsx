@@ -222,7 +222,7 @@ const App = () => (
             } />
             <Route path="/founders" element={
               <Suspense fallback={<PortalLoader />}>
-                <ProtectedRoute requiredRole="admin"><FoundersDashboard /></ProtectedRoute>
+                <FoundersDashboard />
               </Suspense>
             } />
 
