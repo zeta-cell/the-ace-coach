@@ -563,19 +563,25 @@ const FindACoach = () => {
         </div>
       </nav>
 
-      {/* Mobile filter toggle */}
-      <div className="md:hidden px-4 py-3 border-b border-border flex items-center gap-2">
-        <div className="flex items-center gap-1 bg-card border border-border rounded-xl p-1 flex-1">
+      {/* Filter toggle (all screens) */}
+      <div className="px-4 md:px-6 py-3 border-b border-border flex items-center gap-2 max-w-7xl mx-auto">
+        <div className="flex items-center gap-1 bg-card border border-border rounded-xl p-1 flex-1 sm:flex-none">
           {(["all", "tennis", "padel"] as const).map((s) => (
             <button key={s} onClick={() => setSportFilter(s)}
-              className={`flex-1 px-3 py-1.5 rounded-lg font-display text-[10px] tracking-wider transition-colors ${
+              className={`flex-1 sm:flex-none px-3 py-1.5 rounded-lg font-display text-[10px] tracking-wider transition-colors ${
                 sportFilter === s ? "bg-primary text-primary-foreground" : "text-muted-foreground"
               }`}
             >{s.toUpperCase()}</button>
           ))}
         </div>
-        <button onClick={() => setMobileFiltersOpen(true)} className="p-2.5 rounded-xl bg-card border border-border">
-          <SlidersHorizontal size={16} className="text-muted-foreground" />
+        <button onClick={() => {
+          if (window.innerWidth < 768) setMobileFiltersOpen(true);
+          else setDesktopFiltersOpen(prev => !prev);
+        }} className={`p-2.5 rounded-xl border transition-colors flex items-center gap-1.5 ${
+          desktopFiltersOpen ? "bg-primary border-primary text-primary-foreground" : "bg-card border-border text-muted-foreground hover:text-foreground"
+        }`}>
+          <SlidersHorizontal size={16} />
+          <span className="hidden md:inline font-display text-[10px] tracking-wider">FILTERS</span>
         </button>
       </div>
 
