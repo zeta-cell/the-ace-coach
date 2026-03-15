@@ -24,6 +24,7 @@ import { ArrowLeft, Plus, X, GripVertical, Clock, Save, Check, Search, CalendarD
 import { toast } from "sonner";
 import { format, addDays, startOfWeek, startOfMonth, endOfMonth, isSameDay, isSameMonth, getWeek, subMonths, addMonths } from "date-fns";
 import PortalLayout from "@/components/portal/PortalLayout";
+import TrainingBlocksPanel from "@/components/portal/TrainingBlocksPanel";
 import type { Database } from "@/integrations/supabase/types";
 
 type ModuleCategory = Database["public"]["Enums"]["module_category"];
