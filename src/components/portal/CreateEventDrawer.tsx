@@ -103,7 +103,7 @@ const CreateEventDrawer = ({ open, onClose, event, onSaved }: Props) => {
       return;
     }
     setSaving(true);
-    const payload: any = {
+    const payload = {
       coach_id: user.id,
       title,
       event_type: eventType,

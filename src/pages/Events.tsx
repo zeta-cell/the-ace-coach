@@ -146,7 +146,7 @@ const Events = () => {
   const handleCancel = async (eventId: string) => {
     if (!user) return;
     await supabase.from("event_registrations")
-      .update({ status: "cancelled" } as any)
+      .update({ status: "cancelled" })
       .eq("event_id", eventId)
       .eq("player_id", user.id);
     setRegisteredIds(prev => { const s = new Set(prev); s.delete(eventId); return s; });

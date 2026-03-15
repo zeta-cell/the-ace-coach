@@ -96,7 +96,7 @@ const CoachEvents = () => {
   };
 
   const completeEvent = async (event: EventRow) => {
-    await supabase.from("events").update({ status: "completed" } as any).eq("id", event.id);
+    await supabase.from("events").update({ status: "completed" }).eq("id", event.id);
     toast.success("Event marked as completed");
     fetchEvents();
   };
