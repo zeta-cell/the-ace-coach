@@ -275,7 +275,7 @@ const PublicCoachProfile = () => {
                 <p className="font-display text-4xl text-foreground">€{Number(coach.hourly_rate_from).toFixed(0)}</p>
                 <p className="font-body text-xs text-muted-foreground">/session</p>
                 <Link
-                  to="/login"
+                  to={`/book/${coach.profile_slug}`}
                   className="inline-flex items-center gap-2 mt-3 px-6 py-2.5 rounded-xl bg-primary text-primary-foreground font-display text-sm tracking-wider hover:bg-primary/90 transition-colors"
                 >
                   BOOK NOW <ArrowRight size={14} />
