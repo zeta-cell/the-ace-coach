@@ -138,7 +138,7 @@ const Dashboard = () => {
     }
 
     // Check and award badges
-    checkBadges(stats as any, badges as any);
+    checkBadges(stats as UserStats | null, (badges || []) as EarnedBadge[]);
   };
 
   const checkBadges = async (stats: any, existingBadges: any[]) => {
