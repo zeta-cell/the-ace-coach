@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import NotificationBell from "@/components/portal/NotificationBell";
-import aceLogo from "@/assets/the-ace-logo.svg";
+// Logo placeholder
 
 const playerNav = [
   { label: "Home", icon: Home, href: "/dashboard" },

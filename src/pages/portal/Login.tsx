@@ -110,7 +110,7 @@ const Login = () => {
 
         {/* Logo */}
         <div className="flex items-center gap-3 mb-8">
-          <img src={aceLogo} alt="The Ace Academy" className="h-12 w-auto" />
+          <div className="h-12 w-12 rounded-xl bg-primary flex items-center justify-center font-display text-xl text-primary-foreground">CA</div>
           <span className="font-display text-2xl text-foreground tracking-wide">MEMBER PORTAL</span>
         </div>
 
