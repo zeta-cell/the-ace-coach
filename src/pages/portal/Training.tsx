@@ -496,12 +496,24 @@ const Training = () => {
                               className="w-full h-full" allowFullScreen loading="lazy" title={item.module.title} />
                           </div>
                         )}
-                        {item.coach_note && (
-                          <div className="bg-secondary rounded-lg p-3 mt-2">
-                            <p className="text-xs font-display tracking-wider text-muted-foreground mb-1">COACH NOTE</p>
-                            <p className="text-sm font-body text-foreground">{item.coach_note}</p>
-                          </div>
-                        )}
+                         {item.coach_note && (
+                           <div className="bg-secondary rounded-lg p-3 mt-2">
+                             <p className="text-xs font-display tracking-wider text-muted-foreground mb-1">COACH NOTE</p>
+                             <p className="text-sm font-body text-foreground">{item.coach_note}</p>
+                           </div>
+                         )}
+                         {(item.module as any).coach_video_url && (
+                           <button
+                             onClick={() => {
+                               setCoachVideoUrl((item.module as any).coach_video_url);
+                               setCoachVideoTitle(item.module.title);
+                               setCoachVideoOpen(true);
+                             }}
+                             className="mt-2 flex items-center gap-2 px-3 py-2 rounded-lg bg-primary/10 text-primary font-display text-[10px] tracking-wider hover:bg-primary/20 transition-colors"
+                           >
+                             <Video size={14} /> WATCH COACH DEMO
+                           </button>
+                         )}
                       </motion.div>
                     )}
                   </div>
