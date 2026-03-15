@@ -227,6 +227,10 @@ const CoachPlanBuilder = () => {
       setPlanNotes(plan.notes || "");
       setStartTime((plan as any).start_time || "");
       setEndTime((plan as any).end_time || "");
+      setLocationName((plan as any).location_name || "");
+      setLocationAddress((plan as any).location_address || "");
+      setLocationLat((plan as any).location_lat?.toString() || "");
+      setLocationLng((plan as any).location_lng?.toString() || "");
       const { data: items } = await supabase
         .from("player_day_plan_items")
         .select("id, module_id, coach_note, order_index")
