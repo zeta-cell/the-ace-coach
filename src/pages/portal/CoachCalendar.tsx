@@ -21,6 +21,7 @@ import {
 interface DayPlan {
   id: string; plan_date: string; player_id: string; player_name: string;
   item_count: number; start_time: string | null; end_time: string | null;
+  program_author?: string | null; program_title?: string | null; program_author_avatar?: string | null;
 }
 
 interface AssignedPlayer { player_id: string; full_name: string; }
