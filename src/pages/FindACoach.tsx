@@ -317,6 +317,7 @@ const FindACoach = () => {
   const [selectedRating, setSelectedRating] = useState("Any");
   const [selectedExperience, setSelectedExperience] = useState("Any");
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const [desktopFiltersOpen, setDesktopFiltersOpen] = useState(false);
 
   const toggleLanguage = (l: string) => {
     setSelectedLanguages((prev) => {
