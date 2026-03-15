@@ -37,7 +37,7 @@ interface PurchasedProgram {
 interface UserStats {
   total_xp: number; current_level: string; current_streak_days: number;
   total_sessions: number; wallet_balance: number; raffle_tickets: number;
-  total_minutes: number;
+  total_minutes: number; total_calories: number;
 }
 
 interface EarnedBadge { badge_key: string; badge_name: string; earned_at: string; }
