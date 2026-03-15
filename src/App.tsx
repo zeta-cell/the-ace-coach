@@ -37,6 +37,10 @@ const CoachCalendar = lazy(() => import("./pages/portal/CoachCalendar"));
 const CoachProfile = lazy(() => import("./pages/portal/CoachProfile"));
 const CoachMarketplace = lazy(() => import("./pages/portal/CoachMarketplace"));
 
+// Gamification pages (lazy-loaded)
+const Rankings = lazy(() => import("./pages/Rankings"));
+const Rewards = lazy(() => import("./pages/Rewards"));
+
 // Admin pages (lazy-loaded)
 const AdminDashboard = lazy(() => import("./pages/portal/AdminDashboard"));
 const AdminUsers = lazy(() => import("./pages/portal/AdminUsers"));
