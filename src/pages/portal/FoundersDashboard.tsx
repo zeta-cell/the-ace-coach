@@ -1084,7 +1084,7 @@ const FoundersDashboard = () => {
   };
 
   const handleDeleteSpend = async (id: string) => {
-    await supabase.from("founder_spend" as any).delete().eq("id", id);
+    await supabase.from("founder_spend").delete().eq("id", id);
     fetchAll();
     toast("Deleted");
   };
