@@ -517,7 +517,7 @@ const PublicCoachProfile = () => {
               className="sticky top-20"
             >
               <Link
-                to="/login"
+                to={`/book/${coach.profile_slug}`}
                 className="w-full flex items-center justify-center gap-2 py-4 rounded-xl bg-primary text-primary-foreground font-display text-sm tracking-widest hover:bg-primary/90 transition-colors"
               >
                 BOOK A SESSION <ArrowRight size={16} />

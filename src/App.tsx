@@ -78,6 +78,13 @@ const App = () => (
               </Suspense>
             } />
 
+            {/* Book a coach */}
+            <Route path="/book/:coachSlug" element={
+              <Suspense fallback={<PortalLoader />}>
+                <ProtectedRoute><BookCoach /></ProtectedRoute>
+              </Suspense>
+            } />
+
             {/* Player */}
             <Route path="/dashboard" element={
               <Suspense fallback={<PortalLoader />}>
