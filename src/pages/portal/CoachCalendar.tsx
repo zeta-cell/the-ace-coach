@@ -97,6 +97,11 @@ const CoachCalendar = () => {
   // Drag from block library to plan
   const [draggingBlock, setDraggingBlock] = useState<TrainingBlock | null>(null);
 
+  // Touch drag state
+  const [touchDragIdx, setTouchDragIdx] = useState<number | null>(null);
+  const [touchDragY, setTouchDragY] = useState(0);
+  const touchStartRef = useRef<{ idx: number; y: number; height: number } | null>(null);
+
   useEffect(() => {
     if (targetCoachId) {
       fetchMonthPlans();
@@ -216,6 +221,40 @@ const CoachCalendar = () => {
     }
     setDragIdx(null);
     setDragOverIdx(null);
+  };
+
+  // Touch reorder handlers (mobile/tablet)
+  const handleTouchStart = (idx: number, e: React.TouchEvent) => {
+    const touch = e.touches[0];
+    const target = e.currentTarget as HTMLElement;
+    touchStartRef.current = { idx, y: touch.clientY, height: target.offsetHeight };
+    setTouchDragIdx(idx);
+  };
+
+  const handleTouchMove = useCallback((e: React.TouchEvent) => {
+    if (!touchStartRef.current) return;
+    e.preventDefault();
+    const touch = e.touches[0];
+    const deltaY = touch.clientY - touchStartRef.current.y;
+    setTouchDragY(deltaY);
+    const moveBySlots = Math.round(deltaY / (touchStartRef.current.height + 8));
+    const newIdx = Math.max(0, Math.min(planBlocks.length - 1, touchStartRef.current.idx + moveBySlots));
+    setDragOverIdx(newIdx);
+  }, [planBlocks.length]);
+
+  const handleTouchEnd = () => {
+    if (touchStartRef.current !== null && touchDragIdx !== null && dragOverIdx !== null && touchDragIdx !== dragOverIdx) {
+      setPlanBlocks((prev) => {
+        const next = [...prev];
+        const [moved] = next.splice(touchDragIdx, 1);
+        next.splice(dragOverIdx, 0, moved);
+        return next;
+      });
+    }
+    setTouchDragIdx(null);
+    setTouchDragY(0);
+    setDragOverIdx(null);
+    touchStartRef.current = null;
   };
 
   // Drag from library block into plan area
@@ -594,9 +633,17 @@ const CoachCalendar = () => {
                             onDragStart={() => handleDragStart(idx)}
                             onDragOver={(e) => handleDragOver(e, idx)}
                             onDragEnd={handleDragEnd}
-                            className={`p-3 rounded-lg border bg-secondary space-y-2 cursor-grab active:cursor-grabbing transition-all ${
+                            onTouchStart={(e) => handleTouchStart(idx, e)}
+                            onTouchMove={handleTouchMove}
+                            onTouchEnd={handleTouchEnd}
+                            style={{
+                              transform: touchDragIdx === idx ? `translateY(${touchDragY}px)` : undefined,
+                              zIndex: touchDragIdx === idx ? 10 : undefined,
+                              position: touchDragIdx === idx ? "relative" : undefined,
+                            }}
+                            className={`p-3 rounded-lg border bg-secondary space-y-2 cursor-grab active:cursor-grabbing transition-all touch-none ${
                               dragOverIdx === idx ? "border-primary bg-primary/5" : "border-border"
-                            } ${dragIdx === idx ? "opacity-50" : ""}`}
+                            } ${dragIdx === idx || touchDragIdx === idx ? "opacity-50" : ""}`}
                           >
                             <div className="flex items-center gap-2">
                               <GripVertical size={14} className="text-muted-foreground shrink-0" />

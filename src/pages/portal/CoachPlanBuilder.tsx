@@ -169,6 +169,11 @@ const CoachPlanBuilder = () => {
   const [blockGoal, setBlockGoal] = useState("Technique");
   const [blockDesc, setBlockDesc] = useState("");
 
+  // Week context from CoachPlayerDetail
+  const weekParam = searchParams.get("week");
+  const blockIdParam = searchParams.get("block_id");
+  const [weekBlockData, setWeekBlockData] = useState<{ title: string; week_count: number; weekly_structure: any } | null>(null);
+
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
@@ -187,6 +192,15 @@ const CoachPlanBuilder = () => {
       fetchWeekPlanDates();
     }
   }, [user, playerId, planDate]);
+
+  useEffect(() => {
+    if (blockIdParam) {
+      supabase.from("training_blocks").select("title, week_count, weekly_structure")
+        .eq("id", blockIdParam).single().then(({ data }) => {
+          if (data) setWeekBlockData(data);
+        });
+    }
+  }, [blockIdParam]);
 
   const fetchPlayerName = async () => {
     if (!playerId) return;
@@ -223,7 +237,7 @@ const CoachPlanBuilder = () => {
     if (!user || !playerId) return;
     const { data: plan } = await supabase
       .from("player_day_plans")
-      .select("id, notes, start_time, end_time")
+      .select("id, notes, start_time, end_time, location_name, location_address, location_lat, location_lng")
       .eq("player_id", playerId)
       .eq("coach_id", user.id)
       .eq("plan_date", planDate)
@@ -232,12 +246,12 @@ const CoachPlanBuilder = () => {
     if (plan) {
       setExistingPlanId(plan.id);
       setPlanNotes(plan.notes || "");
-      setStartTime((plan as any).start_time || "");
-      setEndTime((plan as any).end_time || "");
-      setLocationName((plan as any).location_name || "");
-      setLocationAddress((plan as any).location_address || "");
-      setLocationLat((plan as any).location_lat?.toString() || "");
-      setLocationLng((plan as any).location_lng?.toString() || "");
+      setStartTime(plan.start_time || "");
+      setEndTime(plan.end_time || "");
+      setLocationName(plan.location_name || "");
+      setLocationAddress(plan.location_address || "");
+      setLocationLat(plan.location_lat?.toString() || "");
+      setLocationLng(plan.location_lng?.toString() || "");
       const { data: items } = await supabase
         .from("player_day_plan_items")
         .select("id, module_id, coach_note, order_index")
@@ -334,7 +348,7 @@ const CoachPlanBuilder = () => {
         location_address: locationAddress || null,
         location_lat: locationLat ? parseFloat(locationLat) : null,
         location_lng: locationLng ? parseFloat(locationLng) : null,
-      } as any).eq("id", planId);
+      }).eq("id", planId);
     } else {
       const { data } = await supabase
         .from("player_day_plans")
@@ -349,7 +363,7 @@ const CoachPlanBuilder = () => {
           location_address: locationAddress || null,
           location_lat: locationLat ? parseFloat(locationLat) : null,
           location_lng: locationLng ? parseFloat(locationLng) : null,
-        } as any)
+        })
         .select("id")
         .single();
       planId = data?.id || null;
@@ -396,7 +410,7 @@ const CoachPlanBuilder = () => {
       module_durations: planItems.map((i) => i.custom_duration),
       module_notes: planItems.map((i) => i.coach_note),
       is_system: false,
-    } as any);
+    });
     toast.success("Training block saved!");
     setShowSaveBlock(false);
     setBlockTitle("");
@@ -503,6 +517,22 @@ const CoachPlanBuilder = () => {
         <Link to={`/coach/players/${playerId}`} className="flex items-center gap-2 text-muted-foreground hover:text-foreground font-body text-sm mb-4 transition-colors">
           <ArrowLeft size={16} /> Back to {playerName}
         </Link>
+
+        {weekBlockData && weekParam && (
+          <div className="mb-4 p-3 rounded-xl bg-primary/5 border border-primary/20">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-display text-xs tracking-wider text-primary">
+                  EDITING WEEK {weekParam} OF {weekBlockData.title.toUpperCase()}
+                </p>
+                <p className="text-[10px] font-body text-muted-foreground">{weekBlockData.week_count}-week program</p>
+              </div>
+              <Link to={`/coach/players/${playerId}`} className="text-[10px] font-display text-primary hover:underline">
+                ← BACK TO PLAYER
+              </Link>
+            </div>
+          </div>
+        )}
 
         <div className="flex items-start justify-between mb-1">
           <div>

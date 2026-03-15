@@ -14,7 +14,7 @@ import {
 import PortalLayout from "@/components/portal/PortalLayout";
 import TrainingDayInfo from "@/components/portal/TrainingDayInfo";
 import TrainingBlocksPanel from "@/components/portal/TrainingBlocksPanel";
-import type { BlockPlanItem, BlockModuleItem } from "@/components/portal/TrainingBlocksPanel";
+import type { BlockPlanItem, ModuleItem as BlockModuleItem } from "@/types/training";
 import { toast } from "sonner";
 
 const CATEGORY_COLORS: Record<string, string> = {
@@ -130,7 +130,7 @@ const Training = () => {
     setPlanNotes(plan.notes || "");
     setEditStartTime(plan.start_time || "");
     setEditEndTime(plan.end_time || "");
-    setEditLocation((plan as any).location_name || "");
+    setEditLocation(plan.location_name || "");
 
     const { data: items } = await supabase
       .from("player_day_plan_items")
@@ -205,7 +205,7 @@ const Training = () => {
       end_time: editEndTime || null,
       location_name: editLocation || null,
       notes: planNotes || null,
-    } as any).eq("id", currentPlanId);
+    }).eq("id", currentPlanId);
     toast.success("Training day saved!");
     setSavingPlan(false);
   };
@@ -232,9 +232,10 @@ const Training = () => {
       module_durations: planItems.map(i => i.module.duration_minutes),
       module_notes: planItems.map(i => i.coach_note || ""),
       is_system: false,
-    } as any);
+    });
     toast.success("Saved as training block!");
     setShowSaveBlock(false); setBlockTitle(""); setBlockGoal("Technique");
+    setShowBlocksPanel(false); // Force refresh on next open
   };
 
   const totalDuration = planItems.reduce((sum, i) => sum + i.module.duration_minutes, 0);

@@ -4,6 +4,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import { Layers, Plus, Search, ChevronDown, ChevronRight, Save, X, Trash2 } from "lucide-react";
+import type { ModuleItem, BlockPlanItem as PlanItem } from "@/types/training";
 
 /* ── types ── */
 interface TrainingBlock {
@@ -19,19 +20,7 @@ interface TrainingBlock {
   coach_id: string | null;
 }
 
-interface ModuleItem {
-  id: string;
-  title: string;
-  category: string;
-  duration_minutes: number | null;
-}
-
-interface PlanItem {
-  tempId: string;
-  module: ModuleItem;
-  coach_note: string;
-  custom_duration: number;
-}
+// ModuleItem and PlanItem (as BlockPlanItem) imported from @/types/training
 
 const BLOCK_CATEGORY_COLORS: Record<string, { bg: string; text: string }> = {
   "Match Preparation": { bg: "bg-amber-500/10", text: "text-amber-500" },
@@ -258,4 +247,5 @@ const TrainingBlocksPanel = ({ onApplyBlock, onSaveAsBlock, modules, isOpen = tr
 };
 
 export default TrainingBlocksPanel;
-export type { TrainingBlock, PlanItem as BlockPlanItem, ModuleItem as BlockModuleItem };
+export type { TrainingBlock };
+export type { BlockPlanItem, ModuleItem as BlockModuleItem } from "@/types/training";

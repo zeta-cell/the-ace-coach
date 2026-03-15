@@ -87,8 +87,8 @@ const CoachPlayerDetail = () => {
 
   const markWeekComplete = async (prog: ActiveProgram) => {
     const nextWeek = Math.min(prog.current_week + 1, prog.week_count);
-    await supabase.from("block_purchases").update({ current_week: nextWeek } as any)
-      .eq("buyer_id", playerId).eq("block_id", prog.block_id);
+    await supabase.from("block_purchases").update({ current_week: nextWeek })
+      .eq("buyer_id", playerId!).eq("block_id", prog.block_id);
     toast.success(`Week ${prog.current_week} completed!`);
     setActivePrograms((prev) => prev.map((p) => p.block_id === prog.block_id ? { ...p, current_week: nextWeek } : p));
   };
@@ -170,10 +170,10 @@ const CoachPlayerDetail = () => {
                           className="flex-1 py-2 rounded-lg border border-border font-display text-[10px] tracking-wider text-foreground hover:bg-secondary transition-colors">
                           {isExpanded ? "HIDE STRUCTURE" : "VIEW FULL PROGRAM"}
                         </button>
-                        <Link to={`/coach/plan/${playerId}`}
+                        <button onClick={() => navigate(`/coach/plan/${playerId}?week=${prog.current_week}&block_id=${prog.block_id}`)}
                           className="flex-1 py-2 rounded-lg border border-border font-display text-[10px] tracking-wider text-foreground hover:bg-secondary transition-colors text-center">
                           ADJUST THIS WEEK
-                        </Link>
+                        </button>
                         <button onClick={() => markWeekComplete(prog)}
                           className="py-2 px-3 rounded-lg bg-primary text-primary-foreground font-display text-[10px] tracking-wider hover:bg-primary/90 transition-colors flex items-center gap-1">
                           <CheckCircle size={12} /> COMPLETE WEEK
