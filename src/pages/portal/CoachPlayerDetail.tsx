@@ -32,6 +32,8 @@ const CoachPlayerDetail = () => {
   const [infoOpen, setInfoOpen] = useState(false);
   const [activePrograms, setActivePrograms] = useState<ActiveProgram[]>([]);
   const [expandedProgram, setExpandedProgram] = useState<string | null>(null);
+  const [trainDrawerOpen, setTrainDrawerOpen] = useState(false);
+  const [upcomingPlans, setUpcomingPlans] = useState<any[]>([]);
 
   useEffect(() => {
     if (user && playerId) fetchAll();
