@@ -1071,11 +1071,11 @@ const FoundersDashboard = () => {
 
   const handleAddSpend = async () => {
     if (!newSpend.month || !newSpend.amount) { toast("Fill in month and amount"); return; }
-    const { error } = await supabase.from("founder_spend" as any).insert({
+    const { error } = await supabase.from("founder_spend").insert({
       month: newSpend.month, category: newSpend.category,
       amount: parseFloat(newSpend.amount), notes: newSpend.notes || null,
       created_by: user?.id,
-    } as any);
+    });
     if (error) { toast("Failed to save"); return; }
     setNewSpend({ month: "", category: "marketing", amount: "", notes: "" });
     setShowSpendForm(false);
