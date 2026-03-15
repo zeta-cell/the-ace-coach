@@ -254,10 +254,33 @@ const CoachModules = () => {
                       <Play className="w-2.5 h-2.5" /> video
                     </span>
                   )}
+                  {mod.coach_video_url && (
+                    <button onClick={() => { setVideoModalUrl(mod.coach_video_url!); setVideoModalTitle(mod.title); setVideoModalOpen(true); }}
+                      className="flex items-center gap-1 px-1.5 py-0.5 rounded bg-primary/10 text-primary text-xs font-body hover:bg-primary/20 transition-colors">
+                      <Video className="w-2.5 h-2.5" /> demo
+                    </button>
+                  )}
                 </div>
                 {mod.description && (
                   <p className="text-xs font-body text-muted-foreground mt-2 line-clamp-2">{mod.description}</p>
                 )}
+                {/* Coach video upload */}
+                <div className="mt-2 flex items-center gap-2">
+                  {!mod.coach_video_url ? (
+                    <label className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-dashed border-border text-muted-foreground text-[10px] font-body hover:border-primary hover:text-primary transition-colors cursor-pointer">
+                      <Upload size={10} /> Add demo video
+                      <input type="file" accept="video/mp4,video/*" className="hidden"
+                        onChange={e => { const f = e.target.files?.[0]; if (f) handleCoachVideoUpload(mod.id, f); e.target.value = ""; }} />
+                    </label>
+                  ) : (
+                    <label className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-secondary text-muted-foreground text-[10px] font-body hover:text-foreground transition-colors cursor-pointer">
+                      <Upload size={10} /> Replace video
+                      <input type="file" accept="video/mp4,video/*" className="hidden"
+                        onChange={e => { const f = e.target.files?.[0]; if (f) handleCoachVideoUpload(mod.id, f); e.target.value = ""; }} />
+                    </label>
+                  )}
+                  {uploadingVideoId === mod.id && <Loader2 size={14} className="animate-spin text-primary" />}
+                </div>
               </motion.div>
             ))}
           </div>
