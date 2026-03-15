@@ -14,6 +14,120 @@ export type Database = {
   }
   public: {
     Tables: {
+      block_purchases: {
+        Row: {
+          amount_paid: number
+          block_id: string | null
+          buyer_id: string
+          currency: string | null
+          current_week: number | null
+          id: string
+          platform_fee: number | null
+          purchased_at: string | null
+          seller_id: string | null
+          status: string | null
+          stripe_payment_intent_id: string | null
+        }
+        Insert: {
+          amount_paid?: number
+          block_id?: string | null
+          buyer_id: string
+          currency?: string | null
+          current_week?: number | null
+          id?: string
+          platform_fee?: number | null
+          purchased_at?: string | null
+          seller_id?: string | null
+          status?: string | null
+          stripe_payment_intent_id?: string | null
+        }
+        Update: {
+          amount_paid?: number
+          block_id?: string | null
+          buyer_id?: string
+          currency?: string | null
+          current_week?: number | null
+          id?: string
+          platform_fee?: number | null
+          purchased_at?: string | null
+          seller_id?: string | null
+          status?: string | null
+          stripe_payment_intent_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "block_purchases_block_id_fkey"
+            columns: ["block_id"]
+            isOneToOne: false
+            referencedRelation: "training_blocks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      block_ratings: {
+        Row: {
+          block_id: string | null
+          id: string
+          rated_at: string | null
+          rated_by: string
+          rating: number | null
+          review_text: string | null
+        }
+        Insert: {
+          block_id?: string | null
+          id?: string
+          rated_at?: string | null
+          rated_by: string
+          rating?: number | null
+          review_text?: string | null
+        }
+        Update: {
+          block_id?: string | null
+          id?: string
+          rated_at?: string | null
+          rated_by?: string
+          rating?: number | null
+          review_text?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "block_ratings_block_id_fkey"
+            columns: ["block_id"]
+            isOneToOne: false
+            referencedRelation: "training_blocks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      block_saves: {
+        Row: {
+          block_id: string | null
+          id: string
+          saved_at: string | null
+          saved_by: string
+        }
+        Insert: {
+          block_id?: string | null
+          id?: string
+          saved_at?: string | null
+          saved_by: string
+        }
+        Update: {
+          block_id?: string | null
+          id?: string
+          saved_at?: string | null
+          saved_by?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "block_saves_block_id_fkey"
+            columns: ["block_id"]
+            isOneToOne: false
+            referencedRelation: "training_blocks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       coach_availability_slots: {
         Row: {
           coach_id: string
@@ -238,6 +352,50 @@ export type Database = {
           years_experience?: number | null
         }
         Relationships: []
+      }
+      coach_requests: {
+        Row: {
+          block_id: string | null
+          coach_id: string
+          created_at: string | null
+          id: string
+          message: string | null
+          player_id: string
+          request_type: string | null
+          responded_at: string | null
+          status: string | null
+        }
+        Insert: {
+          block_id?: string | null
+          coach_id: string
+          created_at?: string | null
+          id?: string
+          message?: string | null
+          player_id: string
+          request_type?: string | null
+          responded_at?: string | null
+          status?: string | null
+        }
+        Update: {
+          block_id?: string | null
+          coach_id?: string
+          created_at?: string | null
+          id?: string
+          message?: string | null
+          player_id?: string
+          request_type?: string | null
+          responded_at?: string | null
+          status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "coach_requests_block_id_fkey"
+            columns: ["block_id"]
+            isOneToOne: false
+            referencedRelation: "training_blocks"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       messages: {
         Row: {
@@ -796,9 +954,14 @@ export type Database = {
       }
       training_blocks: {
         Row: {
+          author_avatar_url: string | null
+          author_id: string | null
+          author_name: string | null
+          block_type: string | null
           category: string
           coach_id: string | null
           created_at: string | null
+          currency: string | null
           description: string | null
           difficulty: string
           duration_minutes: number
@@ -807,17 +970,35 @@ export type Database = {
           goals: string[] | null
           id: string
           is_custom: boolean | null
+          is_for_sale: boolean | null
+          is_public: boolean | null
           is_system: boolean | null
           module_durations: number[]
           module_ids: string[]
           module_notes: string[]
+          preview_exercises: Json | null
+          price: number | null
+          rating_avg: number | null
+          rating_count: number | null
           sport: string
+          tags: string[] | null
+          target_level: string | null
+          target_sport: string | null
+          thumbnail_url: string | null
+          times_used: number | null
           title: string
+          week_count: number | null
+          weekly_structure: Json | null
         }
         Insert: {
+          author_avatar_url?: string | null
+          author_id?: string | null
+          author_name?: string | null
+          block_type?: string | null
           category?: string
           coach_id?: string | null
           created_at?: string | null
+          currency?: string | null
           description?: string | null
           difficulty?: string
           duration_minutes?: number
@@ -826,17 +1007,35 @@ export type Database = {
           goals?: string[] | null
           id?: string
           is_custom?: boolean | null
+          is_for_sale?: boolean | null
+          is_public?: boolean | null
           is_system?: boolean | null
           module_durations?: number[]
           module_ids?: string[]
           module_notes?: string[]
+          preview_exercises?: Json | null
+          price?: number | null
+          rating_avg?: number | null
+          rating_count?: number | null
           sport?: string
+          tags?: string[] | null
+          target_level?: string | null
+          target_sport?: string | null
+          thumbnail_url?: string | null
+          times_used?: number | null
           title: string
+          week_count?: number | null
+          weekly_structure?: Json | null
         }
         Update: {
+          author_avatar_url?: string | null
+          author_id?: string | null
+          author_name?: string | null
+          block_type?: string | null
           category?: string
           coach_id?: string | null
           created_at?: string | null
+          currency?: string | null
           description?: string | null
           difficulty?: string
           duration_minutes?: number
@@ -845,12 +1044,25 @@ export type Database = {
           goals?: string[] | null
           id?: string
           is_custom?: boolean | null
+          is_for_sale?: boolean | null
+          is_public?: boolean | null
           is_system?: boolean | null
           module_durations?: number[]
           module_ids?: string[]
           module_notes?: string[]
+          preview_exercises?: Json | null
+          price?: number | null
+          rating_avg?: number | null
+          rating_count?: number | null
           sport?: string
+          tags?: string[] | null
+          target_level?: string | null
+          target_sport?: string | null
+          thumbnail_url?: string | null
+          times_used?: number | null
           title?: string
+          week_count?: number | null
+          weekly_structure?: Json | null
         }
         Relationships: []
       }
@@ -899,6 +1111,14 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      increment_block_usage: {
+        Args: { p_block_id: string }
+        Returns: undefined
+      }
+      update_block_rating_avg: {
+        Args: { p_block_id: string }
+        Returns: undefined
       }
     }
     Enums: {
