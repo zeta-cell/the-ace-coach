@@ -121,6 +121,11 @@ const CoachCalendar = () => {
   return (
     <PortalLayout>
       <div className="space-y-6">
+        {/* Availability grid — coach's own view only */}
+        {!isAdminView && targetCoachId && (
+          <CoachAvailabilityGrid coachId={targetCoachId} />
+        )}
+
         {/* Header */}
         <div className="space-y-4">
           {isAdminView && (
