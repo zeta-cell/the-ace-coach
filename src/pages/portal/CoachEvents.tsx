@@ -90,7 +90,7 @@ const CoachEvents = () => {
   };
 
   const cancelEvent = async (event: EventRow) => {
-    await supabase.from("events").update({ status: "cancelled" } as any).eq("id", event.id);
+    await supabase.from("events").update({ status: "cancelled" }).eq("id", event.id);
     toast.success("Event cancelled");
     fetchEvents();
   };
