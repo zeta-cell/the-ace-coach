@@ -79,6 +79,8 @@ const App = () => (
             <Route path="/marketplace" element={<Suspense fallback={<PortalLoader />}><Marketplace /></Suspense>} />
             <Route path="/booking-success" element={<Suspense fallback={<PortalLoader />}><BookingSuccess /></Suspense>} />
             <Route path="/rankings" element={<Suspense fallback={<PortalLoader />}><Rankings /></Suspense>} />
+            <Route path="/events" element={<Suspense fallback={<PortalLoader />}><Events /></Suspense>} />
+            <Route path="/community" element={<Suspense fallback={<PortalLoader />}><Community /></Suspense>} />
 
             {/* Auth */}
             <Route path="/login" element={<Suspense fallback={<PortalLoader />}><Login /></Suspense>} />
