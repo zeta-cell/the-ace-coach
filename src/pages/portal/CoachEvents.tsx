@@ -72,15 +72,15 @@ const CoachEvents = () => {
     }
     const { data } = await supabase.from("event_registrations").select("*").eq("event_id", eventId);
     if (data && data.length > 0) {
-      const playerIds = [...new Set((data as any[]).map((r: any) => r.player_id))];
+      const playerIds = [...new Set(data.map(r => r.player_id))];
       const { data: profiles } = await supabase.from("profiles").select("user_id, full_name, avatar_url").in("user_id", playerIds);
-      const profileMap = new Map((profiles || []).map((p: any) => [p.user_id, p]));
+      const profileMap = new Map((profiles || []).map(p => [p.user_id, p]));
       setRegistrations(prev => ({
         ...prev,
-        [eventId]: (data as any[]).map((r: any) => ({
+        [eventId]: data.map(r => ({
           ...r,
-          player_name: (profileMap.get(r.player_id) as any)?.full_name || "Player",
-          player_avatar: (profileMap.get(r.player_id) as any)?.avatar_url,
+          player_name: profileMap.get(r.player_id)?.full_name || "Player",
+          player_avatar: profileMap.get(r.player_id)?.avatar_url,
         })),
       }));
     } else {
