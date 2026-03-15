@@ -12,7 +12,8 @@ import { Progress } from "@/components/ui/progress";
 interface EventRow {
   id: string; coach_id: string; title: string; description: string | null;
   event_type: string; sport: string; start_datetime: string; end_datetime: string;
-  location_name: string | null; location_city: string | null; location_country: string | null;
+  location_name: string | null; location_address: string | null;
+  location_city: string | null; location_country: string | null;
   is_online: boolean; max_participants: number | null; current_participants: number;
   price_per_person: number; currency: string; age_group: string; skill_level: string;
   cover_image_url: string | null; status: string; created_at: string;
