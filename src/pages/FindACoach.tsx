@@ -546,15 +546,6 @@ const FindACoach = () => {
                 placeholder="London, Berlin, Madrid..."
                 className="flex-1 bg-transparent font-body text-sm text-foreground placeholder:text-muted-foreground focus:outline-none min-w-0" />
             </div>
-            <div className="hidden sm:flex items-center gap-1 bg-card border border-border rounded-xl p-1">
-              {(["all", "tennis", "padel"] as const).map((s) => (
-                <button key={s} onClick={() => setSportFilter(s)}
-                  className={`px-3 py-1.5 rounded-lg font-display text-[10px] tracking-wider transition-colors ${
-                    sportFilter === s ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
-                  }`}
-                >{s.toUpperCase()}</button>
-              ))}
-            </div>
           </div>
           <div className="hidden md:flex items-center gap-3 shrink-0">
             <Link to="/login" className="font-display text-sm tracking-wider text-muted-foreground hover:text-foreground transition-colors">LOG IN</Link>
