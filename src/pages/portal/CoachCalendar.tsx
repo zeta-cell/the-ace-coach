@@ -317,6 +317,46 @@ const CoachCalendar = () => {
                 })}
               </div>
             )}
+
+            {/* Create plan for this day */}
+            {!isAdminView && assignedPlayers.length > 0 && (
+              <div className="pt-2 border-t border-border">
+                {!showPlayerPicker ? (
+                  <button
+                    onClick={() => setShowPlayerPicker(true)}
+                    className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border border-dashed border-border text-muted-foreground font-display text-xs tracking-wider hover:border-primary hover:text-primary transition-colors"
+                  >
+                    <Plus size={14} /> CREATE PLAN FOR THIS DAY
+                  </button>
+                ) : (
+                  <div className="space-y-2">
+                    <p className="font-display text-[10px] tracking-wider text-muted-foreground">SELECT PLAYER</p>
+                    {assignedPlayers.map((p) => (
+                      <button
+                        key={p.player_id}
+                        onClick={() => {
+                          setShowPlayerPicker(false);
+                          navigate(`/coach/plan/${p.player_id}?date=${selectedDay}`);
+                        }}
+                        className="w-full flex items-center gap-3 p-2.5 rounded-lg bg-secondary hover:bg-secondary/80 transition-colors"
+                      >
+                        <div className="w-7 h-7 rounded-full bg-primary/20 flex items-center justify-center shrink-0">
+                          <span className="text-primary font-display text-[10px]">{p.full_name.charAt(0)}</span>
+                        </div>
+                        <span className="font-display text-xs text-foreground">{p.full_name}</span>
+                        <ChevronRight size={14} className="text-muted-foreground ml-auto" />
+                      </button>
+                    ))}
+                    <button
+                      onClick={() => setShowPlayerPicker(false)}
+                      className="w-full text-center py-1.5 text-xs font-body text-muted-foreground hover:text-foreground"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         )}
       </div>
