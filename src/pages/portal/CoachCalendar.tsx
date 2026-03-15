@@ -97,6 +97,11 @@ const CoachCalendar = () => {
   // Drag from block library to plan
   const [draggingBlock, setDraggingBlock] = useState<TrainingBlock | null>(null);
 
+  // Touch drag state
+  const [touchDragIdx, setTouchDragIdx] = useState<number | null>(null);
+  const [touchDragY, setTouchDragY] = useState(0);
+  const touchStartRef = useRef<{ idx: number; y: number; height: number } | null>(null);
+
   useEffect(() => {
     if (targetCoachId) {
       fetchMonthPlans();
