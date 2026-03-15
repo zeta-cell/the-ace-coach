@@ -217,15 +217,15 @@ const CoachDashboard = () => {
                   {req.message && <p className="text-xs font-body text-muted-foreground italic">"{req.message}"</p>}
                   <div className="flex gap-2">
                     <button onClick={async () => {
-                      await supabase.from("coach_requests").update({ status: "accepted", responded_at: new Date().toISOString() } as any).eq("id", req.id);
-                      await supabase.from("coach_player_assignments").insert({ coach_id: user!.id, player_id: req.player_id } as any);
+                      await supabase.from("coach_requests").update({ status: "accepted", responded_at: new Date().toISOString() }).eq("id", req.id);
+                      await supabase.from("coach_player_assignments").insert({ coach_id: user!.id, player_id: req.player_id });
                       toast.success("Request accepted!");
                       setRequests((prev) => prev.filter((r) => r.id !== req.id));
                     }} className="flex-1 py-2 rounded-lg bg-primary text-primary-foreground font-display text-[10px] tracking-wider flex items-center justify-center gap-1">
                       <Check size={12} /> ACCEPT
                     </button>
                     <button onClick={async () => {
-                      await supabase.from("coach_requests").update({ status: "declined", responded_at: new Date().toISOString() } as any).eq("id", req.id);
+                      await supabase.from("coach_requests").update({ status: "declined", responded_at: new Date().toISOString() }).eq("id", req.id);
                       toast.success("Request declined");
                       setRequests((prev) => prev.filter((r) => r.id !== req.id));
                     }} className="flex-1 py-2 rounded-lg border border-border text-muted-foreground font-display text-[10px] tracking-wider flex items-center justify-center gap-1">

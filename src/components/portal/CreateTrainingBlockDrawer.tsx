@@ -147,10 +147,10 @@ const CreateTrainingBlockDrawer = ({ open, onClose, onCreated, editBlock }: Prop
 
     let error;
     if (isEditing && editBlock) {
-      const { error: updateError } = await supabase.from("training_blocks").update(blockData as any).eq("id", editBlock.id);
+      const { error: updateError } = await supabase.from("training_blocks").update(blockData).eq("id", editBlock.id);
       error = updateError;
     } else {
-      const { error: insertError } = await supabase.from("training_blocks").insert(blockData as any);
+      const { error: insertError } = await supabase.from("training_blocks").insert(blockData);
       error = insertError;
     }
 

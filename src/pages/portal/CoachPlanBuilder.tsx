@@ -518,6 +518,22 @@ const CoachPlanBuilder = () => {
           <ArrowLeft size={16} /> Back to {playerName}
         </Link>
 
+        {weekBlockData && weekParam && (
+          <div className="mb-4 p-3 rounded-xl bg-primary/5 border border-primary/20">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-display text-xs tracking-wider text-primary">
+                  EDITING WEEK {weekParam} OF {weekBlockData.title.toUpperCase()}
+                </p>
+                <p className="text-[10px] font-body text-muted-foreground">{weekBlockData.week_count}-week program</p>
+              </div>
+              <Link to={`/coach/players/${playerId}`} className="text-[10px] font-display text-primary hover:underline">
+                ← BACK TO PLAYER
+              </Link>
+            </div>
+          </div>
+        )}
+
         <div className="flex items-start justify-between mb-1">
           <div>
             <h1 className="font-display text-3xl text-foreground">DAY PLAN</h1>

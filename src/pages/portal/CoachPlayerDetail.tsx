@@ -170,10 +170,10 @@ const CoachPlayerDetail = () => {
                           className="flex-1 py-2 rounded-lg border border-border font-display text-[10px] tracking-wider text-foreground hover:bg-secondary transition-colors">
                           {isExpanded ? "HIDE STRUCTURE" : "VIEW FULL PROGRAM"}
                         </button>
-                        <Link to={`/coach/plan/${playerId}`}
+                        <button onClick={() => navigate(`/coach/plan/${playerId}?week=${prog.current_week}&block_id=${prog.block_id}`)}
                           className="flex-1 py-2 rounded-lg border border-border font-display text-[10px] tracking-wider text-foreground hover:bg-secondary transition-colors text-center">
                           ADJUST THIS WEEK
-                        </Link>
+                        </button>
                         <button onClick={() => markWeekComplete(prog)}
                           className="py-2 px-3 rounded-lg bg-primary text-primary-foreground font-display text-[10px] tracking-wider hover:bg-primary/90 transition-colors flex items-center gap-1">
                           <CheckCircle size={12} /> COMPLETE WEEK

@@ -633,9 +633,17 @@ const CoachCalendar = () => {
                             onDragStart={() => handleDragStart(idx)}
                             onDragOver={(e) => handleDragOver(e, idx)}
                             onDragEnd={handleDragEnd}
-                            className={`p-3 rounded-lg border bg-secondary space-y-2 cursor-grab active:cursor-grabbing transition-all ${
+                            onTouchStart={(e) => handleTouchStart(idx, e)}
+                            onTouchMove={handleTouchMove}
+                            onTouchEnd={handleTouchEnd}
+                            style={{
+                              transform: touchDragIdx === idx ? `translateY(${touchDragY}px)` : undefined,
+                              zIndex: touchDragIdx === idx ? 10 : undefined,
+                              position: touchDragIdx === idx ? "relative" : undefined,
+                            }}
+                            className={`p-3 rounded-lg border bg-secondary space-y-2 cursor-grab active:cursor-grabbing transition-all touch-none ${
                               dragOverIdx === idx ? "border-primary bg-primary/5" : "border-border"
-                            } ${dragIdx === idx ? "opacity-50" : ""}`}
+                            } ${dragIdx === idx || touchDragIdx === idx ? "opacity-50" : ""}`}
                           >
                             <div className="flex items-center gap-2">
                               <GripVertical size={14} className="text-muted-foreground shrink-0" />

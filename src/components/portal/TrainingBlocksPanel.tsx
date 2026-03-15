@@ -247,4 +247,5 @@ const TrainingBlocksPanel = ({ onApplyBlock, onSaveAsBlock, modules, isOpen = tr
 };
 
 export default TrainingBlocksPanel;
-export type { TrainingBlock, PlanItem as BlockPlanItem, ModuleItem as BlockModuleItem };
+export type { TrainingBlock };
+export type { BlockPlanItem, ModuleItem as BlockModuleItem } from "@/types/training";

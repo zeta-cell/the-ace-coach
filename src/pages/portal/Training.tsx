@@ -232,9 +232,10 @@ const Training = () => {
       module_durations: planItems.map(i => i.module.duration_minutes),
       module_notes: planItems.map(i => i.coach_note || ""),
       is_system: false,
-    } as any);
+    });
     toast.success("Saved as training block!");
     setShowSaveBlock(false); setBlockTitle(""); setBlockGoal("Technique");
+    setShowBlocksPanel(false); // Force refresh on next open
   };
 
   const totalDuration = planItems.reduce((sum, i) => sum + i.module.duration_minutes, 0);
