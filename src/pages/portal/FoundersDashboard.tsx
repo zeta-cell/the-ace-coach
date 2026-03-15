@@ -1168,6 +1168,15 @@ const FoundersDashboard = () => {
 
   return (
     <PortalLayout>
+      {/* Read-only banner */}
+      {isReadOnly && (
+        <div className="bg-amber-500/20 border border-amber-500/40 rounded-lg px-4 py-3 mb-4 flex items-center gap-2">
+          <Eye className="w-4 h-4 text-amber-400 shrink-0" />
+          <p className="text-sm text-amber-300 font-body">
+            👁 Read-only shared view — expires in {getTokenExpiryText()}
+          </p>
+        </div>
+      )}
       {/* Sticky Header */}
       <div className="sticky top-14 z-30 bg-background/90 backdrop-blur-md border-b border-border -mx-4 md:-mx-6 px-4 md:px-6 py-3 mb-6 flex items-center justify-between">
         <div>
