@@ -389,6 +389,46 @@ const AdminDashboard = () => {
                 </motion.div>
               )}
 
+              {/* SECTION — Events Overview */}
+              <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.52 }} className="bg-card border border-border rounded-xl p-5 mb-6">
+                <h2 className="font-display text-xs tracking-wider text-muted-foreground mb-3 flex items-center gap-2">
+                  <Calendar size={14} className="text-primary" /> EVENTS
+                </h2>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+                  {[
+                    { label: "Total Events", value: eventStats.total },
+                    { label: "This Month", value: eventStats.thisMonth },
+                    { label: "Total Registrations", value: eventStats.totalRegs },
+                    { label: "Event Revenue", value: `€${eventStats.revenue}` },
+                  ].map(s => (
+                    <div key={s.label} className="bg-muted/20 rounded-lg p-3 text-center">
+                      <p className="font-display text-lg text-foreground">{s.value}</p>
+                      <p className="text-[9px] font-body text-muted-foreground uppercase tracking-wider">{s.label}</p>
+                    </div>
+                  ))}
+                </div>
+                {recentEvents.length > 0 && (
+                  <div className="space-y-2">
+                    {recentEvents.map((e: any) => (
+                      <div key={e.id} className="flex items-center gap-3 p-2 rounded-lg border border-border">
+                        <div className="flex-1 min-w-0">
+                          <p className="font-display text-sm text-foreground">{e.title}</p>
+                          <p className="text-[10px] font-body text-muted-foreground">
+                            {e.coach_name} · {format(new Date(e.start_datetime), "d MMM yyyy")} · {e.current_participants} registered
+                          </p>
+                        </div>
+                        <span className={`px-2 py-0.5 rounded-full text-[9px] font-display tracking-wider ${
+                          e.status === 'published' ? 'bg-emerald-500/20 text-emerald-400' :
+                          e.status === 'full' ? 'bg-amber-500/20 text-amber-400' :
+                          e.status === 'cancelled' ? 'bg-red-500/20 text-red-400' :
+                          'bg-blue-500/20 text-blue-400'
+                        }`}>{e.status.toUpperCase()}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </motion.div>
+
               {/* SECTION F — Platform Health */}
               <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55 }} className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
                 {[
