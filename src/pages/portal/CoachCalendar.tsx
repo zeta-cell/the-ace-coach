@@ -627,9 +627,23 @@ const CoachCalendar = () => {
                           </div>
                           <div className="flex-1 min-w-0">
                             <p className="text-xs font-display text-foreground truncate">{plan.player_name}</p>
-                            <p className="text-[9px] font-body text-muted-foreground">
+                          <p className="text-[9px] font-body text-muted-foreground">
                               {formatTime(plan.start_time) || "—"} · {plan.item_count} modules
                             </p>
+                            {plan.program_author && (
+                              <div className="flex items-center gap-1 mt-0.5">
+                                {plan.program_author_avatar ? (
+                                  <img src={plan.program_author_avatar} className="w-3 h-3 rounded-full" />
+                                ) : (
+                                  <div className="w-3 h-3 rounded-full bg-primary/20 flex items-center justify-center text-primary font-display text-[6px]">
+                                    {plan.program_author.charAt(0)}
+                                  </div>
+                                )}
+                                <span className="font-body text-[8px] text-muted-foreground">
+                                  Program by {plan.program_author}
+                                </span>
+                              </div>
+                            )}
                           </div>
                           <ChevronRight size={14} className="text-muted-foreground" />
                         </div>
