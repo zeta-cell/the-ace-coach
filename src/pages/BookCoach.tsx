@@ -227,6 +227,12 @@ const BookCoach = () => {
     // Increment raffle tickets for booking
     await supabase.rpc('increment_raffle_tickets', { p_user_id: user.id });
 
+    // Increment session stats
+    await supabase.rpc('increment_session_stats', {
+      p_user_id: user.id,
+      p_minutes: selectedPackage.duration_minutes,
+    });
+
     // Check if this is user's first booking and they were referred
     const { count: bookingCount } = await supabase
       .from('bookings')
