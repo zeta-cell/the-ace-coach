@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion } from "framer-motion";
-import { ChevronRight, Search, Users } from "lucide-react";
+import { ChevronRight, Search, Users, BookOpen } from "lucide-react";
 import PortalLayout from "@/components/portal/PortalLayout";
 
 interface PlayerRow {
@@ -14,6 +14,7 @@ interface PlayerRow {
   fitness_level: string | null;
   best_shot: string | null;
   weakest_shot: string | null;
+  program_name: string | null;
 }
 
 const CoachPlayers = () => {
