@@ -205,7 +205,7 @@ const Training = () => {
       end_time: editEndTime || null,
       location_name: editLocation || null,
       notes: planNotes || null,
-    } as any).eq("id", currentPlanId);
+    }).eq("id", currentPlanId);
     toast.success("Training day saved!");
     setSavingPlan(false);
   };
