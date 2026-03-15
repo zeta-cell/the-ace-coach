@@ -68,6 +68,11 @@ const CoachModules = () => {
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState(emptyForm);
+  const [uploadingVideoId, setUploadingVideoId] = useState<string | null>(null);
+  const [videoModalOpen, setVideoModalOpen] = useState(false);
+  const [videoModalUrl, setVideoModalUrl] = useState("");
+  const [videoModalTitle, setVideoModalTitle] = useState("");
+  const videoFileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (user) fetchModules();
