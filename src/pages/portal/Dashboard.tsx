@@ -74,6 +74,7 @@ const Dashboard = () => {
   const [myRank, setMyRank] = useState<number | null>(null);
   const [heatmapData, setHeatmapData] = useState<Record<string, number>>({});
   const [myCoaches, setMyCoaches] = useState<CoachInfo[]>([]);
+  const [upcomingEvents, setUpcomingEvents] = useState<any[]>([]);
 
   const today = new Date();
   const weekStart = startOfWeek(today, { weekStartsOn: 1 });
