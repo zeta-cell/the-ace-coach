@@ -46,7 +46,7 @@ const WalletCard = () => {
       .eq("user_id", user.id)
       .order("created_at", { ascending: false })
       .limit(5);
-    setTransactions((txns as unknown as WalletTransaction[]) || []);
+    setTransactions((txns || []) as WalletTransaction[]);
   };
 
   const fetchReferrals = async () => {
