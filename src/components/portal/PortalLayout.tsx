@@ -46,7 +46,7 @@ const PortalLayout = ({ children }: { children: React.ReactNode }) => {
   const NavContent = () => (
     <div className="flex flex-col h-full">
       <div className="p-4 border-b border-border flex items-center gap-3">
-        <img src={aceLogo} alt="The Ace Academy" className="h-8 w-auto" />
+        <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center font-display text-sm text-primary-foreground">CA</div>
         {sidebarOpen && <span className="font-display text-lg text-foreground tracking-wide">PORTAL</span>}
       </div>
 
