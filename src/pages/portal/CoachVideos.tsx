@@ -129,6 +129,54 @@ const CoachVideos = () => {
     fetchVideos();
   };
 
+  const fetchComments = async (videoId: string) => {
+    const { data } = await supabase
+      .from("video_comments")
+      .select("id, comment, created_at, author_id")
+      .eq("video_id", videoId)
+      .order("created_at", { ascending: true });
+    
+    if (data && data.length > 0) {
+      const authorIds = [...new Set(data.map(c => c.author_id))];
+      const { data: profiles } = await supabase.from("profiles").select("user_id, full_name").in("user_id", authorIds);
+      const nameMap = new Map(profiles?.map(p => [p.user_id, p.full_name]) || []);
+      setComments(data.map(c => ({ ...c, author_name: nameMap.get(c.author_id) || "Unknown" })));
+    } else {
+      setComments([]);
+    }
+  };
+
+  const handleComment = async () => {
+    if (!selectedVideo || !newComment.trim() || !user) return;
+    setSendingComment(true);
+    await supabase.from("video_comments").insert({
+      video_id: selectedVideo.id,
+      author_id: user.id,
+      comment: newComment.trim(),
+    } as any);
+
+    // Award player XP for receiving feedback
+    await supabase.rpc("award_xp", {
+      p_user_id: selectedVideo.player_id,
+      p_amount: 10,
+      p_event_type: "coach_comment",
+      p_description: "Received coach feedback on video",
+    });
+
+    // Notify player
+    await supabase.from("notifications").insert({
+      user_id: selectedVideo.player_id,
+      title: "Your coach commented on your video",
+      body: `"${newComment.trim().substring(0, 50)}..."`,
+      link: "/videos",
+    });
+
+    toast.success("Comment sent", { duration: 1500 });
+    setNewComment("");
+    setSendingComment(false);
+    fetchComments(selectedVideo.id);
+  };
+
   return (
     <PortalLayout>
       <div className="max-w-4xl mx-auto">
