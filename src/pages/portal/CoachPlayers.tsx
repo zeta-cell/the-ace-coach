@@ -184,7 +184,6 @@ const CoachPlayers = () => {
           onClose={() => { setTrainDrawerOpen(false); setTrainPlayerId(undefined); }}
           prefilledPlayerId={trainPlayerId}
         />
-        )}
       </div>
     </PortalLayout>
   );
