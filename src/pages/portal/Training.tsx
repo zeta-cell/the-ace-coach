@@ -190,7 +190,7 @@ const Training = () => {
       module_id: bi.module.id,
       order_index: existingMax + idx,
       coach_note: bi.coach_note || null,
-      block_id: (bi as Record<string, unknown>).block_id as string | null || null,
+      block_id: 'block_id' in bi ? (bi as any).block_id : null,
     }));
 
     await supabase.from("player_day_plan_items").insert(newItems);

@@ -134,6 +134,9 @@ const Dashboard = () => {
           </div>
         </motion.div>
 
+        {/* Upcoming booked sessions */}
+        <UpcomingBookings />
+
         {/* My Programs */}
         {programs.length > 0 && (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12 }} className="mb-6" id="programs">

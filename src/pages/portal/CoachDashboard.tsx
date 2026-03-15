@@ -295,6 +295,9 @@ const CoachDashboard = () => {
           </div>
         )}
 
+        {/* Incoming Bookings */}
+        <IncomingBookings />
+
         {/* Upcoming Plans */}
         {upcomingPlans.length > 0 && (
           <div className="mb-6">

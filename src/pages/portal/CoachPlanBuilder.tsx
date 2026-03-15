@@ -375,7 +375,7 @@ const CoachPlanBuilder = () => {
         module_id: item.module.id,
         order_index: idx,
         coach_note: item.coach_note || null,
-        block_id: (item as Record<string, unknown>).block_id as string | null || null,
+        block_id: 'block_id' in item ? (item as any).block_id : null,
       }));
       await supabase.from("player_day_plan_items").insert(items);
       setExistingPlanId(planId);
