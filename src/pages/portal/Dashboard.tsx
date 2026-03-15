@@ -51,8 +51,26 @@ const Dashboard = () => {
   useEffect(() => {
     if (user) {
       fetchPlans();
+      fetchPrograms();
     }
   }, [user]);
+
+  const fetchPrograms = async () => {
+    if (!user) return;
+    const { data: purchases } = await supabase
+      .from("block_purchases").select("id, block_id, current_week")
+      .eq("buyer_id", user.id).eq("status", "completed");
+    if (!purchases || purchases.length === 0) return;
+    const blockIds = purchases.map((p) => p.block_id);
+    const { data: blocks } = await supabase
+      .from("training_blocks").select("id, title, author_name, author_avatar_url, week_count, block_type, thumbnail_url")
+      .in("id", blockIds);
+    const blockMap = new Map((blocks as any[])?.map((b) => [b.id, b]) || []);
+    setPrograms(purchases.map((p) => {
+      const b = blockMap.get(p.block_id);
+      return { ...p, title: b?.title || "Program", author_name: b?.author_name, author_avatar_url: b?.author_avatar_url, week_count: b?.week_count || 1, block_type: b?.block_type || "session", thumbnail_url: b?.thumbnail_url };
+    }));
+  };
 
   const fetchPlans = async () => {
     if (!user) return;
