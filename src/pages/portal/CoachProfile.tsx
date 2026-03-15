@@ -387,6 +387,14 @@ const CoachProfile = () => {
             onSaved={fetchData}
           />
         )}
+
+        <CoachPackageDialog
+          open={pkgDialogOpen}
+          onClose={() => { setPkgDialogOpen(false); setEditingPkg(null); }}
+          onSave={handleSavePkg}
+          editing={editingPkg}
+          saving={pkgSaving}
+        />
       </div>
     </PortalLayout>
   );
