@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Search, Edit2, Trash2, X, Clock, Tag, Play } from "lucide-react";
+import { Plus, Search, Edit2, Trash2, X, Clock, Tag, Play, Upload, Video, Loader2 } from "lucide-react";
 import PortalLayout from "@/components/portal/PortalLayout";
+import CoachVideoModal from "@/components/portal/CoachVideoModal";
 import type { Database } from "@/integrations/supabase/types";
+import { toast } from "sonner";
 
 type ModuleCategory = Database["public"]["Enums"]["module_category"];
 type ModuleDifficulty = Database["public"]["Enums"]["module_difficulty"];
@@ -38,6 +40,7 @@ interface Module {
   description: string | null;
   instructions: string | null;
   video_url: string | null;
+  coach_video_url: string | null;
   tags: string[] | null;
   equipment: string[] | null;
   is_shared: boolean | null;
