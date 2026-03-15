@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion } from "framer-motion";
-import { Play, Calendar, TrendingUp, Flame, CheckCircle } from "lucide-react";
+import { Play, Calendar, TrendingUp, Flame, CheckCircle, ShoppingBag, ChevronRight } from "lucide-react";
 import { format, startOfWeek, addDays, isSameDay } from "date-fns";
 import PortalLayout from "@/components/portal/PortalLayout";
 import TrainingDayInfo from "@/components/portal/TrainingDayInfo";
+import { toast } from "sonner";
 
 interface DayPlan {
   id: string;
