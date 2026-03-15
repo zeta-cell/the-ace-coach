@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion } from "framer-motion";
-import { ChevronRight, Search, Users, BookOpen } from "lucide-react";
+import { ChevronRight, Search, Users, BookOpen, Calendar, MessageSquare } from "lucide-react";
 import PortalLayout from "@/components/portal/PortalLayout";
+import QuickAddTrainingDrawer from "@/components/portal/QuickAddTrainingDrawer";
 
 interface PlayerRow {
   player_id: string;
