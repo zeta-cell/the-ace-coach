@@ -72,11 +72,11 @@ interface TrainingBlocksPanelProps {
   onApplyBlock: (items: PlanItem[]) => void;
   onSaveAsBlock: (() => void) | null;
   modules: ModuleItem[];
-  isOpen: boolean;
-  onClose: () => void;
+  isOpen?: boolean;
+  onClose?: () => void;
 }
 
-const TrainingBlocksPanel = ({ onApplyBlock, onSaveAsBlock, modules, isOpen, onClose }: TrainingBlocksPanelProps) => {
+const TrainingBlocksPanel = ({ onApplyBlock, onSaveAsBlock, modules, isOpen = true, onClose }: TrainingBlocksPanelProps) => {
   const { user } = useAuth();
   const [blocks, setBlocks] = useState<TrainingBlock[]>([]);
   const [loading, setLoading] = useState(true);
