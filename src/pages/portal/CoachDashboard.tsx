@@ -3,9 +3,10 @@ import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion } from "framer-motion";
-import { Users, BookOpen, Calendar, ChevronRight } from "lucide-react";
+import { Users, BookOpen, Calendar, ChevronRight, ShoppingBag, Mail, Check, X as XIcon } from "lucide-react";
 import { format } from "date-fns";
 import PortalLayout from "@/components/portal/PortalLayout";
+import { toast } from "sonner";
 
 interface AssignedPlayer {
   player_id: string;
@@ -15,11 +16,23 @@ interface AssignedPlayer {
   fitness_level: string | null;
 }
 
+interface CoachRequest {
+  id: string;
+  player_id: string;
+  player_name: string;
+  block_title: string | null;
+  message: string | null;
+  request_type: string;
+  created_at: string;
+}
+
 const CoachDashboard = () => {
   const { user, profile } = useAuth();
   const [players, setPlayers] = useState<AssignedPlayer[]>([]);
   const [moduleCount, setModuleCount] = useState(0);
   const [todayPlansCount, setTodayPlansCount] = useState(0);
+  const [requests, setRequests] = useState<CoachRequest[]>([]);
+  const [marketplaceStats, setMarketplaceStats] = useState({ published: 0, sales: 0, revenue: 0 });
 
   useEffect(() => {
     if (user) fetchData();
@@ -75,6 +88,39 @@ const CoachDashboard = () => {
       .eq("coach_id", user.id)
       .eq("plan_date", todayStr);
     setTodayPlansCount(plansCount || 0);
+
+    // Fetch coaching requests
+    const { data: reqData } = await supabase
+      .from("coach_requests").select("id, player_id, block_id, message, request_type, created_at")
+      .eq("coach_id", user.id).eq("status", "pending").order("created_at", { ascending: false });
+    if (reqData && reqData.length > 0) {
+      const playerIds = reqData.map((r) => r.player_id);
+      const blockIds = reqData.filter((r) => r.block_id).map((r) => r.block_id);
+      const [profilesR, blocksR] = await Promise.all([
+        supabase.from("profiles").select("user_id, full_name").in("user_id", playerIds),
+        blockIds.length > 0 ? supabase.from("training_blocks").select("id, title").in("id", blockIds) : { data: [] },
+      ]);
+      const nameMap = new Map(profilesR.data?.map((p) => [p.user_id, p.full_name]) || []);
+      const blockMap = new Map((blocksR.data as any[])?.map((b: any) => [b.id, b.title]) || []);
+      setRequests(reqData.map((r) => ({
+        ...r,
+        player_name: nameMap.get(r.player_id) || "Player",
+        block_title: r.block_id ? blockMap.get(r.block_id) || null : null,
+      })));
+    }
+
+    // Marketplace stats
+    const { count: pubCount } = await supabase
+      .from("training_blocks").select("id", { count: "exact", head: true })
+      .eq("coach_id", user.id).eq("is_public", true);
+    const { data: salesData } = await supabase
+      .from("block_purchases").select("amount_paid, platform_fee")
+      .eq("seller_id", user.id);
+    setMarketplaceStats({
+      published: pubCount || 0,
+      sales: salesData?.length || 0,
+      revenue: salesData?.reduce((s, p) => s + (Number(p.amount_paid) - Number(p.platform_fee || 0)), 0) || 0,
+    });
   };
 
   const firstName = profile?.full_name?.split(" ")[0]?.toUpperCase() || "COACH";
@@ -144,6 +190,76 @@ const CoachDashboard = () => {
               ))}
             </div>
           )}
+        </div>
+
+        {/* Coaching Requests */}
+        {requests.length > 0 && (
+          <div className="mb-6">
+            <div className="flex items-center justify-between mb-3">
+              <h2 className="font-display text-xl text-foreground flex items-center gap-2">
+                <Mail size={20} className="text-primary" /> COACHING REQUESTS
+              </h2>
+              <span className="text-xs font-body text-primary">{requests.length} pending</span>
+            </div>
+            <div className="space-y-2">
+              {requests.map((req) => (
+                <div key={req.id} className="bg-card border border-border rounded-xl p-4 space-y-2">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-display text-xs">{req.player_name.charAt(0)}</div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-display text-sm text-foreground">{req.player_name}</p>
+                      <p className="text-[10px] font-body text-muted-foreground">
+                        {req.request_type === "guide_program" ? "Program guidance" : req.request_type === "book_session" ? "Session booking" : "Full coaching"}
+                        {req.block_title && ` · ${req.block_title}`}
+                      </p>
+                    </div>
+                  </div>
+                  {req.message && <p className="text-xs font-body text-muted-foreground italic">"{req.message}"</p>}
+                  <div className="flex gap-2">
+                    <button onClick={async () => {
+                      await supabase.from("coach_requests").update({ status: "accepted", responded_at: new Date().toISOString() } as any).eq("id", req.id);
+                      await supabase.from("coach_player_assignments").insert({ coach_id: user!.id, player_id: req.player_id } as any);
+                      toast.success("Request accepted!");
+                      setRequests((prev) => prev.filter((r) => r.id !== req.id));
+                    }} className="flex-1 py-2 rounded-lg bg-primary text-primary-foreground font-display text-[10px] tracking-wider flex items-center justify-center gap-1">
+                      <Check size={12} /> ACCEPT
+                    </button>
+                    <button onClick={async () => {
+                      await supabase.from("coach_requests").update({ status: "declined", responded_at: new Date().toISOString() } as any).eq("id", req.id);
+                      toast.success("Request declined");
+                      setRequests((prev) => prev.filter((r) => r.id !== req.id));
+                    }} className="flex-1 py-2 rounded-lg border border-border text-muted-foreground font-display text-[10px] tracking-wider flex items-center justify-center gap-1">
+                      <XIcon size={12} /> DECLINE
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Marketplace Stats */}
+        <div className="mb-6">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="font-display text-xl text-foreground flex items-center gap-2">
+              <ShoppingBag size={20} className="text-primary" /> MY MARKETPLACE
+            </h2>
+            <Link to="/coach/marketplace" className="text-primary text-xs font-body hover:underline">Manage →</Link>
+          </div>
+          <div className="grid grid-cols-3 gap-3">
+            <div className="bg-card border border-border rounded-xl p-3 text-center">
+              <p className="font-display text-xl text-foreground">{marketplaceStats.published}</p>
+              <p className="font-body text-[9px] text-muted-foreground uppercase">Published</p>
+            </div>
+            <div className="bg-card border border-border rounded-xl p-3 text-center">
+              <p className="font-display text-xl text-foreground">{marketplaceStats.sales}</p>
+              <p className="font-body text-[9px] text-muted-foreground uppercase">Sales</p>
+            </div>
+            <div className="bg-card border border-border rounded-xl p-3 text-center">
+              <p className="font-display text-xl text-foreground">€{marketplaceStats.revenue.toFixed(0)}</p>
+              <p className="font-body text-[9px] text-muted-foreground uppercase">Revenue</p>
+            </div>
+          </div>
         </div>
       </div>
     </PortalLayout>

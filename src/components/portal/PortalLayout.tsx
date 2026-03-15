@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   LayoutDashboard, Calendar, BookOpen, Video,
   MessageSquare, User, LogOut, Menu, X, ChevronLeft, ChevronRight,
-  Users, Settings, Home, CreditCard, Link2, CalendarDays, UserCheck, Search
+  Users, Settings, Home, CreditCard, Link2, CalendarDays, UserCheck, Search, ShoppingBag
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import NotificationBell from "@/components/portal/NotificationBell";
@@ -12,6 +12,7 @@ import NotificationBell from "@/components/portal/NotificationBell";
 
 const playerNav = [
   { label: "Find a Coach", icon: Search, href: "/find-a-coach" },
+  { label: "Marketplace", icon: ShoppingBag, href: "/marketplace" },
   { label: "Home", icon: Home, href: "/dashboard" },
   { label: "Training", icon: Calendar, href: "/training" },
   { label: "Videos", icon: Video, href: "/videos" },
@@ -24,6 +25,7 @@ const coachNav = [
   { label: "Modules", icon: BookOpen, href: "/coach/modules" },
   { label: "Videos", icon: Video, href: "/coach/videos" },
   { label: "Calendar", icon: CalendarDays, href: "/coach/calendar" },
+  { label: "Marketplace", icon: ShoppingBag, href: "/coach/marketplace" },
   { label: "Messages", icon: MessageSquare, href: "/coach/messages" },
 ];
 

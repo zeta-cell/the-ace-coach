@@ -13,6 +13,7 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 const PublicCoachProfile = lazy(() => import("./pages/PublicCoachProfile"));
 const FindACoach = lazy(() => import("./pages/FindACoach"));
+const Marketplace = lazy(() => import("./pages/Marketplace"));
 
 // Portal pages (lazy-loaded)
 const Login = lazy(() => import("./pages/portal/Login"));
@@ -32,6 +33,7 @@ const CoachPlanBuilder = lazy(() => import("./pages/portal/CoachPlanBuilder"));
 const CoachVideos = lazy(() => import("./pages/portal/CoachVideos"));
 const CoachCalendar = lazy(() => import("./pages/portal/CoachCalendar"));
 const CoachProfile = lazy(() => import("./pages/portal/CoachProfile"));
+const CoachMarketplace = lazy(() => import("./pages/portal/CoachMarketplace"));
 
 // Admin pages (lazy-loaded)
 const AdminDashboard = lazy(() => import("./pages/portal/AdminDashboard"));
@@ -61,6 +63,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/coach/:slug" element={<Suspense fallback={<PortalLoader />}><PublicCoachProfile /></Suspense>} />
             <Route path="/find-a-coach" element={<Suspense fallback={<PortalLoader />}><FindACoach /></Suspense>} />
+            <Route path="/marketplace" element={<Suspense fallback={<PortalLoader />}><Marketplace /></Suspense>} />
 
             {/* Auth */}
             <Route path="/login" element={<Suspense fallback={<PortalLoader />}><Login /></Suspense>} />
@@ -143,6 +146,11 @@ const App = () => (
             <Route path="/coach/profile" element={
               <Suspense fallback={<PortalLoader />}>
                 <ProtectedRoute requiredRole="coach"><CoachProfile /></ProtectedRoute>
+              </Suspense>
+            } />
+            <Route path="/coach/marketplace" element={
+              <Suspense fallback={<PortalLoader />}>
+                <ProtectedRoute requiredRole="coach"><CoachMarketplace /></ProtectedRoute>
               </Suspense>
             } />
 
