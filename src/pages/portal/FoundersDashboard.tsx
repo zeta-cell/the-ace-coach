@@ -2080,28 +2080,30 @@ const FoundersDashboard = () => {
       </Section>
 
       {/* ══════ BOTTOM — FOUNDER ACTIONS ══════ */}
-      <div className="sticky bottom-0 md:bottom-0 z-30 bg-card/95 backdrop-blur-md border-t border-border -mx-4 md:-mx-6 px-4 md:px-6 py-3 mb-20 md:mb-0">
-        <div className="flex flex-wrap items-center gap-2">
-          <Button onClick={handleExportFull} variant="outline" size="sm">
-            <Download className="w-3 h-3 mr-1" /> EXPORT FULL REPORT
-          </Button>
-          <Button onClick={() => setInvestorModal(true)} variant="outline" size="sm">
-            <Crown className="w-3 h-3 mr-1" /> INVESTOR SNAPSHOT
-          </Button>
-          <Button onClick={handleFindExpansion} variant="outline" size="sm">
-            <MapPin className="w-3 h-3 mr-1" /> EXPANSION TARGETS
-          </Button>
-          <Button onClick={handleNudgeAllAtRisk} variant="outline" size="sm">
-            <Send className="w-3 h-3 mr-1" /> NUDGE AT-RISK ({coach.atRiskCoaches.length})
-          </Button>
-          <Button onClick={() => { setShowSpendForm(true); document.getElementById("spend")?.scrollIntoView({ behavior: "smooth" }); }} variant="outline" size="sm">
-            <Plus className="w-3 h-3 mr-1" /> LOG EXPENSE
-          </Button>
-          <Button onClick={handleShareDashboard} variant="default" size="sm">
-            <Share2 className="w-3 h-3 mr-1" /> SHARE DASHBOARD
-          </Button>
+      {!isReadOnly && (
+        <div className="sticky bottom-0 md:bottom-0 z-30 bg-card/95 backdrop-blur-md border-t border-border -mx-4 md:-mx-6 px-4 md:px-6 py-3 mb-20 md:mb-0">
+          <div className="flex flex-wrap items-center gap-2">
+            <Button onClick={handleExportFull} variant="outline" size="sm">
+              <Download className="w-3 h-3 mr-1" /> EXPORT FULL REPORT
+            </Button>
+            <Button onClick={() => setInvestorModal(true)} variant="outline" size="sm">
+              <Crown className="w-3 h-3 mr-1" /> INVESTOR SNAPSHOT
+            </Button>
+            <Button onClick={handleFindExpansion} variant="outline" size="sm">
+              <MapPin className="w-3 h-3 mr-1" /> EXPANSION TARGETS
+            </Button>
+            <Button onClick={handleNudgeAllAtRisk} variant="outline" size="sm">
+              <Send className="w-3 h-3 mr-1" /> NUDGE AT-RISK ({coach.atRiskCoaches.length})
+            </Button>
+            <Button onClick={() => { setShowSpendForm(true); document.getElementById("spend")?.scrollIntoView({ behavior: "smooth" }); }} variant="outline" size="sm">
+              <Plus className="w-3 h-3 mr-1" /> LOG EXPENSE
+            </Button>
+            <Button onClick={handleShareDashboard} variant="default" size="sm">
+              <Share2 className="w-3 h-3 mr-1" /> SHARE DASHBOARD
+            </Button>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Expansion Cities Modal */}
       <Dialog open={expansionModal} onOpenChange={setExpansionModal}>
