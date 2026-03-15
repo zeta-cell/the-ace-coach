@@ -144,6 +144,10 @@ const CoachPlanBuilder = () => {
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [planNotes, setPlanNotes] = useState("");
+  const [locationName, setLocationName] = useState("");
+  const [locationAddress, setLocationAddress] = useState("");
+  const [locationLat, setLocationLat] = useState("");
+  const [locationLng, setLocationLng] = useState("");
   const [planItems, setPlanItems] = useState<PlanItem[]>([]);
   const [modules, setModules] = useState<ModuleItem[]>([]);
   const [moduleSearch, setModuleSearch] = useState("");
@@ -223,6 +227,10 @@ const CoachPlanBuilder = () => {
       setPlanNotes(plan.notes || "");
       setStartTime((plan as any).start_time || "");
       setEndTime((plan as any).end_time || "");
+      setLocationName((plan as any).location_name || "");
+      setLocationAddress((plan as any).location_address || "");
+      setLocationLat((plan as any).location_lat?.toString() || "");
+      setLocationLng((plan as any).location_lng?.toString() || "");
       const { data: items } = await supabase
         .from("player_day_plan_items")
         .select("id, module_id, coach_note, order_index")
@@ -256,6 +264,10 @@ const CoachPlanBuilder = () => {
       setPlanNotes("");
       setStartTime("");
       setEndTime("");
+      setLocationName("");
+      setLocationAddress("");
+      setLocationLat("");
+      setLocationLng("");
     }
   };
 
@@ -311,6 +323,10 @@ const CoachPlanBuilder = () => {
         notes: planNotes || null,
         start_time: startTime || null,
         end_time: endTime || null,
+        location_name: locationName || null,
+        location_address: locationAddress || null,
+        location_lat: locationLat ? parseFloat(locationLat) : null,
+        location_lng: locationLng ? parseFloat(locationLng) : null,
       } as any).eq("id", planId);
     } else {
       const { data } = await supabase
@@ -322,6 +338,10 @@ const CoachPlanBuilder = () => {
           notes: planNotes || null,
           start_time: startTime || null,
           end_time: endTime || null,
+          location_name: locationName || null,
+          location_address: locationAddress || null,
+          location_lat: locationLat ? parseFloat(locationLat) : null,
+          location_lng: locationLng ? parseFloat(locationLng) : null,
         } as any)
         .select("id")
         .single();
@@ -573,8 +593,40 @@ const CoachPlanBuilder = () => {
           placeholder="Plan notes (optional)..."
           value={planNotes}
           onChange={(e) => setPlanNotes(e.target.value)}
-          className="w-full px-3 py-2 rounded-lg bg-card border border-border text-foreground font-body text-sm mb-4 focus:outline-none focus:ring-1 focus:ring-primary"
+          className="w-full px-3 py-2 rounded-lg bg-card border border-border text-foreground font-body text-sm mb-3 focus:outline-none focus:ring-1 focus:ring-primary"
         />
+
+        {/* Location fields */}
+        <div className="grid grid-cols-2 gap-3 mb-4">
+          <input
+            placeholder="Location name (e.g. Padel Club)"
+            value={locationName}
+            onChange={(e) => setLocationName(e.target.value)}
+            className="w-full px-3 py-2 rounded-lg bg-card border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+          />
+          <input
+            placeholder="Address (for Google Maps)"
+            value={locationAddress}
+            onChange={(e) => setLocationAddress(e.target.value)}
+            className="w-full px-3 py-2 rounded-lg bg-card border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+          />
+          <input
+            placeholder="Latitude (optional)"
+            type="number"
+            step="any"
+            value={locationLat}
+            onChange={(e) => setLocationLat(e.target.value)}
+            className="w-full px-3 py-2 rounded-lg bg-card border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+          />
+          <input
+            placeholder="Longitude (optional)"
+            type="number"
+            step="any"
+            value={locationLng}
+            onChange={(e) => setLocationLng(e.target.value)}
+            className="w-full px-3 py-2 rounded-lg bg-card border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+          />
+        </div>
 
         {/* Module browser — on mobile appears before plan items, on desktop after */}
         {renderModuleBrowser()}

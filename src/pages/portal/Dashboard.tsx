@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { Play, Calendar, TrendingUp, Flame, CheckCircle } from "lucide-react";
 import { format, startOfWeek, addDays, isSameDay } from "date-fns";
 import PortalLayout from "@/components/portal/PortalLayout";
+import TrainingDayInfo from "@/components/portal/TrainingDayInfo";
 
 interface DayPlan {
   id: string;
@@ -161,6 +162,18 @@ const Dashboard = () => {
             </div>
           </div>
         </motion.div>
+
+        {/* Training Day Info */}
+        {user && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.15 }}
+            className="mb-6"
+          >
+            <TrainingDayInfo playerId={user.id} date={format(today, "yyyy-MM-dd")} />
+          </motion.div>
+        )}
 
         {/* Week strip */}
         <motion.div
