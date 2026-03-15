@@ -3,6 +3,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import PortalLayout from "@/components/portal/PortalLayout";
+import CoachAvailabilityGrid from "@/components/portal/CoachAvailabilityGrid";
 import {
   format, startOfMonth, endOfMonth, eachDayOfInterval,
   isSameMonth, isToday, startOfWeek, endOfWeek,
