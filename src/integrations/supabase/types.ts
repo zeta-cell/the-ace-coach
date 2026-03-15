@@ -471,11 +471,16 @@ export type Database = {
       }
       player_profiles: {
         Row: {
+          apple_health_connected: boolean
           backhand_pct: number | null
           best_shot: string | null
+          club_location: string | null
+          club_name: string | null
           created_at: string
+          current_usta_ntrp: number | null
           date_of_birth: string | null
           dominant_hand: Database["public"]["Enums"]["dominant_hand"] | null
+          favourite_players: string[] | null
           fitness_level: Database["public"]["Enums"]["fitness_level"] | null
           forehand_pct: number | null
           goals: string[] | null
@@ -484,14 +489,22 @@ export type Database = {
           left_tendency_pct: number | null
           lob_pct: number | null
           nationality: string | null
+          plays_since_year: number | null
           playtomic_level: number | null
           playtomic_url: string | null
+          preferred_court_surface: string | null
+          preferred_sport: Database["public"]["Enums"]["preferred_sport"] | null
           right_tendency_pct: number | null
           serve_pct: number | null
+          shirt_size: string | null
           shot_data_source:
             | Database["public"]["Enums"]["shot_data_source"]
             | null
           smash_pct: number | null
+          target_ranking: string | null
+          training_freq:
+            | Database["public"]["Enums"]["training_frequency"]
+            | null
           updated_at: string
           user_id: string
           volley_pct: number | null
@@ -499,11 +512,16 @@ export type Database = {
           years_playing: number | null
         }
         Insert: {
+          apple_health_connected?: boolean
           backhand_pct?: number | null
           best_shot?: string | null
+          club_location?: string | null
+          club_name?: string | null
           created_at?: string
+          current_usta_ntrp?: number | null
           date_of_birth?: string | null
           dominant_hand?: Database["public"]["Enums"]["dominant_hand"] | null
+          favourite_players?: string[] | null
           fitness_level?: Database["public"]["Enums"]["fitness_level"] | null
           forehand_pct?: number | null
           goals?: string[] | null
@@ -512,14 +530,24 @@ export type Database = {
           left_tendency_pct?: number | null
           lob_pct?: number | null
           nationality?: string | null
+          plays_since_year?: number | null
           playtomic_level?: number | null
           playtomic_url?: string | null
+          preferred_court_surface?: string | null
+          preferred_sport?:
+            | Database["public"]["Enums"]["preferred_sport"]
+            | null
           right_tendency_pct?: number | null
           serve_pct?: number | null
+          shirt_size?: string | null
           shot_data_source?:
             | Database["public"]["Enums"]["shot_data_source"]
             | null
           smash_pct?: number | null
+          target_ranking?: string | null
+          training_freq?:
+            | Database["public"]["Enums"]["training_frequency"]
+            | null
           updated_at?: string
           user_id: string
           volley_pct?: number | null
@@ -527,11 +555,16 @@ export type Database = {
           years_playing?: number | null
         }
         Update: {
+          apple_health_connected?: boolean
           backhand_pct?: number | null
           best_shot?: string | null
+          club_location?: string | null
+          club_name?: string | null
           created_at?: string
+          current_usta_ntrp?: number | null
           date_of_birth?: string | null
           dominant_hand?: Database["public"]["Enums"]["dominant_hand"] | null
+          favourite_players?: string[] | null
           fitness_level?: Database["public"]["Enums"]["fitness_level"] | null
           forehand_pct?: number | null
           goals?: string[] | null
@@ -540,14 +573,24 @@ export type Database = {
           left_tendency_pct?: number | null
           lob_pct?: number | null
           nationality?: string | null
+          plays_since_year?: number | null
           playtomic_level?: number | null
           playtomic_url?: string | null
+          preferred_court_surface?: string | null
+          preferred_sport?:
+            | Database["public"]["Enums"]["preferred_sport"]
+            | null
           right_tendency_pct?: number | null
           serve_pct?: number | null
+          shirt_size?: string | null
           shot_data_source?:
             | Database["public"]["Enums"]["shot_data_source"]
             | null
           smash_pct?: number | null
+          target_ranking?: string | null
+          training_freq?:
+            | Database["public"]["Enums"]["training_frequency"]
+            | null
           updated_at?: string
           user_id?: string
           volley_pct?: number | null
@@ -560,28 +603,37 @@ export type Database = {
         Row: {
           brand: string
           created_at: string
+          grip_size: string | null
           id: string
           is_favorite: boolean | null
           model: string
           player_id: string
+          string_brand: string | null
+          string_tension: string | null
           type: Database["public"]["Enums"]["racket_type"] | null
         }
         Insert: {
           brand?: string
           created_at?: string
+          grip_size?: string | null
           id?: string
           is_favorite?: boolean | null
           model?: string
           player_id: string
+          string_brand?: string | null
+          string_tension?: string | null
           type?: Database["public"]["Enums"]["racket_type"] | null
         }
         Update: {
           brand?: string
           created_at?: string
+          grip_size?: string | null
           id?: string
           is_favorite?: boolean | null
           model?: string
           player_id?: string
+          string_brand?: string | null
+          string_tension?: string | null
           type?: Database["public"]["Enums"]["racket_type"] | null
         }
         Relationships: []
@@ -760,10 +812,12 @@ export type Database = {
       module_difficulty: "beginner" | "intermediate" | "advanced" | "elite"
       payment_status: "pending" | "completed" | "failed" | "refunded"
       payment_type: "camp" | "monthly" | "annual" | "session" | "other"
+      preferred_sport: "tennis" | "padel" | "both"
       racket_type: "power" | "control" | "mixed"
       session_type: "individual" | "group" | "kids" | "online"
       shot_data_source: "player" | "coach"
       sport_type: "tennis" | "padel" | "both"
+      training_frequency: "daily" | "3-4x_week" | "1-2x_week" | "occasional"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -910,10 +964,12 @@ export const Constants = {
       module_difficulty: ["beginner", "intermediate", "advanced", "elite"],
       payment_status: ["pending", "completed", "failed", "refunded"],
       payment_type: ["camp", "monthly", "annual", "session", "other"],
+      preferred_sport: ["tennis", "padel", "both"],
       racket_type: ["power", "control", "mixed"],
       session_type: ["individual", "group", "kids", "online"],
       shot_data_source: ["player", "coach"],
       sport_type: ["tennis", "padel", "both"],
+      training_frequency: ["daily", "3-4x_week", "1-2x_week", "occasional"],
     },
   },
 } as const
