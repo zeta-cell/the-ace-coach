@@ -237,7 +237,7 @@ const CoachPlanBuilder = () => {
     if (!user || !playerId) return;
     const { data: plan } = await supabase
       .from("player_day_plans")
-      .select("id, notes, start_time, end_time")
+      .select("id, notes, start_time, end_time, location_name, location_address, location_lat, location_lng")
       .eq("player_id", playerId)
       .eq("coach_id", user.id)
       .eq("plan_date", planDate)
@@ -246,12 +246,12 @@ const CoachPlanBuilder = () => {
     if (plan) {
       setExistingPlanId(plan.id);
       setPlanNotes(plan.notes || "");
-      setStartTime((plan as any).start_time || "");
-      setEndTime((plan as any).end_time || "");
-      setLocationName((plan as any).location_name || "");
-      setLocationAddress((plan as any).location_address || "");
-      setLocationLat((plan as any).location_lat?.toString() || "");
-      setLocationLng((plan as any).location_lng?.toString() || "");
+      setStartTime(plan.start_time || "");
+      setEndTime(plan.end_time || "");
+      setLocationName(plan.location_name || "");
+      setLocationAddress(plan.location_address || "");
+      setLocationLat(plan.location_lat?.toString() || "");
+      setLocationLng(plan.location_lng?.toString() || "");
       const { data: items } = await supabase
         .from("player_day_plan_items")
         .select("id, module_id, coach_note, order_index")
