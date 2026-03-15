@@ -7,6 +7,7 @@ import { Play, Calendar, TrendingUp, Flame, CheckCircle, ShoppingBag, ChevronRig
 import { format, startOfWeek, addDays, isSameDay } from "date-fns";
 import PortalLayout from "@/components/portal/PortalLayout";
 import TrainingDayInfo from "@/components/portal/TrainingDayInfo";
+import UpcomingBookings from "@/components/portal/UpcomingBookings";
 import { toast } from "sonner";
 
 interface DayPlan {
@@ -132,6 +133,9 @@ const Dashboard = () => {
             </div>
           </div>
         </motion.div>
+
+        {/* Upcoming booked sessions */}
+        <UpcomingBookings />
 
         {/* My Programs */}
         {programs.length > 0 && (

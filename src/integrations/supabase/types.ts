@@ -128,6 +128,89 @@ export type Database = {
           },
         ]
       }
+      bookings: {
+        Row: {
+          booking_date: string
+          cancellation_reason: string | null
+          cancelled_at: string | null
+          cancelled_by: string | null
+          coach_id: string
+          coach_payout: number
+          created_at: string | null
+          currency: string
+          end_time: string
+          id: string
+          location_address: string | null
+          location_type: string | null
+          notes: string | null
+          package_id: string | null
+          platform_fee: number
+          player_id: string
+          start_time: string
+          status: string
+          stripe_checkout_session_id: string | null
+          stripe_payment_intent_id: string | null
+          total_price: number
+          updated_at: string | null
+        }
+        Insert: {
+          booking_date: string
+          cancellation_reason?: string | null
+          cancelled_at?: string | null
+          cancelled_by?: string | null
+          coach_id: string
+          coach_payout?: number
+          created_at?: string | null
+          currency?: string
+          end_time: string
+          id?: string
+          location_address?: string | null
+          location_type?: string | null
+          notes?: string | null
+          package_id?: string | null
+          platform_fee?: number
+          player_id: string
+          start_time: string
+          status?: string
+          stripe_checkout_session_id?: string | null
+          stripe_payment_intent_id?: string | null
+          total_price?: number
+          updated_at?: string | null
+        }
+        Update: {
+          booking_date?: string
+          cancellation_reason?: string | null
+          cancelled_at?: string | null
+          cancelled_by?: string | null
+          coach_id?: string
+          coach_payout?: number
+          created_at?: string | null
+          currency?: string
+          end_time?: string
+          id?: string
+          location_address?: string | null
+          location_type?: string | null
+          notes?: string | null
+          package_id?: string | null
+          platform_fee?: number
+          player_id?: string
+          start_time?: string
+          status?: string
+          stripe_checkout_session_id?: string | null
+          stripe_payment_intent_id?: string | null
+          total_price?: number
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bookings_package_id_fkey"
+            columns: ["package_id"]
+            isOneToOne: false
+            referencedRelation: "coach_packages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       coach_availability_slots: {
         Row: {
           coach_id: string
@@ -971,6 +1054,27 @@ export type Database = {
           id?: string
           player_id?: string
           rating?: number
+        }
+        Relationships: []
+      }
+      stripe_customers: {
+        Row: {
+          created_at: string | null
+          id: string
+          stripe_customer_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          stripe_customer_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          stripe_customer_id?: string
+          user_id?: string
         }
         Relationships: []
       }

@@ -275,7 +275,7 @@ const PublicCoachProfile = () => {
                 <p className="font-display text-4xl text-foreground">€{Number(coach.hourly_rate_from).toFixed(0)}</p>
                 <p className="font-body text-xs text-muted-foreground">/session</p>
                 <Link
-                  to="/login"
+                  to={`/book/${coach.profile_slug}`}
                   className="inline-flex items-center gap-2 mt-3 px-6 py-2.5 rounded-xl bg-primary text-primary-foreground font-display text-sm tracking-wider hover:bg-primary/90 transition-colors"
                 >
                   BOOK NOW <ArrowRight size={14} />
@@ -389,7 +389,7 @@ const PublicCoachProfile = () => {
                             )}
                           </div>
                           <Link
-                            to="/login"
+                            to={`/book/${coach.profile_slug}`}
                             className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-xs font-display tracking-wider hover:bg-primary/90 transition-colors opacity-0 group-hover:opacity-100"
                           >
                             BOOK
@@ -517,7 +517,7 @@ const PublicCoachProfile = () => {
               className="sticky top-20"
             >
               <Link
-                to="/login"
+                to={`/book/${coach.profile_slug}`}
                 className="w-full flex items-center justify-center gap-2 py-4 rounded-xl bg-primary text-primary-foreground font-display text-sm tracking-widest hover:bg-primary/90 transition-colors"
               >
                 BOOK A SESSION <ArrowRight size={16} />

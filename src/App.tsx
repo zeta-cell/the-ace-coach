@@ -14,6 +14,8 @@ import NotFound from "./pages/NotFound";
 const PublicCoachProfile = lazy(() => import("./pages/PublicCoachProfile"));
 const FindACoach = lazy(() => import("./pages/FindACoach"));
 const Marketplace = lazy(() => import("./pages/Marketplace"));
+const BookCoach = lazy(() => import("./pages/BookCoach"));
+const BookingSuccess = lazy(() => import("./pages/BookingSuccess"));
 
 // Portal pages (lazy-loaded)
 const Login = lazy(() => import("./pages/portal/Login"));
@@ -64,6 +66,7 @@ const App = () => (
             <Route path="/coach/:slug" element={<Suspense fallback={<PortalLoader />}><PublicCoachProfile /></Suspense>} />
             <Route path="/find-a-coach" element={<Suspense fallback={<PortalLoader />}><FindACoach /></Suspense>} />
             <Route path="/marketplace" element={<Suspense fallback={<PortalLoader />}><Marketplace /></Suspense>} />
+            <Route path="/booking-success" element={<Suspense fallback={<PortalLoader />}><BookingSuccess /></Suspense>} />
 
             {/* Auth */}
             <Route path="/login" element={<Suspense fallback={<PortalLoader />}><Login /></Suspense>} />
@@ -72,6 +75,13 @@ const App = () => (
             <Route path="/onboarding" element={
               <Suspense fallback={<PortalLoader />}>
                 <ProtectedRoute><Onboarding /></ProtectedRoute>
+              </Suspense>
+            } />
+
+            {/* Book a coach */}
+            <Route path="/book/:coachSlug" element={
+              <Suspense fallback={<PortalLoader />}>
+                <ProtectedRoute><BookCoach /></ProtectedRoute>
               </Suspense>
             } />
 

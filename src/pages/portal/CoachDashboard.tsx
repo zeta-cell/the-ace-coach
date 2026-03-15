@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { Users, BookOpen, Calendar, ChevronRight, ShoppingBag, Mail, Check, X as XIcon } from "lucide-react";
 import { format } from "date-fns";
 import PortalLayout from "@/components/portal/PortalLayout";
+import IncomingBookings from "@/components/portal/IncomingBookings";
 import { toast } from "sonner";
 
 interface AssignedPlayer {
@@ -293,6 +294,9 @@ const CoachDashboard = () => {
             </div>
           </div>
         )}
+
+        {/* Incoming Bookings */}
+        <IncomingBookings />
 
         {/* Upcoming Plans */}
         {upcomingPlans.length > 0 && (
