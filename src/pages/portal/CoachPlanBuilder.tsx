@@ -164,6 +164,10 @@ const CoachPlanBuilder = () => {
   const [calMonth, setCalMonth] = useState(new Date());
   const [existingPlanId, setExistingPlanId] = useState<string | null>(null);
   const [weekPlanDates, setWeekPlanDates] = useState<Set<string>>(new Set());
+  const [showSaveBlock, setShowSaveBlock] = useState(false);
+  const [blockTitle, setBlockTitle] = useState("");
+  const [blockGoal, setBlockGoal] = useState("Technique");
+  const [blockDesc, setBlockDesc] = useState("");
 
   const sensors = useSensors(
     useSensor(PointerSensor),
