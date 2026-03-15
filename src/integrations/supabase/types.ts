@@ -1593,6 +1593,10 @@ export type Database = {
         Args: { p_user_id: string }
         Returns: undefined
       }
+      increment_session_stats: {
+        Args: { p_minutes?: number; p_user_id: string }
+        Returns: undefined
+      }
       recalculate_rankings: { Args: never; Returns: undefined }
       update_block_rating_avg: {
         Args: { p_block_id: string }

@@ -176,6 +176,13 @@ const Training = () => {
       await supabase.rpc('update_streak', { p_user_id: user.id });
       // Increment raffle tickets (atomic)
       await supabase.rpc('increment_raffle_tickets', { p_user_id: user.id });
+      // Increment total_sessions and total_minutes
+      const completedItem = planItems.find(item => item.id === itemId);
+      const durationMinutes = completedItem?.module?.duration_minutes || 0;
+      await supabase.rpc('increment_session_stats', {
+        p_user_id: user.id,
+        p_minutes: durationMinutes,
+      });
     }
   };
 

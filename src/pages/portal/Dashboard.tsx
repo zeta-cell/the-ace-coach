@@ -275,8 +275,8 @@ const Dashboard = () => {
           </div>
           <div className="bg-card border border-border rounded-xl p-3 text-center">
             <Activity size={16} className="text-rose-400 mx-auto mb-0.5" />
-            <p className="font-display text-xl text-foreground"><AnimatedNumber value={estimatedCalories} /></p>
-            <p className="font-body text-[9px] text-muted-foreground uppercase">Calories</p>
+            <p className="font-display text-xl text-foreground">{estimatedCalories.toLocaleString()}</p>
+            <p className="font-body text-[9px] text-muted-foreground uppercase">KCAL BURNED</p>
           </div>
         </motion.div>
 
