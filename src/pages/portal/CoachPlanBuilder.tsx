@@ -264,6 +264,10 @@ const CoachPlanBuilder = () => {
       setPlanNotes("");
       setStartTime("");
       setEndTime("");
+      setLocationName("");
+      setLocationAddress("");
+      setLocationLat("");
+      setLocationLng("");
     }
   };
 
