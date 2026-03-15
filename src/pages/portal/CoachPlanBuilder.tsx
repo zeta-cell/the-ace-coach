@@ -789,6 +789,74 @@ const CoachPlanBuilder = () => {
           </motion.div>
         )}
       </div>
+
+      {/* Save as block modal */}
+      {showSaveBlock && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm"
+          onClick={() => setShowSaveBlock(false)}
+        >
+          <motion.div
+            initial={{ scale: 0.95, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            onClick={(e) => e.stopPropagation()}
+            className="w-full max-w-md bg-card border border-border rounded-xl p-5 space-y-4"
+          >
+            <h3 className="font-display text-lg text-foreground">SAVE AS TRAINING BLOCK</h3>
+            <input
+              placeholder="Block title..."
+              value={blockTitle}
+              onChange={(e) => setBlockTitle(e.target.value)}
+              className="w-full px-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+            />
+            <input
+              placeholder="Short description..."
+              value={blockDesc}
+              onChange={(e) => setBlockDesc(e.target.value)}
+              className="w-full px-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+            />
+            <div>
+              <p className="font-display text-[10px] tracking-wider text-muted-foreground mb-2">GOAL</p>
+              <div className="flex flex-wrap gap-1.5">
+                {["Technique", "Match Preparation", "Fitness", "Recovery", "Warm Up", "Footwork", "Mental", "Kids", "Beginner", "Advanced"].map((g) => (
+                  <button
+                    key={g}
+                    onClick={() => setBlockGoal(g)}
+                    className={`px-3 py-1.5 rounded-lg font-display text-[10px] tracking-wider transition-colors ${
+                      blockGoal === g ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    {g.toUpperCase()}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <p className="text-xs font-body text-muted-foreground">{planItems.length} modules will be saved in this block</p>
+            <div className="flex gap-2">
+              <button onClick={() => setShowSaveBlock(false)} className="flex-1 py-2.5 rounded-xl border border-border font-display text-xs tracking-wider text-muted-foreground hover:text-foreground transition-colors">
+                CANCEL
+              </button>
+              <button onClick={handleSaveAsBlock} className="flex-1 py-2.5 rounded-xl bg-primary font-display text-xs tracking-wider text-primary-foreground hover:bg-primary/90 transition-colors">
+                SAVE BLOCK
+              </button>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+
+      {/* Mobile: Training blocks button */}
+      <div className="lg:hidden fixed bottom-20 right-4 z-40">
+        <button
+          onClick={() => setShowSaveBlock(true)}
+          className="w-12 h-12 rounded-full bg-primary text-primary-foreground shadow-lg flex items-center justify-center"
+          title="Save as block"
+        >
+          <Save size={20} />
+        </button>
+      </div>
+      </div>
     </PortalLayout>
   );
 };
