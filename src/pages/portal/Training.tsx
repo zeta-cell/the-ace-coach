@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { Check, ChevronDown, ChevronUp, Play, Clock } from "lucide-react";
 import { format, startOfWeek, addDays, isSameDay, parseISO, isValid } from "date-fns";
 import PortalLayout from "@/components/portal/PortalLayout";
+import TrainingDayInfo from "@/components/portal/TrainingDayInfo";
 
 const CATEGORY_COLORS: Record<string, string> = {
   warm_up: "bg-yellow-500",
