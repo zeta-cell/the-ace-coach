@@ -49,6 +49,7 @@ const PortalLayout = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [fabDrawerOpen, setFabDrawerOpen] = useState(false);
 
   const navItems = role === "admin" ? adminNav : role === "coach" ? coachNav : playerNav;
 
