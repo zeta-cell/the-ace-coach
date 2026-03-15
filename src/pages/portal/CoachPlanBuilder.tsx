@@ -138,10 +138,12 @@ const CATEGORY_LABELS: Record<string, string> = {
 /* ── Main component ── */
 const CoachPlanBuilder = () => {
   const { playerId } = useParams<{ playerId: string }>();
+  const [searchParams] = useSearchParams();
   const { user } = useAuth();
   const navigate = useNavigate();
   const [playerName, setPlayerName] = useState("");
-  const [planDate, setPlanDate] = useState(format(new Date(), "yyyy-MM-dd"));
+  const initialDate = searchParams.get("date") || format(new Date(), "yyyy-MM-dd");
+  const [planDate, setPlanDate] = useState(initialDate);
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [planNotes, setPlanNotes] = useState("");
