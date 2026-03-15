@@ -94,6 +94,7 @@ const Dashboard = () => {
       fetchPlans();
       fetchPrograms();
       fetchGamificationData();
+      fetchUpcomingEvents();
     }
   }, [user]);
 
