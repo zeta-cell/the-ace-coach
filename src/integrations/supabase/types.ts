@@ -14,6 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
+      coach_availability_slots: {
+        Row: {
+          coach_id: string
+          created_at: string | null
+          day_of_week: number | null
+          end_time: string
+          id: string
+          is_blocked: boolean | null
+          is_recurring: boolean | null
+          specific_date: string | null
+          start_time: string
+        }
+        Insert: {
+          coach_id: string
+          created_at?: string | null
+          day_of_week?: number | null
+          end_time: string
+          id?: string
+          is_blocked?: boolean | null
+          is_recurring?: boolean | null
+          specific_date?: string | null
+          start_time: string
+        }
+        Update: {
+          coach_id?: string
+          created_at?: string | null
+          day_of_week?: number | null
+          end_time?: string
+          id?: string
+          is_blocked?: boolean | null
+          is_recurring?: boolean | null
+          specific_date?: string | null
+          start_time?: string
+        }
+        Relationships: []
+      }
       coach_packages: {
         Row: {
           coach_id: string
