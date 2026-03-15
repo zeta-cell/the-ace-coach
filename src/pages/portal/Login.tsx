@@ -8,7 +8,7 @@ import { z } from "zod";
 import { motion } from "framer-motion";
 import { Eye, EyeOff, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
-import aceLogo from "@/assets/the-ace-logo.svg";
+// Logo removed during cleanup
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
