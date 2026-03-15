@@ -1721,9 +1721,11 @@ const FoundersDashboard = () => {
         <Card>
           <CardHeader className="pb-2 flex flex-row items-center justify-between">
             <CardTitle className="text-sm font-body">Expense Tracker</CardTitle>
-            <Button size="sm" variant="outline" onClick={() => setShowSpendForm(!showSpendForm)}>
-              <Plus className="w-3 h-3 mr-1" /> ADD EXPENSE
-            </Button>
+            {!isReadOnly && (
+              <Button size="sm" variant="outline" onClick={() => setShowSpendForm(!showSpendForm)}>
+                <Plus className="w-3 h-3 mr-1" /> ADD EXPENSE
+              </Button>
+            )}
           </CardHeader>
           <CardContent>
             {showSpendForm && (
