@@ -156,9 +156,51 @@ const PublicCoachProfile = () => {
           player_avatar: (playerMap.get(r.player_id) as any)?.avatar_url || null,
         }))
       );
+
+      if (user) {
+        const alreadyReviewed = (reviewsRes.data as any[]).some(
+          (r: any) => r.player_id === user.id
+        );
+        setHasReviewed(alreadyReviewed);
+      }
+    } else {
+      setReviews([]);
+      setHasReviewed(false);
     }
 
     setLoading(false);
+  };
+
+  const handleSubmitReview = async () => {
+    if (!user || !coach) return;
+    setSubmittingReview(true);
+    try {
+      const { error } = await supabase.from('reviews').insert({
+        coach_id: coach.user_id,
+        player_id: user.id,
+        rating: reviewRating,
+        comment: reviewText.trim() || null,
+      });
+
+      if (error) {
+        toast({ title: 'Error', description: error.message, variant: 'destructive' });
+        return;
+      }
+
+      await supabase.rpc('award_xp', {
+        p_user_id: user.id,
+        p_amount: 20,
+        p_event_type: 'review_written',
+        p_description: 'Wrote a coach review',
+      });
+
+      toast({ title: 'Review submitted! +20 XP 🎉' });
+      setReviewText('');
+      setHasReviewed(true);
+      fetchCoach();
+    } finally {
+      setSubmittingReview(false);
+    }
   };
 
   const avgRating = reviews.length > 0
