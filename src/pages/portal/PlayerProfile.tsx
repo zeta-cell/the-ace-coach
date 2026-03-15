@@ -14,6 +14,7 @@ import {
 import UpcomingSchedule from "@/components/portal/UpcomingSchedule";
 import PortalLayout from "@/components/portal/PortalLayout";
 import PlayerProfileEdit from "@/components/portal/PlayerProfileEdit";
+import HealthConnections from "@/components/portal/HealthConnections";
 
 interface PlayerData {
   dominant_hand: string | null;
