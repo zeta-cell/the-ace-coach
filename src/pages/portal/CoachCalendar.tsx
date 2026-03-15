@@ -5,6 +5,7 @@ import { useNavigate, useParams, Link } from "react-router-dom";
 import PortalLayout from "@/components/portal/PortalLayout";
 import CoachAvailabilityGrid from "@/components/portal/CoachAvailabilityGrid";
 import CreateTrainingBlockDrawer from "@/components/portal/CreateTrainingBlockDrawer";
+import QuickAddTrainingDrawer from "@/components/portal/QuickAddTrainingDrawer";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -35,6 +36,8 @@ interface TrainingBlock {
 }
 
 interface PlanBlock { tempId: string; block: TrainingBlock; coach_note: string; block_id: string; }
+
+interface BookingDot { id: string; booking_date: string; status: string; }
 
 const CATEGORY_LABELS: Record<string, string> = {
   warm_up: "WARM UP", padel_drill: "TECHNICAL", footwork: "FOOTWORK",
@@ -68,13 +71,19 @@ const CoachCalendar = () => {
   const isAdminView = role === "admin" && !!paramCoachId;
   const targetCoachId = paramCoachId || user?.id;
 
+  const [viewMode, setViewMode] = useState<"week" | "month">("month");
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [plans, setPlans] = useState<DayPlan[]>([]);
+  const [monthBookings, setMonthBookings] = useState<BookingDot[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
   const [coachName, setCoachName] = useState("");
   const [assignedPlayers, setAssignedPlayers] = useState<AssignedPlayer[]>([]);
   const [selectedPlayerId, setSelectedPlayerId] = useState<string | null>(null);
+
+  // Quick add
+  const [quickAddOpen, setQuickAddOpen] = useState(false);
+  const [quickAddDate, setQuickAddDate] = useState<string | undefined>();
 
   // Training blocks
   const [blocks, setBlocks] = useState<TrainingBlock[]>([]);
@@ -106,6 +115,7 @@ const CoachCalendar = () => {
   useEffect(() => {
     if (targetCoachId) {
       fetchMonthPlans();
+      fetchMonthBookings();
       if (!isAdminView) fetchAssignedPlayers();
     }
   }, [targetCoachId, currentMonth]);
@@ -149,13 +159,12 @@ const CoachCalendar = () => {
 
     const nameMap = new Map(profilesRes.data?.map(p => [p.user_id, p.full_name]) || []);
     const countMap = new Map<string, number>();
-    const planBlockIds = new Map<string, string>(); // plan_id -> first block_id
+    const planBlockIds = new Map<string, string>();
     (itemsRes.data as any[])?.forEach((item: any) => {
       countMap.set(item.plan_id, (countMap.get(item.plan_id) || 0) + 1);
       if (item.block_id && !planBlockIds.has(item.plan_id)) planBlockIds.set(item.plan_id, item.block_id);
     });
 
-    // Fetch block author info for program credit
     const uniqueBlockIds = [...new Set(planBlockIds.values())];
     let blockAuthorMap = new Map<string, { title: string; author_name: string | null; author_avatar_url: string | null; author_id: string | null }>();
     if (uniqueBlockIds.length > 0) {
@@ -182,6 +191,20 @@ const CoachCalendar = () => {
     result.sort((a, b) => (a.start_time || "99:99").localeCompare(b.start_time || "99:99"));
     setPlans(result);
     setLoading(false);
+  };
+
+  const fetchMonthBookings = async () => {
+    if (!targetCoachId) return;
+    const start = format(startOfMonth(currentMonth), "yyyy-MM-dd");
+    const end = format(endOfMonth(currentMonth), "yyyy-MM-dd");
+    const { data } = await supabase
+      .from("bookings")
+      .select("id, booking_date, status")
+      .eq("coach_id", targetCoachId)
+      .gte("booking_date", start)
+      .lte("booking_date", end)
+      .in("status", ["confirmed", "pending"]);
+    setMonthBookings((data as BookingDot[]) || []);
   };
 
   const fetchBlocks = async () => {
@@ -215,6 +238,7 @@ const CoachCalendar = () => {
   const days = eachDayOfInterval({ start: calStart, end: calEnd });
 
   const getPlansForDay = (date: Date) => plans.filter(p => p.plan_date === format(date, "yyyy-MM-dd"));
+  const getBookingsForDay = (date: Date) => monthBookings.filter(b => b.booking_date === format(date, "yyyy-MM-dd"));
   const selectedDayPlans = selectedDay ? plans.filter(p => p.plan_date === selectedDay) : [];
   const totalDuration = planBlocks.reduce((s, pb) => s + (pb.block.duration_minutes || 0), 0);
 
@@ -230,7 +254,6 @@ const CoachCalendar = () => {
     setPlanBlocks((prev) => prev.map((pb) => pb.tempId === tempId ? { ...pb, coach_note: note } : pb));
   };
 
-  // Drag-and-drop reorder handlers for plan blocks
   const handleDragStart = (idx: number) => setDragIdx(idx);
   const handleDragOver = (e: React.DragEvent, idx: number) => { e.preventDefault(); setDragOverIdx(idx); };
   const handleDragEnd = () => {
@@ -246,7 +269,6 @@ const CoachCalendar = () => {
     setDragOverIdx(null);
   };
 
-  // Touch reorder handlers (mobile/tablet)
   const handleTouchStart = (idx: number, e: React.TouchEvent) => {
     const touch = e.touches[0];
     const target = e.currentTarget as HTMLElement;
@@ -280,7 +302,6 @@ const CoachCalendar = () => {
     touchStartRef.current = null;
   };
 
-  // Drag from library block into plan area
   const handleBlockDragStart = (e: React.DragEvent, block: TrainingBlock) => {
     setDraggingBlock(block);
     e.dataTransfer.effectAllowed = "copy";
@@ -407,6 +428,11 @@ const CoachCalendar = () => {
     setCreateBlockOpen(true);
   };
 
+  const handleQuickAdd = (dateStr: string) => {
+    setQuickAddDate(dateStr);
+    setQuickAddOpen(true);
+  };
+
   return (
     <PortalLayout>
       <div className="space-y-6">
@@ -420,9 +446,23 @@ const CoachCalendar = () => {
               <ArrowLeft size={16} /> Back to Schedule
             </Link>
           )}
-          <h1 className="font-display text-2xl md:text-3xl text-foreground tracking-wider">
-            {isAdminView ? `${coachName.toUpperCase()}'S SCHEDULE` : "MY SCHEDULE"}
-          </h1>
+          <div className="flex items-center justify-between">
+            <h1 className="font-display text-2xl md:text-3xl text-foreground tracking-wider">
+              {isAdminView ? `${coachName.toUpperCase()}'S SCHEDULE` : "MY SCHEDULE"}
+            </h1>
+            {/* View mode toggle */}
+            <div className="flex gap-0.5 bg-secondary rounded-lg p-0.5">
+              {(["week", "month"] as const).map(mode => (
+                <button key={mode} onClick={() => setViewMode(mode)}
+                  className={`px-3 py-1.5 rounded-md font-display text-[10px] tracking-wider transition-colors ${
+                    viewMode === mode ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  {mode.toUpperCase()}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
 
         {/* Three column layout */}
@@ -435,14 +475,12 @@ const CoachCalendar = () => {
                 <h3 className="font-display text-xs tracking-wider text-foreground">TRAINING BLOCKS</h3>
               </div>
 
-              {/* Search */}
               <div className="relative mb-3">
                 <Search size={12} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
                 <input placeholder="Search blocks..." value={blockSearch} onChange={(e) => setBlockSearch(e.target.value)}
                   className="w-full pl-8 pr-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-xs focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-muted-foreground" />
               </div>
 
-              {/* System / Mine tabs */}
               <div className="flex gap-1 mb-3 bg-secondary rounded-lg p-0.5">
                 {(["system", "mine"] as const).map((tab) => (
                   <button key={tab} onClick={() => setBlockTab(tab)}
@@ -453,7 +491,6 @@ const CoachCalendar = () => {
                 ))}
               </div>
 
-              {/* Category filter */}
               <div className="flex flex-wrap gap-1 mb-3">
                 {BLOCK_CATEGORIES.map((cat) => (
                   <button key={cat} onClick={() => setBlockCategory(cat)}
@@ -464,7 +501,6 @@ const CoachCalendar = () => {
                 ))}
               </div>
 
-              {/* Block list */}
               {blocksLoading ? (
                 <div className="space-y-2">{[1,2,3].map(i => <div key={i} className="h-16 bg-muted rounded-lg animate-pulse" />)}</div>
               ) : (
@@ -518,7 +554,6 @@ const CoachCalendar = () => {
                 </div>
               )}
 
-              {/* Create custom block */}
               <button onClick={() => { setEditingBlock(null); setCreateBlockOpen(true); }}
                 className="mt-3 w-full py-2.5 rounded-xl border border-dashed border-border text-muted-foreground font-display text-[10px] tracking-wider hover:border-primary hover:text-primary transition-colors flex items-center justify-center gap-1.5">
                 <Plus size={12} /> CREATE CUSTOM BLOCK
@@ -553,22 +588,48 @@ const CoachCalendar = () => {
             <div className="grid grid-cols-7 gap-1">
               {days.map(day => {
                 const dayPlans = getPlansForDay(day);
+                const dayBookings = getBookingsForDay(day);
                 const dateStr = format(day, "yyyy-MM-dd");
                 const isCurrentMonth = isSameMonth(day, currentMonth);
                 const isSelected = selectedDay === dateStr;
                 const hasPlans = dayPlans.length > 0;
+                const hasBookings = dayBookings.length > 0;
                 const today = isToday(day);
 
                 return (
                   <div key={dateStr} onClick={() => handleDayClick(dateStr)}
-                    className={`min-h-[72px] p-1.5 rounded-xl border cursor-pointer transition-all
+                    className={`min-h-[72px] md:min-h-[80px] p-1.5 rounded-xl border cursor-pointer transition-all group/cell relative
                       ${!isCurrentMonth ? "opacity-30" : ""}
                       ${isSelected ? "border-primary bg-primary/10" : "border-border bg-card hover:border-primary/40"}
                       ${today ? "ring-1 ring-primary/50" : ""}
                     `}>
                     <div className="flex items-center justify-between mb-0.5">
                       <span className={`text-xs font-display ${today ? "text-primary" : "text-foreground"}`}>{format(day, "d")}</span>
-                      {hasPlans && <div className="w-2 h-2 rounded-full bg-primary" />}
+                      {/* Plus button */}
+                      {isCurrentMonth && (
+                        <button
+                          onClick={(e) => { e.stopPropagation(); handleQuickAdd(dateStr); }}
+                          className="w-4 h-4 rounded-full bg-primary/10 text-primary flex items-center justify-center opacity-0 group-hover/cell:opacity-100 md:opacity-0 transition-opacity"
+                          style={{ fontSize: 10 }}
+                        >
+                          <Plus size={10} />
+                        </button>
+                      )}
+                    </div>
+                    {/* Dots */}
+                    <div className="flex items-center gap-0.5 flex-wrap mb-0.5">
+                      {dayBookings.slice(0, 3).map((b, i) => (
+                        <div key={i} className="w-1.5 h-1.5 rounded-full bg-blue-400" />
+                      ))}
+                      {dayBookings.length > 3 && (
+                        <span className="text-[7px] font-body text-blue-400">+{dayBookings.length - 3}</span>
+                      )}
+                      {dayPlans.slice(0, 3).map((_, i) => (
+                        <div key={`p-${i}`} className="w-1.5 h-1.5 rounded-full bg-green-400" />
+                      ))}
+                      {dayPlans.length > 3 && (
+                        <span className="text-[7px] font-body text-green-400">+{dayPlans.length - 3}</span>
+                      )}
                     </div>
                     <div className="space-y-0.5">
                       {dayPlans.slice(0, 2).map((plan, i) => (
@@ -594,7 +655,6 @@ const CoachCalendar = () => {
                 className="hidden md:block shrink-0 overflow-hidden"
               >
                 <div className="w-[380px] bg-card border border-border rounded-2xl p-4 sticky top-20 max-h-[calc(100vh-120px)] overflow-y-auto scrollbar-none space-y-4">
-                  {/* Header */}
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="font-display text-xs tracking-wider text-foreground">
@@ -605,7 +665,6 @@ const CoachCalendar = () => {
                       className="p-1 rounded-lg hover:bg-secondary"><X size={16} /></button>
                   </div>
 
-                  {/* Player selector */}
                   <div>
                     <label className="font-display text-[10px] tracking-wider text-muted-foreground">PLAYER</label>
                     <select value={selectedPlayerId || ""} onChange={(e) => setSelectedPlayerId(e.target.value || null)}
@@ -615,7 +674,6 @@ const CoachCalendar = () => {
                     </select>
                   </div>
 
-                  {/* Existing plans for this day */}
                   {selectedDayPlans.length > 0 && (
                     <div className="space-y-1.5">
                       <p className="font-display text-[10px] tracking-wider text-muted-foreground">EXISTING SESSIONS</p>
@@ -704,7 +762,6 @@ const CoachCalendar = () => {
                           </div>
                         ))}
 
-                        {/* Drop zone at bottom when blocks exist */}
                         {draggingBlock && (
                           <div className="text-center py-3 border border-dashed border-primary rounded-xl bg-primary/5">
                             <p className="text-[10px] font-body text-primary">Drop here to add</p>
@@ -714,7 +771,6 @@ const CoachCalendar = () => {
                     )}
                   </div>
 
-                  {/* Duration */}
                   {planBlocks.length > 0 && (
                     <div className="flex items-center justify-between py-2 border-t border-border">
                       <span className="font-display text-[10px] tracking-wider text-muted-foreground">TOTAL DURATION</span>
@@ -722,7 +778,6 @@ const CoachCalendar = () => {
                     </div>
                   )}
 
-                  {/* Actions */}
                   {planBlocks.length > 0 && (
                     <div className="space-y-2">
                       <button onClick={handleSavePlan} disabled={savingPlan || !selectedPlayerId}
@@ -740,7 +795,6 @@ const CoachCalendar = () => {
                         </button>
                       </div>
 
-                      {/* Copy date picker */}
                       {copyDateOpen && (
                         <div className="p-3 rounded-lg bg-secondary border border-border space-y-2">
                           <p className="font-display text-[10px] tracking-wider text-muted-foreground">COPY TO DATE</p>
@@ -768,6 +822,13 @@ const CoachCalendar = () => {
         onClose={() => { setCreateBlockOpen(false); setEditingBlock(null); }}
         onCreated={fetchBlocks}
         editBlock={editingBlock}
+      />
+
+      <QuickAddTrainingDrawer
+        open={quickAddOpen}
+        onClose={() => setQuickAddOpen(false)}
+        prefilledDate={quickAddDate}
+        onSaved={() => { setQuickAddOpen(false); fetchMonthPlans(); fetchMonthBookings(); }}
       />
     </PortalLayout>
   );
