@@ -348,7 +348,7 @@ const CoachPlanBuilder = () => {
         location_address: locationAddress || null,
         location_lat: locationLat ? parseFloat(locationLat) : null,
         location_lng: locationLng ? parseFloat(locationLng) : null,
-      } as any).eq("id", planId);
+      }).eq("id", planId);
     } else {
       const { data } = await supabase
         .from("player_day_plans")
@@ -363,7 +363,7 @@ const CoachPlanBuilder = () => {
           location_address: locationAddress || null,
           location_lat: locationLat ? parseFloat(locationLat) : null,
           location_lng: locationLng ? parseFloat(locationLng) : null,
-        } as any)
+        })
         .select("id")
         .single();
       planId = data?.id || null;
