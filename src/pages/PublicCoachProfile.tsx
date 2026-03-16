@@ -142,6 +142,7 @@ const PublicCoachProfile = () => {
 
     if (profileRes.data) setProfile(profileRes.data as Profile);
     if (eventsRes.data) setCoachEvents(eventsRes.data as any[]);
+    if (certsRes.data) setCertifications(certsRes.data as any[]);
 
     // Fetch live group spots for group packages
     let pkgsWithSpots: Package[] = (packagesRes.data || []) as unknown as Package[];

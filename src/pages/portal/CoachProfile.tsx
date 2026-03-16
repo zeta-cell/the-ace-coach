@@ -322,21 +322,94 @@ const CoachProfile = () => {
           </motion.div>
         )}
 
-        {/* Certifications, Languages, Specializations */}
-        {(coachData?.certifications?.length || coachData?.languages?.length || coachData?.specializations?.length) ? (
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="bg-card border border-border rounded-xl p-6 space-y-4">
-            {coachData.certifications && coachData.certifications.length > 0 && (
-              <div>
-                <h3 className="font-display text-xs tracking-wider text-muted-foreground mb-2 flex items-center gap-2">
-                  <Award size={14} /> CERTIFICATIONS
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {coachData.certifications.map((c) => (
-                    <span key={c} className="px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-body font-medium">{c}</span>
-                  ))}
-                </div>
+        {/* Certifications (from coach_certifications table) */}
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12 }} className="bg-card border border-border rounded-xl p-6">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="font-display text-sm tracking-wider text-muted-foreground flex items-center gap-2">
+              <Award size={14} /> CERTIFICATIONS
+            </h2>
+            <button
+              onClick={() => setShowCertForm(!showCertForm)}
+              className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-display tracking-wider hover:bg-primary/90 transition-colors"
+            >
+              <Plus size={12} /> ADD
+            </button>
+          </div>
+
+          {showCertForm && (
+            <div className="mb-4 p-4 rounded-lg bg-secondary space-y-3">
+              <input
+                placeholder="Certification name (e.g. ITF Level 2)"
+                value={certForm.name}
+                onChange={e => setCertForm(p => ({ ...p, name: e.target.value }))}
+                className="w-full px-3 py-2 rounded-lg bg-background border border-border text-foreground text-sm font-body focus:outline-none focus:ring-1 focus:ring-primary"
+              />
+              <input
+                placeholder="Issuing body (e.g. International Tennis Federation)"
+                value={certForm.issuing_body}
+                onChange={e => setCertForm(p => ({ ...p, issuing_body: e.target.value }))}
+                className="w-full px-3 py-2 rounded-lg bg-background border border-border text-foreground text-sm font-body focus:outline-none focus:ring-1 focus:ring-primary"
+              />
+              <div className="grid grid-cols-2 gap-3">
+                <input
+                  type="number"
+                  placeholder="Year (e.g. 2022)"
+                  value={certForm.year_obtained}
+                  onChange={e => setCertForm(p => ({ ...p, year_obtained: e.target.value }))}
+                  className="w-full px-3 py-2 rounded-lg bg-background border border-border text-foreground text-sm font-body focus:outline-none focus:ring-1 focus:ring-primary"
+                />
+                <input
+                  placeholder="Certificate URL (optional)"
+                  value={certForm.certificate_url}
+                  onChange={e => setCertForm(p => ({ ...p, certificate_url: e.target.value }))}
+                  className="w-full px-3 py-2 rounded-lg bg-background border border-border text-foreground text-sm font-body focus:outline-none focus:ring-1 focus:ring-primary"
+                />
               </div>
-            )}
+              <div className="flex gap-2">
+                <button
+                  onClick={handleAddCert}
+                  disabled={certSaving || !certForm.name.trim()}
+                  className="flex-1 py-2 rounded-lg bg-primary text-primary-foreground text-xs font-display tracking-wider disabled:opacity-50"
+                >
+                  {certSaving ? "SAVING…" : "SAVE CERTIFICATION"}
+                </button>
+                <button
+                  onClick={() => setShowCertForm(false)}
+                  className="px-4 py-2 rounded-lg border border-border text-muted-foreground text-xs font-display tracking-wider"
+                >
+                  CANCEL
+                </button>
+              </div>
+            </div>
+          )}
+
+          {certifications.length === 0 ? (
+            <p className="font-body text-sm text-muted-foreground text-center py-4">No certifications yet</p>
+          ) : (
+            <div className="space-y-2">
+              {certifications.map(cert => (
+                <div key={cert.id} className="flex items-center justify-between p-3 rounded-lg bg-secondary">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span className="text-primary shrink-0">✓</span>
+                    <div className="min-w-0">
+                      <p className="font-body text-sm text-foreground font-medium truncate">{cert.name}</p>
+                      <p className="font-body text-[10px] text-muted-foreground">
+                        {[cert.issuing_body, cert.year_obtained].filter(Boolean).join(" · ")}
+                      </p>
+                    </div>
+                  </div>
+                  <button onClick={() => handleDeleteCert(cert.id)} className="text-muted-foreground hover:text-destructive shrink-0 ml-2">
+                    <Trash2 size={14} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </motion.div>
+
+        {/* Languages, Specializations */}
+        {(coachData?.languages?.length || coachData?.specializations?.length) ? (
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="bg-card border border-border rounded-xl p-6 space-y-4">
             {coachData.languages && coachData.languages.length > 0 && (
               <div>
                 <h3 className="font-display text-xs tracking-wider text-muted-foreground mb-2 flex items-center gap-2">
