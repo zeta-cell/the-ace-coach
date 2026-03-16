@@ -440,6 +440,33 @@ const PublicCoachProfile = () => {
               </motion.section>
             )}
 
+            {/* CERTIFICATIONS */}
+            {certifications.length > 0 && (
+              <motion.section
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.22 }}
+                className="bg-card border border-border rounded-2xl p-6"
+              >
+                <h2 className="font-display text-sm tracking-wider text-muted-foreground mb-3 flex items-center gap-2">
+                  <Award size={14} /> CERTIFICATIONS
+                </h2>
+                <div className="space-y-2">
+                  {certifications.map(cert => (
+                    <div key={cert.id} className="flex items-center gap-2">
+                      <span className="text-primary shrink-0">✓</span>
+                      <span className="font-body text-sm text-foreground font-medium">{cert.name}</span>
+                      {(cert.issuing_body || cert.year_obtained) && (
+                        <span className="font-body text-xs text-muted-foreground">
+                          — {[cert.issuing_body, cert.year_obtained ? `(${cert.year_obtained})` : null].filter(Boolean).join(" ")}
+                        </span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </motion.section>
+            )}
+
             {/* 4. PACKAGES */}
             <motion.section
               initial={{ opacity: 0, y: 20 }}
