@@ -146,7 +146,7 @@ const SportPickerModal = ({ userId, onComplete }: SportPickerModalProps) => {
               disabled={saving}
               className="flex flex-col items-center gap-2 p-6 rounded-2xl border-2 border-border bg-card hover:border-primary/60 hover:bg-primary/5 transition-all disabled:opacity-50"
             >
-              <span className="text-4xl">🎾</span>
+              <Circle size={32} className="text-primary" />
               <span className="font-display text-sm tracking-wider text-foreground">TENNIS</span>
             </button>
             <button
@@ -154,7 +154,7 @@ const SportPickerModal = ({ userId, onComplete }: SportPickerModalProps) => {
               disabled={saving}
               className="flex flex-col items-center gap-2 p-6 rounded-2xl border-2 border-border bg-card hover:border-primary/60 hover:bg-primary/5 transition-all disabled:opacity-50"
             >
-              <span className="text-4xl">🏓</span>
+              <Grip size={32} className="text-accent-foreground" />
               <span className="font-display text-sm tracking-wider text-foreground">PADEL</span>
             </button>
           </div>
