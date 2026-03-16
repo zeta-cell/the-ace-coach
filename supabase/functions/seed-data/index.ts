@@ -83,7 +83,7 @@ Deno.serve(async (req) => {
         { onConflict: "user_id" }
       );
 
-      created.push(`✅ ${email} (${role})`);
+      created.push(`OK ${email} (${role})`);
       return userId;
     };
 
