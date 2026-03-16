@@ -335,7 +335,7 @@ const PublicCoachProfile = () => {
                 </span>
                 {(coach as any).primary_sport && (
                   <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-secondary text-xs font-display tracking-wider text-foreground">
-                    {(coach as any).primary_sport === "tennis" ? "🎾 Tennis" : (coach as any).primary_sport === "padel" ? "🏓 Padel" : "🎾🏓 Tennis & Padel"}
+                    {(coach as any).primary_sport === "tennis" ? <><Circle size={12} className="text-primary" /> Tennis</> : (coach as any).primary_sport === "padel" ? <><Grip size={12} className="text-accent-foreground" /> Padel</> : <><Layers size={12} className="text-primary" /> Tennis & Padel</>}
                   </span>
                 )}
               </div>
