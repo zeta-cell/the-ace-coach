@@ -441,6 +441,7 @@ export type Database = {
           playtomic_level: number | null
           playtomic_url: string | null
           preferred_side: string | null
+          primary_sport: string | null
           profile_slug: string | null
           racket_brand: string | null
           racket_model: string | null
@@ -480,6 +481,7 @@ export type Database = {
           playtomic_level?: number | null
           playtomic_url?: string | null
           preferred_side?: string | null
+          primary_sport?: string | null
           profile_slug?: string | null
           racket_brand?: string | null
           racket_model?: string | null
@@ -519,6 +521,7 @@ export type Database = {
           playtomic_level?: number | null
           playtomic_url?: string | null
           preferred_side?: string | null
+          primary_sport?: string | null
           profile_slug?: string | null
           racket_brand?: string | null
           racket_model?: string | null
@@ -987,6 +990,7 @@ export type Database = {
           id: string
           instructions: string | null
           is_shared: boolean | null
+          sport: string
           tags: string[] | null
           title: string
           video_url: string | null
@@ -1003,6 +1007,7 @@ export type Database = {
           id?: string
           instructions?: string | null
           is_shared?: boolean | null
+          sport?: string
           tags?: string[] | null
           title: string
           video_url?: string | null
@@ -1019,6 +1024,7 @@ export type Database = {
           id?: string
           instructions?: string | null
           is_shared?: boolean | null
+          sport?: string
           tags?: string[] | null
           title?: string
           video_url?: string | null
@@ -1952,6 +1958,7 @@ export type Database = {
         | "cool_down"
         | "nutrition"
         | "video"
+        | "tennis_drill"
       module_difficulty: "beginner" | "intermediate" | "advanced" | "elite"
       payment_status: "pending" | "completed" | "failed" | "refunded"
       payment_type: "camp" | "monthly" | "annual" | "session" | "other"
@@ -2103,6 +2110,7 @@ export const Constants = {
         "cool_down",
         "nutrition",
         "video",
+        "tennis_drill",
       ],
       module_difficulty: ["beginner", "intermediate", "advanced", "elite"],
       payment_status: ["pending", "completed", "failed", "refunded"],

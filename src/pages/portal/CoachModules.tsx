@@ -11,10 +11,20 @@ import { toast } from "sonner";
 type ModuleCategory = Database["public"]["Enums"]["module_category"];
 type ModuleDifficulty = Database["public"]["Enums"]["module_difficulty"];
 
-const CATEGORIES: ModuleCategory[] = [
-  "warm_up", "padel_drill", "footwork", "fitness", "strength",
+const BASE_CATEGORIES: ModuleCategory[] = [
+  "warm_up", "footwork", "fitness", "strength",
   "mental", "recovery", "cool_down", "nutrition", "video",
 ];
+
+const SPORT_CATEGORIES: Record<string, ModuleCategory[]> = {
+  padel: ["padel_drill"],
+  tennis: ["tennis_drill"],
+};
+
+const getAllCategories = (sport: string | null): ModuleCategory[] => {
+  const sportCats = sport ? (SPORT_CATEGORIES[sport] || []) : [...SPORT_CATEGORIES.padel, ...SPORT_CATEGORIES.tennis];
+  return [...sportCats, ...BASE_CATEGORIES];
+};
 
 const DIFFICULTIES: ModuleDifficulty[] = ["beginner", "intermediate", "advanced", "elite"];
 
@@ -29,6 +39,7 @@ const CATEGORY_COLORS: Record<string, string> = {
   cool_down: "bg-teal-500/20 text-teal-400",
   nutrition: "bg-lime-500/20 text-lime-400",
   video: "bg-pink-500/20 text-pink-400",
+  tennis_drill: "bg-emerald-500/20 text-emerald-400",
 };
 
 interface Module {
@@ -44,6 +55,7 @@ interface Module {
   tags: string[] | null;
   equipment: string[] | null;
   is_shared: boolean | null;
+  sport: string | null;
 }
 
 const emptyForm = {
@@ -73,23 +85,48 @@ const CoachModules = () => {
   const [videoModalUrl, setVideoModalUrl] = useState("");
   const [videoModalTitle, setVideoModalTitle] = useState("");
   const videoFileRef = useRef<HTMLInputElement>(null);
-
+  const [coachSport, setCoachSport] = useState<string | null>(null);
   useEffect(() => {
-    if (user) fetchModules();
+    if (user) {
+      fetchCoachSport();
+      fetchModules();
+    }
   }, [user]);
+
+  const fetchCoachSport = async () => {
+    if (!user) return;
+    const { data } = await supabase
+      .from("coach_profiles")
+      .select("primary_sport")
+      .eq("user_id", user.id)
+      .single();
+    if (data) setCoachSport((data as any).primary_sport);
+  };
 
   const fetchModules = async () => {
     if (!user) return;
-    let query = supabase
-      .from("modules")
-      .select("*")
-      .order("created_at", { ascending: false });
-    // Admins see all modules, coaches see only their own
-    if (role !== "admin") {
-      query = query.eq("created_by", user.id);
+    if (role === "admin") {
+      // Admins see all modules
+      const { data } = await supabase
+        .from("modules").select("*")
+        .order("created_at", { ascending: false });
+      setModules((data as Module[]) || []);
+    } else {
+      // Coaches see: own modules + shared base modules + shared sport-specific modules
+      const { data: ownModules } = await supabase
+        .from("modules").select("*")
+        .eq("created_by", user.id)
+        .order("created_at", { ascending: false });
+
+      const { data: sharedModules } = await supabase
+        .from("modules").select("*")
+        .eq("is_shared", true)
+        .neq("created_by", user.id)
+        .in("sport", coachSport ? ["both", coachSport] : ["both", "padel", "tennis"])
+        .order("created_at", { ascending: false });
+
+      setModules([...(ownModules as Module[] || []), ...(sharedModules as Module[] || [])]);
     }
-    const { data } = await query;
-    setModules((data as Module[]) || []);
     setLoading(false);
   };
 
@@ -187,7 +224,7 @@ const CoachModules = () => {
         {/* Search & filter */}
         {/* Category filter strip */}
         <div className="flex gap-1.5 overflow-x-auto pb-2 mb-3 scrollbar-none">
-          {(["all", ...CATEGORIES] as const).map((cat) => (
+          {(["all", ...getAllCategories(role === "admin" ? null : coachSport)] as const).map((cat) => (
             <button
               key={cat}
               onClick={() => setFilterCat(cat)}
@@ -325,7 +362,7 @@ const CoachModules = () => {
                       onChange={(e) => setForm({ ...form, category: e.target.value as ModuleCategory })}
                       className="px-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-sm"
                     >
-                      {CATEGORIES.map((c) => <option key={c} value={c}>{c.replace("_", " ")}</option>)}
+                      {getAllCategories(role === "admin" ? null : coachSport).map((c) => <option key={c} value={c}>{c.replace("_", " ")}</option>)}
                     </select>
                     <select
                       value={form.difficulty}
