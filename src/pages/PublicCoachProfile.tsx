@@ -139,8 +139,30 @@ const PublicCoachProfile = () => {
     ]);
 
     if (profileRes.data) setProfile(profileRes.data as Profile);
-    if (packagesRes.data) setPackages(packagesRes.data as unknown as Package[]);
     if (eventsRes.data) setCoachEvents(eventsRes.data as any[]);
+
+    // Fetch live group spots for group packages
+    let pkgsWithSpots: Package[] = (packagesRes.data || []) as unknown as Package[];
+    const groupPkgs = pkgsWithSpots.filter(p => p.session_type === "group" && (p.max_group_size || 0) > 1);
+    if (groupPkgs.length > 0) {
+      const today = new Date().toISOString().split("T")[0];
+      const spotsPromises = groupPkgs.map(async (pkg) => {
+        const { count } = await supabase
+          .from("bookings")
+          .select("id", { count: "exact", head: true })
+          .eq("package_id", pkg.id)
+          .gte("booking_date", today)
+          .in("status", ["confirmed", "pending"]);
+        return { id: pkg.id, spots: count || 0 };
+      });
+      const spotsResults = await Promise.all(spotsPromises);
+      const spotsMap = new Map(spotsResults.map(s => [s.id, s.spots]));
+      pkgsWithSpots = pkgsWithSpots.map(p => ({
+        ...p,
+        spots_taken: spotsMap.get(p.id) || 0,
+      }));
+    }
+    setPackages(pkgsWithSpots);
 
     // Track page view for founder analytics
     supabase.from('page_views').insert({
