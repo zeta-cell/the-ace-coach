@@ -223,7 +223,7 @@ const PlayerVideos = () => {
                     )}
                     {(commentCounts[v.id] || 0) > 0 && (
                       <span className="flex items-center gap-0.5 bg-card/90 text-foreground text-[9px] font-body px-1.5 py-0.5 rounded-full">
-                        💬 {commentCounts[v.id]}
+                        <MessageCircle size={10} className="text-primary" /> {commentCounts[v.id]}
                       </span>
                     )}
                     {v.coach_feedback && !hasCoachComments(v.id) && (
