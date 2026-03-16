@@ -11,6 +11,7 @@ import { format, subMonths, startOfMonth, endOfMonth } from "date-fns";
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip, Line, ComposedChart } from "recharts";
 import PortalLayout from "@/components/portal/PortalLayout";
 import IncomingBookings from "@/components/portal/IncomingBookings";
+import SportPickerModal from "@/components/portal/SportPickerModal";
 import { toast } from "sonner";
 
 interface CoachRequest {
@@ -47,8 +48,24 @@ const CoachDashboard = () => {
   const [revenueData, setRevenueData] = useState<any[]>([]);
   const [marketplaceStats, setMarketplaceStats] = useState({ published: 0, sales: 0, revenue: 0 });
   const [weekBookings, setWeekBookings] = useState<any[]>([]);
+  const [showSportPicker, setShowSportPicker] = useState(false);
 
-  useEffect(() => { if (user) fetchAll(); }, [user]);
+  useEffect(() => {
+    if (user) {
+      fetchAll();
+      checkSportSelection();
+    }
+  }, [user]);
+
+  const checkSportSelection = async () => {
+    if (!user) return;
+    const { data } = await supabase
+      .from("coach_profiles")
+      .select("primary_sport")
+      .eq("user_id", user.id)
+      .single();
+    if (!data?.primary_sport) setShowSportPicker(true);
+  };
 
   const fetchAll = async () => {
     if (!user) return;
@@ -152,6 +169,15 @@ const CoachDashboard = () => {
 
   return (
     <PortalLayout>
+      {showSportPicker && user && (
+        <SportPickerModal
+          userId={user.id}
+          onComplete={() => {
+            setShowSportPicker(false);
+            fetchAll();
+          }}
+        />
+      )}
       <div className="max-w-5xl mx-auto">
         <motion.h1 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="font-display text-3xl md:text-4xl text-foreground mb-6">
           WELCOME, {firstName}

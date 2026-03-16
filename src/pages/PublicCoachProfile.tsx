@@ -330,6 +330,11 @@ const PublicCoachProfile = () => {
                 <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-display tracking-wider ${badgeCfg.color}`}>
                   <BadgeIcon size={12} /> {badgeCfg.label.toUpperCase()}
                 </span>
+                {(coach as any).primary_sport && (
+                  <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-secondary text-xs font-display tracking-wider text-foreground">
+                    {(coach as any).primary_sport === "tennis" ? "🎾 Tennis" : (coach as any).primary_sport === "padel" ? "🏓 Padel" : "🎾🏓 Tennis & Padel"}
+                  </span>
+                )}
               </div>
 
               <div className="flex flex-wrap items-center gap-3 text-sm font-body text-muted-foreground">

@@ -29,6 +29,7 @@ interface CoachCard {
   review_count: number;
   session_types: string[];
   available_days: number[];
+  primary_sport: string | null;
 }
 
 const BADGE_CONFIG: Record<string, { icon: typeof Shield; color: string; label: string }> = {
@@ -100,6 +101,11 @@ const CoachCardComponent = ({ coach }: { coach: CoachCard }) => {
             <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-display tracking-wider ${badge.color}`}>
               <BadgeIcon size={10} /> {badge.label.toUpperCase()}
             </span>
+            {coach.primary_sport && (
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-secondary text-[10px] font-display tracking-wider text-muted-foreground">
+                {coach.primary_sport === "tennis" ? "🎾 TENNIS" : coach.primary_sport === "padel" ? "🏓 PADEL" : "🎾🏓 BOTH"}
+              </span>
+            )}
             {coach.location_city && (
               <span className="flex items-center gap-1 text-xs font-body text-muted-foreground">
                 <MapPin size={10} /> {coach.location_city}{coach.location_country ? `, ${coach.location_country}` : ""}
@@ -355,7 +361,7 @@ const FindACoach = () => {
 
     const { data: coachProfiles } = await supabase
       .from("coach_profiles")
-      .select("user_id, bio, location_city, location_country, badge_level, is_verified, years_experience, languages, specializations, hourly_rate_from, profile_slug, total_sessions_coached, coaching_style");
+      .select("user_id, bio, location_city, location_country, badge_level, is_verified, years_experience, languages, specializations, hourly_rate_from, profile_slug, total_sessions_coached, coaching_style, primary_sport");
 
     if (!coachProfiles || coachProfiles.length === 0) {
       setCoaches([]);
@@ -420,6 +426,7 @@ const FindACoach = () => {
         review_count: ratings?.count || 0,
         session_types: sessionTypesMap.get(cp.user_id) || [],
         available_days: availabilityMap.get(cp.user_id) || [],
+        primary_sport: (cp as any).primary_sport || null,
       };
     });
 
@@ -442,9 +449,12 @@ const FindACoach = () => {
       result = result.filter((c) => c.coaching_style?.toLowerCase().includes(q));
     }
 
-    // Sport — robust match
+    // Sport — filter by primary_sport first, then fallback to text match
     if (sportFilter !== "all") {
       result = result.filter((c) => {
+        if (c.primary_sport) {
+          return c.primary_sport === sportFilter || c.primary_sport === "both";
+        }
         const inSpecs = c.specializations.some((s) => s.toLowerCase().includes(sportFilter));
         const inBio = c.bio?.toLowerCase().includes(sportFilter);
         const inStyle = c.coaching_style?.toLowerCase().includes(sportFilter);
