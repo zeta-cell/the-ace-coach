@@ -2142,6 +2142,7 @@ const FoundersDashboard = () => {
           </Button>
         </DialogContent>
       </Dialog>
+      </div>
     </PortalLayout>
   );
 };
