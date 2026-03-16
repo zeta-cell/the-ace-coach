@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { motion } from "framer-motion";
 import {
   MapPin, Clock, Star, CheckCircle2, Share2, Globe, Award,
-  Users, Zap, Calendar, ArrowRight, Shield
+  Users, Zap, Calendar, ArrowRight, Shield, Circle, Grip, Layers
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";

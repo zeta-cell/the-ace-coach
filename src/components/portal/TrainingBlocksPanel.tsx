@@ -146,7 +146,7 @@ const TrainingBlocksPanel = ({ onApplyBlock, onSaveAsBlock, modules, isOpen = tr
             <div key={goal}>
               <button onClick={() => setExpandedGoal(expandedGoal === goal ? null : goal)}
                 className="w-full flex items-center gap-2 p-2 rounded-lg hover:bg-secondary transition-colors">
-                <span className="text-sm">{GOAL_ICONS[goal] || "📋"}</span>
+                {(() => { const gi = GOAL_ICON_COMPONENTS[goal] || GOAL_ICON_COMPONENTS["Custom"]; const Icon = gi.icon; return <Icon size={14} className={gi.color} />; })()}
                 <span className="font-display text-[10px] tracking-wider text-foreground flex-1 text-left">{goal.toUpperCase()}</span>
                 <span className="text-[10px] font-body text-muted-foreground mr-1">{goalBlocks.length}</span>
                 {expandedGoal === goal ? <ChevronDown size={12} className="text-muted-foreground" /> : <ChevronRight size={12} className="text-muted-foreground" />}

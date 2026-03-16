@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import {
   Camera, ExternalLink, Target, TrendingDown,
   Bell, BellOff, LogOut, Mail, Phone, Globe, Award, BookOpen, MessageCircle, Pencil, Plus,
-  Copy, ExternalLink as ExtLink, Link2
+  Copy, ExternalLink as ExtLink, Link2, CheckCircle2
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import PortalLayout from "@/components/portal/PortalLayout";
