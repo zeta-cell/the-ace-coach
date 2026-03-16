@@ -60,7 +60,7 @@ const emptyForm = {
 };
 
 const CoachModules = () => {
-  const { user } = useAuth();
+  const { user, role } = useAuth();
   const [modules, setModules] = useState<Module[]>([]);
   const [search, setSearch] = useState("");
   const [filterCat, setFilterCat] = useState<ModuleCategory | "all">("all");
