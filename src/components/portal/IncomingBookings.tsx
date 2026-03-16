@@ -37,7 +37,7 @@ interface GroupedBooking {
   currency: string;
   price_per_person: number;
   location_type: string | null;
-  participants: { id: string; name: string; avatar: string | null; status: string }[];
+  participants: { id: string; name: string; avatar: string | null; status: string; player_id: string }[];
   totalRevenue: number;
   totalPayout: number;
 }
