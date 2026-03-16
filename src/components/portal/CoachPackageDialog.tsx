@@ -50,7 +50,7 @@ const CoachPackageDialog = ({ open, onClose, onSave, editing, saving }: Props) =
       setForm({
         title: "", session_type: "individual", sport: "padel",
         duration_minutes: 60, price_per_session: 0, total_sessions: null,
-        currency: "EUR", description: "", max_group_size: null,
+        currency: "EUR", description: "", max_group_size: null, min_participants: null,
       });
     }
   }, [editing, open]);
