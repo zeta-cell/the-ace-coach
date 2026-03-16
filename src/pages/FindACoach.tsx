@@ -30,6 +30,7 @@ interface CoachCard {
   session_types: string[];
   available_days: number[];
   primary_sport: string | null;
+  cert_count: number;
 }
 
 const BADGE_CONFIG: Record<string, { icon: typeof Shield; color: string; label: string }> = {
@@ -149,6 +150,12 @@ const CoachCardComponent = ({ coach }: { coach: CoachCard }) => {
             <span key={s} className="px-2 py-0.5 rounded-full bg-muted text-[10px] font-body text-muted-foreground">{s}</span>
           ))}
         </div>
+      )}
+
+      {coach.cert_count > 0 && (
+        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-body mb-4">
+          ✓ {coach.cert_count} certification{coach.cert_count > 1 ? "s" : ""}
+        </span>
       )}
 
       <div className="flex gap-2">
@@ -371,11 +378,12 @@ const FindACoach = () => {
 
     const userIds = coachProfiles.map((c) => c.user_id);
 
-    const [profilesRes, reviewsRes, packagesRes, availabilityRes] = await Promise.all([
+    const [profilesRes, reviewsRes, packagesRes, availabilityRes, certsRes] = await Promise.all([
       supabase.from("profiles").select("user_id, full_name, avatar_url").in("user_id", userIds),
       supabase.from("reviews").select("coach_id, rating"),
       supabase.from("coach_packages").select("coach_id, session_type").eq("is_active", true).in("coach_id", userIds),
       supabase.from("coach_availability_slots").select("coach_id, day_of_week").eq("is_recurring", true).in("coach_id", userIds),
+      supabase.from("coach_certifications").select("coach_id").in("coach_id", userIds),
     ]);
 
     const profileMap = new Map(profilesRes.data?.map((p) => [p.user_id, p]) || []);
@@ -403,6 +411,11 @@ const FindACoach = () => {
       availabilityMap.set(a.coach_id, existing);
     });
 
+    const certCountMap = new Map<string, number>();
+    (certsRes.data || []).forEach((c: any) => {
+      certCountMap.set(c.coach_id, (certCountMap.get(c.coach_id) || 0) + 1);
+    });
+
     const result: CoachCard[] = coachProfiles.map((cp) => {
       const profile = profileMap.get(cp.user_id);
       const ratings = ratingMap.get(cp.user_id);
@@ -427,6 +440,7 @@ const FindACoach = () => {
         session_types: sessionTypesMap.get(cp.user_id) || [],
         available_days: availabilityMap.get(cp.user_id) || [],
         primary_sport: (cp as any).primary_sport || null,
+        cert_count: certCountMap.get(cp.user_id) || 0,
       };
     });
 

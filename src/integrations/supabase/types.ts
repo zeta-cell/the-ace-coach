@@ -329,6 +329,36 @@ export type Database = {
         }
         Relationships: []
       }
+      coach_certifications: {
+        Row: {
+          certificate_url: string | null
+          coach_id: string
+          created_at: string | null
+          id: string
+          issuing_body: string | null
+          name: string
+          year_obtained: number | null
+        }
+        Insert: {
+          certificate_url?: string | null
+          coach_id: string
+          created_at?: string | null
+          id?: string
+          issuing_body?: string | null
+          name: string
+          year_obtained?: number | null
+        }
+        Update: {
+          certificate_url?: string | null
+          coach_id?: string
+          created_at?: string | null
+          id?: string
+          issuing_body?: string | null
+          name?: string
+          year_obtained?: number | null
+        }
+        Relationships: []
+      }
       coach_packages: {
         Row: {
           auto_confirm: boolean | null

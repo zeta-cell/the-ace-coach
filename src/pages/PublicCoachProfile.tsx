@@ -103,6 +103,7 @@ const PublicCoachProfile = () => {
   const [submittingReview, setSubmittingReview] = useState(false);
   const [hasReviewed, setHasReviewed] = useState(false);
   const [coachEvents, setCoachEvents] = useState<any[]>([]);
+  const [certifications, setCertifications] = useState<{ id: string; name: string; issuing_body: string | null; year_obtained: number | null }[]>([]);
 
   useEffect(() => {
     const handleScroll = () => setShowStickyBook(window.scrollY > 400);
@@ -131,15 +132,17 @@ const PublicCoachProfile = () => {
 
     setCoach(coachData as unknown as CoachProfile);
 
-    const [profileRes, packagesRes, reviewsRes, eventsRes] = await Promise.all([
+    const [profileRes, packagesRes, reviewsRes, eventsRes, certsRes] = await Promise.all([
       supabase.from("profiles").select("full_name, avatar_url").eq("user_id", coachData.user_id).single(),
       supabase.from("coach_packages").select("id, title, session_type, sport, duration_minutes, price_per_session, currency, description, total_sessions, max_group_size, min_participants").eq("coach_id", coachData.user_id).eq("is_active", true).order("price_per_session"),
       supabase.from("reviews").select("*").eq("coach_id", coachData.user_id).order("created_at", { ascending: false }),
       supabase.from("events").select("*").eq("coach_id", coachData.user_id).eq("status", "published").gte("start_datetime", new Date().toISOString()).order("start_datetime").limit(3),
+      supabase.from("coach_certifications").select("id, name, issuing_body, year_obtained").eq("coach_id", coachData.user_id).order("year_obtained", { ascending: false }),
     ]);
 
     if (profileRes.data) setProfile(profileRes.data as Profile);
     if (eventsRes.data) setCoachEvents(eventsRes.data as any[]);
+    if (certsRes.data) setCertifications(certsRes.data as any[]);
 
     // Fetch live group spots for group packages
     let pkgsWithSpots: Package[] = (packagesRes.data || []) as unknown as Package[];
@@ -434,6 +437,33 @@ const PublicCoachProfile = () => {
                     <span className="font-semibold text-foreground">Coaching style:</span> {coach.coaching_style}
                   </p>
                 )}
+              </motion.section>
+            )}
+
+            {/* CERTIFICATIONS */}
+            {certifications.length > 0 && (
+              <motion.section
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.22 }}
+                className="bg-card border border-border rounded-2xl p-6"
+              >
+                <h2 className="font-display text-sm tracking-wider text-muted-foreground mb-3 flex items-center gap-2">
+                  <Award size={14} /> CERTIFICATIONS
+                </h2>
+                <div className="space-y-2">
+                  {certifications.map(cert => (
+                    <div key={cert.id} className="flex items-center gap-2">
+                      <span className="text-primary shrink-0">✓</span>
+                      <span className="font-body text-sm text-foreground font-medium">{cert.name}</span>
+                      {(cert.issuing_body || cert.year_obtained) && (
+                        <span className="font-body text-xs text-muted-foreground">
+                          — {[cert.issuing_body, cert.year_obtained ? `(${cert.year_obtained})` : null].filter(Boolean).join(" ")}
+                        </span>
+                      )}
+                    </div>
+                  ))}
+                </div>
               </motion.section>
             )}
 
