@@ -243,7 +243,7 @@ const CoachProfile = () => {
               <div className="flex items-center gap-2 mt-1 flex-wrap">
                 {coachData?.primary_sport && (
                   <span className="font-body text-[10px] bg-accent/20 text-accent-foreground px-2 py-0.5 rounded-full uppercase font-semibold">
-                    {coachData.primary_sport === "padel" ? "🏓 Padel" : "🎾 Tennis"} Coach
+                    {coachData.primary_sport === "padel" ? "Padel" : "Tennis"} Coach
                   </span>
                 )}
                 {coachData?.nationality && (
