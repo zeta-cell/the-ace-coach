@@ -23,6 +23,7 @@ interface Booking {
   location_type: string | null;
   package_id: string | null;
   max_group_size: number | null;
+  player_id: string;
 }
 
 interface GroupedBooking {
