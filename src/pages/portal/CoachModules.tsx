@@ -11,10 +11,20 @@ import { toast } from "sonner";
 type ModuleCategory = Database["public"]["Enums"]["module_category"];
 type ModuleDifficulty = Database["public"]["Enums"]["module_difficulty"];
 
-const CATEGORIES: ModuleCategory[] = [
-  "warm_up", "padel_drill", "footwork", "fitness", "strength",
+const BASE_CATEGORIES: ModuleCategory[] = [
+  "warm_up", "footwork", "fitness", "strength",
   "mental", "recovery", "cool_down", "nutrition", "video",
 ];
+
+const SPORT_CATEGORIES: Record<string, ModuleCategory[]> = {
+  padel: ["padel_drill"],
+  tennis: ["tennis_drill"],
+};
+
+const getAllCategories = (sport: string | null): ModuleCategory[] => {
+  const sportCats = sport ? (SPORT_CATEGORIES[sport] || []) : [...SPORT_CATEGORIES.padel, ...SPORT_CATEGORIES.tennis];
+  return [...sportCats, ...BASE_CATEGORIES];
+};
 
 const DIFFICULTIES: ModuleDifficulty[] = ["beginner", "intermediate", "advanced", "elite"];
 
