@@ -1052,7 +1052,7 @@ const FoundersDashboard = () => {
   const handleNudgeAllAtRisk = async () => {
     const msg = "Your profile is looking great! Need help getting your first booking? Reply to this message and we'll feature you on the homepage.";
     const inserts = coach.atRiskCoaches.map((c: any) => ({
-      user_id: c.userId, title: "Let's get you booked! 🎾", body: msg, link: "/coach",
+      user_id: c.userId, title: "Let's get you booked!", body: msg, link: "/coach",
     }));
     if (inserts.length === 0) { toast("No at-risk coaches"); return; }
     const { error } = await supabase.from("notifications").insert(inserts);
