@@ -138,7 +138,7 @@ const Events = () => {
     ]);
 
     setRegisteredIds(prev => new Set([...prev, event.id]));
-    toast.success("You're registered! See you there 🎾");
+    toast.success("You're registered! See you there!");
     setRegistering(null);
     fetchEvents();
   };
