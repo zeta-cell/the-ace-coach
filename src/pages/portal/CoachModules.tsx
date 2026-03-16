@@ -104,16 +104,28 @@ const CoachModules = () => {
 
   const fetchModules = async () => {
     if (!user) return;
-    let query = supabase
-      .from("modules")
-      .select("*")
-      .order("created_at", { ascending: false });
-    // Admins see all modules, coaches see only their own
-    if (role !== "admin") {
-      query = query.eq("created_by", user.id);
+    if (role === "admin") {
+      // Admins see all modules
+      const { data } = await supabase
+        .from("modules").select("*")
+        .order("created_at", { ascending: false });
+      setModules((data as Module[]) || []);
+    } else {
+      // Coaches see: own modules + shared base modules + shared sport-specific modules
+      const { data: ownModules } = await supabase
+        .from("modules").select("*")
+        .eq("created_by", user.id)
+        .order("created_at", { ascending: false });
+
+      const { data: sharedModules } = await supabase
+        .from("modules").select("*")
+        .eq("is_shared", true)
+        .neq("created_by", user.id)
+        .in("sport", coachSport ? ["both", coachSport] : ["both", "padel", "tennis"])
+        .order("created_at", { ascending: false });
+
+      setModules([...(ownModules as Module[] || []), ...(sharedModules as Module[] || [])]);
     }
-    const { data } = await query;
-    setModules((data as Module[]) || []);
     setLoading(false);
   };
 
