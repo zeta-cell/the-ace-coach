@@ -104,7 +104,7 @@ const CoachCardComponent = ({ coach }: { coach: CoachCard }) => {
             </span>
             {coach.primary_sport && (
               <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-secondary text-[10px] font-display tracking-wider text-muted-foreground">
-                {coach.primary_sport === "tennis" ? "🎾 TENNIS" : coach.primary_sport === "padel" ? "🏓 PADEL" : "🎾🏓 BOTH"}
+                {coach.primary_sport === "tennis" ? <><Circle size={10} className="text-primary" /> TENNIS</> : coach.primary_sport === "padel" ? <><Grip size={10} className="text-accent-foreground" /> PADEL</> : <><Layers size={10} className="text-primary" /> BOTH</>}
               </span>
             )}
             {coach.location_city && (
