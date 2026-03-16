@@ -129,6 +129,26 @@ const IncomingBookings = () => {
   const handleCancelGroupBooking = async (bookingId: string, packageId: string, bookingDate: string) => {
     await supabase.from("bookings").update({ status: "cancelled", cancelled_by: user?.id, cancelled_at: new Date().toISOString() }).eq("id", bookingId);
     
+    // Notify other group participants about the change
+    const { data: otherBookings } = await supabase
+      .from("bookings")
+      .select("player_id")
+      .eq("package_id", packageId)
+      .eq("booking_date", bookingDate)
+      .in("status", ["confirmed", "pending"])
+      .neq("id", bookingId);
+
+    if (otherBookings && otherBookings.length > 0) {
+      await Promise.all(otherBookings.map(ob =>
+        supabase.from("notifications").insert({
+          user_id: ob.player_id,
+          title: "Group session update",
+          body: `A participant left your group session on ${bookingDate}. A spot has opened up.`,
+          link: "/dashboard",
+        })
+      ));
+    }
+
     // Check waitlist
     const { data: waitlistEntry } = await supabase
       .from("booking_waitlist")
