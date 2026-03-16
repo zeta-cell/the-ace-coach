@@ -36,10 +36,14 @@ const CoachMarketplace = () => {
     if (!user) return;
     setLoading(true);
 
-    const { data: myBlocks } = await supabase
+    let blockQuery = supabase
       .from("training_blocks").select("*")
-      .eq("coach_id", user.id).eq("is_system", false)
       .order("created_at", { ascending: false });
+    // Admins see all blocks, coaches see only their own non-system blocks
+    if (role !== "admin") {
+      blockQuery = blockQuery.eq("coach_id", user.id).eq("is_system", false);
+    }
+    const { data: myBlocks } = await blockQuery;
 
     const { data: sales } = await supabase
       .from("block_purchases").select("block_id, amount_paid, platform_fee")
