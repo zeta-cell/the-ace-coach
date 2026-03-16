@@ -98,6 +98,7 @@ const IncomingBookings = () => {
         package_title: pkg?.title || "Session",
         session_type: pkg?.session_type || "individual",
         max_group_size: pkg?.max_group_size || null,
+        player_id: b.player_id,
       };
     });
 
