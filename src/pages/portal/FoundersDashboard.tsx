@@ -2026,7 +2026,7 @@ const FoundersDashboard = () => {
           <Card className="border-green-500/30">
             <CardContent className="p-4 flex items-center gap-2">
               <CheckCircle2 className="w-5 h-5 text-green-400" />
-              <p className="text-sm text-green-400 font-display">All systems healthy ✓</p>
+              <p className="text-sm text-green-400 font-display">All systems healthy</p>
             </CardContent>
           </Card>
         )}

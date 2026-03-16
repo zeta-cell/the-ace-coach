@@ -245,7 +245,7 @@ const Events = () => {
 
             {isRegistered ? (
               <div className="flex flex-col items-end gap-1">
-                <span className="px-3 py-1.5 rounded-lg bg-emerald-500/20 text-emerald-400 text-[10px] font-display tracking-wider">REGISTERED ✓</span>
+                <span className="px-3 py-1.5 rounded-lg bg-emerald-500/20 text-emerald-400 text-[10px] font-display tracking-wider flex items-center gap-1"><CheckCircle size={10} /> REGISTERED</span>
                 <button onClick={() => handleCancel(event.id)} className="text-[9px] font-body text-muted-foreground hover:text-destructive transition-colors">Cancel</button>
               </div>
             ) : isFull ? (

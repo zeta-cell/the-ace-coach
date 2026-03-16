@@ -36,11 +36,18 @@ const BLOCK_CATEGORY_COLORS: Record<string, { bg: string; text: string }> = {
   "Custom": { bg: "bg-muted", text: "text-muted-foreground" },
 };
 
-const GOAL_ICONS: Record<string, string> = {
-  "Match Preparation": "🎯", "Technique": "🎾", "Fitness": "💪",
-  "Recovery": "🧘", "Warm Up": "🔥", "Footwork": "👟",
-  "Mental": "🧠", "Kids": "⭐", "Beginner": "📘",
-  "Advanced": "🏆", "Custom": "📋",
+const GOAL_ICON_COMPONENTS: Record<string, { icon: typeof Target; color: string }> = {
+  "Match Preparation": { icon: Target, color: "text-amber-500" },
+  "Technique": { icon: Circle, color: "text-primary" },
+  "Fitness": { icon: Dumbbell, color: "text-orange-500" },
+  "Recovery": { icon: Leaf, color: "text-green-500" },
+  "Warm Up": { icon: Flame, color: "text-red-500" },
+  "Footwork": { icon: Footprints, color: "text-blue-500" },
+  "Mental": { icon: Brain, color: "text-purple-500" },
+  "Kids": { icon: Star, color: "text-yellow-500" },
+  "Beginner": { icon: BookOpen, color: "text-sky-500" },
+  "Advanced": { icon: Trophy, color: "text-rose-500" },
+  "Custom": { icon: ClipboardList, color: "text-muted-foreground" },
 };
 
 interface TrainingBlocksPanelProps {

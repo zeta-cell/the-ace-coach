@@ -391,7 +391,7 @@ const CoachProfile = () => {
               {certifications.map(cert => (
                 <div key={cert.id} className="flex items-center justify-between p-3 rounded-lg bg-secondary">
                   <div className="flex items-center gap-2 min-w-0">
-                    <span className="text-primary shrink-0">✓</span>
+                    <CheckCircle2 size={14} className="text-primary shrink-0" />
                     <div className="min-w-0">
                       <p className="font-body text-sm text-foreground font-medium truncate">{cert.name}</p>
                       <p className="font-body text-[10px] text-muted-foreground">

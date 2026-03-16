@@ -469,7 +469,7 @@ const Dashboard = () => {
               ) : (
                 <>
                   <h2 className="font-display text-xl text-foreground mb-2">NO TRAINING TODAY</h2>
-                  <p className="font-body text-sm text-muted-foreground">Rest day or your coach hasn't assigned a plan yet. 💪</p>
+                  <p className="font-body text-sm text-muted-foreground">Rest day or your coach hasn't assigned a plan yet.</p>
                 </>
               )}
             </div>

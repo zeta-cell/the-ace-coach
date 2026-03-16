@@ -214,8 +214,8 @@ const PlayerProfileEdit = ({ open, onClose, playerData, phone, onSaved }: Props)
               value={form.preferred_sport}
               onChange={(v) => set("preferred_sport", v)}
               options={[
-                { value: "tennis", label: "🎾 TENNIS" },
-                { value: "padel", label: "🏓 PADEL" },
+                { value: "tennis", label: "TENNIS" },
+                { value: "padel", label: "PADEL" },
                 { value: "both", label: "BOTH" },
               ]}
             />

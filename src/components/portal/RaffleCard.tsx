@@ -54,10 +54,10 @@ const RaffleCard = () => {
 
       {expanded && (
         <div className="mt-2 pt-2 border-t border-border space-y-1.5">
-          <p className="font-body text-xs text-muted-foreground">🎯 Complete a training session → +1 ticket</p>
-          <p className="font-body text-xs text-muted-foreground">👥 Refer a friend who signs up → +3 tickets</p>
-          <p className="font-body text-xs text-muted-foreground">📹 Upload a progress video → +1 ticket</p>
-          <p className="font-body text-xs text-muted-foreground">⭐ Write a coach review → +1 ticket</p>
+          <p className="font-body text-xs text-muted-foreground flex items-center gap-1.5"><Target size={12} className="text-primary shrink-0" /> Complete a training session → +1 ticket</p>
+          <p className="font-body text-xs text-muted-foreground flex items-center gap-1.5"><Users size={12} className="text-blue-400 shrink-0" /> Refer a friend who signs up → +3 tickets</p>
+          <p className="font-body text-xs text-muted-foreground flex items-center gap-1.5"><Video size={12} className="text-emerald-400 shrink-0" /> Upload a progress video → +1 ticket</p>
+          <p className="font-body text-xs text-muted-foreground flex items-center gap-1.5"><Star size={12} className="text-amber-400 shrink-0" /> Write a coach review → +1 ticket</p>
         </div>
       )}
     </div>

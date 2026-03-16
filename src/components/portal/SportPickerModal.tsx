@@ -164,7 +164,7 @@ const SportPickerModal = ({ userId, onComplete }: SportPickerModalProps) => {
             disabled={saving}
             className="w-full flex items-center justify-center gap-2 p-4 rounded-2xl border-2 border-border bg-card hover:border-primary/60 hover:bg-primary/5 transition-all disabled:opacity-50"
           >
-            <span className="text-xl">🎾🏓</span>
+            <Layers size={20} className="text-primary" />
             <span className="font-display text-sm tracking-wider text-foreground">BOTH SPORTS</span>
           </button>
 

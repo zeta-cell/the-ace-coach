@@ -620,7 +620,7 @@ const PublicCoachProfile = () => {
                 </div>
               )}
               {user && hasReviewed && (
-                <p className="font-body text-xs text-chart-2 mb-4">✓ You have already reviewed this coach</p>
+                <p className="font-body text-xs text-chart-2 mb-4 flex items-center gap-1"><CheckCircle2 size={12} /> You have already reviewed this coach</p>
               )}
               {reviews.length === 0 ? (
                 <div className="bg-card border border-border rounded-2xl p-8 text-center">
