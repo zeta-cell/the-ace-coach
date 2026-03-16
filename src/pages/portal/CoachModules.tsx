@@ -54,6 +54,7 @@ interface Module {
   tags: string[] | null;
   equipment: string[] | null;
   is_shared: boolean | null;
+  sport: string | null;
 }
 
 const emptyForm = {
