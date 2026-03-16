@@ -133,7 +133,7 @@ const Events = () => {
     await Promise.all([
       supabase.rpc("award_xp", { p_user_id: user.id, p_amount: 30, p_event_type: "event_registration", p_description: `Registered for ${event.title}` }),
       supabase.rpc("increment_raffle_tickets", { p_user_id: user.id }),
-      supabase.from("notifications").insert({ user_id: user.id, title: `You're registered for ${event.title}!`, body: `See you there 🎾`, link: "/events" }),
+      supabase.from("notifications").insert({ user_id: user.id, title: `You're registered for ${event.title}!`, body: `See you there!`, link: "/events" }),
       supabase.from("notifications").insert({ user_id: event.coach_id, title: `New registration for ${event.title}`, body: "A player just registered for your event", link: "/coach/events" }),
     ]);
 
