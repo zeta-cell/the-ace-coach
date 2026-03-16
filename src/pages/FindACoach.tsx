@@ -372,11 +372,12 @@ const FindACoach = () => {
 
     const userIds = coachProfiles.map((c) => c.user_id);
 
-    const [profilesRes, reviewsRes, packagesRes, availabilityRes] = await Promise.all([
+    const [profilesRes, reviewsRes, packagesRes, availabilityRes, certsRes] = await Promise.all([
       supabase.from("profiles").select("user_id, full_name, avatar_url").in("user_id", userIds),
       supabase.from("reviews").select("coach_id, rating"),
       supabase.from("coach_packages").select("coach_id, session_type").eq("is_active", true).in("coach_id", userIds),
       supabase.from("coach_availability_slots").select("coach_id, day_of_week").eq("is_recurring", true).in("coach_id", userIds),
+      supabase.from("coach_certifications").select("coach_id").in("coach_id", userIds),
     ]);
 
     const profileMap = new Map(profilesRes.data?.map((p) => [p.user_id, p]) || []);
