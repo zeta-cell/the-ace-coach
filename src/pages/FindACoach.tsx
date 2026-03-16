@@ -421,6 +421,7 @@ const FindACoach = () => {
         review_count: ratings?.count || 0,
         session_types: sessionTypesMap.get(cp.user_id) || [],
         available_days: availabilityMap.get(cp.user_id) || [],
+        primary_sport: (cp as any).primary_sport || null,
       };
     });
 
