@@ -231,7 +231,7 @@ const PublicCoachProfile = () => {
         p_description: 'Wrote a coach review',
       });
 
-      toast({ title: 'Review submitted! +20 XP 🎉' });
+      toast({ title: 'Review submitted! +20 XP' });
       setReviewText('');
       setHasReviewed(true);
       fetchCoach();
