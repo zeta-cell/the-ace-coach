@@ -220,7 +220,7 @@ const IncomingBookings = () => {
       price_per_person: Number(first.total_price),
       location_type: first.location_type,
       participants: groupBookings.map(b => ({
-        id: b.id, name: b.player_name, avatar: b.player_avatar, status: b.status,
+        id: b.id, name: b.player_name, avatar: b.player_avatar, status: b.status, player_id: b.player_id,
       })),
       totalRevenue: groupBookings.reduce((s, b) => s + Number(b.total_price), 0),
       totalPayout: groupBookings.reduce((s, b) => s + Number(b.coach_payout), 0),
