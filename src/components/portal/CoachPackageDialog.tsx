@@ -44,6 +44,7 @@ const CoachPackageDialog = ({ open, onClose, onSave, editing, saving }: Props) =
         currency: editing.currency,
         description: editing.description || "",
         max_group_size: editing.max_group_size,
+        min_participants: (editing as any).min_participants || null,
       });
     } else {
       setForm({
