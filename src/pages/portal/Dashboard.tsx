@@ -370,7 +370,7 @@ const Dashboard = () => {
           </div>
           {earnedBadges.length === 0 ? (
             <div className="bg-card border border-dashed border-border rounded-xl p-4 text-center">
-              <p className="font-body text-xs text-muted-foreground">Complete sessions to earn your first badge! 🏅</p>
+              <p className="font-body text-xs text-muted-foreground">Complete sessions to earn your first badge!</p>
             </div>
           ) : (
             <div className="flex gap-2 overflow-x-auto pb-2">
