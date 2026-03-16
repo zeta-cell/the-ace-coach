@@ -454,7 +454,7 @@ const PublicCoachProfile = () => {
                 <div className="space-y-2">
                   {certifications.map(cert => (
                     <div key={cert.id} className="flex items-center gap-2">
-                      <span className="text-primary shrink-0">✓</span>
+                      <CheckCircle2 size={14} className="text-primary shrink-0" />
                       <span className="font-body text-sm text-foreground font-medium">{cert.name}</span>
                       {(cert.issuing_body || cert.year_obtained) && (
                         <span className="font-body text-xs text-muted-foreground">
