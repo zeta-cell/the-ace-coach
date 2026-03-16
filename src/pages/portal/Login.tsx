@@ -295,7 +295,7 @@ const Login = () => {
               className="flex flex-col items-center gap-1.5 p-3 rounded-xl border border-border bg-card hover:border-primary/50 hover:bg-primary/5 transition-all disabled:opacity-50"
             >
               <div className="w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center">
-                <span className="font-display text-sm">🏋️</span>
+                <Dumbbell size={18} className="text-accent-foreground" />
               </div>
               <span className="font-display text-[10px] tracking-wider text-foreground">COACH</span>
               <span className="text-[9px] font-body text-muted-foreground">Francisco López</span>
