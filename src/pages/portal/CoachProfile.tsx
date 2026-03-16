@@ -65,6 +65,10 @@ const CoachProfile = () => {
   const [pkgDialogOpen, setPkgDialogOpen] = useState(false);
   const [editingPkg, setEditingPkg] = useState<CoachPackage | null>(null);
   const [pkgSaving, setPkgSaving] = useState(false);
+  const [certifications, setCertifications] = useState<Certification[]>([]);
+  const [certForm, setCertForm] = useState({ name: "", issuing_body: "", year_obtained: "", certificate_url: "" });
+  const [showCertForm, setShowCertForm] = useState(false);
+  const [certSaving, setCertSaving] = useState(false);
   const [notifPrefs, setNotifPrefs] = useState({
     new_message: true,
     coach_feedback: true,
