@@ -29,6 +29,7 @@ interface CoachCard {
   review_count: number;
   session_types: string[];
   available_days: number[];
+  primary_sport: string | null;
 }
 
 const BADGE_CONFIG: Record<string, { icon: typeof Shield; color: string; label: string }> = {
