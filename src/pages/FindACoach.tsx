@@ -152,6 +152,12 @@ const CoachCardComponent = ({ coach }: { coach: CoachCard }) => {
         </div>
       )}
 
+      {coach.cert_count > 0 && (
+        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-body mb-4">
+          ✓ {coach.cert_count} certification{coach.cert_count > 1 ? "s" : ""}
+        </span>
+      )}
+
       <div className="flex gap-2">
         <Link
           to={coach.profile_slug ? `/coach/${coach.profile_slug}` : "#"}
