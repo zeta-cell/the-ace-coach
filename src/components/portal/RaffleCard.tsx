@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { Ticket, ChevronDown, ChevronUp, Gift } from "lucide-react";
+import { Ticket, ChevronDown, ChevronUp, Gift, Target, Users, Video, Star } from "lucide-react";
 
 const RaffleCard = () => {
   const { user } = useAuth();
