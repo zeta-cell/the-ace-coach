@@ -11,6 +11,7 @@ import { format, subMonths, startOfMonth, endOfMonth } from "date-fns";
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip, Line, ComposedChart } from "recharts";
 import PortalLayout from "@/components/portal/PortalLayout";
 import IncomingBookings from "@/components/portal/IncomingBookings";
+import SportPickerModal from "@/components/portal/SportPickerModal";
 import { toast } from "sonner";
 
 interface CoachRequest {
