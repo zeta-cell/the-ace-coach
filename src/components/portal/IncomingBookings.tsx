@@ -294,9 +294,19 @@ const IncomingBookings = () => {
                 <span className="font-body text-xs text-muted-foreground">
                   Revenue: {currencySymbol(g.currency)}{g.totalRevenue.toFixed(0)} ({g.participants.length} × {currencySymbol(g.currency)}{g.price_per_person.toFixed(0)})
                 </span>
-                <span className="font-body text-[9px] text-muted-foreground">
-                  Your cut: {currencySymbol(g.currency)}{g.totalPayout.toFixed(0)}
-                </span>
+                <div className="flex items-center gap-2">
+                  {new Date(`${g.booking_date}T${g.end_time}`) < new Date() && (
+                    <button
+                      onClick={() => setFeedbackGroup(g)}
+                      className="flex items-center gap-1 px-2 py-1 rounded text-[8px] font-display bg-chart-2/10 text-chart-2 hover:bg-chart-2/20 transition-colors"
+                    >
+                      <MessageSquare size={9} /> FEEDBACK
+                    </button>
+                  )}
+                  <span className="font-body text-[9px] text-muted-foreground">
+                    Your cut: {currencySymbol(g.currency)}{g.totalPayout.toFixed(0)}
+                  </span>
+                </div>
               </div>
             </div>
           );
