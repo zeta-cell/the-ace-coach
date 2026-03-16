@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
-import { Layers, Plus, Search, ChevronDown, ChevronRight, Save, X, Trash2 } from "lucide-react";
+import { Layers, Plus, Search, ChevronDown, ChevronRight, Save, X, Trash2, Target, Circle, Dumbbell, Leaf, Flame, Footprints, Brain, Star, BookOpen, Trophy, ClipboardList } from "lucide-react";
 import type { ModuleItem, BlockPlanItem as PlanItem } from "@/types/training";
 
 /* ── types ── */
