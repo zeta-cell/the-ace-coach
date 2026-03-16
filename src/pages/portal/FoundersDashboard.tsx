@@ -1062,7 +1062,7 @@ const FoundersDashboard = () => {
 
   const handleSendNudge = async (userId: string) => {
     const { error } = await supabase.from("notifications").insert({
-      user_id: userId, title: "Let's get you booked! 🎾",
+      user_id: userId, title: "Let's get you booked!",
       body: "Your profile is looking great! Need help getting your first booking? Reply to this message and we'll feature you on the homepage.",
       link: "/coach",
     });
