@@ -46,7 +46,7 @@ const UpcomingBookings = () => {
       .in("status", ["pending", "confirmed"])
       .gte("booking_date", today)
       .order("booking_date")
-      .limit(5);
+      .limit(10);
 
     let bookingItems: BookingItem[] = [];
 
