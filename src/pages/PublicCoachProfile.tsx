@@ -56,6 +56,8 @@ interface Package {
   description: string | null;
   total_sessions: number | null;
   max_group_size: number | null;
+  min_participants: number | null;
+  spots_taken?: number;
 }
 
 interface Review {
