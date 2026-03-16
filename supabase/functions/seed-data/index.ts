@@ -680,7 +680,7 @@ Deno.serve(async (req) => {
           { content: "Hi Francisco! I was wondering if we could focus on my backhand during our next session?", sender: "player" },
           { content: "Of course, Anna! I've noticed some room for improvement there too. I'll prepare some specific drills. Let's also work on your wrist position — it'll make a big difference.", sender: "coach" },
           { content: "That sounds great! Should I warm up with any specific exercises before we start?", sender: "player" },
-          { content: "Yes! Do the resistance band shoulder warm-up and some wrist circles. I've added them to your plan for that day. See you on court! 🎾", sender: "coach" },
+          { content: "Yes! Do the resistance band shoulder warm-up and some wrist circles. I've added them to your plan for that day. See you on court!", sender: "coach" },
         ]},
         { from: playerIds[1], to: coach1Id, messages: [
           { content: "Coach, I've been practicing the serve technique you showed me. Feeling much more consistent!", sender: "player" },
