@@ -1361,7 +1361,7 @@ const FoundersDashboard = () => {
                       <td className="p-2 text-right font-medium">€{c.revenue.toLocaleString()}</td>
                       <td className="p-2 text-right">{c.avgRating}</td>
                       <td className="p-2 text-center uppercase text-[9px]">{c.badge}</td>
-                      <td className="p-2 text-center">{c.verified ? "✓" : "—"}</td>
+                      <td className="p-2 text-center">{c.verified ? <CheckCircle2 size={14} className="text-green-400 mx-auto" /> : "—"}</td>
                     </tr>
                   ))}
                 </tbody>
