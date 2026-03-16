@@ -282,8 +282,8 @@ const Login = () => {
               disabled={loading}
               className="flex flex-col items-center gap-1.5 p-3 rounded-xl border border-border bg-card hover:border-primary/50 hover:bg-primary/5 transition-all disabled:opacity-50"
             >
-              <div className="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center">
-                <span className="text-emerald-400 font-display text-sm">🎾</span>
+              <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
+                <span className="font-display text-sm">🎾</span>
               </div>
               <span className="font-display text-[10px] tracking-wider text-foreground">PLAYER</span>
               <span className="text-[9px] font-body text-muted-foreground">Anna Müller</span>
@@ -294,8 +294,8 @@ const Login = () => {
               disabled={loading}
               className="flex flex-col items-center gap-1.5 p-3 rounded-xl border border-border bg-card hover:border-primary/50 hover:bg-primary/5 transition-all disabled:opacity-50"
             >
-              <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center">
-                <span className="text-blue-400 font-display text-sm">🏋️</span>
+              <div className="w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center">
+                <span className="font-display text-sm">🏋️</span>
               </div>
               <span className="font-display text-[10px] tracking-wider text-foreground">COACH</span>
               <span className="text-[9px] font-body text-muted-foreground">Francisco López</span>
@@ -306,8 +306,8 @@ const Login = () => {
               disabled={loading}
               className="flex flex-col items-center gap-1.5 p-3 rounded-xl border border-border bg-card hover:border-primary/50 hover:bg-primary/5 transition-all disabled:opacity-50"
             >
-              <div className="w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center">
-                <span className="text-amber-400 font-display text-sm">👑</span>
+              <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center">
+                <span className="font-display text-sm">👑</span>
               </div>
               <span className="font-display text-[10px] tracking-wider text-foreground">FOUNDER</span>
               <span className="text-[9px] font-body text-muted-foreground">Admin Ace</span>
