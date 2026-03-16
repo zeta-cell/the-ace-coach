@@ -243,6 +243,11 @@ const UpcomingBookings = () => {
                         {b.package_title}
                       </span>
                     )}
+                    {b.session_type === "group" && b.max_group_size && (
+                      <span className="text-[9px] font-display font-semibold bg-chart-2/10 text-chart-2 px-2 py-0.5 rounded-full uppercase flex items-center gap-0.5">
+                        <Users size={8} /> GROUP
+                      </span>
+                    )}
                     <span className={`text-[9px] font-body font-semibold px-2 py-0.5 rounded-full uppercase ${b.status === "confirmed" ? "bg-green-500/10 text-green-400" : "bg-yellow-500/10 text-yellow-400"}`}>
                       {b.status === "confirmed" ? "CONFIRMED" : "PENDING PAYMENT"}
                     </span>
