@@ -444,9 +444,12 @@ const FindACoach = () => {
       result = result.filter((c) => c.coaching_style?.toLowerCase().includes(q));
     }
 
-    // Sport — robust match
+    // Sport — filter by primary_sport first, then fallback to text match
     if (sportFilter !== "all") {
       result = result.filter((c) => {
+        if (c.primary_sport) {
+          return c.primary_sport === sportFilter || c.primary_sport === "both";
+        }
         const inSpecs = c.specializations.some((s) => s.toLowerCase().includes(sportFilter));
         const inBio = c.bio?.toLowerCase().includes(sportFilter);
         const inStyle = c.coaching_style?.toLowerCase().includes(sportFilter);
