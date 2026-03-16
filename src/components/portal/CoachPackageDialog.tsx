@@ -29,6 +29,7 @@ const CoachPackageDialog = ({ open, onClose, onSave, editing, saving }: Props) =
     currency: "EUR",
     description: "",
     max_group_size: null as number | null,
+    min_participants: null as number | null,
   });
 
   useEffect(() => {
