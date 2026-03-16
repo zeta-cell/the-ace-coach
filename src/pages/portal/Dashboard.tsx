@@ -309,7 +309,7 @@ const Dashboard = () => {
             </div>
             <div className="flex-1">
               <h3 className="font-display text-sm text-foreground">{lvl.label.toUpperCase()} LEVEL</h3>
-              <p className="font-body text-xs text-muted-foreground">{nextLvl ? `${xpToNext} XP to ${nextLvl.label}` : "Max level reached! 🏆"}</p>
+              <p className="font-body text-xs text-muted-foreground">{nextLvl ? `${xpToNext} XP to ${nextLvl.label}` : "Max level reached!"}</p>
             </div>
             <Link to="/rewards" className="text-xs font-display text-primary tracking-wider hover:underline">REWARDS →</Link>
           </div>
