@@ -356,7 +356,7 @@ const FindACoach = () => {
 
     const { data: coachProfiles } = await supabase
       .from("coach_profiles")
-      .select("user_id, bio, location_city, location_country, badge_level, is_verified, years_experience, languages, specializations, hourly_rate_from, profile_slug, total_sessions_coached, coaching_style");
+      .select("user_id, bio, location_city, location_country, badge_level, is_verified, years_experience, languages, specializations, hourly_rate_from, profile_slug, total_sessions_coached, coaching_style, primary_sport");
 
     if (!coachProfiles || coachProfiles.length === 0) {
       setCoaches([]);
