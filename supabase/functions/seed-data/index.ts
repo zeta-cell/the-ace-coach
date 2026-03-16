@@ -669,7 +669,7 @@ Deno.serve(async (req) => {
       await admin.from("notifications").insert([
         { user_id: playerIds[i], title: "Training plan updated", body: "Coach Francisco updated your training plan for tomorrow. Check it out!", link: "/training" },
         { user_id: playerIds[i], title: "New event near you", body: "Spring Padel Tournament 2026 is now open for registration. Limited spots!", link: "/events" },
-        { user_id: playerIds[i], title: "Level up! 🎉", body: `Congratulations! You've earned enough XP to reach a new level. Keep training!`, link: "/dashboard" },
+        { user_id: playerIds[i], title: "Level up!", body: `Congratulations! You've earned enough XP to reach a new level. Keep training!`, link: "/dashboard" },
       ]);
     }
 
