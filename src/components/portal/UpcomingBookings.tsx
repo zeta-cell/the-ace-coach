@@ -265,6 +265,39 @@ const UpcomingBookings = () => {
                   )}
                 </div>
               </div>
+              {/* Group co-participants */}
+              {b.session_type === "group" && b.group_participants && b.group_participants.length > 0 && (
+                <div className="mt-2 pt-2 border-t border-border">
+                  <p className="font-body text-[10px] text-muted-foreground mb-1.5">Also joining:</p>
+                  <div className="flex items-center gap-1.5">
+                    {b.group_participants.slice(0, 5).map((p, i) => (
+                      <div key={i} className="w-6 h-6 rounded-full bg-primary/20 overflow-hidden flex items-center justify-center shrink-0" title={p.name}>
+                        {p.avatar ? (
+                          <img src={p.avatar} alt="" className="w-full h-full object-cover" />
+                        ) : (
+                          <span className="font-display text-[8px] text-primary">{p.name.charAt(0)}</span>
+                        )}
+                      </div>
+                    ))}
+                    <span className="font-body text-[9px] text-muted-foreground ml-1">
+                      {b.group_participants.map(p => p.name.split(' ')[0]).join(', ')}
+                    </span>
+                  </div>
+                  {b.max_group_size && (
+                    <div className="flex items-center gap-1 mt-1.5">
+                      {Array.from({ length: b.max_group_size }).map((_, i) => (
+                        <div
+                          key={i}
+                          className={`w-3 h-3 rounded-full ${i < (b.group_participants!.length + 1) ? "bg-primary" : "bg-muted border border-border"}`}
+                        />
+                      ))}
+                      <span className="font-body text-[9px] text-muted-foreground ml-1">
+                        {b.group_participants.length + 1}/{b.max_group_size} spots
+                      </span>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           );
         })}
