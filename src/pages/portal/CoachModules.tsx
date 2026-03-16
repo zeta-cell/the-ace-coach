@@ -361,7 +361,7 @@ const CoachModules = () => {
                       onChange={(e) => setForm({ ...form, category: e.target.value as ModuleCategory })}
                       className="px-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-sm"
                     >
-                      {CATEGORIES.map((c) => <option key={c} value={c}>{c.replace("_", " ")}</option>)}
+                      {getAllCategories(role === "admin" ? null : coachSport).map((c) => <option key={c} value={c}>{c.replace("_", " ")}</option>)}
                     </select>
                     <select
                       value={form.difficulty}
