@@ -84,7 +84,7 @@ const CoachModules = () => {
   const [videoModalUrl, setVideoModalUrl] = useState("");
   const [videoModalTitle, setVideoModalTitle] = useState("");
   const videoFileRef = useRef<HTMLInputElement>(null);
-
+  const [coachSport, setCoachSport] = useState<string | null>(null);
   useEffect(() => {
     if (user) fetchModules();
   }, [user]);
