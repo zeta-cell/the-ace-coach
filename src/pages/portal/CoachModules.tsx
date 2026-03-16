@@ -223,7 +223,7 @@ const CoachModules = () => {
         {/* Search & filter */}
         {/* Category filter strip */}
         <div className="flex gap-1.5 overflow-x-auto pb-2 mb-3 scrollbar-none">
-          {(["all", ...CATEGORIES] as const).map((cat) => (
+          {(["all", ...getAllCategories(role === "admin" ? null : coachSport)] as const).map((cat) => (
             <button
               key={cat}
               onClick={() => setFilterCat(cat)}
