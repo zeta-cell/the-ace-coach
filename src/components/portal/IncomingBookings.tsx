@@ -47,6 +47,7 @@ const IncomingBookings = () => {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [weekSummary, setWeekSummary] = useState({ count: 0, income: 0 });
   const [coachSlug, setCoachSlug] = useState<string | null>(null);
+  const [feedbackGroup, setFeedbackGroup] = useState<GroupedBooking | null>(null);
 
   useEffect(() => {
     if (user) {
