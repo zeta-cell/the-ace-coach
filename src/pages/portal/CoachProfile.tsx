@@ -13,8 +13,15 @@ import PortalLayout from "@/components/portal/PortalLayout";
 import CoachProfileEdit from "@/components/portal/CoachProfileEdit";
 import CoachPackageCard, { type CoachPackage } from "@/components/portal/CoachPackageCard";
 import CoachPackageDialog from "@/components/portal/CoachPackageDialog";
+import { Trash2 } from "lucide-react";
 
-interface CoachData {
+interface Certification {
+  id: string;
+  name: string;
+  issuing_body: string | null;
+  year_obtained: number | null;
+  certificate_url: string | null;
+}
   bio: string | null;
   coaching_style: string | null;
   certifications: string[];
