@@ -48,8 +48,24 @@ const CoachDashboard = () => {
   const [revenueData, setRevenueData] = useState<any[]>([]);
   const [marketplaceStats, setMarketplaceStats] = useState({ published: 0, sales: 0, revenue: 0 });
   const [weekBookings, setWeekBookings] = useState<any[]>([]);
+  const [showSportPicker, setShowSportPicker] = useState(false);
 
-  useEffect(() => { if (user) fetchAll(); }, [user]);
+  useEffect(() => {
+    if (user) {
+      fetchAll();
+      checkSportSelection();
+    }
+  }, [user]);
+
+  const checkSportSelection = async () => {
+    if (!user) return;
+    const { data } = await supabase
+      .from("coach_profiles")
+      .select("primary_sport")
+      .eq("user_id", user.id)
+      .single();
+    if (!data?.primary_sport) setShowSportPicker(true);
+  };
 
   const fetchAll = async () => {
     if (!user) return;
