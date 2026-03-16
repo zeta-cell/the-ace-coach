@@ -86,8 +86,21 @@ const CoachModules = () => {
   const videoFileRef = useRef<HTMLInputElement>(null);
   const [coachSport, setCoachSport] = useState<string | null>(null);
   useEffect(() => {
-    if (user) fetchModules();
+    if (user) {
+      fetchCoachSport();
+      fetchModules();
+    }
   }, [user]);
+
+  const fetchCoachSport = async () => {
+    if (!user) return;
+    const { data } = await supabase
+      .from("coach_profiles")
+      .select("primary_sport")
+      .eq("user_id", user.id)
+      .single();
+    if (data) setCoachSport((data as any).primary_sport);
+  };
 
   const fetchModules = async () => {
     if (!user) return;
