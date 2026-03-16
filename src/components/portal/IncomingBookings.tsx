@@ -371,7 +371,7 @@ const IncomingBookings = () => {
             bookingId: p.id,
             name: p.name,
             avatar: p.avatar,
-            playerId: "", // We need player_id - stored in booking
+            playerId: p.player_id,
           }))}
           sessionTitle={feedbackGroup.package_title}
           sessionDate={format(new Date(feedbackGroup.booking_date + "T00:00:00"), "EEE d MMM")}
