@@ -60,7 +60,7 @@ const emptyForm = {
 };
 
 const CoachModules = () => {
-  const { user } = useAuth();
+  const { user, role } = useAuth();
   const [modules, setModules] = useState<Module[]>([]);
   const [search, setSearch] = useState("");
   const [filterCat, setFilterCat] = useState<ModuleCategory | "all">("all");
@@ -80,11 +80,15 @@ const CoachModules = () => {
 
   const fetchModules = async () => {
     if (!user) return;
-    const { data } = await supabase
+    let query = supabase
       .from("modules")
       .select("*")
-      .eq("created_by", user.id)
       .order("created_at", { ascending: false });
+    // Admins see all modules, coaches see only their own
+    if (role !== "admin") {
+      query = query.eq("created_by", user.id);
+    }
+    const { data } = await query;
     setModules((data as Module[]) || []);
     setLoading(false);
   };
