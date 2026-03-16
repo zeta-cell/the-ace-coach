@@ -82,16 +82,18 @@ const CoachProfile = () => {
 
   const fetchData = async () => {
     if (!user) return;
-    const [{ data: coach }, { data: prof }, { data: pkgs }] = await Promise.all([
+    const [{ data: coach }, { data: prof }, { data: pkgs }, { data: certs }] = await Promise.all([
       supabase.from("coach_profiles").select("*").eq("user_id", user.id).single(),
       supabase.from("profiles").select("notification_preferences").eq("user_id", user.id).single(),
       supabase.from("coach_packages").select("*").eq("coach_id", user.id).order("created_at", { ascending: false }),
+      supabase.from("coach_certifications").select("*").eq("coach_id", user.id).order("year_obtained", { ascending: false }),
     ]);
     if (coach) setCoachData(coach as unknown as CoachData);
     if (prof?.notification_preferences) {
       setNotifPrefs(prof.notification_preferences as typeof notifPrefs);
     }
     if (pkgs) setPackages(pkgs as unknown as CoachPackage[]);
+    if (certs) setCertifications(certs as unknown as Certification[]);
   };
 
   const toggleNotifPref = async (key: keyof typeof notifPrefs) => {
