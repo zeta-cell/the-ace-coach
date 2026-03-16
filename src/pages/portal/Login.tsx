@@ -56,7 +56,35 @@ const Login = () => {
     if (error) {
       setError(error.message);
     } else {
-      navigate("/dashboard");
+      // Fetch role to redirect appropriately
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        const { data: roleData } = await supabase
+          .from("user_roles")
+          .select("role")
+          .eq("user_id", session.user.id)
+          .single();
+        if (roleData?.role === "coach") navigate("/coach");
+        else if (roleData?.role === "admin") navigate("/admin");
+        else navigate("/dashboard");
+      } else {
+        navigate("/dashboard");
+      }
+    }
+  };
+
+  const handleQuickLogin = async (email: string, redirectTo: string) => {
+    setError("");
+    setLoading(true);
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password: "AceAcademy2026!",
+    });
+    setLoading(false);
+    if (error) {
+      setError(error.message);
+    } else {
+      navigate(redirectTo);
     }
   };
 
