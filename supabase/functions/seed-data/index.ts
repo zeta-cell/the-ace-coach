@@ -57,7 +57,7 @@ Deno.serve(async (req) => {
         user_metadata: { full_name: fullName },
       });
       if (error) {
-        created.push(`❌ ${email}: ${error.message}`);
+        created.push(`FAIL ${email}: ${error.message}`);
         return null;
       }
 
