@@ -1168,6 +1168,7 @@ const FoundersDashboard = () => {
 
   return (
     <PortalLayout>
+      <div className="flex-1 overflow-y-auto h-screen">
       {/* Read-only banner */}
       {isReadOnly && (
         <div className="bg-amber-500/20 border border-amber-500/40 rounded-lg px-4 py-3 mb-4 flex items-center gap-2">
