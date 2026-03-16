@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
-import { Upload, Video, X, Play, MessageSquare, Loader2 } from "lucide-react";
+import { Upload, Video, X, Play, MessageSquare, Loader2, MessageCircle } from "lucide-react";
 import { format } from "date-fns";
 import { toast } from "sonner";
 import PortalLayout from "@/components/portal/PortalLayout";
