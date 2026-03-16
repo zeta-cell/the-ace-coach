@@ -191,6 +191,7 @@ const CoachProfile = () => {
     if (!error) fetchData();
   };
 
+  const copyProfileUrl = () => {
     if (coachData?.profile_slug) {
       navigator.clipboard.writeText(`${window.location.origin}/coach/${coachData.profile_slug}`);
       toast({ title: "Link copied!" });
