@@ -937,8 +937,8 @@ const FoundersDashboard = () => {
     }).filter(Boolean));
     // We can't easily detect "new country" without historical data, skip for now
 
-    if (biz.mrr >= 1000 && biz.lastMonthGMV < 1000) greenSignals.push("MRR crossed €1,000! 🎉");
-    if (biz.mrr >= 5000 && biz.lastMonthGMV < 5000) greenSignals.push("MRR crossed €5,000! 🎉");
+    if (biz.mrr >= 1000 && biz.lastMonthGMV < 1000) greenSignals.push("MRR crossed €1,000!");
+    if (biz.mrr >= 5000 && biz.lastMonthGMV < 5000) greenSignals.push("MRR crossed €5,000!");
     if (lastWeekRefAvg > 0 && thisWeekRefSignups > lastWeekRefAvg * 2) {
       greenSignals.push(`Referral signups up ${Math.round((thisWeekRefSignups / lastWeekRefAvg - 1) * 100)}% — something went viral`);
     }
@@ -1052,7 +1052,7 @@ const FoundersDashboard = () => {
   const handleNudgeAllAtRisk = async () => {
     const msg = "Your profile is looking great! Need help getting your first booking? Reply to this message and we'll feature you on the homepage.";
     const inserts = coach.atRiskCoaches.map((c: any) => ({
-      user_id: c.userId, title: "Let's get you booked! 🎾", body: msg, link: "/coach",
+      user_id: c.userId, title: "Let's get you booked!", body: msg, link: "/coach",
     }));
     if (inserts.length === 0) { toast("No at-risk coaches"); return; }
     const { error } = await supabase.from("notifications").insert(inserts);
@@ -1062,7 +1062,7 @@ const FoundersDashboard = () => {
 
   const handleSendNudge = async (userId: string) => {
     const { error } = await supabase.from("notifications").insert({
-      user_id: userId, title: "Let's get you booked! 🎾",
+      user_id: userId, title: "Let's get you booked!",
       body: "Your profile is looking great! Need help getting your first booking? Reply to this message and we'll feature you on the homepage.",
       link: "/coach",
     });
@@ -1174,7 +1174,7 @@ const FoundersDashboard = () => {
         <div className="bg-amber-500/20 border border-amber-500/40 rounded-lg px-4 py-3 mb-4 flex items-center gap-2">
           <Eye className="w-4 h-4 text-amber-400 shrink-0" />
           <p className="text-sm text-amber-300 font-body">
-            👁 Read-only shared view — expires in {getTokenExpiryText()}
+            Read-only shared view — expires in {getTokenExpiryText()}
           </p>
         </div>
       )}
@@ -1361,7 +1361,7 @@ const FoundersDashboard = () => {
                       <td className="p-2 text-right font-medium">€{c.revenue.toLocaleString()}</td>
                       <td className="p-2 text-right">{c.avgRating}</td>
                       <td className="p-2 text-center uppercase text-[9px]">{c.badge}</td>
-                      <td className="p-2 text-center">{c.verified ? "✓" : "—"}</td>
+                      <td className="p-2 text-center">{c.verified ? <CheckCircle2 size={14} className="text-green-400 mx-auto" /> : "—"}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -2026,7 +2026,7 @@ const FoundersDashboard = () => {
           <Card className="border-green-500/30">
             <CardContent className="p-4 flex items-center gap-2">
               <CheckCircle2 className="w-5 h-5 text-green-400" />
-              <p className="text-sm text-green-400 font-display">All systems healthy ✓</p>
+              <p className="text-sm text-green-400 font-display">All systems healthy</p>
             </CardContent>
           </Card>
         )}

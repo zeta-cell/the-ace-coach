@@ -169,7 +169,7 @@ const Dashboard = () => {
     for (const badge of newBadges) {
       await supabase.from("user_badges").insert({ user_id: user.id, badge_key: badge.key, badge_name: badge.name, badge_description: badge.desc });
       await supabase.rpc('award_xp', { p_user_id: user.id, p_amount: 30, p_event_type: 'badge_earned', p_description: `Badge: ${badge.name}` });
-      toast.success(`🏆 New badge earned: ${badge.name}!`);
+      toast.success(`New badge earned: ${badge.name}!`);
     }
   };
 
@@ -309,7 +309,7 @@ const Dashboard = () => {
             </div>
             <div className="flex-1">
               <h3 className="font-display text-sm text-foreground">{lvl.label.toUpperCase()} LEVEL</h3>
-              <p className="font-body text-xs text-muted-foreground">{nextLvl ? `${xpToNext} XP to ${nextLvl.label}` : "Max level reached! 🏆"}</p>
+              <p className="font-body text-xs text-muted-foreground">{nextLvl ? `${xpToNext} XP to ${nextLvl.label}` : "Max level reached!"}</p>
             </div>
             <Link to="/rewards" className="text-xs font-display text-primary tracking-wider hover:underline">REWARDS →</Link>
           </div>
@@ -370,7 +370,7 @@ const Dashboard = () => {
           </div>
           {earnedBadges.length === 0 ? (
             <div className="bg-card border border-dashed border-border rounded-xl p-4 text-center">
-              <p className="font-body text-xs text-muted-foreground">Complete sessions to earn your first badge! 🏅</p>
+              <p className="font-body text-xs text-muted-foreground">Complete sessions to earn your first badge!</p>
             </div>
           ) : (
             <div className="flex gap-2 overflow-x-auto pb-2">
@@ -469,7 +469,7 @@ const Dashboard = () => {
               ) : (
                 <>
                   <h2 className="font-display text-xl text-foreground mb-2">NO TRAINING TODAY</h2>
-                  <p className="font-body text-sm text-muted-foreground">Rest day or your coach hasn't assigned a plan yet. 💪</p>
+                  <p className="font-body text-sm text-muted-foreground">Rest day or your coach hasn't assigned a plan yet.</p>
                 </>
               )}
             </div>

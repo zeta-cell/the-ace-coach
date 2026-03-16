@@ -228,7 +228,7 @@ const AdminDashboard = () => {
   const verifyCoach = async (userId: string) => {
     await supabase.from("coach_profiles").update({ is_verified: true }).eq("user_id", userId);
     await supabase.rpc("award_xp", { p_user_id: userId, p_amount: 50, p_event_type: "profile_verified", p_description: "Profile verified by ACE" });
-    await supabase.from("notifications").insert({ user_id: userId, title: "Profile Verified! 🎉", body: "Your coach profile is now verified on ACE!", link: "/coach/profile" });
+    await supabase.from("notifications").insert({ user_id: userId, title: "Profile Verified!", body: "Your coach profile is now verified on ACE!", link: "/coach/profile" });
     toast.success("Coach verified");
     setUnverifiedCoaches(prev => prev.filter(c => c.user_id !== userId));
   };

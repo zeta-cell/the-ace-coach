@@ -446,7 +446,7 @@ const CoachPlanBuilder = () => {
     if (error) {
       toast.error("Fehler beim Speichern");
     } else {
-      toast.success("Saved ✓", { duration: 1500 });
+      toast.success("Saved", { duration: 1500 });
     }
   };
 

@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { motion } from "framer-motion";
 import {
   MapPin, Clock, Star, CheckCircle2, Share2, Globe, Award,
-  Users, Zap, Calendar, ArrowRight, Shield
+  Users, Zap, Calendar, ArrowRight, Shield, Circle, Grip, Layers
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -231,7 +231,7 @@ const PublicCoachProfile = () => {
         p_description: 'Wrote a coach review',
       });
 
-      toast({ title: 'Review submitted! +20 XP 🎉' });
+      toast({ title: 'Review submitted! +20 XP' });
       setReviewText('');
       setHasReviewed(true);
       fetchCoach();
@@ -335,7 +335,7 @@ const PublicCoachProfile = () => {
                 </span>
                 {(coach as any).primary_sport && (
                   <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-secondary text-xs font-display tracking-wider text-foreground">
-                    {(coach as any).primary_sport === "tennis" ? "🎾 Tennis" : (coach as any).primary_sport === "padel" ? "🏓 Padel" : "🎾🏓 Tennis & Padel"}
+                    {(coach as any).primary_sport === "tennis" ? <><Circle size={12} className="text-primary" /> Tennis</> : (coach as any).primary_sport === "padel" ? <><Grip size={12} className="text-accent-foreground" /> Padel</> : <><Layers size={12} className="text-primary" /> Tennis & Padel</>}
                   </span>
                 )}
               </div>
@@ -454,7 +454,7 @@ const PublicCoachProfile = () => {
                 <div className="space-y-2">
                   {certifications.map(cert => (
                     <div key={cert.id} className="flex items-center gap-2">
-                      <span className="text-primary shrink-0">✓</span>
+                      <CheckCircle2 size={14} className="text-primary shrink-0" />
                       <span className="font-body text-sm text-foreground font-medium">{cert.name}</span>
                       {(cert.issuing_body || cert.year_obtained) && (
                         <span className="font-body text-xs text-muted-foreground">
@@ -620,7 +620,7 @@ const PublicCoachProfile = () => {
                 </div>
               )}
               {user && hasReviewed && (
-                <p className="font-body text-xs text-chart-2 mb-4">✓ You have already reviewed this coach</p>
+                <p className="font-body text-xs text-chart-2 mb-4 flex items-center gap-1"><CheckCircle2 size={12} /> You have already reviewed this coach</p>
               )}
               {reviews.length === 0 ? (
                 <div className="bg-card border border-border rounded-2xl p-8 text-center">

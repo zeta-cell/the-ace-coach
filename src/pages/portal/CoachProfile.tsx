@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import {
   Camera, ExternalLink, Target, TrendingDown,
   Bell, BellOff, LogOut, Mail, Phone, Globe, Award, BookOpen, MessageCircle, Pencil, Plus,
-  Copy, ExternalLink as ExtLink, Link2
+  Copy, ExternalLink as ExtLink, Link2, CheckCircle2
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import PortalLayout from "@/components/portal/PortalLayout";
@@ -243,7 +243,7 @@ const CoachProfile = () => {
               <div className="flex items-center gap-2 mt-1 flex-wrap">
                 {coachData?.primary_sport && (
                   <span className="font-body text-[10px] bg-accent/20 text-accent-foreground px-2 py-0.5 rounded-full uppercase font-semibold">
-                    {coachData.primary_sport === "padel" ? "🏓 Padel" : "🎾 Tennis"} Coach
+                    {coachData.primary_sport === "padel" ? "Padel" : "Tennis"} Coach
                   </span>
                 )}
                 {coachData?.nationality && (
@@ -391,7 +391,7 @@ const CoachProfile = () => {
               {certifications.map(cert => (
                 <div key={cert.id} className="flex items-center justify-between p-3 rounded-lg bg-secondary">
                   <div className="flex items-center gap-2 min-w-0">
-                    <span className="text-primary shrink-0">✓</span>
+                    <CheckCircle2 size={14} className="text-primary shrink-0" />
                     <div className="min-w-0">
                       <p className="font-body text-sm text-foreground font-medium truncate">{cert.name}</p>
                       <p className="font-body text-[10px] text-muted-foreground">

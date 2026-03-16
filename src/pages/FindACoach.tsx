@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   MapPin, Search, Star, CheckCircle, Shield, Zap, Crown,
-  SlidersHorizontal, X, ChevronDown,
+  SlidersHorizontal, X, ChevronDown, Circle, Grip, Layers, Award,
 } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 
@@ -104,7 +104,7 @@ const CoachCardComponent = ({ coach }: { coach: CoachCard }) => {
             </span>
             {coach.primary_sport && (
               <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-secondary text-[10px] font-display tracking-wider text-muted-foreground">
-                {coach.primary_sport === "tennis" ? "🎾 TENNIS" : coach.primary_sport === "padel" ? "🏓 PADEL" : "🎾🏓 BOTH"}
+                {coach.primary_sport === "tennis" ? <><Circle size={10} className="text-primary" /> TENNIS</> : coach.primary_sport === "padel" ? <><Grip size={10} className="text-accent-foreground" /> PADEL</> : <><Layers size={10} className="text-primary" /> BOTH</>}
               </span>
             )}
             {coach.location_city && (
@@ -154,7 +154,7 @@ const CoachCardComponent = ({ coach }: { coach: CoachCard }) => {
 
       {coach.cert_count > 0 && (
         <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-body mb-4">
-          ✓ {coach.cert_count} certification{coach.cert_count > 1 ? "s" : ""}
+          <Award size={10} /> {coach.cert_count} certification{coach.cert_count > 1 ? "s" : ""}
         </span>
       )}
 

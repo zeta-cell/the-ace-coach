@@ -3,7 +3,7 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion } from "framer-motion";
-import { ArrowLeft, Target, TrendingDown, Calendar, CalendarDays, Plus, Mail, Phone, MessageCircle, ChevronDown, ChevronUp, User, BookOpen, CheckCircle, Video, Dumbbell } from "lucide-react";
+import { ArrowLeft, Target, TrendingDown, Calendar, CalendarDays, Plus, Mail, Phone, MessageCircle, ChevronDown, ChevronUp, User, BookOpen, CheckCircle, Video, Dumbbell, Globe } from "lucide-react";
 import UpcomingSchedule from "@/components/portal/UpcomingSchedule";
 import { format, addDays } from "date-fns";
 import PortalLayout from "@/components/portal/PortalLayout";
@@ -245,7 +245,7 @@ const CoachPlayerDetail = () => {
                 </div>
                 {playerData?.nationality && (
                   <div className="flex items-center gap-2 text-sm font-body text-foreground">
-                    <span className="text-muted-foreground shrink-0 w-3.5 text-center">🌍</span>
+                    <Globe size={14} className="text-muted-foreground shrink-0" />
                     <span>{playerData.nationality}</span>
                   </div>
                 )}

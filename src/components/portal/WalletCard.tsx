@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { Wallet, Copy, ArrowUpRight, ArrowDownLeft, Share2, MessageCircle } from "lucide-react";
+import { Wallet, Copy, ArrowUpRight, ArrowDownLeft, Share2, MessageCircle, Coins } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
 
@@ -144,8 +144,8 @@ const WalletCard = () => {
           </div>
 
           <div className="mt-3 pt-3 border-t border-border space-y-1">
-            <p className="font-body text-[10px] text-primary">💰 Earn €5 when a friend signs up</p>
-            <p className="font-body text-[10px] text-primary">💰 Earn €10 more when they book their first session</p>
+            <p className="font-body text-[10px] text-primary flex items-center gap-1"><Coins size={10} className="text-primary shrink-0" /> Earn €5 when a friend signs up</p>
+            <p className="font-body text-[10px] text-primary flex items-center gap-1"><Coins size={10} className="text-primary shrink-0" /> Earn €10 more when they book their first session</p>
           </div>
         </div>
       )}

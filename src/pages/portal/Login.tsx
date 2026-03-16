@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { motion } from "framer-motion";
-import { Eye, EyeOff, ArrowLeft } from "lucide-react";
+import { Eye, EyeOff, ArrowLeft, Circle, Dumbbell, Crown } from "lucide-react";
 import { toast } from "sonner";
 // Logo removed during cleanup
 
@@ -283,7 +283,7 @@ const Login = () => {
               className="flex flex-col items-center gap-1.5 p-3 rounded-xl border border-border bg-card hover:border-primary/50 hover:bg-primary/5 transition-all disabled:opacity-50"
             >
               <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
-                <span className="font-display text-sm">🎾</span>
+                <Circle size={18} className="text-primary" />
               </div>
               <span className="font-display text-[10px] tracking-wider text-foreground">PLAYER</span>
               <span className="text-[9px] font-body text-muted-foreground">Anna Müller</span>
@@ -295,7 +295,7 @@ const Login = () => {
               className="flex flex-col items-center gap-1.5 p-3 rounded-xl border border-border bg-card hover:border-primary/50 hover:bg-primary/5 transition-all disabled:opacity-50"
             >
               <div className="w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center">
-                <span className="font-display text-sm">🏋️</span>
+                <Dumbbell size={18} className="text-accent-foreground" />
               </div>
               <span className="font-display text-[10px] tracking-wider text-foreground">COACH</span>
               <span className="text-[9px] font-body text-muted-foreground">Francisco López</span>
@@ -307,7 +307,7 @@ const Login = () => {
               className="flex flex-col items-center gap-1.5 p-3 rounded-xl border border-border bg-card hover:border-primary/50 hover:bg-primary/5 transition-all disabled:opacity-50"
             >
               <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center">
-                <span className="font-display text-sm">👑</span>
+                <Crown size={18} className="text-amber-400" />
               </div>
               <span className="font-display text-[10px] tracking-wider text-foreground">FOUNDER</span>
               <span className="text-[9px] font-body text-muted-foreground">Admin Ace</span>

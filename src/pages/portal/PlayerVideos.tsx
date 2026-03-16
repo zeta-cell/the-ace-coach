@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
-import { Upload, Video, X, Play, MessageSquare, Loader2 } from "lucide-react";
+import { Upload, Video, X, Play, MessageSquare, Loader2, MessageCircle } from "lucide-react";
 import { format } from "date-fns";
 import { toast } from "sonner";
 import PortalLayout from "@/components/portal/PortalLayout";
@@ -223,7 +223,7 @@ const PlayerVideos = () => {
                     )}
                     {(commentCounts[v.id] || 0) > 0 && (
                       <span className="flex items-center gap-0.5 bg-card/90 text-foreground text-[9px] font-body px-1.5 py-0.5 rounded-full">
-                        💬 {commentCounts[v.id]}
+                        <MessageCircle size={10} className="text-primary" /> {commentCounts[v.id]}
                       </span>
                     )}
                     {v.coach_feedback && !hasCoachComments(v.id) && (
@@ -244,8 +244,8 @@ const PlayerVideos = () => {
                   </div>
                   <p className="font-display text-foreground">{v.title}</p>
                   {v.coach_feedback && (
-                    <p className="text-xs font-body text-primary mt-1 line-clamp-1">
-                      💬 Coach feedback available
+                    <p className="text-xs font-body text-primary mt-1 line-clamp-1 flex items-center gap-1">
+                      <MessageCircle size={10} /> Coach feedback available
                     </p>
                   )}
                 </div>

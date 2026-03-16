@@ -57,7 +57,7 @@ Deno.serve(async (req) => {
         user_metadata: { full_name: fullName },
       });
       if (error) {
-        created.push(`❌ ${email}: ${error.message}`);
+        created.push(`FAIL ${email}: ${error.message}`);
         return null;
       }
 
@@ -83,7 +83,7 @@ Deno.serve(async (req) => {
         { onConflict: "user_id" }
       );
 
-      created.push(`✅ ${email} (${role})`);
+      created.push(`OK ${email} (${role})`);
       return userId;
     };
 
@@ -669,7 +669,7 @@ Deno.serve(async (req) => {
       await admin.from("notifications").insert([
         { user_id: playerIds[i], title: "Training plan updated", body: "Coach Francisco updated your training plan for tomorrow. Check it out!", link: "/training" },
         { user_id: playerIds[i], title: "New event near you", body: "Spring Padel Tournament 2026 is now open for registration. Limited spots!", link: "/events" },
-        { user_id: playerIds[i], title: "Level up! 🎉", body: `Congratulations! You've earned enough XP to reach a new level. Keep training!`, link: "/dashboard" },
+        { user_id: playerIds[i], title: "Level up!", body: `Congratulations! You've earned enough XP to reach a new level. Keep training!`, link: "/dashboard" },
       ]);
     }
 
@@ -680,7 +680,7 @@ Deno.serve(async (req) => {
           { content: "Hi Francisco! I was wondering if we could focus on my backhand during our next session?", sender: "player" },
           { content: "Of course, Anna! I've noticed some room for improvement there too. I'll prepare some specific drills. Let's also work on your wrist position — it'll make a big difference.", sender: "coach" },
           { content: "That sounds great! Should I warm up with any specific exercises before we start?", sender: "player" },
-          { content: "Yes! Do the resistance band shoulder warm-up and some wrist circles. I've added them to your plan for that day. See you on court! 🎾", sender: "coach" },
+          { content: "Yes! Do the resistance band shoulder warm-up and some wrist circles. I've added them to your plan for that day. See you on court!", sender: "coach" },
         ]},
         { from: playerIds[1], to: coach1Id, messages: [
           { content: "Coach, I've been practicing the serve technique you showed me. Feeling much more consistent!", sender: "player" },

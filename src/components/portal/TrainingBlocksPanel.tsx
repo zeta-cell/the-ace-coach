@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
-import { Layers, Plus, Search, ChevronDown, ChevronRight, Save, X, Trash2 } from "lucide-react";
+import { Layers, Plus, Search, ChevronDown, ChevronRight, Save, X, Trash2, Target, Circle, Dumbbell, Leaf, Flame, Footprints, Brain, Star, BookOpen, Trophy, ClipboardList } from "lucide-react";
 import type { ModuleItem, BlockPlanItem as PlanItem } from "@/types/training";
 
 /* ── types ── */
@@ -36,11 +36,18 @@ const BLOCK_CATEGORY_COLORS: Record<string, { bg: string; text: string }> = {
   "Custom": { bg: "bg-muted", text: "text-muted-foreground" },
 };
 
-const GOAL_ICONS: Record<string, string> = {
-  "Match Preparation": "🎯", "Technique": "🎾", "Fitness": "💪",
-  "Recovery": "🧘", "Warm Up": "🔥", "Footwork": "👟",
-  "Mental": "🧠", "Kids": "⭐", "Beginner": "📘",
-  "Advanced": "🏆", "Custom": "📋",
+const GOAL_ICON_COMPONENTS: Record<string, { icon: typeof Target; color: string }> = {
+  "Match Preparation": { icon: Target, color: "text-amber-500" },
+  "Technique": { icon: Circle, color: "text-primary" },
+  "Fitness": { icon: Dumbbell, color: "text-orange-500" },
+  "Recovery": { icon: Leaf, color: "text-green-500" },
+  "Warm Up": { icon: Flame, color: "text-red-500" },
+  "Footwork": { icon: Footprints, color: "text-blue-500" },
+  "Mental": { icon: Brain, color: "text-purple-500" },
+  "Kids": { icon: Star, color: "text-yellow-500" },
+  "Beginner": { icon: BookOpen, color: "text-sky-500" },
+  "Advanced": { icon: Trophy, color: "text-rose-500" },
+  "Custom": { icon: ClipboardList, color: "text-muted-foreground" },
 };
 
 interface TrainingBlocksPanelProps {
@@ -139,7 +146,7 @@ const TrainingBlocksPanel = ({ onApplyBlock, onSaveAsBlock, modules, isOpen = tr
             <div key={goal}>
               <button onClick={() => setExpandedGoal(expandedGoal === goal ? null : goal)}
                 className="w-full flex items-center gap-2 p-2 rounded-lg hover:bg-secondary transition-colors">
-                <span className="text-sm">{GOAL_ICONS[goal] || "📋"}</span>
+                {(() => { const gi = GOAL_ICON_COMPONENTS[goal] || GOAL_ICON_COMPONENTS["Custom"]; const Icon = gi.icon; return <Icon size={14} className={gi.color} />; })()}
                 <span className="font-display text-[10px] tracking-wider text-foreground flex-1 text-left">{goal.toUpperCase()}</span>
                 <span className="text-[10px] font-body text-muted-foreground mr-1">{goalBlocks.length}</span>
                 {expandedGoal === goal ? <ChevronDown size={12} className="text-muted-foreground" /> : <ChevronRight size={12} className="text-muted-foreground" />}

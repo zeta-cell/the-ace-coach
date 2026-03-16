@@ -2,6 +2,7 @@ import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
+import { Circle, Grip, Layers } from "lucide-react";
 
 interface SportPickerModalProps {
   userId: string;
@@ -108,7 +109,7 @@ const SportPickerModal = ({ userId, onComplete }: SportPickerModalProps) => {
       }
 
       const label = sport === "both" ? "Tennis & Padel" : sport.charAt(0).toUpperCase() + sport.slice(1);
-      toast.success(`Your ${label} library is ready! 🎾`);
+      toast.success(`Your ${label} library is ready!`);
       onComplete();
     } catch {
       toast.error("Something went wrong, please try again.");
@@ -132,7 +133,7 @@ const SportPickerModal = ({ userId, onComplete }: SportPickerModalProps) => {
         >
           <div className="space-y-2">
             <h1 className="font-display text-3xl text-foreground tracking-wide">
-              WELCOME TO ACE! 🎾
+              WELCOME TO ACE!
             </h1>
             <p className="font-body text-sm text-muted-foreground">
               What sport do you coach?
@@ -145,7 +146,7 @@ const SportPickerModal = ({ userId, onComplete }: SportPickerModalProps) => {
               disabled={saving}
               className="flex flex-col items-center gap-2 p-6 rounded-2xl border-2 border-border bg-card hover:border-primary/60 hover:bg-primary/5 transition-all disabled:opacity-50"
             >
-              <span className="text-4xl">🎾</span>
+              <Circle size={32} className="text-primary" />
               <span className="font-display text-sm tracking-wider text-foreground">TENNIS</span>
             </button>
             <button
@@ -153,7 +154,7 @@ const SportPickerModal = ({ userId, onComplete }: SportPickerModalProps) => {
               disabled={saving}
               className="flex flex-col items-center gap-2 p-6 rounded-2xl border-2 border-border bg-card hover:border-primary/60 hover:bg-primary/5 transition-all disabled:opacity-50"
             >
-              <span className="text-4xl">🏓</span>
+              <Grip size={32} className="text-accent-foreground" />
               <span className="font-display text-sm tracking-wider text-foreground">PADEL</span>
             </button>
           </div>
@@ -163,7 +164,7 @@ const SportPickerModal = ({ userId, onComplete }: SportPickerModalProps) => {
             disabled={saving}
             className="w-full flex items-center justify-center gap-2 p-4 rounded-2xl border-2 border-border bg-card hover:border-primary/60 hover:bg-primary/5 transition-all disabled:opacity-50"
           >
-            <span className="text-xl">🎾🏓</span>
+            <Layers size={20} className="text-primary" />
             <span className="font-display text-sm tracking-wider text-foreground">BOTH SPORTS</span>
           </button>
 
