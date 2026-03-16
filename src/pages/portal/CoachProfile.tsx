@@ -22,6 +22,8 @@ interface Certification {
   year_obtained: number | null;
   certificate_url: string | null;
 }
+
+interface CoachData {
   bio: string | null;
   coaching_style: string | null;
   certifications: string[];
