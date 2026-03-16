@@ -128,6 +128,44 @@ export type Database = {
           },
         ]
       }
+      booking_participant_feedback: {
+        Row: {
+          booking_id: string
+          coach_id: string
+          created_at: string | null
+          id: string
+          notes: string | null
+          player_id: string
+          rating: number | null
+        }
+        Insert: {
+          booking_id: string
+          coach_id: string
+          created_at?: string | null
+          id?: string
+          notes?: string | null
+          player_id: string
+          rating?: number | null
+        }
+        Update: {
+          booking_id?: string
+          coach_id?: string
+          created_at?: string | null
+          id?: string
+          notes?: string | null
+          player_id?: string
+          rating?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "booking_participant_feedback_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: true
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       booking_waitlist: {
         Row: {
           coach_id: string
@@ -301,9 +339,13 @@ export type Database = {
           duration_minutes: number
           id: string
           is_active: boolean
+          is_recurring_group: boolean | null
           max_group_size: number | null
+          min_participants: number | null
           price_per_session: number
           pricing_type: string | null
+          recurring_day_of_week: number | null
+          recurring_start_time: string | null
           session_type: Database["public"]["Enums"]["session_type"]
           sport: Database["public"]["Enums"]["sport_type"]
           title: string
@@ -318,9 +360,13 @@ export type Database = {
           duration_minutes?: number
           id?: string
           is_active?: boolean
+          is_recurring_group?: boolean | null
           max_group_size?: number | null
+          min_participants?: number | null
           price_per_session?: number
           pricing_type?: string | null
+          recurring_day_of_week?: number | null
+          recurring_start_time?: string | null
           session_type?: Database["public"]["Enums"]["session_type"]
           sport?: Database["public"]["Enums"]["sport_type"]
           title: string
@@ -335,9 +381,13 @@ export type Database = {
           duration_minutes?: number
           id?: string
           is_active?: boolean
+          is_recurring_group?: boolean | null
           max_group_size?: number | null
+          min_participants?: number | null
           price_per_session?: number
           pricing_type?: string | null
+          recurring_day_of_week?: number | null
+          recurring_start_time?: string | null
           session_type?: Database["public"]["Enums"]["session_type"]
           sport?: Database["public"]["Enums"]["sport_type"]
           title?: string
