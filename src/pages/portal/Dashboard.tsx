@@ -169,7 +169,7 @@ const Dashboard = () => {
     for (const badge of newBadges) {
       await supabase.from("user_badges").insert({ user_id: user.id, badge_key: badge.key, badge_name: badge.name, badge_description: badge.desc });
       await supabase.rpc('award_xp', { p_user_id: user.id, p_amount: 30, p_event_type: 'badge_earned', p_description: `Badge: ${badge.name}` });
-      toast.success(`🏆 New badge earned: ${badge.name}!`);
+      toast.success(`New badge earned: ${badge.name}!`);
     }
   };
 
