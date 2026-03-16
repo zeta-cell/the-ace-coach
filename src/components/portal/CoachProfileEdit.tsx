@@ -146,6 +146,7 @@ const CoachProfileEdit = ({ open, onClose, coachData, onSaved }: Props) => {
       const { error } = await supabase
         .from("coach_profiles")
         .update({
+          primary_sport: form.primary_sport || null,
           profile_slug: form.profile_slug || null,
           location_city: form.location_city || null,
           location_country: form.location_country || null,
