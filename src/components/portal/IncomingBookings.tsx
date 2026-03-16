@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion } from "framer-motion";
-import { Calendar, MapPin, Users, Link2, Copy } from "lucide-react";
+import { Calendar, MapPin, Users, Link2, Copy, MessageSquare } from "lucide-react";
 import { format, startOfWeek, endOfWeek } from "date-fns";
 import { toast } from "sonner";
+import GroupFeedbackDrawer from "./GroupFeedbackDrawer";
 
 interface Booking {
   id: string;
@@ -22,6 +23,7 @@ interface Booking {
   location_type: string | null;
   package_id: string | null;
   max_group_size: number | null;
+  player_id: string;
 }
 
 interface GroupedBooking {
@@ -36,7 +38,7 @@ interface GroupedBooking {
   currency: string;
   price_per_person: number;
   location_type: string | null;
-  participants: { id: string; name: string; avatar: string | null; status: string }[];
+  participants: { id: string; name: string; avatar: string | null; status: string; player_id: string }[];
   totalRevenue: number;
   totalPayout: number;
 }
@@ -46,6 +48,7 @@ const IncomingBookings = () => {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [weekSummary, setWeekSummary] = useState({ count: 0, income: 0 });
   const [coachSlug, setCoachSlug] = useState<string | null>(null);
+  const [feedbackGroup, setFeedbackGroup] = useState<GroupedBooking | null>(null);
 
   useEffect(() => {
     if (user) {
@@ -95,6 +98,7 @@ const IncomingBookings = () => {
         package_title: pkg?.title || "Session",
         session_type: pkg?.session_type || "individual",
         max_group_size: pkg?.max_group_size || null,
+        player_id: b.player_id,
       };
     });
 
@@ -127,6 +131,26 @@ const IncomingBookings = () => {
   const handleCancelGroupBooking = async (bookingId: string, packageId: string, bookingDate: string) => {
     await supabase.from("bookings").update({ status: "cancelled", cancelled_by: user?.id, cancelled_at: new Date().toISOString() }).eq("id", bookingId);
     
+    // Notify other group participants about the change
+    const { data: otherBookings } = await supabase
+      .from("bookings")
+      .select("player_id")
+      .eq("package_id", packageId)
+      .eq("booking_date", bookingDate)
+      .in("status", ["confirmed", "pending"])
+      .neq("id", bookingId);
+
+    if (otherBookings && otherBookings.length > 0) {
+      await Promise.all(otherBookings.map(ob =>
+        supabase.from("notifications").insert({
+          user_id: ob.player_id,
+          title: "Group session update",
+          body: `A participant left your group session on ${bookingDate}. A spot has opened up.`,
+          link: "/dashboard",
+        })
+      ));
+    }
+
     // Check waitlist
     const { data: waitlistEntry } = await supabase
       .from("booking_waitlist")
@@ -196,7 +220,7 @@ const IncomingBookings = () => {
       price_per_person: Number(first.total_price),
       location_type: first.location_type,
       participants: groupBookings.map(b => ({
-        id: b.id, name: b.player_name, avatar: b.player_avatar, status: b.status,
+        id: b.id, name: b.player_name, avatar: b.player_avatar, status: b.status, player_id: b.player_id,
       })),
       totalRevenue: groupBookings.reduce((s, b) => s + Number(b.total_price), 0),
       totalPayout: groupBookings.reduce((s, b) => s + Number(b.coach_payout), 0),
@@ -272,9 +296,19 @@ const IncomingBookings = () => {
                 <span className="font-body text-xs text-muted-foreground">
                   Revenue: {currencySymbol(g.currency)}{g.totalRevenue.toFixed(0)} ({g.participants.length} × {currencySymbol(g.currency)}{g.price_per_person.toFixed(0)})
                 </span>
-                <span className="font-body text-[9px] text-muted-foreground">
-                  Your cut: {currencySymbol(g.currency)}{g.totalPayout.toFixed(0)}
-                </span>
+                <div className="flex items-center gap-2">
+                  {new Date(`${g.booking_date}T${g.end_time}`) < new Date() && (
+                    <button
+                      onClick={() => setFeedbackGroup(g)}
+                      className="flex items-center gap-1 px-2 py-1 rounded text-[8px] font-display bg-chart-2/10 text-chart-2 hover:bg-chart-2/20 transition-colors"
+                    >
+                      <MessageSquare size={9} /> FEEDBACK
+                    </button>
+                  )}
+                  <span className="font-body text-[9px] text-muted-foreground">
+                    Your cut: {currencySymbol(g.currency)}{g.totalPayout.toFixed(0)}
+                  </span>
+                </div>
               </div>
             </div>
           );
@@ -327,6 +361,22 @@ const IncomingBookings = () => {
           );
         })}
       </div>
+
+      {/* Group Feedback Drawer */}
+      {feedbackGroup && (
+        <GroupFeedbackDrawer
+          open={!!feedbackGroup}
+          onClose={() => setFeedbackGroup(null)}
+          participants={feedbackGroup.participants.map(p => ({
+            bookingId: p.id,
+            name: p.name,
+            avatar: p.avatar,
+            playerId: p.player_id,
+          }))}
+          sessionTitle={feedbackGroup.package_title}
+          sessionDate={format(new Date(feedbackGroup.booking_date + "T00:00:00"), "EEE d MMM")}
+        />
+      )}
     </motion.div>
   );
 };

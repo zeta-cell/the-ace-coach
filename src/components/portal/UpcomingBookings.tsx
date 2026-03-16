@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion } from "framer-motion";
-import { Calendar, X } from "lucide-react";
+import { Calendar, X, Users } from "lucide-react";
 import { format, differenceInHours } from "date-fns";
 import { toast } from "sonner";
 
@@ -21,6 +21,9 @@ interface BookingItem {
   package_title: string;
   session_type: string;
   event_id?: string;
+  package_id?: string | null;
+  max_group_size?: number | null;
+  group_participants?: { name: string; avatar: string | null }[];
 }
 
 const UpcomingBookings = () => {
@@ -43,7 +46,7 @@ const UpcomingBookings = () => {
       .in("status", ["pending", "confirmed"])
       .gte("booking_date", today)
       .order("booking_date")
-      .limit(5);
+      .limit(10);
 
     let bookingItems: BookingItem[] = [];
 
@@ -53,15 +56,48 @@ const UpcomingBookings = () => {
 
       const [profilesRes, pkgsRes] = await Promise.all([
         supabase.from("profiles").select("user_id, full_name, avatar_url").in("user_id", coachIds),
-        pkgIds.length > 0 ? supabase.from("coach_packages").select("id, title, session_type").in("id", pkgIds) : { data: [] },
+        pkgIds.length > 0 ? supabase.from("coach_packages").select("id, title, session_type, max_group_size").in("id", pkgIds) : { data: [] },
       ]);
 
       const profileMap = new Map(profilesRes.data?.map(p => [p.user_id, p]) || []);
       const pkgMap = new Map((pkgsRes.data || []).map(p => [p.id, p]));
 
+      // Fetch group co-participants for group bookings
+      const groupPkgBookings = data.filter(b => {
+        const pkg = pkgMap.get(b.package_id);
+        return pkg && pkg.session_type === "group" && (pkg.max_group_size || 0) > 1;
+      });
+
+      const coParticipantMap = new Map<string, { name: string; avatar: string | null }[]>();
+      if (groupPkgBookings.length > 0) {
+        for (const b of groupPkgBookings) {
+          const { data: others } = await supabase
+            .from("bookings")
+            .select("player_id")
+            .eq("package_id", b.package_id!)
+            .eq("booking_date", b.booking_date)
+            .in("status", ["pending", "confirmed"])
+            .neq("player_id", user.id);
+
+          if (others && others.length > 0) {
+            const otherIds = others.map(o => o.player_id);
+            const { data: otherProfiles } = await supabase
+              .from("profiles")
+              .select("user_id, full_name, avatar_url")
+              .in("user_id", otherIds);
+
+            coParticipantMap.set(`${b.package_id}_${b.booking_date}`, (otherProfiles || []).map(p => ({
+              name: p.full_name,
+              avatar: p.avatar_url,
+            })));
+          }
+        }
+      }
+
       bookingItems = data.map(b => {
         const coach = profileMap.get(b.coach_id);
         const pkg = pkgMap.get(b.package_id);
+        const coParticipants = coParticipantMap.get(`${b.package_id}_${b.booking_date}`) || [];
         return {
           id: b.id,
           type: "booking" as const,
@@ -75,6 +111,9 @@ const UpcomingBookings = () => {
           coach_avatar: coach?.avatar_url || null,
           package_title: pkg?.title || "Session",
           session_type: pkg?.session_type || "individual",
+          package_id: b.package_id,
+          max_group_size: pkg?.max_group_size || null,
+          group_participants: coParticipants,
         };
       });
     }
@@ -204,6 +243,11 @@ const UpcomingBookings = () => {
                         {b.package_title}
                       </span>
                     )}
+                    {b.session_type === "group" && b.max_group_size && (
+                      <span className="text-[9px] font-display font-semibold bg-chart-2/10 text-chart-2 px-2 py-0.5 rounded-full uppercase flex items-center gap-0.5">
+                        <Users size={8} /> GROUP
+                      </span>
+                    )}
                     <span className={`text-[9px] font-body font-semibold px-2 py-0.5 rounded-full uppercase ${b.status === "confirmed" ? "bg-green-500/10 text-green-400" : "bg-yellow-500/10 text-yellow-400"}`}>
                       {b.status === "confirmed" ? "CONFIRMED" : "PENDING PAYMENT"}
                     </span>
@@ -221,6 +265,39 @@ const UpcomingBookings = () => {
                   )}
                 </div>
               </div>
+              {/* Group co-participants */}
+              {b.session_type === "group" && b.group_participants && b.group_participants.length > 0 && (
+                <div className="mt-2 pt-2 border-t border-border">
+                  <p className="font-body text-[10px] text-muted-foreground mb-1.5">Also joining:</p>
+                  <div className="flex items-center gap-1.5">
+                    {b.group_participants.slice(0, 5).map((p, i) => (
+                      <div key={i} className="w-6 h-6 rounded-full bg-primary/20 overflow-hidden flex items-center justify-center shrink-0" title={p.name}>
+                        {p.avatar ? (
+                          <img src={p.avatar} alt="" className="w-full h-full object-cover" />
+                        ) : (
+                          <span className="font-display text-[8px] text-primary">{p.name.charAt(0)}</span>
+                        )}
+                      </div>
+                    ))}
+                    <span className="font-body text-[9px] text-muted-foreground ml-1">
+                      {b.group_participants.map(p => p.name.split(' ')[0]).join(', ')}
+                    </span>
+                  </div>
+                  {b.max_group_size && (
+                    <div className="flex items-center gap-1 mt-1.5">
+                      {Array.from({ length: b.max_group_size }).map((_, i) => (
+                        <div
+                          key={i}
+                          className={`w-3 h-3 rounded-full ${i < (b.group_participants!.length + 1) ? "bg-primary" : "bg-muted border border-border"}`}
+                        />
+                      ))}
+                      <span className="font-body text-[9px] text-muted-foreground ml-1">
+                        {b.group_participants.length + 1}/{b.max_group_size} spots
+                      </span>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           );
         })}

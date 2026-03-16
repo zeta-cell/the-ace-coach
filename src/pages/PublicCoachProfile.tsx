@@ -56,6 +56,8 @@ interface Package {
   description: string | null;
   total_sessions: number | null;
   max_group_size: number | null;
+  min_participants: number | null;
+  spots_taken?: number;
 }
 
 interface Review {
@@ -131,14 +133,36 @@ const PublicCoachProfile = () => {
 
     const [profileRes, packagesRes, reviewsRes, eventsRes] = await Promise.all([
       supabase.from("profiles").select("full_name, avatar_url").eq("user_id", coachData.user_id).single(),
-      supabase.from("coach_packages").select("*").eq("coach_id", coachData.user_id).eq("is_active", true).order("price_per_session"),
+      supabase.from("coach_packages").select("id, title, session_type, sport, duration_minutes, price_per_session, currency, description, total_sessions, max_group_size, min_participants").eq("coach_id", coachData.user_id).eq("is_active", true).order("price_per_session"),
       supabase.from("reviews").select("*").eq("coach_id", coachData.user_id).order("created_at", { ascending: false }),
       supabase.from("events").select("*").eq("coach_id", coachData.user_id).eq("status", "published").gte("start_datetime", new Date().toISOString()).order("start_datetime").limit(3),
     ]);
 
     if (profileRes.data) setProfile(profileRes.data as Profile);
-    if (packagesRes.data) setPackages(packagesRes.data as unknown as Package[]);
     if (eventsRes.data) setCoachEvents(eventsRes.data as any[]);
+
+    // Fetch live group spots for group packages
+    let pkgsWithSpots: Package[] = (packagesRes.data || []) as unknown as Package[];
+    const groupPkgs = pkgsWithSpots.filter(p => p.session_type === "group" && (p.max_group_size || 0) > 1);
+    if (groupPkgs.length > 0) {
+      const today = new Date().toISOString().split("T")[0];
+      const spotsPromises = groupPkgs.map(async (pkg) => {
+        const { count } = await supabase
+          .from("bookings")
+          .select("id", { count: "exact", head: true })
+          .eq("package_id", pkg.id)
+          .gte("booking_date", today)
+          .in("status", ["confirmed", "pending"]);
+        return { id: pkg.id, spots: count || 0 };
+      });
+      const spotsResults = await Promise.all(spotsPromises);
+      const spotsMap = new Map(spotsResults.map(s => [s.id, s.spots]));
+      pkgsWithSpots = pkgsWithSpots.map(p => ({
+        ...p,
+        spots_taken: spotsMap.get(p.id) || 0,
+      }));
+    }
+    setPackages(pkgsWithSpots);
 
     // Track page view for founder analytics
     supabase.from('page_views').insert({
@@ -449,9 +473,24 @@ const PublicCoachProfile = () => {
                               <p className="font-body text-[10px] text-muted-foreground">{pkg.total_sessions} sessions total</p>
                             )}
                             {pkg.max_group_size && (
-                              <p className="font-body text-[10px] text-muted-foreground flex items-center gap-1">
-                                <Users size={10} /> Max {pkg.max_group_size}
-                              </p>
+                              <div className="mt-1">
+                                <div className="flex items-center gap-1">
+                                  {Array.from({ length: pkg.max_group_size }).map((_, i) => (
+                                    <div
+                                      key={i}
+                                      className={`w-2.5 h-2.5 rounded-full ${i < (pkg.spots_taken || 0) ? "bg-primary" : "bg-muted border border-border"}`}
+                                    />
+                                  ))}
+                                  <span className="font-body text-[9px] text-muted-foreground ml-1">
+                                    {pkg.spots_taken || 0}/{pkg.max_group_size}
+                                  </span>
+                                </div>
+                                {pkg.min_participants && (pkg.spots_taken || 0) < pkg.min_participants && (
+                                  <p className="font-body text-[9px] text-chart-4 mt-0.5">
+                                    Min {pkg.min_participants} needed
+                                  </p>
+                                )}
+                              </div>
                             )}
                           </div>
                           <Link

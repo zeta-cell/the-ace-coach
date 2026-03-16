@@ -29,6 +29,7 @@ const CoachPackageDialog = ({ open, onClose, onSave, editing, saving }: Props) =
     currency: "EUR",
     description: "",
     max_group_size: null as number | null,
+    min_participants: null as number | null,
   });
 
   useEffect(() => {
@@ -43,12 +44,13 @@ const CoachPackageDialog = ({ open, onClose, onSave, editing, saving }: Props) =
         currency: editing.currency,
         description: editing.description || "",
         max_group_size: editing.max_group_size,
+        min_participants: (editing as any).min_participants || null,
       });
     } else {
       setForm({
         title: "", session_type: "individual", sport: "padel",
         duration_minutes: 60, price_per_session: 0, total_sessions: null,
-        currency: "EUR", description: "", max_group_size: null,
+        currency: "EUR", description: "", max_group_size: null, min_participants: null,
       });
     }
   }, [editing, open]);
@@ -147,9 +149,15 @@ const CoachPackageDialog = ({ open, onClose, onSave, editing, saving }: Props) =
           </div>
 
           {form.session_type === "group" && (
-            <div>
-              <label className="font-display text-xs tracking-wider text-muted-foreground">MAX GROUP SIZE</label>
-              <Input type="number" value={form.max_group_size ?? ""} onChange={(e) => set("max_group_size", e.target.value ? Number(e.target.value) : null)} placeholder="e.g. 6" className="mt-1.5 h-9 text-sm" min={2} />
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="font-display text-xs tracking-wider text-muted-foreground">MAX GROUP SIZE</label>
+                <Input type="number" value={form.max_group_size ?? ""} onChange={(e) => set("max_group_size", e.target.value ? Number(e.target.value) : null)} placeholder="e.g. 6" className="mt-1.5 h-9 text-sm" min={2} />
+              </div>
+              <div>
+                <label className="font-display text-xs tracking-wider text-muted-foreground">MIN PARTICIPANTS</label>
+                <Input type="number" value={form.min_participants ?? ""} onChange={(e) => set("min_participants", e.target.value ? Number(e.target.value) : null)} placeholder="e.g. 2" className="mt-1.5 h-9 text-sm" min={1} />
+              </div>
             </div>
           )}
 
