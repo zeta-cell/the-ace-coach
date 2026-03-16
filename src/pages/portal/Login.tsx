@@ -272,17 +272,47 @@ const Login = () => {
           </form>
         )}
 
-        {/* Bootstrap admin - first time setup */}
+        {/* Quick Login Cards */}
         <div className="mt-8 pt-6 border-t border-border">
-          <p className="text-muted-foreground text-xs font-body mb-2 text-center">First time setup</p>
-          <button
-            type="button"
-            onClick={handleBootstrap}
-            disabled={bootstrapping}
-            className="w-full py-2.5 rounded-lg border border-border text-muted-foreground font-body text-xs hover:bg-card transition-colors disabled:opacity-50"
-          >
-            {bootstrapping ? 'Creating admin account...' : 'Bootstrap admin@the-ace.academy'}
-          </button>
+          <p className="text-muted-foreground text-xs font-body mb-3 text-center uppercase tracking-wider">Quick Access — Demo Accounts</p>
+          <div className="grid grid-cols-3 gap-2">
+            <button
+              type="button"
+              onClick={() => handleQuickLogin("player.anna@the-ace.academy", "/dashboard")}
+              disabled={loading}
+              className="flex flex-col items-center gap-1.5 p-3 rounded-xl border border-border bg-card hover:border-primary/50 hover:bg-primary/5 transition-all disabled:opacity-50"
+            >
+              <div className="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center">
+                <span className="text-emerald-400 font-display text-sm">🎾</span>
+              </div>
+              <span className="font-display text-[10px] tracking-wider text-foreground">PLAYER</span>
+              <span className="text-[9px] font-body text-muted-foreground">Anna Müller</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => handleQuickLogin("coach.francisco@the-ace.academy", "/coach")}
+              disabled={loading}
+              className="flex flex-col items-center gap-1.5 p-3 rounded-xl border border-border bg-card hover:border-primary/50 hover:bg-primary/5 transition-all disabled:opacity-50"
+            >
+              <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center">
+                <span className="text-blue-400 font-display text-sm">🏋️</span>
+              </div>
+              <span className="font-display text-[10px] tracking-wider text-foreground">COACH</span>
+              <span className="text-[9px] font-body text-muted-foreground">Francisco López</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => handleQuickLogin("admin@the-ace.academy", "/founders")}
+              disabled={loading}
+              className="flex flex-col items-center gap-1.5 p-3 rounded-xl border border-border bg-card hover:border-primary/50 hover:bg-primary/5 transition-all disabled:opacity-50"
+            >
+              <div className="w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center">
+                <span className="text-amber-400 font-display text-sm">👑</span>
+              </div>
+              <span className="font-display text-[10px] tracking-wider text-foreground">FOUNDER</span>
+              <span className="text-[9px] font-body text-muted-foreground">Admin Ace</span>
+            </button>
+          </div>
         </div>
       </motion.div>
     </div>
