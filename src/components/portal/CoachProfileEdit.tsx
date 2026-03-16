@@ -84,6 +84,7 @@ const CoachProfileEdit = ({ open, onClose, coachData, onSaved }: Props) => {
   const [saving, setSaving] = useState(false);
   const [slugError, setSlugError] = useState("");
   const [form, setForm] = useState<CoachEditData>({
+    primary_sport: coachData?.primary_sport || "",
     profile_slug: coachData?.profile_slug || "",
     location_city: coachData?.location_city || "",
     location_country: coachData?.location_country || "",
