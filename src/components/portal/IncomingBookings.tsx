@@ -359,6 +359,22 @@ const IncomingBookings = () => {
           );
         })}
       </div>
+
+      {/* Group Feedback Drawer */}
+      {feedbackGroup && (
+        <GroupFeedbackDrawer
+          open={!!feedbackGroup}
+          onClose={() => setFeedbackGroup(null)}
+          participants={feedbackGroup.participants.map(p => ({
+            bookingId: p.id,
+            name: p.name,
+            avatar: p.avatar,
+            playerId: "", // We need player_id - stored in booking
+          }))}
+          sessionTitle={feedbackGroup.package_title}
+          sessionDate={format(new Date(feedbackGroup.booking_date + "T00:00:00"), "EEE d MMM")}
+        />
+      )}
     </motion.div>
   );
 };
