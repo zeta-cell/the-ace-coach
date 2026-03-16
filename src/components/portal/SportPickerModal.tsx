@@ -133,7 +133,7 @@ const SportPickerModal = ({ userId, onComplete }: SportPickerModalProps) => {
         >
           <div className="space-y-2">
             <h1 className="font-display text-3xl text-foreground tracking-wide">
-              WELCOME TO ACE! 🎾
+              WELCOME TO ACE!
             </h1>
             <p className="font-body text-sm text-muted-foreground">
               What sport do you coach?
