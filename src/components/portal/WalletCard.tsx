@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { Wallet, Copy, ArrowUpRight, ArrowDownLeft, Share2, MessageCircle } from "lucide-react";
+import { Wallet, Copy, ArrowUpRight, ArrowDownLeft, Share2, MessageCircle, Coins } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
 
