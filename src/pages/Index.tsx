@@ -1,6 +1,9 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Search, Calendar, Shield, Users, Trophy, Zap, MapPin, ArrowRight } from "lucide-react";
+import heroPadel from "@/assets/hero-padel.jpg";
+import featuresTennis from "@/assets/features-tennis.jpg";
+import ctaCourt from "@/assets/cta-court.jpg";
 
 const features = [
   { icon: Search, title: "FIND YOUR COACH", desc: "Search by sport, location, language, availability & price. Tennis or Padel — your perfect match awaits." },
@@ -38,18 +41,24 @@ const Index = () => {
         </div>
       </nav>
 
-      {/* Hero */}
-      <section className="pt-32 pb-20 px-6 relative">
-        <div className="absolute top-20 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-primary/5 rounded-full blur-3xl" />
+      {/* Hero — full-bleed image */}
+      <section className="relative min-h-[100vh] flex items-end">
+        <img
+          src={heroPadel}
+          alt="Padel player mid-swing on clay court"
+          className="absolute inset-0 w-full h-full object-cover"
+          loading="eager"
+        />
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
 
-        <div className="max-w-5xl mx-auto text-center relative">
+        <div className="relative z-10 w-full max-w-5xl mx-auto px-6 pb-16 pt-32">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7 }}
           >
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary font-body text-xs tracking-wider mb-8">
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/20 text-primary font-body text-xs tracking-wider mb-6 backdrop-blur-sm">
               <MapPin size={14} /> TENNIS & PADEL COACHING PLATFORM
             </span>
             <h1 className="font-display text-5xl md:text-7xl lg:text-8xl leading-[0.9] mb-6">
@@ -59,11 +68,11 @@ const Index = () => {
               <br />
               ANYWHERE
             </h1>
-            <p className="font-body text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10">
+            <p className="font-body text-lg md:text-xl text-muted-foreground max-w-2xl mb-10">
               The all-in-one platform for tennis & padel players to discover coaches,
               book sessions, track progress, and level up their game.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-4">
               <Link
                 to="/find-a-coach"
                 className="inline-flex items-center justify-center gap-2 font-display text-sm tracking-widest bg-primary text-primary-foreground px-8 py-3.5 rounded-xl hover:bg-primary/90 transition-colors"
@@ -72,7 +81,7 @@ const Index = () => {
               </Link>
               <Link
                 to="/login"
-                className="inline-flex items-center justify-center gap-2 font-display text-sm tracking-widest bg-secondary text-foreground px-8 py-3.5 rounded-xl hover:bg-secondary/80 transition-colors"
+                className="inline-flex items-center justify-center gap-2 font-display text-sm tracking-widest bg-foreground/10 text-foreground px-8 py-3.5 rounded-xl hover:bg-foreground/20 transition-colors backdrop-blur-sm"
               >
                 I'M A COACH
               </Link>
@@ -100,9 +109,17 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Features */}
-      <section className="py-20 px-6">
-        <div className="max-w-6xl mx-auto">
+      {/* Features — with background image */}
+      <section className="relative py-24 px-6 overflow-hidden">
+        <img
+          src={featuresTennis}
+          alt="Tennis racket close-up"
+          className="absolute inset-0 w-full h-full object-cover opacity-15"
+          loading="lazy"
+        />
+        <div className="absolute inset-0 bg-background/80" />
+
+        <div className="relative z-10 max-w-6xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -125,7 +142,7 @@ const Index = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.08 }}
-                className="group bg-card border border-border rounded-xl p-6 hover:border-primary/30 transition-colors"
+                className="group bg-card/70 backdrop-blur-sm border border-border rounded-xl p-6 hover:border-primary/30 transition-colors"
               >
                 <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
                   <f.icon size={20} className="text-primary" />
@@ -176,9 +193,17 @@ const Index = () => {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-24 px-6">
-        <div className="max-w-3xl mx-auto text-center">
+      {/* CTA — full-bleed image */}
+      <section className="relative py-32 px-6 overflow-hidden">
+        <img
+          src={ctaCourt}
+          alt="Padel court at night with dramatic lighting"
+          className="absolute inset-0 w-full h-full object-cover"
+          loading="lazy"
+        />
+        <div className="absolute inset-0 bg-background/70 backdrop-blur-[2px]" />
+
+        <div className="relative z-10 max-w-3xl mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
