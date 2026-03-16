@@ -8,6 +8,7 @@ import { toast } from "@/hooks/use-toast";
 import { X, Plus } from "lucide-react";
 
 interface CoachEditData {
+  primary_sport: string;
   profile_slug: string;
   location_city: string;
   location_country: string;
