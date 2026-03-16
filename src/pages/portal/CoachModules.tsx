@@ -39,6 +39,7 @@ const CATEGORY_COLORS: Record<string, string> = {
   cool_down: "bg-teal-500/20 text-teal-400",
   nutrition: "bg-lime-500/20 text-lime-400",
   video: "bg-pink-500/20 text-pink-400",
+  tennis_drill: "bg-emerald-500/20 text-emerald-400",
 };
 
 interface Module {
