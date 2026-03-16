@@ -149,9 +149,15 @@ const CoachPackageDialog = ({ open, onClose, onSave, editing, saving }: Props) =
           </div>
 
           {form.session_type === "group" && (
-            <div>
-              <label className="font-display text-xs tracking-wider text-muted-foreground">MAX GROUP SIZE</label>
-              <Input type="number" value={form.max_group_size ?? ""} onChange={(e) => set("max_group_size", e.target.value ? Number(e.target.value) : null)} placeholder="e.g. 6" className="mt-1.5 h-9 text-sm" min={2} />
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="font-display text-xs tracking-wider text-muted-foreground">MAX GROUP SIZE</label>
+                <Input type="number" value={form.max_group_size ?? ""} onChange={(e) => set("max_group_size", e.target.value ? Number(e.target.value) : null)} placeholder="e.g. 6" className="mt-1.5 h-9 text-sm" min={2} />
+              </div>
+              <div>
+                <label className="font-display text-xs tracking-wider text-muted-foreground">MIN PARTICIPANTS</label>
+                <Input type="number" value={form.min_participants ?? ""} onChange={(e) => set("min_participants", e.target.value ? Number(e.target.value) : null)} placeholder="e.g. 2" className="mt-1.5 h-9 text-sm" min={1} />
+              </div>
             </div>
           )}
 
