@@ -56,15 +56,48 @@ const UpcomingBookings = () => {
 
       const [profilesRes, pkgsRes] = await Promise.all([
         supabase.from("profiles").select("user_id, full_name, avatar_url").in("user_id", coachIds),
-        pkgIds.length > 0 ? supabase.from("coach_packages").select("id, title, session_type").in("id", pkgIds) : { data: [] },
+        pkgIds.length > 0 ? supabase.from("coach_packages").select("id, title, session_type, max_group_size").in("id", pkgIds) : { data: [] },
       ]);
 
       const profileMap = new Map(profilesRes.data?.map(p => [p.user_id, p]) || []);
       const pkgMap = new Map((pkgsRes.data || []).map(p => [p.id, p]));
 
+      // Fetch group co-participants for group bookings
+      const groupPkgBookings = data.filter(b => {
+        const pkg = pkgMap.get(b.package_id);
+        return pkg && pkg.session_type === "group" && (pkg.max_group_size || 0) > 1;
+      });
+
+      const coParticipantMap = new Map<string, { name: string; avatar: string | null }[]>();
+      if (groupPkgBookings.length > 0) {
+        for (const b of groupPkgBookings) {
+          const { data: others } = await supabase
+            .from("bookings")
+            .select("player_id")
+            .eq("package_id", b.package_id!)
+            .eq("booking_date", b.booking_date)
+            .in("status", ["pending", "confirmed"])
+            .neq("player_id", user.id);
+
+          if (others && others.length > 0) {
+            const otherIds = others.map(o => o.player_id);
+            const { data: otherProfiles } = await supabase
+              .from("profiles")
+              .select("user_id, full_name, avatar_url")
+              .in("user_id", otherIds);
+
+            coParticipantMap.set(`${b.package_id}_${b.booking_date}`, (otherProfiles || []).map(p => ({
+              name: p.full_name,
+              avatar: p.avatar_url,
+            })));
+          }
+        }
+      }
+
       bookingItems = data.map(b => {
         const coach = profileMap.get(b.coach_id);
         const pkg = pkgMap.get(b.package_id);
+        const coParticipants = coParticipantMap.get(`${b.package_id}_${b.booking_date}`) || [];
         return {
           id: b.id,
           type: "booking" as const,
@@ -78,6 +111,9 @@ const UpcomingBookings = () => {
           coach_avatar: coach?.avatar_url || null,
           package_title: pkg?.title || "Session",
           session_type: pkg?.session_type || "individual",
+          package_id: b.package_id,
+          max_group_size: pkg?.max_group_size || null,
+          group_participants: coParticipants,
         };
       });
     }
