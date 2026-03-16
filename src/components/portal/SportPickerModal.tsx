@@ -109,7 +109,7 @@ const SportPickerModal = ({ userId, onComplete }: SportPickerModalProps) => {
       }
 
       const label = sport === "both" ? "Tennis & Padel" : sport.charAt(0).toUpperCase() + sport.slice(1);
-      toast.success(`Your ${label} library is ready! 🎾`);
+      toast.success(`Your ${label} library is ready!`);
       onComplete();
     } catch {
       toast.error("Something went wrong, please try again.");
