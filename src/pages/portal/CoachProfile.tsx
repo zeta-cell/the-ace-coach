@@ -46,6 +46,7 @@ interface CoachData {
   is_verified: boolean;
   badge_level: string;
   total_sessions_coached: number;
+  primary_sport: string | null;
 }
 
 const CoachProfile = () => {
