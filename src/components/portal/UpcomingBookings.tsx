@@ -21,6 +21,9 @@ interface BookingItem {
   package_title: string;
   session_type: string;
   event_id?: string;
+  package_id?: string | null;
+  max_group_size?: number | null;
+  group_participants?: { name: string; avatar: string | null }[];
 }
 
 const UpcomingBookings = () => {
