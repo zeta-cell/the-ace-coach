@@ -405,6 +405,11 @@ const FindACoach = () => {
       availabilityMap.set(a.coach_id, existing);
     });
 
+    const certCountMap = new Map<string, number>();
+    (certsRes.data || []).forEach((c: any) => {
+      certCountMap.set(c.coach_id, (certCountMap.get(c.coach_id) || 0) + 1);
+    });
+
     const result: CoachCard[] = coachProfiles.map((cp) => {
       const profile = profileMap.get(cp.user_id);
       const ratings = ratingMap.get(cp.user_id);
