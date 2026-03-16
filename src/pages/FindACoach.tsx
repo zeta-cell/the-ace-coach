@@ -101,6 +101,11 @@ const CoachCardComponent = ({ coach }: { coach: CoachCard }) => {
             <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-display tracking-wider ${badge.color}`}>
               <BadgeIcon size={10} /> {badge.label.toUpperCase()}
             </span>
+            {coach.primary_sport && (
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-secondary text-[10px] font-display tracking-wider text-muted-foreground">
+                {coach.primary_sport === "tennis" ? "🎾 TENNIS" : coach.primary_sport === "padel" ? "🏓 PADEL" : "🎾🏓 BOTH"}
+              </span>
+            )}
             {coach.location_city && (
               <span className="flex items-center gap-1 text-xs font-body text-muted-foreground">
                 <MapPin size={10} /> {coach.location_city}{coach.location_country ? `, ${coach.location_country}` : ""}

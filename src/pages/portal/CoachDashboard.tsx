@@ -169,6 +169,15 @@ const CoachDashboard = () => {
 
   return (
     <PortalLayout>
+      {showSportPicker && user && (
+        <SportPickerModal
+          userId={user.id}
+          onComplete={() => {
+            setShowSportPicker(false);
+            fetchAll();
+          }}
+        />
+      )}
       <div className="max-w-5xl mx-auto">
         <motion.h1 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="font-display text-3xl md:text-4xl text-foreground mb-6">
           WELCOME, {firstName}
