@@ -473,9 +473,24 @@ const PublicCoachProfile = () => {
                               <p className="font-body text-[10px] text-muted-foreground">{pkg.total_sessions} sessions total</p>
                             )}
                             {pkg.max_group_size && (
-                              <p className="font-body text-[10px] text-muted-foreground flex items-center gap-1">
-                                <Users size={10} /> Max {pkg.max_group_size}
-                              </p>
+                              <div className="mt-1">
+                                <div className="flex items-center gap-1">
+                                  {Array.from({ length: pkg.max_group_size }).map((_, i) => (
+                                    <div
+                                      key={i}
+                                      className={`w-2.5 h-2.5 rounded-full ${i < (pkg.spots_taken || 0) ? "bg-primary" : "bg-muted border border-border"}`}
+                                    />
+                                  ))}
+                                  <span className="font-body text-[9px] text-muted-foreground ml-1">
+                                    {pkg.spots_taken || 0}/{pkg.max_group_size}
+                                  </span>
+                                </div>
+                                {pkg.min_participants && (pkg.spots_taken || 0) < pkg.min_participants && (
+                                  <p className="font-body text-[9px] text-chart-4 mt-0.5">
+                                    Min {pkg.min_participants} needed
+                                  </p>
+                                )}
+                              </div>
                             )}
                           </div>
                           <Link
