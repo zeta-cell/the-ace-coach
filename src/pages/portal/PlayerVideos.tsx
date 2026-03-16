@@ -244,8 +244,8 @@ const PlayerVideos = () => {
                   </div>
                   <p className="font-display text-foreground">{v.title}</p>
                   {v.coach_feedback && (
-                    <p className="text-xs font-body text-primary mt-1 line-clamp-1">
-                      💬 Coach feedback available
+                    <p className="text-xs font-body text-primary mt-1 line-clamp-1 flex items-center gap-1">
+                      <MessageCircle size={10} /> Coach feedback available
                     </p>
                   )}
                 </div>

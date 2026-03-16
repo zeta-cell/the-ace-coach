@@ -61,7 +61,7 @@ interface RacketData {
   grip_size: string | null;
 }
 
-const SPORT_LABELS: Record<string, string> = { tennis: "🎾 Tennis", padel: "🏓 Padel", both: "🎾🏓 Both" };
+const SPORT_LABELS: Record<string, string> = { tennis: "Tennis", padel: "Padel", both: "Both" };
 const SURFACE_LABELS: Record<string, string> = { clay: "Clay", hard: "Hard Court", grass: "Grass", artificial_grass: "Artificial Grass", indoor: "Indoor" };
 const FREQ_LABELS: Record<string, string> = { daily: "Daily", "3-4x_week": "3–4× / week", "1-2x_week": "1–2× / week", occasional: "Occasional" };
 

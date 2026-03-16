@@ -245,7 +245,7 @@ const CoachPlayerDetail = () => {
                 </div>
                 {playerData?.nationality && (
                   <div className="flex items-center gap-2 text-sm font-body text-foreground">
-                    <span className="text-muted-foreground shrink-0 w-3.5 text-center">🌍</span>
+                    <Globe size={14} className="text-muted-foreground shrink-0" />
                     <span>{playerData.nationality}</span>
                   </div>
                 )}

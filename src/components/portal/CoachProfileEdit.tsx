@@ -219,7 +219,7 @@ const CoachProfileEdit = ({ open, onClose, coachData, onSaved }: Props) => {
                       : "border-border bg-card text-muted-foreground hover:border-primary/40"
                   }`}
                 >
-                  {sport === "padel" ? "🏓 PADEL" : "🎾 TENNIS"}
+                  {sport === "padel" ? "PADEL" : "TENNIS"}
                 </button>
               ))}
             </div>

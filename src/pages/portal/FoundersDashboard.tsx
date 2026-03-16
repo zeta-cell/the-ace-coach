@@ -1174,7 +1174,7 @@ const FoundersDashboard = () => {
         <div className="bg-amber-500/20 border border-amber-500/40 rounded-lg px-4 py-3 mb-4 flex items-center gap-2">
           <Eye className="w-4 h-4 text-amber-400 shrink-0" />
           <p className="text-sm text-amber-300 font-body">
-            👁 Read-only shared view — expires in {getTokenExpiryText()}
+            Read-only shared view — expires in {getTokenExpiryText()}
           </p>
         </div>
       )}
