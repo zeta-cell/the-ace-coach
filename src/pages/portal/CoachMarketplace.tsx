@@ -24,7 +24,7 @@ interface PublishedBlock {
 }
 
 const CoachMarketplace = () => {
-  const { user } = useAuth();
+  const { user, role } = useAuth();
   const [blocks, setBlocks] = useState<PublishedBlock[]>([]);
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState<"published" | "drafts">("published");
