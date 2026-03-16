@@ -166,7 +166,31 @@ const CoachProfile = () => {
     }
   };
 
-  const copyProfileUrl = () => {
+  const handleAddCert = async () => {
+    if (!user || !certForm.name.trim()) return;
+    setCertSaving(true);
+    const { error } = await supabase.from("coach_certifications").insert({
+      coach_id: user.id,
+      name: certForm.name.trim(),
+      issuing_body: certForm.issuing_body.trim() || null,
+      year_obtained: certForm.year_obtained ? parseInt(certForm.year_obtained) : null,
+      certificate_url: certForm.certificate_url.trim() || null,
+    } as any);
+    setCertSaving(false);
+    if (error) {
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+    } else {
+      setCertForm({ name: "", issuing_body: "", year_obtained: "", certificate_url: "" });
+      setShowCertForm(false);
+      fetchData();
+    }
+  };
+
+  const handleDeleteCert = async (id: string) => {
+    const { error } = await supabase.from("coach_certifications").delete().eq("id", id);
+    if (!error) fetchData();
+  };
+
     if (coachData?.profile_slug) {
       navigator.clipboard.writeText(`${window.location.origin}/coach/${coachData.profile_slug}`);
       toast({ title: "Link copied!" });
