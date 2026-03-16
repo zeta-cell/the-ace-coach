@@ -937,8 +937,8 @@ const FoundersDashboard = () => {
     }).filter(Boolean));
     // We can't easily detect "new country" without historical data, skip for now
 
-    if (biz.mrr >= 1000 && biz.lastMonthGMV < 1000) greenSignals.push("MRR crossed €1,000! 🎉");
-    if (biz.mrr >= 5000 && biz.lastMonthGMV < 5000) greenSignals.push("MRR crossed €5,000! 🎉");
+    if (biz.mrr >= 1000 && biz.lastMonthGMV < 1000) greenSignals.push("MRR crossed €1,000!");
+    if (biz.mrr >= 5000 && biz.lastMonthGMV < 5000) greenSignals.push("MRR crossed €5,000!");
     if (lastWeekRefAvg > 0 && thisWeekRefSignups > lastWeekRefAvg * 2) {
       greenSignals.push(`Referral signups up ${Math.round((thisWeekRefSignups / lastWeekRefAvg - 1) * 100)}% — something went viral`);
     }
