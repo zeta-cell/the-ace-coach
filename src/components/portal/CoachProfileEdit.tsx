@@ -204,6 +204,30 @@ const CoachProfileEdit = ({ open, onClose, coachData, onSaved }: Props) => {
         </SheetHeader>
 
         <div className="space-y-5 pb-24">
+          {/* SPORT SELECTION */}
+          <section className="space-y-3">
+            <h3 className="font-display text-xs tracking-wider text-muted-foreground border-b border-border pb-2">YOUR SPORT</h3>
+            <div className="grid grid-cols-2 gap-3">
+              {(["padel", "tennis"] as const).map((sport) => (
+                <button
+                  key={sport}
+                  type="button"
+                  onClick={() => set("primary_sport", sport)}
+                  className={`py-3 rounded-xl border-2 font-display text-sm tracking-wider transition-all ${
+                    form.primary_sport === sport
+                      ? "border-primary bg-primary/10 text-primary"
+                      : "border-border bg-card text-muted-foreground hover:border-primary/40"
+                  }`}
+                >
+                  {sport === "padel" ? "🏓 PADEL" : "🎾 TENNIS"}
+                </button>
+              ))}
+            </div>
+            {!form.primary_sport && (
+              <p className="text-xs font-body text-amber-400">Please select your sport to receive the correct training modules.</p>
+            )}
+          </section>
+
           {/* PUBLIC PROFILE */}
           <section className="space-y-3">
             <h3 className="font-display text-xs tracking-wider text-muted-foreground border-b border-border pb-2">PUBLIC PROFILE</h3>
