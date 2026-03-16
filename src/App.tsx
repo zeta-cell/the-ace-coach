@@ -215,6 +215,21 @@ const App = () => (
                 <ProtectedRoute requiredRole="admin"><AdminSchedule /></ProtectedRoute>
               </Suspense>
             } />
+            <Route path="/admin/modules" element={
+              <Suspense fallback={<PortalLoader />}>
+                <ProtectedRoute requiredRole="admin"><CoachModules /></ProtectedRoute>
+              </Suspense>
+            } />
+            <Route path="/admin/marketplace" element={
+              <Suspense fallback={<PortalLoader />}>
+                <ProtectedRoute requiredRole="admin"><CoachMarketplace /></ProtectedRoute>
+              </Suspense>
+            } />
+            <Route path="/admin/events" element={
+              <Suspense fallback={<PortalLoader />}>
+                <ProtectedRoute requiredRole="admin"><CoachEvents /></ProtectedRoute>
+              </Suspense>
+            } />
             <Route path="/admin/schedule/coach/:coachId" element={
               <Suspense fallback={<PortalLoader />}>
                 <ProtectedRoute requiredRole="admin"><CoachCalendar /></ProtectedRoute>
