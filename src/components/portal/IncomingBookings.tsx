@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion } from "framer-motion";
-import { Calendar, MapPin, Users, Link2, Copy } from "lucide-react";
+import { Calendar, MapPin, Users, Link2, Copy, MessageSquare } from "lucide-react";
 import { format, startOfWeek, endOfWeek } from "date-fns";
 import { toast } from "sonner";
+import GroupFeedbackDrawer from "./GroupFeedbackDrawer";
 
 interface Booking {
   id: string;
