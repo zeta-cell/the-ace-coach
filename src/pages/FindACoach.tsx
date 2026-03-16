@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   MapPin, Search, Star, CheckCircle, Shield, Zap, Crown,
-  SlidersHorizontal, X, ChevronDown,
+  SlidersHorizontal, X, ChevronDown, Circle, Grip, Layers, Award,
 } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 
