@@ -136,6 +136,9 @@ const Training = () => {
   const [moduleCatFilter, setModuleCatFilter] = useState("All");
   const [allModules, setAllModules] = useState<BlockModuleItem[]>([]);
   const [allBlocks, setAllBlocks] = useState<TrainingBlock[]>([]);
+  const [showInlineBlocks, setShowInlineBlocks] = useState(false);
+  const [blockSearch, setBlockSearch] = useState("");
+  const [expandedBlockGoal, setExpandedBlockGoal] = useState<string | null>(null);
 
   // Month calendar
   const [showMonthCal, setShowMonthCal] = useState(false);
@@ -803,11 +806,89 @@ const Training = () => {
                     <Search size={14} /> SEARCH ALL MODULES
                   </button>
 
-                  {/* Use a block */}
-                  <button onClick={() => { setShowAddPanel(true); setAddTab("blocks"); }}
-                    className="w-full py-3 rounded-xl border border-dashed border-border text-muted-foreground font-display text-[10px] tracking-wider hover:border-primary hover:text-primary transition-colors flex items-center justify-center gap-2">
-                    <Layers size={14} /> USE A BLOCK
+                  {/* Use a block — inline toggle */}
+                  <button onClick={() => setShowInlineBlocks(!showInlineBlocks)}
+                    className={`w-full py-3 rounded-xl border border-dashed font-display text-[10px] tracking-wider transition-colors flex items-center justify-center gap-2 ${
+                      showInlineBlocks ? "border-primary text-primary" : "border-border text-muted-foreground hover:border-primary hover:text-primary"
+                    }`}>
+                    <Layers size={14} /> {showInlineBlocks ? "HIDE BLOCKS" : "USE A BLOCK"}
                   </button>
+
+                  {/* Inline blocks browser */}
+                  <AnimatePresence>
+                    {showInlineBlocks && (
+                      <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }}
+                        className="overflow-hidden">
+                        <div className="bg-card border border-border rounded-xl p-4 space-y-3">
+                          {/* Block search */}
+                          <div className="relative">
+                            <Search size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                            <input value={blockSearch} onChange={e => setBlockSearch(e.target.value)}
+                              placeholder="Search blocks..."
+                              className="w-full pl-9 pr-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-muted-foreground" />
+                          </div>
+
+                          {/* Blocks grouped by goal */}
+                          <div className="space-y-1">
+                            {(() => {
+                              const filtered = allBlocks.filter(b =>
+                                !blockSearch || b.title.toLowerCase().includes(blockSearch.toLowerCase())
+                              );
+                              const grouped = filtered.reduce<Record<string, TrainingBlock[]>>((acc, b) => {
+                                const key = b.goal || "Other";
+                                (acc[key] = acc[key] || []).push(b);
+                                return acc;
+                              }, {});
+                              const sortedKeys = Object.keys(grouped).sort();
+
+                              if (sortedKeys.length === 0) {
+                                return <p className="text-xs font-body text-muted-foreground text-center py-4">No blocks found</p>;
+                              }
+
+                              return sortedKeys.map(goal => (
+                                <div key={goal}>
+                                  <button onClick={() => setExpandedBlockGoal(expandedBlockGoal === goal ? null : goal)}
+                                    className="w-full flex items-center justify-between py-2.5 px-1 text-left hover:bg-secondary/50 rounded-lg transition-colors">
+                                    <span className="font-display text-[11px] tracking-wider text-foreground">
+                                      {goal.toUpperCase()} ({grouped[goal].length})
+                                    </span>
+                                    <ChevronRight size={14} className={`text-muted-foreground transition-transform ${expandedBlockGoal === goal ? "rotate-90" : ""}`} />
+                                  </button>
+                                  <AnimatePresence>
+                                    {expandedBlockGoal === goal && (
+                                      <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }}
+                                        className="overflow-hidden">
+                                        <div className="space-y-1.5 pl-2 pb-2">
+                                          {grouped[goal].map(block => {
+                                            const totalDur = block.module_durations?.reduce((s, d) => s + d, 0) || 0;
+                                            return (
+                                              <button key={block.id} onClick={() => { handleApplyBlock(block); setShowInlineBlocks(false); }}
+                                                className="w-full text-left p-3 rounded-xl border border-border hover:border-primary/40 transition-colors bg-secondary/40">
+                                                <p className="font-display text-xs text-foreground truncate">{block.title}</p>
+                                                {block.description && (
+                                                  <p className="text-[10px] font-body text-muted-foreground line-clamp-1 mt-0.5">{block.description}</p>
+                                                )}
+                                                <div className="flex items-center gap-2 text-[9px] font-body text-muted-foreground mt-1">
+                                                  <span>{block.module_ids.length} modules</span>
+                                                  <span>·</span>
+                                                  <span>{totalDur} min</span>
+                                                  {block.is_system && <span className="text-primary/60">SYSTEM</span>}
+                                                </div>
+                                              </button>
+                                            );
+                                          })}
+                                        </div>
+                                      </motion.div>
+                                    )}
+                                  </AnimatePresence>
+                                </div>
+                              ));
+                            })()}
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
               ) : (
                 /* Player empty state */
