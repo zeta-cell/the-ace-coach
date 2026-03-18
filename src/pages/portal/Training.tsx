@@ -857,30 +857,30 @@ const Training = () => {
             ) : (
               /* Empty state — Coach inline builder */
               isCoachOrAdmin ? (
-                <div className="space-y-4">
+                <div className="space-y-5">
                   {/* Start / End time */}
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="font-display text-[10px] tracking-wider text-primary mb-1.5 block">START TIME *</label>
+                      <label className="font-display text-[11px] tracking-wider text-primary mb-2 block">START TIME *</label>
                       <input type="time" value={editStartTime} onChange={e => setEditStartTime(e.target.value)}
-                        className="w-full px-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary" />
+                        className="w-full px-4 py-4 rounded-2xl bg-secondary/80 border border-border text-foreground font-body text-base focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all [color-scheme:dark]" />
                     </div>
                     <div>
-                      <label className="font-display text-[10px] tracking-wider text-primary mb-1.5 block">END TIME *</label>
+                      <label className="font-display text-[11px] tracking-wider text-primary mb-2 block">END TIME *</label>
                       <input type="time" value={editEndTime} onChange={e => setEditEndTime(e.target.value)}
-                        className="w-full px-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary" />
+                        className="w-full px-4 py-4 rounded-2xl bg-secondary/80 border border-border text-foreground font-body text-base focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all [color-scheme:dark]" />
                     </div>
                   </div>
 
                   {/* Location */}
                   <input value={editLocation} onChange={e => setEditLocation(e.target.value)}
                     placeholder="Location (e.g. Court 3, Padel Club Valencia)..."
-                    className="w-full px-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-muted-foreground" />
+                    className="w-full px-4 py-4 rounded-2xl bg-secondary/80 border border-border text-foreground font-body text-base focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all placeholder:text-muted-foreground" />
 
                   {/* Notes */}
                   <input value={planNotes} onChange={e => setPlanNotes(e.target.value)}
                     placeholder="Plan notes (optional)..."
-                    className="w-full px-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-muted-foreground" />
+                    className="w-full px-4 py-4 rounded-2xl bg-secondary/80 border border-border text-foreground font-body text-base focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all placeholder:text-muted-foreground" />
 
                   {/* Add modules by category */}
                   <div>
