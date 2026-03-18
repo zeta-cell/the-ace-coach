@@ -965,6 +965,7 @@ const CoachPlanBuilder = () => {
                       >
                         <SortablePlanItem
                           item={item}
+                          index={idx}
                           onRemove={removeItem}
                           onNoteChange={updateNote}
                           onDurationChange={updateDuration}
