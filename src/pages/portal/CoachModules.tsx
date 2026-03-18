@@ -71,7 +71,7 @@ const emptyForm = {
   is_shared: false,
 };
 
-const CoachModules = () => {
+export const CoachModulesContent = ({ embedded = false }: { embedded?: boolean }) => {
   const { user, role } = useAuth();
   const [modules, setModules] = useState<Module[]>([]);
   const [search, setSearch] = useState("");
