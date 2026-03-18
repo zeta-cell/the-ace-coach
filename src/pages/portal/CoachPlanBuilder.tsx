@@ -32,6 +32,7 @@ type ModuleCategory = Database["public"]["Enums"]["module_category"];
 const CATEGORY_COLORS: Record<string, string> = {
   warm_up: "bg-yellow-500",
   padel_drill: "bg-cyan-500",
+  tennis_drill: "bg-emerald-500",
   footwork: "bg-blue-500",
   fitness: "bg-orange-500",
   strength: "bg-orange-600",
