@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Check, ChevronDown, ChevronUp, ChevronLeft, ChevronRight,
   Play, Clock, Layers, CalendarDays, MapPin, Save, Trash2, Plus, X, Video,
+  GripVertical, Minus,
 } from "lucide-react";
 import {
   format, startOfWeek, addDays, isSameDay, parseISO, isValid,
@@ -173,25 +174,16 @@ const Training = () => {
     setPlanItems((prev) =>
       prev.map((item) => item.id === itemId ? { ...item, is_completed: true, completed_at: new Date().toISOString() } : item)
     );
-    // Award XP for completing a session module
     if (user) {
       await supabase.rpc('award_xp', {
-        p_user_id: user.id,
-        p_amount: 25,
-        p_event_type: 'session_complete',
+        p_user_id: user.id, p_amount: 25, p_event_type: 'session_complete',
         p_description: 'Completed a training session',
       });
-      // Update streak
       await supabase.rpc('update_streak', { p_user_id: user.id });
-      // Increment raffle tickets (atomic)
       await supabase.rpc('increment_raffle_tickets', { p_user_id: user.id });
-      // Increment total_sessions and total_minutes
       const completedItem = planItems.find(item => item.id === itemId);
       const durationMinutes = completedItem?.module?.duration_minutes || 0;
-      await supabase.rpc('increment_session_stats', {
-        p_user_id: user.id,
-        p_minutes: durationMinutes,
-      });
+      await supabase.rpc('increment_session_stats', { p_user_id: user.id, p_minutes: durationMinutes });
     }
   };
 
@@ -265,7 +257,49 @@ const Training = () => {
     });
     toast.success("Saved as training block!");
     setShowSaveBlock(false); setBlockTitle(""); setBlockGoal("Technique");
-    setShowBlocksPanel(false); // Force refresh on next open
+    setShowBlocksPanel(false);
+  };
+
+  /* ── Coach reorder ── */
+  const handleMoveItem = async (index: number, direction: "up" | "down") => {
+    const newIndex = direction === "up" ? index - 1 : index + 1;
+    if (newIndex < 0 || newIndex >= planItems.length) return;
+
+    const updated = [...planItems];
+    const [moved] = updated.splice(index, 1);
+    updated.splice(newIndex, 0, moved);
+
+    // Update order_index locally
+    const reordered = updated.map((item, i) => ({ ...item, order_index: i }));
+    setPlanItems(reordered);
+
+    // Persist all order changes
+    for (const item of reordered) {
+      await supabase.from("player_day_plan_items")
+        .update({ order_index: item.order_index })
+        .eq("id", item.id);
+    }
+  };
+
+  /* ── Coach remove item ── */
+  const handleRemoveItem = async (itemId: string) => {
+    await supabase.from("player_day_plan_items").delete().eq("id", itemId);
+    const remaining = planItems.filter(i => i.id !== itemId);
+    // Re-index
+    const reordered = remaining.map((item, i) => ({ ...item, order_index: i }));
+    setPlanItems(reordered);
+    for (const item of reordered) {
+      await supabase.from("player_day_plan_items")
+        .update({ order_index: item.order_index })
+        .eq("id", item.id);
+    }
+    toast.success("Module removed");
+    // If no items left, clean up the plan
+    if (reordered.length === 0 && currentPlanId) {
+      await supabase.from("player_day_plans").delete().eq("id", currentPlanId);
+      setCurrentPlanId(null);
+      setPlanNotes("");
+    }
   };
 
   const totalDuration = planItems.reduce((sum, i) => sum + i.module.duration_minutes, 0);
@@ -336,19 +370,12 @@ const Training = () => {
         {/* Month calendar (toggleable) */}
         <AnimatePresence>
           {showMonthCal && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              className="overflow-hidden mb-4"
-            >
+            <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden mb-4">
               <div className="bg-card border border-border rounded-xl p-4">
                 <div className="flex items-center justify-between mb-3">
-                  <button onClick={() => setCalMonth(m => new Date(m.getFullYear(), m.getMonth() - 1))}
-                    className="p-1 rounded hover:bg-secondary"><ChevronLeft size={16} /></button>
+                  <button onClick={() => setCalMonth(m => new Date(m.getFullYear(), m.getMonth() - 1))} className="p-1 rounded hover:bg-secondary"><ChevronLeft size={16} /></button>
                   <span className="font-display text-xs tracking-wider text-foreground">{format(calMonth, "MMMM yyyy").toUpperCase()}</span>
-                  <button onClick={() => setCalMonth(m => new Date(m.getFullYear(), m.getMonth() + 1))}
-                    className="p-1 rounded hover:bg-secondary"><ChevronRight size={16} /></button>
+                  <button onClick={() => setCalMonth(m => new Date(m.getFullYear(), m.getMonth() + 1))} className="p-1 rounded hover:bg-secondary"><ChevronRight size={16} /></button>
                 </div>
                 <div className="grid grid-cols-7 gap-1 mb-1">
                   {["M","T","W","T","F","S","S"].map((d,i) => (
@@ -363,9 +390,7 @@ const Training = () => {
                     const hasPlan = planDates.has(dateStr);
                     return (
                       <button key={dateStr} onClick={() => { setSelectedDay(day); setShowMonthCal(false); }}
-                        className={`py-1.5 rounded-lg text-xs font-body relative transition-colors ${
-                          !inMonth ? "opacity-30" : ""
-                        } ${selected ? "bg-primary text-primary-foreground" : "hover:bg-secondary text-foreground"}`}>
+                        className={`py-1.5 rounded-lg text-xs font-body relative transition-colors ${!inMonth ? "opacity-30" : ""} ${selected ? "bg-primary text-primary-foreground" : "hover:bg-secondary text-foreground"}`}>
                         {format(day, "d")}
                         {hasPlan && !selected && (
                           <div className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-primary" />
@@ -388,7 +413,7 @@ const Training = () => {
 
         {/* Coach: editable session info */}
         {isCoachOrAdmin && planItems.length > 0 && (
-          <div className="bg-card border border-border rounded-xl p-4 mb-6 space-y-3">
+          <div className="bg-card border border-border rounded-xl p-4 mb-4 space-y-3">
             <h2 className="font-display text-[10px] tracking-wider text-muted-foreground">SESSION INFO</h2>
             <div className="grid grid-cols-3 gap-3">
               <div>
@@ -451,6 +476,19 @@ const Training = () => {
           </div>
         ) : (
           <div className="space-y-3">
+            {/* Coach builder header */}
+            {isCoachOrAdmin && (
+              <div className="flex items-center justify-between mb-1">
+                <p className="font-display text-[10px] tracking-wider text-muted-foreground">
+                  WORKOUT · {planItems.length} MODULE{planItems.length !== 1 ? "S" : ""} · {totalDuration}MIN
+                </p>
+                <button onClick={() => setShowBlocksPanel(true)}
+                  className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-primary text-primary-foreground font-display text-[9px] tracking-wider hover:bg-primary/90 transition-colors">
+                  <Plus size={11} /> ADD
+                </button>
+              </div>
+            )}
+
             {planItems.map((item, index) => (
               <motion.div key={item.id}
                 initial={{ opacity: 0, y: 10 }}
@@ -461,8 +499,28 @@ const Training = () => {
                 <div className="flex">
                   <div className={`w-1 ${CATEGORY_COLORS[item.module.category] || "bg-muted"}`} />
                   <div className="flex-1 p-4">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
+                    <div className="flex items-start justify-between gap-2">
+                      {/* Coach reorder controls */}
+                      {isCoachOrAdmin && (
+                        <div className="flex flex-col gap-0.5 pt-1 shrink-0">
+                          <button
+                            onClick={() => handleMoveItem(index, "up")}
+                            disabled={index === 0}
+                            className="p-0.5 text-muted-foreground hover:text-foreground disabled:opacity-20 transition-colors"
+                          >
+                            <ChevronUp size={14} />
+                          </button>
+                          <button
+                            onClick={() => handleMoveItem(index, "down")}
+                            disabled={index === planItems.length - 1}
+                            className="p-0.5 text-muted-foreground hover:text-foreground disabled:opacity-20 transition-colors"
+                          >
+                            <ChevronDown size={14} />
+                          </button>
+                        </div>
+                      )}
+
+                      <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
                           <span className="font-body text-[10px] font-semibold bg-primary/10 text-primary px-2 py-0.5 rounded-full uppercase">
                             {item.module.category.replace("_", " ")}
@@ -473,16 +531,27 @@ const Training = () => {
                         </div>
                         <h3 className="font-display text-lg text-foreground">{item.module.title}</h3>
                       </div>
-                      <div className="flex items-center gap-2">
-                        {!item.is_completed ? (
-                          <button onClick={() => markComplete(item.id)}
-                            className="px-3 py-1.5 rounded-lg bg-primary text-primary-foreground font-display text-xs tracking-wider hover:bg-primary/90 transition-colors">
-                            COMPLETE
+
+                      <div className="flex items-center gap-1.5 shrink-0">
+                        {isCoachOrAdmin && (
+                          <button onClick={() => handleRemoveItem(item.id)}
+                            className="p-1.5 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
+                            title="Remove module"
+                          >
+                            <Minus size={14} />
                           </button>
-                        ) : (
-                          <span className="flex items-center gap-1 text-green-500 font-body text-xs">
-                            <Check size={14} /> Done
-                          </span>
+                        )}
+                        {!isCoachOrAdmin && (
+                          !item.is_completed ? (
+                            <button onClick={() => markComplete(item.id)}
+                              className="px-3 py-1.5 rounded-lg bg-primary text-primary-foreground font-display text-xs tracking-wider hover:bg-primary/90 transition-colors">
+                              COMPLETE
+                            </button>
+                          ) : (
+                            <span className="flex items-center gap-1 text-green-500 font-body text-xs">
+                              <Check size={14} /> Done
+                            </span>
+                          )
                         )}
                         <button onClick={() => setExpandedItem(expandedItem === item.id ? null : item.id)}
                           className="p-1 text-muted-foreground hover:text-foreground transition-colors">
@@ -538,7 +607,7 @@ const Training = () => {
               </p>
             </div>
 
-            {/* Coach: add more blocks button */}
+            {/* Coach: add more modules button */}
             {isCoachOrAdmin && (
               <button onClick={() => setShowBlocksPanel(true)}
                 className="w-full py-2.5 rounded-xl border border-dashed border-border text-muted-foreground font-display text-[10px] tracking-wider hover:border-primary hover:text-primary transition-colors flex items-center justify-center gap-1.5">
