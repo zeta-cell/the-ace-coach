@@ -308,22 +308,6 @@ const CoachPlayerDetail = () => {
             )}
           </div>
 
-          {/* Action buttons row */}
-          <div className="grid grid-cols-3 gap-2 mb-6">
-            <button onClick={() => navigate(`/training?player=${playerId}&date=${format(new Date(), "yyyy-MM-dd")}`)}
-              className="py-2.5 rounded-xl bg-primary text-primary-foreground font-display text-xs tracking-widest hover:bg-primary/90 transition-colors flex items-center justify-center gap-2">
-              <Dumbbell size={14} /> CREATE TRAINING
-            </button>
-            <button onClick={() => navigate(`/messages?to=${playerId}`)}
-              className="py-2.5 rounded-xl bg-card border border-border text-foreground font-display text-xs tracking-widest hover:bg-secondary transition-colors flex items-center justify-center gap-2">
-              <MessageCircle size={14} /> MESSAGE
-            </button>
-            <Link to={`/coach/videos`}
-              className="py-2.5 rounded-xl bg-card border border-border text-foreground font-display text-xs tracking-widest hover:bg-secondary transition-colors flex items-center justify-center gap-2">
-              <Video size={14} /> VIDEOS
-            </Link>
-          </div>
-
           {/* Quick Day Navigator */}
           <div className="bg-card border border-border rounded-xl mb-6 overflow-hidden">
             <div className="flex items-center justify-between px-4 py-3">
@@ -385,6 +369,18 @@ const CoachPlayerDetail = () => {
                 </div>
               )}
             </div>
+          </div>
+
+          {/* Action buttons row */}
+          <div className="grid grid-cols-2 gap-2 mb-6">
+            <button onClick={() => navigate(`/messages?to=${playerId}`)}
+              className="py-2.5 rounded-xl bg-card border border-border text-foreground font-display text-xs tracking-widest hover:bg-secondary transition-colors flex items-center justify-center gap-2">
+              <MessageCircle size={14} /> MESSAGE
+            </button>
+            <Link to={`/coach/videos`}
+              className="py-2.5 rounded-xl bg-card border border-border text-foreground font-display text-xs tracking-widest hover:bg-secondary transition-colors flex items-center justify-center gap-2">
+              <Video size={14} /> VIDEOS
+            </Link>
           </div>
 
 
