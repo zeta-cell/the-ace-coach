@@ -200,7 +200,7 @@ const InlineAddModule = ({
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="Modul suchen..."
+          placeholder="Search modules..."
           className="flex-1 bg-transparent text-foreground font-body text-xs focus:outline-none placeholder:text-muted-foreground"
         />
         <button onClick={() => { setOpen(false); setSearch(""); }} className="p-0.5">
