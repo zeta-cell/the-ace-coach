@@ -108,6 +108,7 @@ interface TrainingBlock {
   id: string; title: string; description: string | null; goal: string;
   category: string; module_ids: string[]; module_durations: number[];
   module_notes: string[]; is_system: boolean; coach_id: string | null;
+  difficulty: string; sport: string;
 }
 
 const parseDateParam = (value: string | null) => {
