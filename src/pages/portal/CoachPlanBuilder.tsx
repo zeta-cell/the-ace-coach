@@ -48,6 +48,10 @@ interface ModuleItem {
   title: string;
   category: ModuleCategory;
   duration_minutes: number | null;
+  description?: string | null;
+  instructions?: string | null;
+  difficulty?: string | null;
+  equipment?: string[] | null;
 }
 
 interface PlanItem {
@@ -60,17 +64,20 @@ interface PlanItem {
 /* ── Sortable item component ── */
 const SortablePlanItem = ({
   item,
+  index,
   onRemove,
   onNoteChange,
   onDurationChange,
   onDurationSave,
 }: {
   item: PlanItem;
+  index: number;
   onRemove: (id: string) => void;
   onNoteChange: (id: string, note: string) => void;
   onDurationChange: (id: string, duration: number) => void;
   onDurationSave: (id: string, moduleId: string, duration: number) => void;
 }) => {
+  const [expanded, setExpanded] = useState(false);
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
     id: item.tempId,
   });
@@ -94,50 +101,96 @@ const SortablePlanItem = ({
     onDurationSave(item.tempId, item.module.id, val);
   };
 
+  const hasDetails = item.module.description || item.module.instructions || (item.module.equipment && item.module.equipment.length > 0);
+
   return (
     <div ref={setNodeRef} style={style} className="bg-card border border-border rounded-xl overflow-hidden">
       <div className="flex">
-        <div className={`w-1 ${CATEGORY_COLORS[item.module.category] || "bg-muted"}`} />
+        <div className={`w-1.5 ${CATEGORY_COLORS[item.module.category] || "bg-muted"}`} />
         <div className="flex-1 p-3">
           <div className="flex items-center gap-2">
             <button {...attributes} {...listeners} className="cursor-grab active:cursor-grabbing touch-none">
               <GripVertical size={14} className="text-muted-foreground" />
             </button>
+            <span className="text-xs font-display text-muted-foreground w-5">{index + 1}.</span>
             <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2">
+              <p className="font-display text-foreground text-sm">{item.module.title}</p>
+              <div className="flex items-center gap-2 mt-0.5">
                 <span className="font-body text-[10px] font-semibold bg-primary/10 text-primary px-2 py-0.5 rounded-full uppercase">
                   {item.module.category.replace("_", " ")}
                 </span>
-                <div className="flex items-center gap-0.5 text-muted-foreground text-xs font-body">
-                  <Clock size={10} />
-                  <input
-                    type="number"
-                    min={5}
-                    max={300}
-                    value={item.custom_duration === 0 ? "" : item.custom_duration}
-                    onChange={(e) => {
-                      const raw = e.target.value;
-                      onDurationChange(item.tempId, raw === "" ? 0 : parseInt(raw) || 0);
-                    }}
-                    onBlur={handleDurationBlur}
-                    onKeyDown={handleDurationKeyDown}
-                    className="w-[52px] bg-transparent text-center text-foreground font-body text-xs focus:outline-none focus:ring-1 focus:ring-primary rounded"
-                  />
-                  <span>min</span>
-                </div>
+                {item.module.difficulty && (
+                  <span className="font-body text-[10px] text-muted-foreground uppercase">{item.module.difficulty}</span>
+                )}
               </div>
-              <p className="font-display text-foreground mt-0.5">{item.module.title}</p>
+            </div>
+            <div className="flex items-center gap-0.5 text-muted-foreground text-xs font-body shrink-0">
+              <Clock size={10} />
+              <input
+                type="number"
+                min={5}
+                max={300}
+                value={item.custom_duration === 0 ? "" : item.custom_duration}
+                onChange={(e) => {
+                  const raw = e.target.value;
+                  onDurationChange(item.tempId, raw === "" ? 0 : parseInt(raw) || 0);
+                }}
+                onBlur={handleDurationBlur}
+                onKeyDown={handleDurationKeyDown}
+                className="w-[40px] bg-transparent text-center text-foreground font-body text-xs focus:outline-none focus:ring-1 focus:ring-primary rounded"
+              />
+              <span>m</span>
             </div>
             <button onClick={() => onRemove(item.tempId)} className="p-1 hover:bg-destructive/20 rounded-lg transition-colors shrink-0">
               <X size={14} className="text-destructive" />
             </button>
           </div>
-          <input
-            placeholder="Coach note for this module..."
-            value={item.coach_note}
-            onChange={(e) => onNoteChange(item.tempId, e.target.value)}
-            className="w-full mt-2 px-2 py-1.5 rounded-lg bg-secondary text-foreground font-body text-xs focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-muted-foreground"
-          />
+
+          {/* Expand toggle */}
+          <div className="flex items-center gap-2 mt-2">
+            <input
+              placeholder="Coach note..."
+              value={item.coach_note}
+              onChange={(e) => onNoteChange(item.tempId, e.target.value)}
+              className="flex-1 px-2 py-1.5 rounded-lg bg-secondary text-foreground font-body text-xs focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-muted-foreground"
+            />
+            {hasDetails && (
+              <button
+                onClick={() => setExpanded(!expanded)}
+                className="p-1.5 rounded-lg hover:bg-secondary transition-colors shrink-0"
+              >
+                {expanded ? <ChevronUp size={14} className="text-primary" /> : <ChevronDown size={14} className="text-muted-foreground" />}
+              </button>
+            )}
+          </div>
+
+          {/* Expandable details */}
+          {expanded && hasDetails && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              className="mt-2 space-y-2 border-t border-border pt-2"
+            >
+              {item.module.description && (
+                <p className="text-xs font-body text-muted-foreground">{item.module.description}</p>
+              )}
+              {item.module.instructions && (
+                <div>
+                  <p className="text-[10px] font-display text-foreground tracking-wider mb-1">INSTRUCTIONS</p>
+                  <p className="text-xs font-body text-muted-foreground whitespace-pre-line">{item.module.instructions}</p>
+                </div>
+              )}
+              {item.module.equipment && item.module.equipment.length > 0 && (
+                <div className="flex items-center gap-1 flex-wrap">
+                  <span className="text-[10px] font-display text-foreground tracking-wider">EQUIPMENT:</span>
+                  {item.module.equipment.map((eq) => (
+                    <span key={eq} className="text-[10px] font-body bg-secondary text-muted-foreground px-2 py-0.5 rounded-full">{eq}</span>
+                  ))}
+                </div>
+              )}
+            </motion.div>
+          )}
         </div>
       </div>
     </div>
@@ -315,7 +368,7 @@ const CoachPlanBuilder = () => {
     if (!user) return;
     const { data } = await supabase
       .from("modules")
-      .select("id, title, category, duration_minutes")
+      .select("id, title, category, duration_minutes, description, instructions, difficulty, equipment")
       .or(`created_by.eq.${user.id},is_shared.eq.true`)
       .order("category");
     setModules((data as ModuleItem[]) || []);
@@ -368,7 +421,7 @@ const CoachPlanBuilder = () => {
       if (moduleIds.length > 0) {
         const { data: mods } = await supabase
           .from("modules")
-          .select("id, title, category, duration_minutes")
+          .select("id, title, category, duration_minutes, description, instructions, difficulty, equipment")
           .in("id", moduleIds);
         const modMap = new Map(mods?.map((m) => [m.id, m]) || []);
         setPlanItems(
@@ -912,6 +965,7 @@ const CoachPlanBuilder = () => {
                       >
                         <SortablePlanItem
                           item={item}
+                          index={idx}
                           onRemove={removeItem}
                           onNoteChange={updateNote}
                           onDurationChange={updateDuration}
