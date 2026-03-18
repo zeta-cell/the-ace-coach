@@ -50,6 +50,20 @@ const CoachPlayerDetail = () => {
     if (playerId) fetchQuickDayPlan();
   }, [playerId, quickDate]);
 
+  const fetchQuickDayPlan = async () => {
+    if (!playerId) return;
+    setQuickDayLoading(true);
+    const dateStr = format(quickDate, "yyyy-MM-dd");
+    const { data } = await supabase
+      .from("player_day_plans")
+      .select("id, plan_date, notes, start_time, end_time")
+      .eq("player_id", playerId)
+      .eq("plan_date", dateStr)
+      .maybeSingle();
+    setQuickDayPlan(data);
+    setQuickDayLoading(false);
+  };
+
   const fetchAll = async () => {
     if (!playerId || !user) return;
     const [{ data: prof }, { data: pp }, { data: rk }] = await Promise.all([
