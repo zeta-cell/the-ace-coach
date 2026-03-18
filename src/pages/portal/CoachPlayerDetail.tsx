@@ -46,6 +46,10 @@ const CoachPlayerDetail = () => {
     if (user && playerId) fetchAll();
   }, [user, playerId]);
 
+  useEffect(() => {
+    if (playerId) fetchQuickDayPlan();
+  }, [playerId, quickDate]);
+
   const fetchAll = async () => {
     if (!playerId || !user) return;
     const [{ data: prof }, { data: pp }, { data: rk }] = await Promise.all([
