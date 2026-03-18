@@ -271,6 +271,11 @@ const QuickAddTrainingDrawer = ({
                   filteredBlocks={filteredBlocks} filteredModules={filteredModules}
                   selectedBlockId={selectedBlockId} setSelectedBlockId={setSelectedBlockId}
                   selectedModuleIds={selectedModuleIds} toggleModule={toggleModule}
+                  selectedBlock={selectedBlock}
+                  selectedModules={selectedModules}
+                  totalDuration={totalDuration}
+                  onRemoveModule={removeModule}
+                  onClearSelection={clearSelection}
                   canProceed={!!canProceedToReview}
                   onNext={handleReview}
                 />
