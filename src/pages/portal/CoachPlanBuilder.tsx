@@ -232,9 +232,9 @@ const InlineAddModule = ({
 };
 
 const CATEGORY_LABELS: Record<string, string> = {
-  all: "ALL", warm_up: "WARM UP", padel_drill: "PADEL", footwork: "FOOTWORK",
-  fitness: "FITNESS", strength: "STRENGTH", mental: "MENTAL", recovery: "RECOVERY",
-  cool_down: "COOL DOWN", nutrition: "NUTRITION", video: "VIDEO",
+  all: "ALL", warm_up: "WARM UP", padel_drill: "PADEL", tennis_drill: "TENNIS",
+  footwork: "FOOTWORK", fitness: "FITNESS", strength: "STRENGTH", mental: "MENTAL",
+  recovery: "RECOVERY", cool_down: "COOL DOWN", nutrition: "NUTRITION", video: "VIDEO",
 };
 
 /* ── Main component ── */
