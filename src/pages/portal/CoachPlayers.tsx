@@ -158,7 +158,7 @@ const CoachPlayers = () => {
                     <button
                       onClick={(e) => { e.stopPropagation(); setTrainPlayerId(player.player_id); setTrainDrawerOpen(true); }}
                       className="p-2 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
-                      title="Assign training"
+                      title="Create training"
                     >
                       <Calendar size={16} />
                     </button>

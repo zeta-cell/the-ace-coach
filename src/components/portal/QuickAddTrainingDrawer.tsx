@@ -193,7 +193,7 @@ const QuickAddTrainingDrawer = ({
           >
             <div className="p-5 space-y-4">
               <div className="flex items-center justify-between">
-                <h2 className="font-display text-lg tracking-wider text-foreground">ASSIGN TRAINING</h2>
+                <h2 className="font-display text-lg tracking-wider text-foreground">CREATE TRAINING</h2>
                 <button onClick={onClose} className="p-1 rounded-lg hover:bg-secondary">
                   <X size={18} className="text-muted-foreground" />
                 </button>
@@ -292,7 +292,7 @@ const QuickAddTrainingDrawer = ({
                 disabled={saving || !playerId || !date || (assignType === "block" ? !selectedBlockId : selectedModuleIds.length === 0)}
                 className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-display text-sm tracking-wider hover:bg-primary/90 transition-colors disabled:opacity-50"
               >
-                {saving ? "SAVING..." : "ASSIGN TRAINING"}
+                {saving ? "SAVING..." : "CREATE TRAINING"}
               </button>
             </div>
           </motion.div>
