@@ -498,12 +498,35 @@ const SelectionStep = ({
                 <AnimatePresence>
                   {isExpanded && (
                     <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
-                      <div className="px-3 pb-3 pt-1 border-t border-border space-y-1">
+                      <div className="px-3 pb-3 pt-1 border-t border-border space-y-1.5">
                         <div className="flex flex-wrap gap-1.5 text-[9px] font-body text-muted-foreground">
                           <span className="flex items-center gap-0.5"><Clock size={9} /> {b.duration_minutes} min</span>
                           <span>·</span>
                           <span>{b.module_ids?.length || 0} modules</span>
                         </div>
+                        {b.module_ids && b.module_ids.length > 0 && (
+                          <div className="space-y-1">
+                            {b.module_ids.map((mId, idx) => {
+                              const mod = allModules.find(m => m.id === mId);
+                              const dur = b.module_durations?.[idx];
+                              return (
+                                <div key={`${mId}-${idx}`} className={`flex items-center gap-2 py-1.5 px-2 rounded-md bg-secondary/80 border-l-2 ${
+                                  CATEGORY_BORDER_COLORS[mod?.category?.toLowerCase() || ""] || "border-l-muted-foreground"
+                                }`}>
+                                  <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[8px] font-display text-primary-foreground ${
+                                    CATEGORY_DOT_COLORS[mod?.category?.toLowerCase() || ""] || "bg-muted-foreground"
+                                  }`}>{idx + 1}</span>
+                                  <div className="flex-1 min-w-0">
+                                    <p className="font-display text-[10px] text-foreground truncate">{mod?.title || "Unknown module"}</p>
+                                    <p className="text-[9px] font-body text-muted-foreground">
+                                      {mod?.category?.replace("_", " ") || "—"} · {dur || mod?.duration_minutes || 0}min
+                                    </p>
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        )}
                       </div>
                     </motion.div>
                   )}
