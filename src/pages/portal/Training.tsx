@@ -876,21 +876,32 @@ const Training = () => {
                           <div className="grid grid-cols-2 gap-3">
                             <div>
                               <label className="font-display text-[9px] tracking-wider text-primary mb-1 block">START TIME</label>
-                              <input type="time" value={editStartTime} onChange={e => setEditStartTime(e.target.value)}
-                                className="w-full px-3 py-2.5 rounded-xl bg-card border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary transition-all [color-scheme:dark]" />
+                              <div className="relative">
+                                <Clock size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+                                <input type="time" value={editStartTime} onChange={e => setEditStartTime(e.target.value)}
+                                  placeholder="00:00"
+                                  className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-background border-2 border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all [color-scheme:dark]" />
+                              </div>
                             </div>
                             <div>
                               <label className="font-display text-[9px] tracking-wider text-primary mb-1 block">END TIME</label>
-                              <input type="time" value={editEndTime} onChange={e => setEditEndTime(e.target.value)}
-                                className="w-full px-3 py-2.5 rounded-xl bg-card border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary transition-all [color-scheme:dark]" />
+                              <div className="relative">
+                                <Clock size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+                                <input type="time" value={editEndTime} onChange={e => setEditEndTime(e.target.value)}
+                                  placeholder="00:00"
+                                  className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-background border-2 border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all [color-scheme:dark]" />
+                              </div>
                             </div>
                           </div>
-                          <input value={editLocation} onChange={e => setEditLocation(e.target.value)}
-                            placeholder="Location (e.g. Court 3)..."
-                            className="w-full px-3 py-2.5 rounded-xl bg-card border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-muted-foreground transition-all" />
+                          <div className="relative">
+                            <MapPin size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+                            <input value={editLocation} onChange={e => setEditLocation(e.target.value)}
+                              placeholder="Location (e.g. Court 3)..."
+                              className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-background border-2 border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary placeholder:text-muted-foreground transition-all" />
+                          </div>
                           <input value={planNotes} onChange={e => setPlanNotes(e.target.value)}
                             placeholder="Plan notes (optional)..."
-                            className="w-full px-3 py-2.5 rounded-xl bg-card border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-muted-foreground transition-all" />
+                            className="w-full px-3 py-2.5 rounded-xl bg-background border-2 border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary placeholder:text-muted-foreground transition-all" />
                         </div>
                       </motion.div>
                     )}
