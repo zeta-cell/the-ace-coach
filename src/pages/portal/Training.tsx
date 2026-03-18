@@ -1000,19 +1000,23 @@ const Training = () => {
       {isCoachOrAdmin && planItems.length > 0 && (
         <div className="fixed bottom-0 left-0 right-0 bg-card/95 backdrop-blur-sm border-t border-border z-30 px-4 py-3">
           <div className="max-w-3xl mx-auto flex items-center justify-between gap-3">
-            <p className="font-display text-xs tracking-wider text-foreground">
-              {planItems.length} module{planItems.length !== 1 ? "s" : ""} · {totalDuration} min
+            <p className="font-body text-sm text-foreground">
+              {planItems.length} module{planItems.length !== 1 ? "s" : ""} · {totalDuration} min total
             </p>
-            <div className="flex items-center gap-2">
-              <button onClick={handleCancelDay}
-                className="p-2 rounded-lg border border-destructive/30 text-destructive hover:bg-destructive/10 transition-colors">
-                <Trash2 size={14} />
-              </button>
-              <button onClick={handleSavePlan} disabled={savingPlan}
-                className="px-5 py-2 rounded-xl bg-primary text-primary-foreground font-display text-xs tracking-wider hover:bg-primary/90 disabled:opacity-50 transition-colors flex items-center gap-1.5">
-                <Save size={14} /> {savingPlan ? "SAVING..." : "SAVE PLAN"}
-              </button>
-            </div>
+            <button onClick={handleSavePlan} disabled={savingPlan || justSaved}
+              className={`px-6 py-2.5 rounded-xl font-display text-xs tracking-wider transition-all flex items-center gap-2 ${
+                justSaved
+                  ? "bg-primary/80 text-primary-foreground"
+                  : "bg-primary text-primary-foreground hover:bg-primary/90"
+              } disabled:opacity-90`}>
+              {justSaved ? (
+                <><Check size={14} /> SAVED</>
+              ) : savingPlan ? (
+                <><Save size={14} className="animate-pulse" /> SAVING...</>
+              ) : (
+                <><Save size={14} /> SAVE PLAN</>
+              )}
+            </button>
           </div>
         </div>
       )}
