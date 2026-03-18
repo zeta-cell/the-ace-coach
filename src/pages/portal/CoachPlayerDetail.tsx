@@ -539,7 +539,7 @@ const CoachPlayerDetail = () => {
 
 
           {/* Quick plan link */}
-          <Link to={`/coach/plan/${playerId}`}
+          <Link to={`/training?player=${playerId}`}
             className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-primary text-primary-foreground font-display text-sm tracking-widest hover:bg-primary/90 transition-colors">
             <Plus size={16} /> CREATE DAY PLAN
           </Link>
