@@ -5,9 +5,9 @@ import { useAuth } from "@/contexts/AuthContext";
 import { motion } from "framer-motion";
 import {
   Users, BookOpen, Calendar, ChevronRight, ShoppingBag, Mail, Check, X as XIcon,
-  TrendingUp, TrendingDown, DollarSign, Star, CreditCard
+  TrendingUp, TrendingDown, DollarSign, Star, CreditCard, CalendarDays, ChevronLeft, ChevronDown, ChevronUp
 } from "lucide-react";
-import { format, subMonths, startOfMonth, endOfMonth } from "date-fns";
+import { format, subMonths, startOfMonth, endOfMonth, addDays, startOfWeek, endOfWeek, isSameDay, isSameMonth, addMonths, subWeeks, addWeeks } from "date-fns";
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip, Line, ComposedChart } from "recharts";
 import PortalLayout from "@/components/portal/PortalLayout";
 import IncomingBookings from "@/components/portal/IncomingBookings";
@@ -161,10 +161,15 @@ const CoachDashboard = () => {
 
   const LEVEL_COLORS: Record<string, string> = { bronze: "#CD7F32", silver: "#C0C0C0", gold: "#FFD700", platinum: "#E5E4E2", diamond: "#B9F2FF", legend: "#FF69B4" };
 
-  // Week strip
+  // Week strip with offset
+  const [weekOffset, setWeekOffset] = useState(0);
+  const [showMonthView, setShowMonthView] = useState(false);
+  const [calMonth, setCalMonth] = useState(new Date());
+
+  const weekStart = addDays(new Date(), weekOffset * 7);
   const weekDays = Array.from({ length: 7 }, (_, i) => {
-    const d = new Date(); d.setDate(d.getDate() + i);
-    return { date: format(d, "yyyy-MM-dd"), label: format(d, "EEE"), day: format(d, "d") };
+    const d = addDays(weekStart, i);
+    return { date: format(d, "yyyy-MM-dd"), label: format(d, "EEE"), day: format(d, "d"), dateObj: d };
   });
 
   return (
@@ -287,7 +292,81 @@ const CoachDashboard = () => {
 
         {/* SECTION E — Week Strip */}
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }} className="mb-6">
-          <h3 className="font-display text-sm tracking-wider text-muted-foreground mb-3">UPCOMING WEEK</h3>
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="font-display text-sm tracking-wider text-muted-foreground">UPCOMING WEEK</h3>
+            <div className="flex items-center gap-1">
+              <button onClick={() => setWeekOffset(w => w - 1)} className="p-1.5 rounded-lg hover:bg-secondary text-muted-foreground transition-colors">
+                <ChevronLeft size={14} />
+              </button>
+              <button
+                onClick={() => setShowMonthView(!showMonthView)}
+                className={`p-1.5 rounded-lg transition-colors ${showMonthView ? "bg-primary text-primary-foreground" : "hover:bg-secondary text-muted-foreground"}`}
+              >
+                <CalendarDays size={14} />
+              </button>
+              <button onClick={() => setWeekOffset(w => w + 1)} className="p-1.5 rounded-lg hover:bg-secondary text-muted-foreground transition-colors">
+                <ChevronRight size={14} />
+              </button>
+              {weekOffset !== 0 && (
+                <button onClick={() => setWeekOffset(0)} className="ml-1 px-2 py-1 rounded-lg bg-primary/10 font-display text-[9px] tracking-wider text-primary hover:bg-primary/20 transition-colors">
+                  TODAY
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Month calendar overlay */}
+          {showMonthView && (() => {
+            const ms = startOfMonth(calMonth);
+            const me = endOfMonth(calMonth);
+            const cs = startOfWeek(ms, { weekStartsOn: 1 });
+            const days: Date[] = [];
+            let cur = cs;
+            while (cur <= me || days.length % 7 !== 0) { days.push(cur); cur = addDays(cur, 1); }
+            return (
+              <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} className="mb-3 bg-card border border-border rounded-xl p-3 overflow-hidden">
+                <div className="flex items-center justify-between mb-2">
+                  <button onClick={() => setCalMonth(subMonths(calMonth, 1))} className="p-1 rounded-lg hover:bg-secondary text-muted-foreground"><ChevronLeft size={14} /></button>
+                  <p className="font-display text-xs tracking-wider text-foreground">{format(calMonth, "MMMM yyyy").toUpperCase()}</p>
+                  <button onClick={() => setCalMonth(addMonths(calMonth, 1))} className="p-1 rounded-lg hover:bg-secondary text-muted-foreground"><ChevronRight size={14} /></button>
+                </div>
+                <div className="grid grid-cols-7 gap-1 mb-1">
+                  {["M","T","W","T","F","S","S"].map((d,i) => (
+                    <div key={i} className="text-center font-display text-[9px] text-muted-foreground py-0.5">{d}</div>
+                  ))}
+                </div>
+                <div className="grid grid-cols-7 gap-1">
+                  {days.map(day => {
+                    const val = format(day, "yyyy-MM-dd");
+                    const isToday = isSameDay(day, new Date());
+                    const inMonth = isSameMonth(day, calMonth);
+                    const hasBooking = weekBookings.some(b => b.booking_date === val);
+                    return (
+                      <button
+                        key={val}
+                        onClick={() => {
+                          const diff = Math.floor((day.getTime() - new Date().setHours(0,0,0,0)) / (1000*60*60*24));
+                          setWeekOffset(Math.floor(diff / 7));
+                          setShowMonthView(false);
+                        }}
+                        className={`aspect-square rounded-lg text-center font-body text-[11px] transition-all relative flex items-center justify-center ${
+                          !inMonth ? "text-muted-foreground/20"
+                            : isToday ? "bg-primary/15 text-foreground ring-1 ring-primary/40"
+                            : "text-foreground hover:bg-secondary"
+                        }`}
+                      >
+                        {format(day, "d")}
+                        {hasBooking && inMonth && (
+                          <span className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-primary" />
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              </motion.div>
+            );
+          })()}
+
           <div className="flex gap-2">
             {weekDays.map(d => {
               const dayBookings = weekBookings.filter(b => b.booking_date === d.date);
