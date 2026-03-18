@@ -89,9 +89,14 @@ const CoachModules = () => {
   useEffect(() => {
     if (user) {
       fetchCoachSport();
-      fetchModules();
     }
   }, [user]);
+
+  useEffect(() => {
+    if (user) {
+      fetchModules();
+    }
+  }, [user, coachSport]);
 
   const fetchCoachSport = async () => {
     if (!user) return;
