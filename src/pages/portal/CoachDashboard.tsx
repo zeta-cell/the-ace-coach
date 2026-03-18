@@ -5,9 +5,9 @@ import { useAuth } from "@/contexts/AuthContext";
 import { motion } from "framer-motion";
 import {
   Users, BookOpen, Calendar, ChevronRight, ShoppingBag, Mail, Check, X as XIcon,
-  TrendingUp, TrendingDown, DollarSign, Star, CreditCard
+  TrendingUp, TrendingDown, DollarSign, Star, CreditCard, CalendarDays, ChevronLeft, ChevronDown, ChevronUp
 } from "lucide-react";
-import { format, subMonths, startOfMonth, endOfMonth } from "date-fns";
+import { format, subMonths, startOfMonth, endOfMonth, addDays, startOfWeek, endOfWeek, isSameDay, isSameMonth, addMonths, subWeeks, addWeeks } from "date-fns";
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip, Line, ComposedChart } from "recharts";
 import PortalLayout from "@/components/portal/PortalLayout";
 import IncomingBookings from "@/components/portal/IncomingBookings";
