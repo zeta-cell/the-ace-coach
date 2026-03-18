@@ -269,6 +269,7 @@ const CoachPlanBuilder = () => {
   const [blockTitle, setBlockTitle] = useState("");
   const [blockGoal, setBlockGoal] = useState("Technique");
   const [blockDesc, setBlockDesc] = useState("");
+  const [showLocationSection, setShowLocationSection] = useState(false);
 
   // Week context from CoachPlayerDetail
   const weekParam = searchParams.get("week");
