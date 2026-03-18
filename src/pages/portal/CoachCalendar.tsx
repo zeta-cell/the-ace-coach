@@ -15,7 +15,7 @@ import {
 import {
   ChevronLeft, ChevronRight, Users, Clock, ArrowLeft, Plus, X,
   Layers, Search, GripVertical, Trash2, Copy, Save, Dumbbell,
-  Calendar as CalendarIcon, Edit3,
+  Calendar as CalendarIcon, Edit3, MapPin, Shield,
 } from "lucide-react";
 
 /* ── types ── */
@@ -38,6 +38,13 @@ interface TrainingBlock {
 interface PlanBlock { tempId: string; block: TrainingBlock; coach_note: string; block_id: string; }
 
 interface BookingDot { id: string; booking_date: string; status: string; }
+
+interface DayBookingDetail {
+  id: string; booking_date: string; start_time: string; end_time: string;
+  status: string; total_price: number; coach_payout: number; currency: string;
+  player_name: string; player_avatar: string | null; player_id: string;
+  package_title: string; location_type: string | null;
+}
 
 const CATEGORY_LABELS: Record<string, string> = {
   warm_up: "WARM UP", padel_drill: "TECHNICAL", footwork: "FOOTWORK",
@@ -71,6 +78,7 @@ const CoachCalendar = () => {
   const isAdminView = role === "admin" && !!paramCoachId;
   const targetCoachId = paramCoachId || user?.id;
 
+  const [calendarTab, setCalendarTab] = useState<"bookings" | "availability">("bookings");
   const [viewMode, setViewMode] = useState<"week" | "month">("month");
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [plans, setPlans] = useState<DayPlan[]>([]);
@@ -80,6 +88,7 @@ const CoachCalendar = () => {
   const [coachName, setCoachName] = useState("");
   const [assignedPlayers, setAssignedPlayers] = useState<AssignedPlayer[]>([]);
   const [selectedPlayerId, setSelectedPlayerId] = useState<string | null>(null);
+  const [selectedDayBookings, setSelectedDayBookings] = useState<DayBookingDetail[]>([]);
 
   // Quick add
   const [quickAddOpen, setQuickAddOpen] = useState(false);
@@ -415,11 +424,48 @@ const CoachCalendar = () => {
     fetchBlocks();
   };
 
+  const fetchDayBookings = async (dateStr: string) => {
+    if (!targetCoachId) return;
+    const { data } = await supabase
+      .from("bookings")
+      .select("id, booking_date, start_time, end_time, status, total_price, coach_payout, currency, player_id, package_id, location_type")
+      .eq("coach_id", targetCoachId)
+      .eq("booking_date", dateStr)
+      .in("status", ["pending", "confirmed"])
+      .order("start_time");
+
+    if (!data || data.length === 0) { setSelectedDayBookings([]); return; }
+
+    const playerIds = [...new Set(data.map(b => b.player_id))];
+    const pkgIds = [...new Set(data.filter(b => b.package_id).map(b => b.package_id!))];
+
+    const [profilesRes, pkgsRes] = await Promise.all([
+      supabase.from("profiles").select("user_id, full_name, avatar_url").in("user_id", playerIds),
+      pkgIds.length > 0 ? supabase.from("coach_packages").select("id, title").in("id", pkgIds) : { data: [] },
+    ]);
+
+    const profileMap = new Map(profilesRes.data?.map(p => [p.user_id, p]) || []);
+    const pkgMap = new Map((pkgsRes.data as any[])?.map(p => [p.id, p]) || []);
+
+    setSelectedDayBookings(data.map(b => {
+      const player = profileMap.get(b.player_id);
+      const pkg = pkgMap.get(b.package_id);
+      return {
+        ...b,
+        player_name: player?.full_name || "Player",
+        player_avatar: player?.avatar_url || null,
+        player_id: b.player_id,
+        package_title: pkg?.title || "Session",
+      };
+    }));
+  };
+
   const handleDayClick = (dateStr: string) => {
     if (selectedDay === dateStr) {
-      setSelectedDay(null); setPlanBlocks([]); setSelectedPlayerId(null);
+      setSelectedDay(null); setPlanBlocks([]); setSelectedPlayerId(null); setSelectedDayBookings([]);
     } else {
       setSelectedDay(dateStr); setPlanBlocks([]); setSelectedPlayerId(null);
+      fetchDayBookings(dateStr);
     }
   };
 
@@ -433,12 +479,11 @@ const CoachCalendar = () => {
     setQuickAddOpen(true);
   };
 
+  const currencySymbol = (c: string) => c === "EUR" ? "€" : c === "USD" ? "$" : c === "GBP" ? "£" : c;
+
   return (
     <PortalLayout>
       <div className="space-y-6">
-        {/* Availability grid */}
-        {!isAdminView && targetCoachId && <CoachAvailabilityGrid coachId={targetCoachId} />}
-
         {/* Header */}
         <div className="space-y-4">
           {isAdminView && (
@@ -450,21 +495,32 @@ const CoachCalendar = () => {
             <h1 className="font-display text-2xl md:text-3xl text-foreground tracking-wider">
               {isAdminView ? `${coachName.toUpperCase()}'S SCHEDULE` : "MY SCHEDULE"}
             </h1>
-            {/* View mode toggle */}
-            <div className="flex gap-0.5 bg-secondary rounded-lg p-0.5">
-              {(["week", "month"] as const).map(mode => (
-                <button key={mode} onClick={() => setViewMode(mode)}
-                  className={`px-3 py-1.5 rounded-md font-display text-[10px] tracking-wider transition-colors ${
-                    viewMode === mode ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
+          </div>
+
+          {/* Tab toggle: Bookings Calendar vs Availability */}
+          {!isAdminView && (
+            <div className="flex gap-1 bg-secondary rounded-lg p-0.5">
+              {([{ key: "bookings", label: "BOOKINGS CALENDAR", icon: CalendarIcon }, { key: "availability", label: "AVAILABILITY", icon: Shield }] as const).map(tab => (
+                <button key={tab.key} onClick={() => setCalendarTab(tab.key as "bookings" | "availability")}
+                  className={`flex-1 py-2.5 rounded-md font-display text-[10px] tracking-wider transition-colors flex items-center justify-center gap-1.5 ${
+                    calendarTab === tab.key ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
-                  {mode.toUpperCase()}
+                  <tab.icon size={14} /> {tab.label}
                 </button>
               ))}
             </div>
-          </div>
+          )}
         </div>
 
+        {/* Availability tab */}
+        {calendarTab === "availability" && !isAdminView && targetCoachId && (
+          <CoachAvailabilityGrid coachId={targetCoachId} />
+        )}
+
+        {/* Bookings Calendar tab */}
+        {(calendarTab === "bookings" || isAdminView) && (
+        <>
         {/* Three column layout */}
         <div className="flex gap-4">
           {/* LEFT — Training Blocks Library */}
@@ -911,6 +967,58 @@ const CoachCalendar = () => {
             </motion.div>
           )}
         </AnimatePresence>
+
+        {/* Selected day bookings — shown below calendar on mobile & desktop */}
+        {selectedDay && selectedDayBookings.length > 0 && (
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-2">
+            <h3 className="font-display text-sm tracking-wider text-foreground">
+              BOOKINGS — {format(new Date(selectedDay + "T00:00:00"), "EEE d MMM").toUpperCase()}
+            </h3>
+            {selectedDayBookings.map(b => (
+              <Link key={b.id} to={`/coach/players/${b.player_id}`}
+                className="flex items-center gap-3 p-3 rounded-xl bg-card border border-border hover:border-primary/40 transition-colors">
+                <div className="w-10 h-10 rounded-full bg-primary/20 overflow-hidden flex items-center justify-center shrink-0">
+                  {b.player_avatar ? (
+                    <img src={b.player_avatar} alt="" className="w-full h-full object-cover" />
+                  ) : (
+                    <span className="font-display text-sm text-primary">{b.player_name.charAt(0)}</span>
+                  )}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-display text-sm text-foreground">{b.player_name}</p>
+                  <div className="flex items-center gap-2 text-xs font-body text-muted-foreground">
+                    <span className="flex items-center gap-1"><Clock size={11} className="text-primary" />{b.start_time.slice(0, 5)} – {b.end_time.slice(0, 5)}</span>
+                    <span>·</span>
+                    <span>{b.package_title}</span>
+                  </div>
+                  <div className="flex items-center gap-2 mt-0.5">
+                    <span className={`text-[9px] font-display px-2 py-0.5 rounded-full uppercase ${
+                      b.status === "confirmed" ? "bg-green-500/10 text-green-400" : "bg-yellow-500/10 text-yellow-400"
+                    }`}>{b.status}</span>
+                    {b.location_type && (
+                      <span className="text-[9px] font-body text-muted-foreground flex items-center gap-0.5">
+                        <MapPin size={8} /> {b.location_type === "in_person" ? "In Person" : "Online"}
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <div className="text-right shrink-0">
+                  <p className="font-display text-foreground">{currencySymbol(b.currency)}{Number(b.total_price).toFixed(0)}</p>
+                  <p className="font-body text-[9px] text-muted-foreground">Your cut: {currencySymbol(b.currency)}{Number(b.coach_payout).toFixed(0)}</p>
+                </div>
+              </Link>
+            ))}
+          </motion.div>
+        )}
+
+        {selectedDay && selectedDayBookings.length === 0 && calendarTab === "bookings" && (
+          <div className="text-center py-4">
+            <p className="text-sm font-body text-muted-foreground">No bookings on this day</p>
+          </div>
+        )}
+
+        </>
+        )}
       </div>
 
       <CreateTrainingBlockDrawer
