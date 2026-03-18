@@ -186,7 +186,7 @@ const InlineAddModule = ({
         onClick={() => setOpen(true)}
         className="w-full py-3 rounded-xl border-2 border-dashed border-border text-muted-foreground font-display text-xs tracking-wider hover:border-primary hover:text-primary transition-colors flex items-center justify-center gap-2"
       >
-        <Plus size={14} /> MODUL HINZUFÜGEN
+        <Search size={14} /> SEARCH ALL MODULES
       </button>
     );
   }
