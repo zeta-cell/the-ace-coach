@@ -299,18 +299,28 @@ const QuickAddTrainingDrawer = ({
                 ) : (
                   filteredModules.length === 0 ? (
                     <p className="text-xs font-body text-muted-foreground text-center py-6">No modules found</p>
-                  ) : filteredModules.map(m => (
-                    <button key={m.id} onClick={() => toggleModule(m.id)}
-                      className={`w-full text-left p-3 rounded-lg border transition-colors ${
-                        selectedModuleIds.includes(m.id) ? "border-primary bg-primary/5" : "border-border hover:border-primary/40"
-                      }`}
-                    >
-                      <p className="font-display text-xs text-foreground">{m.title}</p>
-                      <p className="text-[10px] font-body text-muted-foreground">
-                        {m.category?.replace("_", " ")} · {m.duration_minutes || 0}min
-                      </p>
-                    </button>
-                  ))
+                  ) : filteredModules.map(m => {
+                    const isSelected = selectedModuleIds.includes(m.id);
+                    return (
+                      <button key={m.id} onClick={() => toggleModule(m.id)}
+                        className={`w-full text-left p-3 rounded-lg border transition-all flex items-center gap-3 ${
+                          isSelected ? "border-primary bg-primary/10" : "border-border hover:border-primary/40"
+                        }`}
+                      >
+                        <div className="flex-1 min-w-0">
+                          <p className="font-display text-xs text-foreground">{m.title}</p>
+                          <p className="text-[10px] font-body text-muted-foreground">
+                            {m.category?.replace("_", " ")} · {m.duration_minutes || 0}min
+                          </p>
+                        </div>
+                        <div className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-all ${
+                          isSelected ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground hover:text-foreground"
+                        }`}>
+                          {isSelected ? <Check size={14} /> : <Plus size={14} />}
+                        </div>
+                      </button>
+                    );
+                  }))
                 )}
               </div>
 
