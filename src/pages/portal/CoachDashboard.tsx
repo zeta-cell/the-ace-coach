@@ -161,10 +161,15 @@ const CoachDashboard = () => {
 
   const LEVEL_COLORS: Record<string, string> = { bronze: "#CD7F32", silver: "#C0C0C0", gold: "#FFD700", platinum: "#E5E4E2", diamond: "#B9F2FF", legend: "#FF69B4" };
 
-  // Week strip
+  // Week strip with offset
+  const [weekOffset, setWeekOffset] = useState(0);
+  const [showMonthView, setShowMonthView] = useState(false);
+  const [calMonth, setCalMonth] = useState(new Date());
+
+  const weekStart = addDays(new Date(), weekOffset * 7);
   const weekDays = Array.from({ length: 7 }, (_, i) => {
-    const d = new Date(); d.setDate(d.getDate() + i);
-    return { date: format(d, "yyyy-MM-dd"), label: format(d, "EEE"), day: format(d, "d") };
+    const d = addDays(weekStart, i);
+    return { date: format(d, "yyyy-MM-dd"), label: format(d, "EEE"), day: format(d, "d"), dateObj: d };
   });
 
   return (
