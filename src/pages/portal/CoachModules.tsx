@@ -89,9 +89,14 @@ const CoachModules = () => {
   useEffect(() => {
     if (user) {
       fetchCoachSport();
-      fetchModules();
     }
   }, [user]);
+
+  useEffect(() => {
+    if (user) {
+      fetchModules();
+    }
+  }, [user, coachSport]);
 
   const fetchCoachSport = async () => {
     if (!user) return;
@@ -212,7 +217,7 @@ const CoachModules = () => {
     <PortalLayout>
       <div className="max-w-4xl mx-auto">
         <div className="flex items-center justify-between mb-4">
-          <h1 className="font-display text-3xl text-foreground">MODULES</h1>
+          <h1 className="font-display text-3xl text-foreground">TRAINING LIBRARY</h1>
           <button
             onClick={() => { setForm(emptyForm); setEditingId(null); setShowForm(true); }}
             className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground font-display text-xs tracking-wider hover:bg-primary/90 transition-colors"
