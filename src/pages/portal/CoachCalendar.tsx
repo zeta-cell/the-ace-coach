@@ -815,6 +815,102 @@ const CoachCalendar = () => {
             )}
           </AnimatePresence>
         </div>
+
+        {/* Mobile bottom panel — day detail */}
+        <AnimatePresence>
+          {selectedDay && (
+            <motion.div
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "100%" }}
+              transition={{ type: "spring", damping: 28, stiffness: 300 }}
+              className="md:hidden fixed inset-x-0 bottom-0 z-50 bg-card border-t border-border rounded-t-2xl shadow-2xl max-h-[60vh] overflow-y-auto"
+            >
+              <div className="p-4 space-y-3">
+                {/* Handle bar */}
+                <div className="w-10 h-1 rounded-full bg-muted-foreground/30 mx-auto" />
+
+                <div className="flex items-center justify-between">
+                  <p className="font-display text-sm tracking-wider text-foreground">
+                    {format(new Date(selectedDay + "T00:00:00"), "EEEE d MMM").toUpperCase()}
+                  </p>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => handleQuickAdd(selectedDay)}
+                      className="p-1.5 rounded-lg bg-primary text-primary-foreground"
+                    >
+                      <Plus size={16} />
+                    </button>
+                    <button
+                      onClick={() => { setSelectedDay(null); setPlanBlocks([]); setSelectedPlayerId(null); }}
+                      className="p-1.5 rounded-lg hover:bg-secondary"
+                    >
+                      <X size={16} />
+                    </button>
+                  </div>
+                </div>
+
+                {selectedDayPlans.length === 0 ? (
+                  <div className="text-center py-6">
+                    <Dumbbell size={24} className="text-muted-foreground mx-auto mb-2" />
+                    <p className="text-sm font-body text-muted-foreground">No sessions scheduled</p>
+                    <button
+                      onClick={() => handleQuickAdd(selectedDay)}
+                      className="mt-3 px-4 py-2 rounded-xl bg-primary text-primary-foreground font-display text-xs tracking-wider"
+                    >
+                      ADD TRAINING
+                    </button>
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    {selectedDayPlans.map((plan) => (
+                      <div
+                        key={plan.id}
+                        onClick={() => navigate(`/coach/plan/${plan.player_id}?date=${selectedDay}`)}
+                        className="flex items-center gap-3 p-3 rounded-xl bg-secondary hover:bg-secondary/80 cursor-pointer transition-colors"
+                      >
+                        <div className="w-9 h-9 rounded-full bg-primary/20 flex items-center justify-center shrink-0">
+                          <span className="text-primary font-display text-sm">{plan.player_name.charAt(0)}</span>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-display text-foreground truncate">{plan.player_name}</p>
+                          <div className="flex items-center gap-2 mt-0.5">
+                            {plan.start_time && (
+                              <span className="flex items-center gap-1 text-xs font-body text-muted-foreground">
+                                <Clock size={11} className="text-primary" />
+                                {formatTime(plan.start_time)}
+                                {plan.end_time ? ` – ${formatTime(plan.end_time)}` : ""}
+                              </span>
+                            )}
+                            <span className="flex items-center gap-1 text-xs font-body text-muted-foreground">
+                              <Dumbbell size={11} className="text-primary" />
+                              {plan.item_count} modules
+                            </span>
+                          </div>
+                          {plan.program_author && (
+                            <div className="flex items-center gap-1 mt-0.5">
+                              {plan.program_author_avatar ? (
+                                <img src={plan.program_author_avatar} className="w-3.5 h-3.5 rounded-full" />
+                              ) : (
+                                <div className="w-3.5 h-3.5 rounded-full bg-primary/20 flex items-center justify-center text-primary font-display text-[7px]">
+                                  {plan.program_author.charAt(0)}
+                                </div>
+                              )}
+                              <span className="font-body text-[10px] text-muted-foreground">
+                                Program by {plan.program_author}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                        <ChevronRight size={16} className="text-muted-foreground shrink-0" />
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       <CreateTrainingBlockDrawer
