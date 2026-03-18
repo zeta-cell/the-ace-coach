@@ -424,11 +424,48 @@ const CoachCalendar = () => {
     fetchBlocks();
   };
 
+  const fetchDayBookings = async (dateStr: string) => {
+    if (!targetCoachId) return;
+    const { data } = await supabase
+      .from("bookings")
+      .select("id, booking_date, start_time, end_time, status, total_price, coach_payout, currency, player_id, package_id, location_type")
+      .eq("coach_id", targetCoachId)
+      .eq("booking_date", dateStr)
+      .in("status", ["pending", "confirmed"])
+      .order("start_time");
+
+    if (!data || data.length === 0) { setSelectedDayBookings([]); return; }
+
+    const playerIds = [...new Set(data.map(b => b.player_id))];
+    const pkgIds = [...new Set(data.filter(b => b.package_id).map(b => b.package_id!))];
+
+    const [profilesRes, pkgsRes] = await Promise.all([
+      supabase.from("profiles").select("user_id, full_name, avatar_url").in("user_id", playerIds),
+      pkgIds.length > 0 ? supabase.from("coach_packages").select("id, title").in("id", pkgIds) : { data: [] },
+    ]);
+
+    const profileMap = new Map(profilesRes.data?.map(p => [p.user_id, p]) || []);
+    const pkgMap = new Map((pkgsRes.data as any[])?.map(p => [p.id, p]) || []);
+
+    setSelectedDayBookings(data.map(b => {
+      const player = profileMap.get(b.player_id);
+      const pkg = pkgMap.get(b.package_id);
+      return {
+        ...b,
+        player_name: player?.full_name || "Player",
+        player_avatar: player?.avatar_url || null,
+        player_id: b.player_id,
+        package_title: pkg?.title || "Session",
+      };
+    }));
+  };
+
   const handleDayClick = (dateStr: string) => {
     if (selectedDay === dateStr) {
-      setSelectedDay(null); setPlanBlocks([]); setSelectedPlayerId(null);
+      setSelectedDay(null); setPlanBlocks([]); setSelectedPlayerId(null); setSelectedDayBookings([]);
     } else {
       setSelectedDay(dateStr); setPlanBlocks([]); setSelectedPlayerId(null);
+      fetchDayBookings(dateStr);
     }
   };
 
