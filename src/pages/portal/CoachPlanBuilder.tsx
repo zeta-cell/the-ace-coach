@@ -421,7 +421,7 @@ const CoachPlanBuilder = () => {
       if (moduleIds.length > 0) {
         const { data: mods } = await supabase
           .from("modules")
-          .select("id, title, category, duration_minutes")
+          .select("id, title, category, duration_minutes, description, instructions, difficulty, equipment")
           .in("id", moduleIds);
         const modMap = new Map(mods?.map((m) => [m.id, m]) || []);
         setPlanItems(
