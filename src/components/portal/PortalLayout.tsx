@@ -125,8 +125,8 @@ const PortalLayout = ({ children }: { children: React.ReactNode }) => {
             <>
               {/* Left two: Players, Calendar */}
               {[
-                { label: "Training Center", icon: LayoutDashboard, href: "/coach" },
                 { label: "Players", icon: Users, href: "/coach/players" },
+                { label: "Calendar", icon: CalendarDays, href: "/coach/calendar" },
               ].map((item) => {
                 const isActive = location.pathname === item.href;
                 return (
@@ -136,17 +136,17 @@ const PortalLayout = ({ children }: { children: React.ReactNode }) => {
                   </Link>
                 );
               })}
-              {/* Center — Create Training */}
+              {/* Center — Create Plan */}
               <button onClick={() => setFabDrawerOpen(true)} className="flex flex-col items-center -mt-5">
                 <div className="w-14 h-14 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg">
-                  <Plus size={22} />
+                  <Dumbbell size={22} />
                 </div>
                 <span className="text-[9px] font-display tracking-wider text-primary mt-1">CREATE</span>
               </button>
-              {/* Right two: Library, Videos */}
+              {/* Right two: Library, Messages */}
               {[
                 { label: "Library", icon: BookOpen, href: "/coach/library" },
-                { label: "Videos", icon: Video, href: "/coach/videos" },
+                { label: "Messages", icon: MessageSquare, href: "/coach/messages" },
               ].map((item) => {
                 const isActive = location.pathname === item.href;
                 return (
