@@ -281,6 +281,15 @@ const Training = () => {
   return (
     <PortalLayout>
       <div className="max-w-3xl mx-auto">
+        {isCoachViewingPlayer && (
+          <button
+            onClick={() => navigate(`/coach/players/${playerParam}`)}
+            className="inline-flex items-center gap-2 mb-4 text-muted-foreground hover:text-foreground transition-colors font-body text-sm"
+          >
+            <ChevronLeft size={16} /> Back to Player Profile
+          </button>
+        )}
+
         <div className="flex items-center justify-between mb-4">
           <h1 className="font-display text-3xl text-foreground">TRAINING</h1>
           <div className="flex items-center gap-2">
