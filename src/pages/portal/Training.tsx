@@ -144,6 +144,7 @@ const Training = () => {
   const [editLocation, setEditLocation] = useState("");
   const [savingPlan, setSavingPlan] = useState(false);
   const [justSaved, setJustSaved] = useState(false);
+  const [showSessionDetails, setShowSessionDetails] = useState(false);
 
   // Add panel state
   const [showAddPanel, setShowAddPanel] = useState(false);
