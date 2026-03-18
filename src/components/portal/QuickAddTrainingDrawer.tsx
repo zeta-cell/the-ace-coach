@@ -36,6 +36,8 @@ interface QuickAddTrainingDrawerProps {
   onSaved?: () => void;
 }
 
+const CATEGORY_FILTERS = ["All", "Padel", "Tennis", "Mental", "Fitness", "Tactical", "Recovery"] as const;
+
 const QuickAddTrainingDrawer = ({
   open, onClose, prefilledDate, prefilledPlayerId, onSaved,
 }: QuickAddTrainingDrawerProps) => {
@@ -49,6 +51,7 @@ const QuickAddTrainingDrawer = ({
   const [selectedBlockId, setSelectedBlockId] = useState("");
   const [selectedModuleIds, setSelectedModuleIds] = useState<string[]>([]);
   const [search, setSearch] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState<string>("All");
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
