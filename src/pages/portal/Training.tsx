@@ -349,17 +349,20 @@ const Training = () => {
   /* ── Save plan ── */
   const handleSavePlan = async () => {
     if (!currentPlanId) return;
-    if (!editStartTime || !editEndTime) {
-      toast.error("Please set both start and end times.");
-      return;
-    }
     setSavingPlan(true);
     await supabase.from("player_day_plans").update({
       start_time: editStartTime || null, end_time: editEndTime || null,
       location_name: editLocation || null, notes: planNotes || null,
     }).eq("id", currentPlanId);
-    toast.success("Training day saved!");
+    // Also persist any coach notes
+    for (const item of planItems) {
+      await supabase.from("player_day_plan_items").update({ coach_note: item.coach_note || null }).eq("id", item.id);
+    }
     setSavingPlan(false);
+    setJustSaved(true);
+    toast.success("Plan saved!");
+    // Reset saved state after 3 seconds
+    setTimeout(() => setJustSaved(false), 3000);
   };
 
   /* ── Save as block ── */
