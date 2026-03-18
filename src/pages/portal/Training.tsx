@@ -661,16 +661,8 @@ const Training = () => {
         )}
 
         {/* Weather standalone when no plan */}
-        {weather && !loading && planItems.length === 0 && isCoachOrAdmin && (
-          <div className="bg-card border border-border rounded-2xl p-4 mb-5 flex items-center gap-3">
-            {getWeatherIcon(weather.weatherCode)}
-            <span className="font-body text-base text-muted-foreground">
-              {weather.temp}°C · {getWeatherLabel(weather.weatherCode)} · Wind {weather.windSpeed} km/h
-            </span>
-          </div>
-        )}
-        {weather && !loading && planItems.length === 0 && !isCoachOrAdmin && (
-          <div className="bg-card border border-border rounded-xl p-3 mb-4 flex items-center gap-2">
+        {weather && !loading && planItems.length === 0 && (
+          <div className="bg-card border border-border rounded-xl p-3 mb-4 flex items-center gap-2.5">
             {getWeatherIcon(weather.weatherCode)}
             <span className="font-body text-sm text-muted-foreground">
               {weather.temp}°C · {getWeatherLabel(weather.weatherCode)} · Wind {weather.windSpeed} km/h
