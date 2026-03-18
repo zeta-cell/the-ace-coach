@@ -71,6 +71,7 @@ const CoachCalendar = () => {
   const isAdminView = role === "admin" && !!paramCoachId;
   const targetCoachId = paramCoachId || user?.id;
 
+  const [calendarTab, setCalendarTab] = useState<"bookings" | "availability">("bookings");
   const [viewMode, setViewMode] = useState<"week" | "month">("month");
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [plans, setPlans] = useState<DayPlan[]>([]);
