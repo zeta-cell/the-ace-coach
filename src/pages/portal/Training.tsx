@@ -136,6 +136,9 @@ const Training = () => {
   const [moduleCatFilter, setModuleCatFilter] = useState("All");
   const [allModules, setAllModules] = useState<BlockModuleItem[]>([]);
   const [allBlocks, setAllBlocks] = useState<TrainingBlock[]>([]);
+  const [showInlineBlocks, setShowInlineBlocks] = useState(false);
+  const [blockSearch, setBlockSearch] = useState("");
+  const [expandedBlockGoal, setExpandedBlockGoal] = useState<string | null>(null);
 
   // Month calendar
   const [showMonthCal, setShowMonthCal] = useState(false);
