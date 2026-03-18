@@ -25,7 +25,7 @@ const playerNav = [
 const coachNav = [
   { label: "Training Center", icon: LayoutDashboard, href: "/coach" },
   { label: "Players", icon: Users, href: "/coach/players" },
-  { label: "Modules", icon: BookOpen, href: "/coach/modules" },
+  { label: "Training Library", icon: BookOpen, href: "/coach/modules" },
   { label: "Videos", icon: Video, href: "/coach/videos" },
   { label: "Calendar", icon: CalendarDays, href: "/coach/calendar" },
   { label: "Events", icon: Calendar, href: "/coach/events" },
@@ -39,7 +39,7 @@ const adminNav = [
   { label: "Players", icon: Users, href: "/admin/users?role=player" },
   { label: "Coaches", icon: UserCheck, href: "/admin/users?role=coach" },
   { label: "Assignments", icon: Link2, href: "/admin/assignments" },
-  { label: "Modules", icon: BookOpen, href: "/admin/modules" },
+  { label: "Training Library", icon: BookOpen, href: "/admin/modules" },
   { label: "Blocks", icon: ShoppingBag, href: "/admin/marketplace" },
   { label: "Events", icon: Calendar, href: "/admin/events" },
   { label: "Payments", icon: CreditCard, href: "/admin/payments" },
