@@ -878,59 +878,73 @@ const Training = () => {
               /* Empty state — Coach inline builder */
               isCoachOrAdmin ? (
                 <div className="space-y-4">
-                  {/* Session details — collapsible */}
-                  <button onClick={() => setShowSessionDetails(!showSessionDetails)}
-                    className="w-full flex items-center gap-2 p-3 rounded-xl bg-card border border-border hover:border-primary/40 transition-colors">
-                    <div className="w-7 h-7 rounded-lg bg-primary/15 flex items-center justify-center shrink-0">
-                      {showSessionDetails ? <Minus size={12} className="text-primary" /> : <Plus size={12} className="text-primary" />}
+                  {/* Session details card — same style as existing plan view */}
+                  <div className="bg-card border border-border rounded-xl p-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      <div>
+                        <label className="text-[10px] font-display tracking-wider text-muted-foreground mb-1 block">LOCATION</label>
+                        <div className="flex items-center gap-2">
+                          <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                            <MapPin size={14} className="text-primary" />
+                          </div>
+                          <input value={editLocation} onChange={e => setEditLocation(e.target.value)} placeholder="e.g. Club Deportivo"
+                            className="flex-1 px-2.5 py-1.5 rounded-lg bg-secondary text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-muted-foreground" />
+                        </div>
+                      </div>
+                      <div>
+                        <label className="text-[10px] font-display tracking-wider text-muted-foreground mb-1 block">START TIME</label>
+                        <div className="flex items-center gap-2">
+                          <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                            <Clock size={14} className="text-primary" />
+                          </div>
+                          <input type="time" value={editStartTime} onChange={e => setEditStartTime(e.target.value)}
+                            className="flex-1 px-2.5 py-1.5 rounded-lg bg-secondary text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary [color-scheme:dark]" />
+                        </div>
+                      </div>
+                      <div>
+                        <label className="text-[10px] font-display tracking-wider text-muted-foreground mb-1 block">END TIME</label>
+                        <div className="flex items-center gap-2">
+                          <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                            <Clock size={14} className="text-primary" />
+                          </div>
+                          <input type="time" value={editEndTime} onChange={e => setEditEndTime(e.target.value)}
+                            className="flex-1 px-2.5 py-1.5 rounded-lg bg-secondary text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary [color-scheme:dark]" />
+                        </div>
+                      </div>
                     </div>
-                    <div className="flex-1 text-left">
-                      <span className="font-display text-[10px] tracking-wider text-foreground">SESSION DETAILS</span>
-                      {(editStartTime || editLocation) && !showSessionDetails && (
-                        <span className="text-[10px] font-body text-muted-foreground ml-2">
-                          {editStartTime && `${editStartTime}`}{editStartTime && editEndTime && ` – ${editEndTime}`}{editLocation && ` · ${editLocation}`}
-                        </span>
+
+                    {/* Coach + weather row */}
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-3 pt-3 border-t border-border">
+                      {coachName && (
+                        <div className="flex items-center gap-2.5">
+                          <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center overflow-hidden shrink-0">
+                            {coachAvatar ? (
+                              <img src={coachAvatar} alt={coachName} className="w-full h-full object-cover" />
+                            ) : (
+                              <User size={14} className="text-primary" />
+                            )}
+                          </div>
+                          <div className="min-w-0">
+                            <p className="text-[10px] font-display tracking-wider text-muted-foreground">COACH</p>
+                            <p className="font-body text-sm text-foreground truncate">{coachName}</p>
+                          </div>
+                        </div>
+                      )}
+                      {weather && (
+                        <div className="flex items-center gap-2.5">
+                          <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                            {getWeatherIcon(weather.weatherCode)}
+                          </div>
+                          <div className="min-w-0">
+                            <p className="text-[10px] font-display tracking-wider text-muted-foreground">WEATHER</p>
+                            <p className="font-body text-sm text-foreground">
+                              {weather.temp}°C · {getWeatherLabel(weather.weatherCode)}
+                            </p>
+                          </div>
+                        </div>
                       )}
                     </div>
-                    <ChevronDown size={14} className={`text-muted-foreground transition-transform ${showSessionDetails ? "rotate-180" : ""}`} />
-                  </button>
-
-                  <AnimatePresence>
-                    {showSessionDetails && (
-                      <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }}
-                        className="overflow-hidden">
-                        <div className="space-y-3 pb-2">
-                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                            <div className="min-w-0">
-                              <label className="font-display text-[9px] tracking-wider text-primary mb-1 block">START TIME</label>
-                              <div className="relative min-w-0">
-                                <Clock size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
-                                <input type="time" value={editStartTime} onChange={e => setEditStartTime(e.target.value)}
-                                  className="w-full min-w-0 pl-9 pr-3 py-2.5 rounded-xl bg-background border-2 border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all [color-scheme:dark] appearance-none" />
-                              </div>
-                            </div>
-                            <div className="min-w-0">
-                              <label className="font-display text-[9px] tracking-wider text-primary mb-1 block">END TIME</label>
-                              <div className="relative min-w-0">
-                                <Clock size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
-                                <input type="time" value={editEndTime} onChange={e => setEditEndTime(e.target.value)}
-                                  className="w-full min-w-0 pl-9 pr-3 py-2.5 rounded-xl bg-background border-2 border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all [color-scheme:dark] appearance-none" />
-                              </div>
-                            </div>
-                          </div>
-                          <div className="relative">
-                            <MapPin size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
-                            <input value={editLocation} onChange={e => setEditLocation(e.target.value)}
-                              placeholder="Location (e.g. Court 3)..."
-                              className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-background border-2 border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary placeholder:text-muted-foreground transition-all" />
-                          </div>
-                          <input value={planNotes} onChange={e => setPlanNotes(e.target.value)}
-                            placeholder="Plan notes (optional)..."
-                            className="w-full px-3 py-2.5 rounded-xl bg-background border-2 border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary placeholder:text-muted-foreground transition-all" />
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
+                  </div>
 
                   {/* Add modules by category */}
                   <div>
