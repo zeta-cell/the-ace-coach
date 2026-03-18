@@ -341,18 +341,24 @@ Deno.serve(async (req) => {
     ];
 
     const moduleIdMap: Record<string, string> = {};
+    const moduleCatMap: Record<string, string> = {};
     if (coach1Id) {
       for (const m of moduleCategories) {
         const { data: existing } = await admin
           .from("modules").select("id").eq("title", m.title).eq("created_by", coach1Id).maybeSingle();
         if (existing) {
           moduleIdMap[m.title] = existing.id;
+          moduleCatMap[existing.id] = m.category;
         } else {
           const { data: inserted } = await admin.from("modules").insert({
             title: m.title, category: m.category, duration_minutes: m.duration,
             description: m.desc, created_by: coach1Id, is_shared: true, difficulty: m.difficulty || "intermediate",
+            sport: m.sport || "both",
           }).select("id").single();
-          if (inserted) moduleIdMap[m.title] = inserted.id;
+          if (inserted) {
+            moduleIdMap[m.title] = inserted.id;
+            moduleCatMap[inserted.id] = m.category;
+          }
         }
       }
     }
