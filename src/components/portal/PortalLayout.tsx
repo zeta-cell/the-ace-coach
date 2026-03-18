@@ -121,21 +121,47 @@ const PortalLayout = ({ children }: { children: React.ReactNode }) => {
       {/* Mobile bottom nav */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-card border-t border-border">
         <div className="flex items-center justify-around py-2">
-          {(role === "player" ? playerNav.slice(0, 5) : navItems.slice(0, 5)).map((item) => {
-            const isActive = location.pathname === item.href;
-            return (
-              <Link
-                key={item.href}
-                to={item.href}
-                className={`flex flex-col items-center gap-0.5 p-1.5 rounded-lg transition-colors ${
-                  isActive ? "text-primary" : "text-muted-foreground"
-                }`}
-              >
-                <item.icon size={20} />
-                <span className="text-[10px] font-body font-medium">{item.label}</span>
+          {role === "coach" ? (
+            <>
+              {/* Left two */}
+              {[coachNav[1], coachNav[4]].map((item) => {
+                const isActive = location.pathname === item.href;
+                return (
+                  <Link key={item.href} to={item.href} className={`flex flex-col items-center gap-0.5 p-1.5 rounded-lg transition-colors ${isActive ? "text-primary" : "text-muted-foreground"}`}>
+                    <item.icon size={20} />
+                    <span className="text-[10px] font-body font-medium">{item.label}</span>
+                  </Link>
+                );
+              })}
+              {/* Center — Create Training */}
+              <Link to="/coach" className="flex flex-col items-center -mt-5">
+                <div className={`w-14 h-14 rounded-full flex items-center justify-center shadow-lg transition-colors ${location.pathname === "/coach" ? "bg-primary text-primary-foreground" : "bg-primary text-primary-foreground"}`}>
+                  <Plus size={24} />
+                </div>
+                <span className="text-[9px] font-display tracking-wider text-primary mt-1">CREATE</span>
               </Link>
-            );
-          })}
+              {/* Right two */}
+              {[coachNav[2], coachNav[3]].map((item) => {
+                const isActive = location.pathname === item.href;
+                return (
+                  <Link key={item.href} to={item.href} className={`flex flex-col items-center gap-0.5 p-1.5 rounded-lg transition-colors ${isActive ? "text-primary" : "text-muted-foreground"}`}>
+                    <item.icon size={20} />
+                    <span className="text-[10px] font-body font-medium">{item.label}</span>
+                  </Link>
+                );
+              })}
+            </>
+          ) : (
+            (role === "player" ? playerNav.slice(0, 5) : navItems.slice(0, 5)).map((item) => {
+              const isActive = location.pathname === item.href;
+              return (
+                <Link key={item.href} to={item.href} className={`flex flex-col items-center gap-0.5 p-1.5 rounded-lg transition-colors ${isActive ? "text-primary" : "text-muted-foreground"}`}>
+                  <item.icon size={20} />
+                  <span className="text-[10px] font-body font-medium">{item.label}</span>
+                </Link>
+              );
+            })
+          )}
         </div>
       </div>
 
