@@ -487,8 +487,11 @@ export const TrainingBlocksContent = ({ embedded = false }: { embedded?: boolean
           </div>
         )}
       </div>
-    </PortalLayout>
   );
+
+  if (embedded) return content;
+  return <PortalLayout>{content}</PortalLayout>;
 };
 
+const TrainingBlocksPage = () => <TrainingBlocksContent />;
 export default TrainingBlocksPage;

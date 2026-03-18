@@ -491,8 +491,11 @@ export const CoachModulesContent = ({ embedded = false }: { embedded?: boolean }
           coachName={user ? "You" : undefined}
         />
       </div>
-    </PortalLayout>
   );
+
+  if (embedded) return content;
+  return <PortalLayout>{content}</PortalLayout>;
 };
 
+const CoachModules = () => <CoachModulesContent />;
 export default CoachModules;
