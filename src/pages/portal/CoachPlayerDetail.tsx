@@ -3,7 +3,7 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion } from "framer-motion";
-import { ArrowLeft, Target, TrendingDown, Calendar, CalendarDays, Plus, Mail, Phone, MessageCircle, ChevronDown, ChevronUp, User, BookOpen, CheckCircle, Video, Dumbbell, Globe } from "lucide-react";
+import { ArrowLeft, Target, TrendingDown, Calendar, CalendarDays, Plus, Mail, Phone, MessageCircle, ChevronDown, ChevronUp, User, BookOpen, CheckCircle, Video, Dumbbell, Globe, Edit3, Save, X } from "lucide-react";
 import UpcomingSchedule from "@/components/portal/UpcomingSchedule";
 import { format, addDays } from "date-fns";
 import PortalLayout from "@/components/portal/PortalLayout";
@@ -34,6 +34,9 @@ const CoachPlayerDetail = () => {
   const [expandedProgram, setExpandedProgram] = useState<string | null>(null);
   const [trainDrawerOpen, setTrainDrawerOpen] = useState(false);
   const [upcomingPlans, setUpcomingPlans] = useState<any[]>([]);
+  const [editMode, setEditMode] = useState(false);
+  const [editData, setEditData] = useState<any>(null);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     if (user && playerId) fetchAll();
@@ -106,6 +109,36 @@ const CoachPlayerDetail = () => {
       .eq("buyer_id", playerId!).eq("block_id", prog.block_id);
     toast.success(`Week ${prog.current_week} completed!`);
     setActivePrograms((prev) => prev.map((p) => p.block_id === prog.block_id ? { ...p, current_week: nextWeek } : p));
+  };
+
+  const handleSaveAbilities = async () => {
+    if (!playerId || !editData) return;
+    setSaving(true);
+    const { error } = await supabase.from("player_profiles").update({
+      fitness_level: editData.fitness_level,
+      playtomic_level: editData.playtomic_level,
+      dominant_hand: editData.dominant_hand,
+      preferred_sport: editData.preferred_sport,
+      best_shot: editData.best_shot,
+      weakest_shot: editData.weakest_shot,
+      volley_pct: editData.volley_pct,
+      forehand_pct: editData.forehand_pct,
+      serve_pct: editData.serve_pct,
+      smash_pct: editData.smash_pct,
+      backhand_pct: editData.backhand_pct,
+      lob_pct: editData.lob_pct,
+      left_tendency_pct: editData.left_tendency_pct,
+      right_tendency_pct: editData.right_tendency_pct,
+    }).eq("user_id", playerId);
+
+    if (error) {
+      toast.error("Failed to save changes");
+    } else {
+      setPlayerData({ ...playerData, ...editData });
+      toast.success("Player abilities updated");
+      setEditMode(false);
+    }
+    setSaving(false);
   };
 
   if (loading) {
@@ -293,54 +326,170 @@ const CoachPlayerDetail = () => {
             </div>
           )}
 
-          {/* Best / Weakest */}
-          <div className="grid grid-cols-2 gap-3 mb-6">
-            <div className="bg-card border border-border rounded-xl p-4 flex items-center gap-3">
-              <Target size={20} className="text-primary flex-shrink-0" />
-              <div>
-                <p className="font-display text-lg text-foreground">{playerData?.best_shot || "—"}</p>
-                <p className="font-body text-[10px] text-muted-foreground uppercase tracking-wide">Best Shot</p>
+          {/* Edit / View toggle for abilities */}
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="font-display text-sm tracking-wider text-muted-foreground">ABILITIES & LEVELS</h3>
+            {!editMode ? (
+              <button onClick={() => { setEditMode(true); setEditData({ ...playerData }); }}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border text-muted-foreground hover:text-foreground hover:border-primary/40 font-display text-[10px] tracking-wider transition-colors">
+                <Edit3 size={12} /> EDIT
+              </button>
+            ) : (
+              <div className="flex items-center gap-2">
+                <button onClick={() => setEditMode(false)}
+                  className="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-border text-muted-foreground hover:text-foreground font-display text-[10px] tracking-wider transition-colors">
+                  <X size={12} /> CANCEL
+                </button>
+                <button onClick={handleSaveAbilities} disabled={saving}
+                  className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-primary text-primary-foreground font-display text-[10px] tracking-wider hover:bg-primary/90 disabled:opacity-50 transition-colors">
+                  <Save size={12} /> {saving ? "SAVING..." : "SAVE"}
+                </button>
               </div>
-            </div>
-            <div className="bg-card border border-border rounded-xl p-4 flex items-center gap-3">
-              <TrendingDown size={20} className="text-muted-foreground flex-shrink-0" />
-              <div>
-                <p className="font-display text-lg text-foreground">{playerData?.weakest_shot || "—"}</p>
-                <p className="font-body text-[10px] text-muted-foreground uppercase tracking-wide">Weakest Shot</p>
-              </div>
-            </div>
+            )}
           </div>
 
-          {/* Shot bars */}
+          {/* Fitness level, Playtomic level, dominant hand, best/weakest shot */}
+          {editMode && editData ? (
+            <div className="bg-card border border-border rounded-xl p-4 mb-4 space-y-4">
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="font-display text-[10px] tracking-wider text-muted-foreground">FITNESS LEVEL</label>
+                  <select value={editData.fitness_level || ""} onChange={(e) => setEditData({ ...editData, fitness_level: e.target.value })}
+                    className="w-full mt-1 px-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary">
+                    <option value="beginner">Beginner</option>
+                    <option value="intermediate">Intermediate</option>
+                    <option value="advanced">Advanced</option>
+                    <option value="elite">Elite</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="font-display text-[10px] tracking-wider text-muted-foreground">PLAYTOMIC LEVEL</label>
+                  <input type="number" step="0.1" min="1" max="10" value={editData.playtomic_level ?? ""} onChange={(e) => setEditData({ ...editData, playtomic_level: e.target.value ? parseFloat(e.target.value) : null })}
+                    className="w-full mt-1 px-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary" />
+                </div>
+                <div>
+                  <label className="font-display text-[10px] tracking-wider text-muted-foreground">DOMINANT HAND</label>
+                  <select value={editData.dominant_hand || ""} onChange={(e) => setEditData({ ...editData, dominant_hand: e.target.value })}
+                    className="w-full mt-1 px-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary">
+                    <option value="">—</option>
+                    <option value="right">Right</option>
+                    <option value="left">Left</option>
+                    <option value="ambidextrous">Ambidextrous</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="font-display text-[10px] tracking-wider text-muted-foreground">PREFERRED SPORT</label>
+                  <select value={editData.preferred_sport || ""} onChange={(e) => setEditData({ ...editData, preferred_sport: e.target.value })}
+                    className="w-full mt-1 px-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary">
+                    <option value="padel">Padel</option>
+                    <option value="tennis">Tennis</option>
+                    <option value="both">Both</option>
+                  </select>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="font-display text-[10px] tracking-wider text-muted-foreground">BEST SHOT</label>
+                  <select value={editData.best_shot || ""} onChange={(e) => setEditData({ ...editData, best_shot: e.target.value })}
+                    className="w-full mt-1 px-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary">
+                    <option value="">—</option>
+                    {["Forehand", "Backhand", "Volley", "Serve", "Smash", "Lob"].map(s => <option key={s} value={s}>{s}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label className="font-display text-[10px] tracking-wider text-muted-foreground">WEAKEST SHOT</label>
+                  <select value={editData.weakest_shot || ""} onChange={(e) => setEditData({ ...editData, weakest_shot: e.target.value })}
+                    className="w-full mt-1 px-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary">
+                    <option value="">—</option>
+                    {["Forehand", "Backhand", "Volley", "Serve", "Smash", "Lob"].map(s => <option key={s} value={s}>{s}</option>)}
+                  </select>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 gap-3 mb-4">
+              <div className="bg-card border border-border rounded-xl p-4 flex items-center gap-3">
+                <Target size={20} className="text-primary flex-shrink-0" />
+                <div>
+                  <p className="font-display text-lg text-foreground">{playerData?.best_shot || "—"}</p>
+                  <p className="font-body text-[10px] text-muted-foreground uppercase tracking-wide">Best Shot</p>
+                </div>
+              </div>
+              <div className="bg-card border border-border rounded-xl p-4 flex items-center gap-3">
+                <TrendingDown size={20} className="text-muted-foreground flex-shrink-0" />
+                <div>
+                  <p className="font-display text-lg text-foreground">{playerData?.weakest_shot || "—"}</p>
+                  <p className="font-body text-[10px] text-muted-foreground uppercase tracking-wide">Weakest Shot</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Shot confidence */}
           <div className="bg-card border border-border rounded-xl p-4 mb-6">
             <h3 className="font-display text-sm tracking-wider text-muted-foreground mb-3">SHOT CONFIDENCE</h3>
-            <div className="space-y-2">
-              {shots.map((shot, idx) => (
-                <div key={shot.name}>
-                  <div className="flex justify-between mb-1">
-                    <span className="font-body text-xs text-foreground">{shot.name}</span>
-                    <span className="font-body text-xs text-muted-foreground">{shot.pct}%</span>
+            {editMode && editData ? (
+              <div className="space-y-3">
+                {["Volley", "Forehand", "Serve", "Smash", "Backhand", "Lob"].map((shotName) => {
+                  const key = `${shotName.toLowerCase()}_pct`;
+                  const value = editData[key] ?? 50;
+                  return (
+                    <div key={shotName}>
+                      <div className="flex justify-between mb-1">
+                        <span className="font-body text-xs text-foreground">{shotName}</span>
+                        <span className="font-body text-xs text-primary font-medium">{value}%</span>
+                      </div>
+                      <input type="range" min={0} max={100} value={value}
+                        onChange={(e) => setEditData({ ...editData, [key]: parseInt(e.target.value) })}
+                        className="w-full h-1.5 rounded-full appearance-none bg-muted cursor-pointer accent-primary [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-primary" />
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {shots.map((shot, idx) => (
+                  <div key={shot.name}>
+                    <div className="flex justify-between mb-1">
+                      <span className="font-body text-xs text-foreground">{shot.name}</span>
+                      <span className="font-body text-xs text-muted-foreground">{shot.pct}%</span>
+                    </div>
+                    <div className="h-1.5 w-full rounded-full bg-muted">
+                      <div className="h-1.5 rounded-full transition-all duration-500" style={{ width: `${shot.pct}%`, backgroundColor: idx < 2 ? 'hsl(var(--primary))' : 'hsl(var(--muted-foreground) / 0.3)' }} />
+                    </div>
                   </div>
-                  <div className="h-1.5 w-full rounded-full bg-muted">
-                    <div className="h-1.5 rounded-full transition-all duration-500" style={{ width: `${shot.pct}%`, backgroundColor: idx < 2 ? 'hsl(var(--primary))' : 'hsl(var(--muted-foreground) / 0.3)' }} />
-                  </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Side tendency */}
           {playerData && (
             <div className="bg-card border border-border rounded-xl p-4 mb-6">
               <h3 className="font-display text-sm tracking-wider text-muted-foreground mb-3">SIDE PREFERENCE</h3>
-              <div className="flex h-8 rounded-full overflow-hidden">
-                <div className="bg-primary flex items-center justify-center" style={{ width: `${playerData.left_tendency_pct}%` }}>
-                  <span className="text-primary-foreground text-xs font-body font-medium px-2">L {playerData.left_tendency_pct}%</span>
+              {editMode && editData ? (
+                <div>
+                  <div className="flex justify-between mb-1">
+                    <span className="font-body text-xs text-foreground">Left {editData.left_tendency_pct ?? 50}%</span>
+                    <span className="font-body text-xs text-foreground">Right {100 - (editData.left_tendency_pct ?? 50)}%</span>
+                  </div>
+                  <input type="range" min={0} max={100} value={editData.left_tendency_pct ?? 50}
+                    onChange={(e) => {
+                      const left = parseInt(e.target.value);
+                      setEditData({ ...editData, left_tendency_pct: left, right_tendency_pct: 100 - left });
+                    }}
+                    className="w-full h-1.5 rounded-full appearance-none bg-muted cursor-pointer accent-primary [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-primary" />
                 </div>
-                <div className="bg-secondary flex items-center justify-center" style={{ width: `${playerData.right_tendency_pct}%` }}>
-                  <span className="text-muted-foreground text-xs font-body font-medium px-2">R {playerData.right_tendency_pct}%</span>
+              ) : (
+                <div className="flex h-8 rounded-full overflow-hidden">
+                  <div className="bg-primary flex items-center justify-center" style={{ width: `${playerData.left_tendency_pct}%` }}>
+                    <span className="text-primary-foreground text-xs font-body font-medium px-2">L {playerData.left_tendency_pct}%</span>
+                  </div>
+                  <div className="bg-secondary flex items-center justify-center" style={{ width: `${playerData.right_tendency_pct}%` }}>
+                    <span className="text-muted-foreground text-xs font-body font-medium px-2">R {playerData.right_tendency_pct}%</span>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           )}
 
