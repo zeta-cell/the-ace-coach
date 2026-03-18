@@ -648,124 +648,159 @@ const Training = () => {
               </div>
             )}
 
-            {/* Plan items — builder cards */}
+            {/* Plan items — coach inline builder cards */}
             {planItems.length > 0 ? (
-              <div className="space-y-2">
-                {planItems.map((item, index) => (
-                  <motion.div key={item.id}
-                    initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.03 }}
-                    className={`bg-card border border-border rounded-xl overflow-hidden border-l-4 ${CATEGORY_COLORS[item.module.category] || "border-l-muted"}`}>
-                    <div className="p-3">
-                      <div className="flex items-center gap-2">
-                        {/* Reorder controls (coach) */}
-                        {isCoachOrAdmin && (
-                          <div className="flex flex-col gap-0.5 shrink-0">
-                            <button onClick={() => handleMoveItem(index, "up")} disabled={index === 0}
-                              className="p-0.5 text-muted-foreground hover:text-foreground disabled:opacity-20 transition-colors">
-                              <ChevronUp size={12} />
-                            </button>
-                            <button onClick={() => handleMoveItem(index, "down")} disabled={index === planItems.length - 1}
-                              className="p-0.5 text-muted-foreground hover:text-foreground disabled:opacity-20 transition-colors">
-                              <ChevronDown size={12} />
-                            </button>
-                          </div>
-                        )}
-
-                        {/* Module info */}
-                        <div className="flex-1 min-w-0 cursor-pointer" onClick={() => setExpandedItem(expandedItem === item.id ? null : item.id)}>
+              <div className="space-y-3">
+                {/* Coach view: inline editable cards */}
+                {isCoachOrAdmin ? (
+                  <>
+                    {planItems.map((item, index) => (
+                      <motion.div key={item.id}
+                        initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.03 }}
+                        className={`bg-card border border-border rounded-xl overflow-hidden border-l-4 ${CATEGORY_COLORS[item.module.category] || "border-l-muted"}`}>
+                        <div className="p-3 space-y-2">
+                          {/* Top row: drag handle, category badge, duration, X button */}
                           <div className="flex items-center gap-2">
-                            <div className={`w-2 h-2 rounded-full shrink-0 ${CATEGORY_DOT[item.module.category] || "bg-muted-foreground"}`} />
-                            <span className="font-display text-sm text-foreground truncate">{item.module.title}</span>
-                          </div>
-                          <div className="flex items-center gap-2 mt-0.5 ml-4">
-                            <span className="font-body text-[10px] text-muted-foreground uppercase">
-                              {item.module.category.replace("_", " ")}
+                            <GripVertical size={14} className="text-muted-foreground shrink-0 cursor-grab" />
+                            <span className={`px-2 py-0.5 rounded font-display text-[9px] tracking-wider text-primary ${
+                              CATEGORY_DOT[item.module.category] ? "bg-primary/10" : "bg-secondary"
+                            }`}>
+                              {item.module.category.replace("_", " ").toUpperCase()}
                             </span>
-                            <span className="text-muted-foreground text-[10px]">·</span>
                             <span className="flex items-center gap-0.5 text-muted-foreground text-[10px] font-body">
-                              <Clock size={9} /> {item.module.duration_minutes} min
+                              <Clock size={10} /> {item.module.duration_minutes} <span className="text-[9px]">m</span>
                             </span>
-                          </div>
-                        </div>
-
-                        {/* Actions */}
-                        <div className="flex items-center gap-1 shrink-0">
-                          {isCoachOrAdmin ? (
+                            <div className="flex-1" />
                             <button onClick={() => handleRemoveItem(item.id)}
-                              className="p-1.5 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors">
-                              <Minus size={14} />
+                              className="p-1 text-muted-foreground hover:text-destructive transition-colors">
+                              <X size={14} />
                             </button>
-                          ) : (
-                            !item.is_completed ? (
-                              <button onClick={() => markComplete(item.id)}
-                                className="px-2.5 py-1 rounded-lg bg-primary text-primary-foreground font-display text-[9px] tracking-wider hover:bg-primary/90 transition-colors">
-                                DONE
-                              </button>
-                            ) : (
-                              <span className="flex items-center gap-1 text-green-500 font-body text-[10px]">
-                                <Check size={12} /> Done
-                              </span>
-                            )
-                          )}
-                          <button onClick={() => setExpandedItem(expandedItem === item.id ? null : item.id)}
-                            className="p-1 text-muted-foreground hover:text-foreground transition-colors">
-                            {expandedItem === item.id ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
-                          </button>
+                          </div>
+                          {/* Title */}
+                          <p className="font-display text-sm text-foreground">{item.module.title}</p>
+                          {/* Coach note input */}
+                          <input
+                            value={item.coach_note || ""}
+                            onChange={e => handleUpdateCoachNote(item.id, e.target.value)}
+                            placeholder="Coach note for this module..."
+                            className="w-full px-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-xs focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-muted-foreground"
+                          />
+                        </div>
+                      </motion.div>
+                    ))}
+
+                    {/* Inline form fields + add buttons below items */}
+                    <div className="space-y-4 pt-2">
+                      {/* Add modules by category */}
+                      <div>
+                        <label className="font-display text-[10px] tracking-wider text-muted-foreground mb-2 block">ADD MODULES BY CATEGORY</label>
+                        <div className="flex flex-wrap gap-1.5">
+                          {MODULE_CATEGORIES.filter(c => c !== "All").map(cat => (
+                            <button key={cat} onClick={() => { setModuleCatFilter(cat); setShowAddPanel(true); setAddTab("modules"); }}
+                              className="px-3 py-1.5 rounded-lg bg-secondary border border-border text-muted-foreground font-display text-[9px] tracking-wider hover:border-primary hover:text-foreground transition-colors">
+                              {cat.toUpperCase()}
+                            </button>
+                          ))}
                         </div>
                       </div>
 
-                      {/* Expanded details */}
-                      <AnimatePresence>
-                        {expandedItem === item.id && (
-                          <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }}
-                            className="mt-3 pt-3 border-t border-border overflow-hidden">
-                            {item.module.description && (
-                              <p className="text-xs font-body text-muted-foreground mb-2">{item.module.description}</p>
-                            )}
-                            {item.module.instructions && (
-                              <div className="text-xs font-body text-foreground mb-2 whitespace-pre-wrap">{item.module.instructions}</div>
-                            )}
-                            {item.module.video_url && (
-                              <div className="aspect-video rounded-lg overflow-hidden mb-2">
-                                <iframe src={item.module.video_url.replace("watch?v=", "embed/").replace("youtu.be/", "youtube.com/embed/")}
-                                  className="w-full h-full" allowFullScreen loading="lazy" title={item.module.title} />
-                              </div>
-                            )}
-                            {item.coach_note && (
-                              <div className="bg-secondary rounded-lg p-2.5 mt-1">
-                                <p className="text-[9px] font-display tracking-wider text-muted-foreground mb-0.5">COACH NOTE</p>
-                                <p className="text-xs font-body text-foreground">{item.coach_note}</p>
-                              </div>
-                            )}
-                            {(item.module as any).coach_video_url && (
-                              <button onClick={() => { setCoachVideoUrl((item.module as any).coach_video_url); setCoachVideoTitle(item.module.title); setCoachVideoOpen(true); }}
-                                className="mt-2 flex items-center gap-2 px-3 py-1.5 rounded-lg bg-primary/10 text-primary font-display text-[9px] tracking-wider hover:bg-primary/20 transition-colors">
-                                <Video size={12} /> WATCH COACH DEMO
-                              </button>
-                            )}
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
+                      <button onClick={() => { setModuleCatFilter("All"); setShowAddPanel(true); setAddTab("modules"); }}
+                        className="w-full py-3 rounded-xl border border-dashed border-border text-muted-foreground font-display text-[10px] tracking-wider hover:border-primary hover:text-primary transition-colors flex items-center justify-center gap-2">
+                        <Search size={14} /> SEARCH ALL MODULES
+                      </button>
+
+                      <button onClick={() => { setShowAddPanel(true); setAddTab("blocks"); }}
+                        className="w-full py-3 rounded-xl border border-dashed border-border text-muted-foreground font-display text-[10px] tracking-wider hover:border-primary hover:text-primary transition-colors flex items-center justify-center gap-2">
+                        <Layers size={14} /> USE A BLOCK
+                      </button>
                     </div>
-                  </motion.div>
-                ))}
+                  </>
+                ) : (
+                  /* Player view: existing cards */
+                  <>
+                    {planItems.map((item, index) => (
+                      <motion.div key={item.id}
+                        initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.03 }}
+                        className={`bg-card border border-border rounded-xl overflow-hidden border-l-4 ${CATEGORY_COLORS[item.module.category] || "border-l-muted"}`}>
+                        <div className="p-3">
+                          <div className="flex items-center gap-2">
+                            <div className="flex-1 min-w-0 cursor-pointer" onClick={() => setExpandedItem(expandedItem === item.id ? null : item.id)}>
+                              <div className="flex items-center gap-2">
+                                <div className={`w-2 h-2 rounded-full shrink-0 ${CATEGORY_DOT[item.module.category] || "bg-muted-foreground"}`} />
+                                <span className="font-display text-sm text-foreground truncate">{item.module.title}</span>
+                              </div>
+                              <div className="flex items-center gap-2 mt-0.5 ml-4">
+                                <span className="font-body text-[10px] text-muted-foreground uppercase">
+                                  {item.module.category.replace("_", " ")}
+                                </span>
+                                <span className="text-muted-foreground text-[10px]">·</span>
+                                <span className="flex items-center gap-0.5 text-muted-foreground text-[10px] font-body">
+                                  <Clock size={9} /> {item.module.duration_minutes} min
+                                </span>
+                              </div>
+                            </div>
 
-                {/* Add more modules inline button */}
-                {isCoachOrAdmin && (
-                  <button onClick={() => { setShowAddPanel(true); setAddTab("modules"); }}
-                    className="w-full py-2.5 rounded-xl border border-dashed border-border text-muted-foreground font-display text-[10px] tracking-wider hover:border-primary hover:text-primary transition-colors flex items-center justify-center gap-1.5">
-                    <Plus size={12} /> ADD BLOCKS OR MODULES
-                  </button>
-                )}
+                            <div className="flex items-center gap-1 shrink-0">
+                              {!item.is_completed ? (
+                                <button onClick={() => markComplete(item.id)}
+                                  className="px-2.5 py-1 rounded-lg bg-primary text-primary-foreground font-display text-[9px] tracking-wider hover:bg-primary/90 transition-colors">
+                                  DONE
+                                </button>
+                              ) : (
+                                <span className="flex items-center gap-1 text-green-500 font-body text-[10px]">
+                                  <Check size={12} /> Done
+                                </span>
+                              )}
+                              <button onClick={() => setExpandedItem(expandedItem === item.id ? null : item.id)}
+                                className="p-1 text-muted-foreground hover:text-foreground transition-colors">
+                                {expandedItem === item.id ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                              </button>
+                            </div>
+                          </div>
 
-                {/* Player total */}
-                {!isCoachOrAdmin && (
-                  <div className="text-center pt-2">
-                    <p className="text-xs font-body text-muted-foreground">
-                      {planItems.filter(i => i.is_completed).length}/{planItems.length} completed · {totalDuration} min total
-                    </p>
-                  </div>
+                          <AnimatePresence>
+                            {expandedItem === item.id && (
+                              <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }}
+                                className="mt-3 pt-3 border-t border-border overflow-hidden">
+                                {item.module.description && (
+                                  <p className="text-xs font-body text-muted-foreground mb-2">{item.module.description}</p>
+                                )}
+                                {item.module.instructions && (
+                                  <div className="text-xs font-body text-foreground mb-2 whitespace-pre-wrap">{item.module.instructions}</div>
+                                )}
+                                {item.module.video_url && (
+                                  <div className="aspect-video rounded-lg overflow-hidden mb-2">
+                                    <iframe src={item.module.video_url.replace("watch?v=", "embed/").replace("youtu.be/", "youtube.com/embed/")}
+                                      className="w-full h-full" allowFullScreen loading="lazy" title={item.module.title} />
+                                  </div>
+                                )}
+                                {item.coach_note && (
+                                  <div className="bg-secondary rounded-lg p-2.5 mt-1">
+                                    <p className="text-[9px] font-display tracking-wider text-muted-foreground mb-0.5">COACH NOTE</p>
+                                    <p className="text-xs font-body text-foreground">{item.coach_note}</p>
+                                  </div>
+                                )}
+                                {(item.module as any).coach_video_url && (
+                                  <button onClick={() => { setCoachVideoUrl((item.module as any).coach_video_url); setCoachVideoTitle(item.module.title); setCoachVideoOpen(true); }}
+                                    className="mt-2 flex items-center gap-2 px-3 py-1.5 rounded-lg bg-primary/10 text-primary font-display text-[9px] tracking-wider hover:bg-primary/20 transition-colors">
+                                    <Video size={12} /> WATCH COACH DEMO
+                                  </button>
+                                )}
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                        </div>
+                      </motion.div>
+                    ))}
+
+                    <div className="text-center pt-2">
+                      <p className="text-xs font-body text-muted-foreground">
+                        {planItems.filter(i => i.is_completed).length}/{planItems.length} completed · {totalDuration} min total
+                      </p>
+                    </div>
+                  </>
                 )}
               </div>
             ) : (
