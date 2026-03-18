@@ -512,8 +512,15 @@ const CoachCalendar = () => {
             </div>
           )}
         </div>
-        </div>
 
+        {/* Availability tab */}
+        {calendarTab === "availability" && !isAdminView && targetCoachId && (
+          <CoachAvailabilityGrid coachId={targetCoachId} />
+        )}
+
+        {/* Bookings Calendar tab */}
+        {(calendarTab === "bookings" || isAdminView) && (
+        <>
         {/* Three column layout */}
         <div className="flex gap-4">
           {/* LEFT — Training Blocks Library */}
