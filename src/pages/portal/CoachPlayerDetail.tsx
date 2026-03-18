@@ -289,7 +289,7 @@ const CoachPlayerDetail = () => {
 
           {/* Action buttons row */}
           <div className="grid grid-cols-3 gap-2 mb-6">
-            <button onClick={() => setTrainDrawerOpen(true)}
+            <button onClick={() => navigate(`/training?player=${playerId}&date=${format(new Date(), "yyyy-MM-dd")}`)}
               className="py-2.5 rounded-xl bg-primary text-primary-foreground font-display text-xs tracking-widest hover:bg-primary/90 transition-colors flex items-center justify-center gap-2">
               <Dumbbell size={14} /> CREATE TRAINING
             </button>
