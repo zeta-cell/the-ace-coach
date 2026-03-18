@@ -397,6 +397,14 @@ const Training = () => {
     }
   };
 
+  /* ── Update coach note ── */
+  const handleUpdateCoachNote = async (itemId: string, note: string) => {
+    setPlanItems(prev => prev.map(item =>
+      item.id === itemId ? { ...item, coach_note: note } : item
+    ));
+    await supabase.from("player_day_plan_items").update({ coach_note: note || null }).eq("id", itemId);
+  };
+
   /* ── Navigate to plan builder ── */
   const handleEditInBuilder = () => {
     if (!targetPlayerId) return;
