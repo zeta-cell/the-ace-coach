@@ -32,6 +32,7 @@ const CoachPlayers = lazy(() => import("./pages/portal/CoachPlayers"));
 const CoachPlayerDetail = lazy(() => import("./pages/portal/CoachPlayerDetail"));
 const CoachModules = lazy(() => import("./pages/portal/CoachModules"));
 const TrainingBlocks = lazy(() => import("./pages/portal/TrainingBlocks"));
+const Library = lazy(() => import("./pages/portal/Library"));
 const CoachPlanBuilder = lazy(() => import("./pages/portal/CoachPlanBuilder"));
 const CoachVideos = lazy(() => import("./pages/portal/CoachVideos"));
 const CoachCalendar = lazy(() => import("./pages/portal/CoachCalendar"));
