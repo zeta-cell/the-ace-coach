@@ -286,21 +286,45 @@ const Training = () => {
     return newPlan.id;
   };
 
+  /* ── Find correct insert position by category sort order ── */
+  const findInsertIndex = (items: PlanItem[], category: string): number => {
+    const newOrder = CATEGORY_SORT_ORDER[category] ?? 5;
+    // Find first item whose category comes AFTER the new one
+    for (let i = 0; i < items.length; i++) {
+      const existingOrder = CATEGORY_SORT_ORDER[items[i].module.category] ?? 5;
+      if (existingOrder > newOrder) return i;
+    }
+    return items.length; // append at end
+  };
+
   /* ── Add single module ── */
   const handleAddModule = async (mod: BlockModuleItem) => {
     const planId = await ensurePlan();
     if (!planId) return;
-    const orderIndex = planItems.length;
+
+    const newItem: PlanItem = {
+      id: "", order_index: 0, is_completed: false,
+      completed_at: null, coach_note: null,
+      module: { ...mod, description: null, instructions: null, video_url: null, coach_video_url: null, duration_minutes: mod.duration_minutes || 15 },
+    };
+
+    const insertIdx = findInsertIndex(planItems, mod.category);
+    const updated = [...planItems];
+    updated.splice(insertIdx, 0, newItem);
+    const reordered = updated.map((item, i) => ({ ...item, order_index: i }));
+
     const { data } = await supabase.from("player_day_plan_items")
-      .insert({ plan_id: planId, module_id: mod.id, order_index: orderIndex })
+      .insert({ plan_id: planId, module_id: mod.id, order_index: insertIdx })
       .select("id").single();
     if (data) {
-      setPlanItems(prev => [...prev, {
-        id: data.id, order_index: orderIndex, is_completed: false,
-        completed_at: null, coach_note: null,
-        module: { ...mod, description: null, instructions: null, video_url: null, coach_video_url: null, duration_minutes: mod.duration_minutes || 15 },
-      }]);
+      reordered[insertIdx] = { ...reordered[insertIdx], id: data.id };
+      setPlanItems(reordered);
+      // Update order_index for shifted items
+      for (let i = insertIdx + 1; i < reordered.length; i++) {
+        supabase.from("player_day_plan_items").update({ order_index: i }).eq("id", reordered[i].id);
+      }
       toast.success(`Added "${mod.title}"`);
+      setJustSaved(false);
     }
   };
 
