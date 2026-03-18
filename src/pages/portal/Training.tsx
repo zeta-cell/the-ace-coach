@@ -5,27 +5,39 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Check, ChevronDown, ChevronUp, ChevronLeft, ChevronRight,
-  Play, Clock, Layers, CalendarDays, MapPin, Save, Trash2, Plus, X, Video,
-  GripVertical, Minus,
+  Clock, Layers, CalendarDays, MapPin, Save, Trash2, Plus, X, Video,
+  Minus, Search, GripVertical,
 } from "lucide-react";
 import {
   format, startOfWeek, addDays, isSameDay, parseISO, isValid,
-  startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isToday,
+  startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth,
 } from "date-fns";
 import PortalLayout from "@/components/portal/PortalLayout";
 import TrainingDayInfo from "@/components/portal/TrainingDayInfo";
-import TrainingBlocksPanel from "@/components/portal/TrainingBlocksPanel";
 import CoachVideoModal from "@/components/portal/CoachVideoModal";
 import type { BlockPlanItem, ModuleItem as BlockModuleItem } from "@/types/training";
 import { toast } from "sonner";
 
+/* ── colour maps ── */
 const CATEGORY_COLORS: Record<string, string> = {
-  warm_up: "bg-yellow-500", padel_drill: "bg-cyan-500", footwork: "bg-blue-500",
-  fitness: "bg-orange-500", strength: "bg-orange-600", mental: "bg-purple-500",
-  recovery: "bg-green-500", cool_down: "bg-teal-500", nutrition: "bg-lime-500",
-  video: "bg-pink-500",
+  warm_up: "border-l-yellow-500", padel_drill: "border-l-cyan-500", padel: "border-l-cyan-500",
+  footwork: "border-l-blue-500", fitness: "border-l-orange-500", strength: "border-l-orange-600",
+  mental: "border-l-purple-500", recovery: "border-l-green-500", cool_down: "border-l-teal-500",
+  nutrition: "border-l-lime-500", video: "border-l-pink-500", tennis: "border-l-emerald-500",
+  tactical: "border-l-amber-500", technique: "border-l-primary",
 };
 
+const CATEGORY_DOT: Record<string, string> = {
+  warm_up: "bg-yellow-500", padel_drill: "bg-cyan-500", padel: "bg-cyan-500",
+  footwork: "bg-blue-500", fitness: "bg-orange-500", strength: "bg-orange-600",
+  mental: "bg-purple-500", recovery: "bg-green-500", cool_down: "bg-teal-500",
+  nutrition: "bg-lime-500", video: "bg-pink-500", tennis: "bg-emerald-500",
+  tactical: "bg-amber-500", technique: "bg-primary",
+};
+
+const MODULE_CATEGORIES = ["All", "Padel", "Tennis", "Fitness", "Mental", "Recovery", "Tactical", "Warm Up"] as const;
+
+/* ── types ── */
 interface PlanItem {
   id: string;
   order_index: number;
@@ -37,6 +49,12 @@ interface PlanItem {
     description: string | null; instructions: string | null; video_url: string | null;
     coach_video_url?: string | null;
   };
+}
+
+interface TrainingBlock {
+  id: string; title: string; description: string | null; goal: string;
+  category: string; module_ids: string[]; module_durations: number[];
+  module_notes: string[]; is_system: boolean; coach_id: string | null;
 }
 
 const parseDateParam = (value: string | null) => {
@@ -69,32 +87,40 @@ const Training = () => {
   const [editLocation, setEditLocation] = useState("");
   const [savingPlan, setSavingPlan] = useState(false);
 
-  // Blocks panel
-  const [showBlocksPanel, setShowBlocksPanel] = useState(false);
-  const [modules, setModules] = useState<BlockModuleItem[]>([]);
+  // Add panel state
+  const [showAddPanel, setShowAddPanel] = useState(false);
+  const [addTab, setAddTab] = useState<"modules" | "blocks">("modules");
+  const [moduleSearch, setModuleSearch] = useState("");
+  const [moduleCatFilter, setModuleCatFilter] = useState("All");
+  const [allModules, setAllModules] = useState<BlockModuleItem[]>([]);
+  const [allBlocks, setAllBlocks] = useState<TrainingBlock[]>([]);
 
   // Month calendar
   const [showMonthCal, setShowMonthCal] = useState(false);
   const [calMonth, setCalMonth] = useState(new Date());
   const [planDates, setPlanDates] = useState<Set<string>>(new Set());
 
-  // Save as block
-  const [showSaveBlock, setShowSaveBlock] = useState(false);
-  const [blockTitle, setBlockTitle] = useState("");
-  const [blockGoal, setBlockGoal] = useState("Technique");
-
   // Coach video modal
   const [coachVideoOpen, setCoachVideoOpen] = useState(false);
   const [coachVideoUrl, setCoachVideoUrl] = useState("");
   const [coachVideoTitle, setCoachVideoTitle] = useState("");
+
+  // Player name (for coach view header)
+  const [playerName, setPlayerName] = useState("");
 
   const weekStart = startOfWeek(selectedDay, { weekStartsOn: 1 });
   const weekDays = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
 
   useEffect(() => { setSelectedDay(parseDateParam(dateParam)); }, [dateParam]);
   useEffect(() => { if (targetPlayerId) fetchDayPlan(); }, [selectedDay, targetPlayerId]);
-  useEffect(() => { if (user && isCoachOrAdmin) fetchModules(); }, [user]);
+  useEffect(() => { if (user && isCoachOrAdmin) { fetchModules(); fetchBlocks(); } }, [user]);
   useEffect(() => { if (targetPlayerId) fetchPlanDates(); }, [calMonth, targetPlayerId]);
+  useEffect(() => {
+    if (isCoachViewingPlayer && playerParam) {
+      supabase.from("profiles").select("full_name").eq("user_id", playerParam).single()
+        .then(({ data }) => { if (data) setPlayerName(data.full_name); });
+    }
+  }, [playerParam]);
 
   const fetchModules = async () => {
     if (!user) return;
@@ -102,7 +128,16 @@ const Training = () => {
       .select("id, title, category, duration_minutes")
       .or(`created_by.eq.${user.id},is_shared.eq.true`)
       .order("category");
-    setModules((data as BlockModuleItem[]) || []);
+    setAllModules((data as BlockModuleItem[]) || []);
+  };
+
+  const fetchBlocks = async () => {
+    if (!user) return;
+    const { data } = await supabase.from("training_blocks")
+      .select("*")
+      .or(`is_system.eq.true,coach_id.eq.${user.id}`)
+      .order("goal").order("title");
+    setAllBlocks((data as TrainingBlock[]) || []);
   };
 
   const fetchPlanDates = async () => {
@@ -110,8 +145,7 @@ const Training = () => {
     const ms = startOfMonth(calMonth);
     const me = endOfMonth(calMonth);
     const { data } = await supabase.from("player_day_plans")
-      .select("plan_date")
-      .eq("player_id", targetPlayerId)
+      .select("plan_date").eq("player_id", targetPlayerId)
       .gte("plan_date", format(ms, "yyyy-MM-dd"))
       .lte("plan_date", format(me, "yyyy-MM-dd"));
     setPlanDates(new Set(data?.map(d => d.plan_date) || []));
@@ -121,19 +155,14 @@ const Training = () => {
     if (!targetPlayerId) return;
     setLoading(true);
     const dayStr = format(selectedDay, "yyyy-MM-dd");
-
-    const { data: plan } = await supabase
-      .from("player_day_plans")
+    const { data: plan } = await supabase.from("player_day_plans")
       .select("id, notes, start_time, end_time, location_name")
-      .eq("player_id", targetPlayerId)
-      .eq("plan_date", dayStr)
-      .maybeSingle();
+      .eq("player_id", targetPlayerId).eq("plan_date", dayStr).maybeSingle();
 
     if (!plan) {
       setPlanItems([]); setPlanNotes(""); setCurrentPlanId(null);
       setEditStartTime(""); setEditEndTime(""); setEditLocation("");
-      setLoading(false);
-      return;
+      setLoading(false); return;
     }
 
     setCurrentPlanId(plan.id);
@@ -142,21 +171,18 @@ const Training = () => {
     setEditEndTime(plan.end_time || "");
     setEditLocation(plan.location_name || "");
 
-    const { data: items } = await supabase
-      .from("player_day_plan_items")
+    const { data: items } = await supabase.from("player_day_plan_items")
       .select("id, order_index, is_completed, completed_at, coach_note, module_id")
-      .eq("plan_id", plan.id)
-      .order("order_index");
+      .eq("plan_id", plan.id).order("order_index");
 
-    const moduleIds = items?.map((i) => i.module_id) || [];
-    const { data: mods } = await supabase
-      .from("modules")
+    const moduleIds = items?.map(i => i.module_id) || [];
+    const { data: mods } = await supabase.from("modules")
       .select("id, title, category, duration_minutes, description, instructions, video_url, coach_video_url")
       .in("id", moduleIds.length > 0 ? moduleIds : ["00000000-0000-0000-0000-000000000000"]);
 
     const moduleMap = new Map(mods?.map((m: any) => [m.id, m]) || []);
     setPlanItems(
-      (items || []).map((item) => ({
+      (items || []).map(item => ({
         ...item,
         module: moduleMap.get(item.module_id) || {
           id: item.module_id, title: "Unknown", category: "", duration_minutes: 0,
@@ -169,144 +195,133 @@ const Training = () => {
 
   const markComplete = async (itemId: string) => {
     await supabase.from("player_day_plan_items")
-      .update({ is_completed: true, completed_at: new Date().toISOString() })
-      .eq("id", itemId);
-    setPlanItems((prev) =>
-      prev.map((item) => item.id === itemId ? { ...item, is_completed: true, completed_at: new Date().toISOString() } : item)
-    );
+      .update({ is_completed: true, completed_at: new Date().toISOString() }).eq("id", itemId);
+    setPlanItems(prev => prev.map(item =>
+      item.id === itemId ? { ...item, is_completed: true, completed_at: new Date().toISOString() } : item
+    ));
     if (user) {
-      await supabase.rpc('award_xp', {
-        p_user_id: user.id, p_amount: 25, p_event_type: 'session_complete',
-        p_description: 'Completed a training session',
-      });
+      await supabase.rpc('award_xp', { p_user_id: user.id, p_amount: 25, p_event_type: 'session_complete', p_description: 'Completed a training session' });
       await supabase.rpc('update_streak', { p_user_id: user.id });
       await supabase.rpc('increment_raffle_tickets', { p_user_id: user.id });
       const completedItem = planItems.find(item => item.id === itemId);
-      const durationMinutes = completedItem?.module?.duration_minutes || 0;
-      await supabase.rpc('increment_session_stats', { p_user_id: user.id, p_minutes: durationMinutes });
+      await supabase.rpc('increment_session_stats', { p_user_id: user.id, p_minutes: completedItem?.module?.duration_minutes || 0 });
     }
   };
 
-  /* ── Coach actions ── */
-
-  const handleApplyBlock = async (blockItems: BlockPlanItem[]) => {
-    if (!targetPlayerId || !user) return;
+  /* ── Ensure plan exists ── */
+  const ensurePlan = async (): Promise<string | null> => {
+    if (currentPlanId) return currentPlanId;
+    if (!targetPlayerId || !user) return null;
     const dayStr = format(selectedDay, "yyyy-MM-dd");
-    let planId = currentPlanId;
+    const { data: newPlan } = await supabase.from("player_day_plans")
+      .insert({ player_id: targetPlayerId, coach_id: user.id, plan_date: dayStr, notes: "" })
+      .select("id").single();
+    if (!newPlan) { toast.error("Failed to create plan"); return null; }
+    setCurrentPlanId(newPlan.id);
+    return newPlan.id;
+  };
 
-    if (!planId) {
-      const { data: newPlan } = await supabase.from("player_day_plans")
-        .insert({ player_id: targetPlayerId, coach_id: user.id, plan_date: dayStr, notes: "" })
-        .select("id").single();
-      if (!newPlan) { toast.error("Failed to create plan"); return; }
-      planId = newPlan.id;
-      setCurrentPlanId(planId);
+  /* ── Add single module ── */
+  const handleAddModule = async (mod: BlockModuleItem) => {
+    const planId = await ensurePlan();
+    if (!planId) return;
+    const orderIndex = planItems.length;
+    const { data } = await supabase.from("player_day_plan_items")
+      .insert({ plan_id: planId, module_id: mod.id, order_index: orderIndex })
+      .select("id").single();
+    if (data) {
+      setPlanItems(prev => [...prev, {
+        id: data.id, order_index: orderIndex, is_completed: false,
+        completed_at: null, coach_note: null,
+        module: { ...mod, description: null, instructions: null, video_url: null, coach_video_url: null, duration_minutes: mod.duration_minutes || 15 },
+      }]);
+      toast.success(`Added "${mod.title}"`);
     }
+  };
 
-    const existingMax = planItems.length > 0
-      ? Math.max(...planItems.map(i => i.order_index)) + 1 : 0;
+  /* ── Apply block ── */
+  const handleApplyBlock = async (block: TrainingBlock) => {
+    const planId = await ensurePlan();
+    if (!planId) return;
+    const moduleMap = new Map(allModules.map(m => [m.id, m]));
+    const existingMax = planItems.length;
+    const newItems = block.module_ids.map((moduleId, idx) => {
+      const mod = moduleMap.get(moduleId);
+      if (!mod) return null;
+      return { plan_id: planId, module_id: moduleId, order_index: existingMax + idx, coach_note: block.module_notes[idx] || null };
+    }).filter(Boolean);
 
-    const newItems = blockItems.map((bi, idx) => ({
-      plan_id: planId!,
-      module_id: bi.module.id,
-      order_index: existingMax + idx,
-      coach_note: bi.coach_note || null,
-      block_id: 'block_id' in bi ? (bi as any).block_id : null,
-    }));
-
-    await supabase.from("player_day_plan_items").insert(newItems);
-    setShowBlocksPanel(false);
+    if (newItems.length === 0) { toast.error("Block references modules you don't have"); return; }
+    await supabase.from("player_day_plan_items").insert(newItems as any);
+    toast.success(`Applied "${block.title}" — ${newItems.length} modules`);
     fetchDayPlan();
   };
 
+  /* ── Save plan ── */
   const handleSavePlan = async () => {
     if (!currentPlanId) return;
     setSavingPlan(true);
     await supabase.from("player_day_plans").update({
-      start_time: editStartTime || null,
-      end_time: editEndTime || null,
-      location_name: editLocation || null,
-      notes: planNotes || null,
+      start_time: editStartTime || null, end_time: editEndTime || null,
+      location_name: editLocation || null, notes: planNotes || null,
     }).eq("id", currentPlanId);
-    toast.success("Training day saved!");
+    toast.success("Plan saved!");
     setSavingPlan(false);
   };
 
+  /* ── Cancel day ── */
   const handleCancelDay = async () => {
     if (!currentPlanId || !confirm("Delete this entire training day?")) return;
     await supabase.from("player_day_plan_items").delete().eq("plan_id", currentPlanId);
     await supabase.from("player_day_plans").delete().eq("id", currentPlanId);
     toast.success("Training day removed");
-    setCurrentPlanId(null);
-    setPlanItems([]);
-    setPlanNotes("");
+    setCurrentPlanId(null); setPlanItems([]); setPlanNotes("");
     setEditStartTime(""); setEditEndTime(""); setEditLocation("");
   };
 
-  const handleSaveAsBlock = async () => {
-    if (!user || planItems.length === 0 || !blockTitle.trim()) {
-      toast.error("Add a title and at least one module"); return;
-    }
-    await supabase.from("training_blocks").insert({
-      coach_id: user.id, title: blockTitle.trim(), goal: blockGoal,
-      category: "custom", description: `${planItems.length} modules`,
-      module_ids: planItems.map(i => i.module.id),
-      module_durations: planItems.map(i => i.module.duration_minutes),
-      module_notes: planItems.map(i => i.coach_note || ""),
-      is_system: false,
-    });
-    toast.success("Saved as training block!");
-    setShowSaveBlock(false); setBlockTitle(""); setBlockGoal("Technique");
-    setShowBlocksPanel(false);
-  };
-
-  /* ── Coach reorder ── */
+  /* ── Reorder ── */
   const handleMoveItem = async (index: number, direction: "up" | "down") => {
     const newIndex = direction === "up" ? index - 1 : index + 1;
     if (newIndex < 0 || newIndex >= planItems.length) return;
-
     const updated = [...planItems];
     const [moved] = updated.splice(index, 1);
     updated.splice(newIndex, 0, moved);
-
-    // Update order_index locally
     const reordered = updated.map((item, i) => ({ ...item, order_index: i }));
     setPlanItems(reordered);
-
-    // Persist all order changes
     for (const item of reordered) {
-      await supabase.from("player_day_plan_items")
-        .update({ order_index: item.order_index })
-        .eq("id", item.id);
+      await supabase.from("player_day_plan_items").update({ order_index: item.order_index }).eq("id", item.id);
     }
   };
 
-  /* ── Coach remove item ── */
+  /* ── Remove item ── */
   const handleRemoveItem = async (itemId: string) => {
     await supabase.from("player_day_plan_items").delete().eq("id", itemId);
     const remaining = planItems.filter(i => i.id !== itemId);
-    // Re-index
     const reordered = remaining.map((item, i) => ({ ...item, order_index: i }));
     setPlanItems(reordered);
     for (const item of reordered) {
-      await supabase.from("player_day_plan_items")
-        .update({ order_index: item.order_index })
-        .eq("id", item.id);
+      await supabase.from("player_day_plan_items").update({ order_index: item.order_index }).eq("id", item.id);
     }
     toast.success("Module removed");
-    // If no items left, clean up the plan
     if (reordered.length === 0 && currentPlanId) {
       await supabase.from("player_day_plans").delete().eq("id", currentPlanId);
-      setCurrentPlanId(null);
-      setPlanNotes("");
+      setCurrentPlanId(null); setPlanNotes("");
     }
   };
 
-  const totalDuration = planItems.reduce((sum, i) => sum + i.module.duration_minutes, 0);
+  const totalDuration = planItems.reduce((sum, i) => sum + (i.module.duration_minutes || 0), 0);
+
+  // Filtered modules for add panel
+  const filteredModules = useMemo(() => {
+    return allModules.filter(m => {
+      const matchCat = moduleCatFilter === "All" || m.category.toLowerCase().includes(moduleCatFilter.toLowerCase());
+      const matchSearch = !moduleSearch || m.title.toLowerCase().includes(moduleSearch.toLowerCase());
+      return matchCat && matchSearch;
+    });
+  }, [allModules, moduleCatFilter, moduleSearch]);
 
   // Month calendar
   const monthStart = startOfMonth(calMonth);
-  const monthEnd = endOfMonth(calMonth);
   const calDays = eachDayOfInterval({
     start: startOfWeek(monthStart, { weekStartsOn: 1 }),
     end: addDays(endOfMonth(calMonth), 6 - endOfMonth(calMonth).getDay()),
@@ -314,53 +329,45 @@ const Training = () => {
 
   return (
     <PortalLayout>
-      <div className="max-w-3xl mx-auto">
+      <div className="max-w-3xl mx-auto pb-24">
+        {/* Back button for coach */}
         {isCoachViewingPlayer && (
-          <button
-            onClick={() => navigate(`/coach/players/${playerParam}`)}
-            className="inline-flex items-center gap-2 mb-4 text-muted-foreground hover:text-foreground transition-colors font-body text-sm"
-          >
-            <ChevronLeft size={16} /> Back to Player Profile
+          <button onClick={() => navigate(`/coach/players/${playerParam}`)}
+            className="inline-flex items-center gap-2 mb-3 text-muted-foreground hover:text-foreground transition-colors font-body text-sm">
+            <ChevronLeft size={16} /> Back to {playerName || "Player"}
           </button>
         )}
 
+        {/* Header */}
         <div className="flex items-center justify-between mb-4">
-          <h1 className="font-display text-3xl text-foreground">TRAINING</h1>
-          <div className="flex items-center gap-2">
-            {isCoachOrAdmin && (
-              <button
-                onClick={() => setShowBlocksPanel(true)}
-                className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-card border border-border text-muted-foreground hover:text-foreground hover:border-primary/40 font-display text-[10px] tracking-wider transition-colors"
-              >
-                <Layers size={14} /> BLOCKS
-              </button>
-            )}
-            <button
-              onClick={() => setShowMonthCal(!showMonthCal)}
-              className={`p-2 rounded-lg border transition-colors ${showMonthCal ? "bg-primary text-primary-foreground border-primary" : "bg-card border-border text-muted-foreground hover:text-foreground"}`}
-            >
-              <CalendarDays size={16} />
-            </button>
+          <div>
+            <h1 className="font-display text-2xl text-foreground">
+              {isCoachViewingPlayer ? `${playerName || "Player"}'s Plan` : "TRAINING"}
+            </h1>
+            <p className="text-xs font-body text-muted-foreground mt-0.5">
+              {format(selectedDay, "EEEE, MMMM d, yyyy")}
+            </p>
           </div>
+          <button onClick={() => setShowMonthCal(!showMonthCal)}
+            className={`p-2 rounded-lg border transition-colors ${showMonthCal ? "bg-primary text-primary-foreground border-primary" : "bg-card border-border text-muted-foreground hover:text-foreground"}`}>
+            <CalendarDays size={16} />
+          </button>
         </div>
 
         {/* Week strip */}
-        <div className="flex gap-2 mb-4">
-          {weekDays.map((day) => {
+        <div className="flex gap-1.5 mb-4">
+          {weekDays.map(day => {
             const isSelected = isSameDay(day, selectedDay);
-            const today = isSameDay(day, new Date());
             const hasPlan = planDates.has(format(day, "yyyy-MM-dd"));
             return (
               <button key={day.toISOString()} onClick={() => setSelectedDay(day)}
                 className={`flex-1 py-2 rounded-lg text-center transition-colors relative ${
-                  isSelected ? "bg-primary text-primary-foreground"
-                    : today ? "bg-secondary text-foreground"
-                    : "bg-card text-muted-foreground hover:bg-secondary"
+                  isSelected ? "bg-primary text-primary-foreground" : "bg-card text-muted-foreground hover:bg-secondary"
                 }`}>
-                <span className="font-display text-xs block">{format(day, "EEE")}</span>
+                <span className="font-display text-[10px] block">{format(day, "EEE")}</span>
                 <span className="font-body text-xs">{format(day, "d")}</span>
                 {hasPlan && !isSelected && (
-                  <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-primary" />
+                  <div className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-primary" />
                 )}
               </button>
             );
@@ -404,274 +411,341 @@ const Training = () => {
           )}
         </AnimatePresence>
 
-        {/* Training Day Info Card (player view) */}
+        {/* Player-only: training day info */}
         {targetPlayerId && !isCoachOrAdmin && (
           <div className="mb-6">
             <TrainingDayInfo playerId={targetPlayerId} date={format(selectedDay, "yyyy-MM-dd")} />
           </div>
         )}
 
-        {/* Coach: editable session info */}
+        {/* Coach: session info bar */}
         {isCoachOrAdmin && planItems.length > 0 && (
-          <div className="bg-card border border-border rounded-xl p-4 mb-4 space-y-3">
-            <h2 className="font-display text-[10px] tracking-wider text-muted-foreground">SESSION INFO</h2>
-            <div className="grid grid-cols-3 gap-3">
+          <div className="bg-card border border-border rounded-xl p-3 mb-4">
+            <div className="grid grid-cols-3 gap-2">
               <div>
-                <label className="font-display text-[9px] tracking-wider text-muted-foreground block mb-1">
-                  <MapPin size={10} className="inline mr-1" />LOCATION
+                <label className="font-display text-[9px] tracking-wider text-muted-foreground block mb-0.5">
+                  <MapPin size={9} className="inline mr-0.5" />LOCATION
                 </label>
-                <input value={editLocation} onChange={(e) => setEditLocation(e.target.value)}
-                  placeholder="Training venue..."
-                  className="w-full px-2.5 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-xs focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-muted-foreground" />
+                <input value={editLocation} onChange={e => setEditLocation(e.target.value)} placeholder="Venue..."
+                  className="w-full px-2 py-1.5 rounded-lg bg-secondary border border-border text-foreground font-body text-xs focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-muted-foreground" />
               </div>
               <div>
-                <label className="font-display text-[9px] tracking-wider text-muted-foreground block mb-1">
-                  <Clock size={10} className="inline mr-1" />START
+                <label className="font-display text-[9px] tracking-wider text-muted-foreground block mb-0.5">
+                  <Clock size={9} className="inline mr-0.5" />START
                 </label>
-                <input type="time" value={editStartTime} onChange={(e) => setEditStartTime(e.target.value)}
-                  className="w-full px-2.5 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-xs focus:outline-none focus:ring-1 focus:ring-primary" />
+                <input type="time" value={editStartTime} onChange={e => setEditStartTime(e.target.value)}
+                  className="w-full px-2 py-1.5 rounded-lg bg-secondary border border-border text-foreground font-body text-xs focus:outline-none focus:ring-1 focus:ring-primary" />
               </div>
               <div>
-                <label className="font-display text-[9px] tracking-wider text-muted-foreground block mb-1">
-                  <Clock size={10} className="inline mr-1" />END
+                <label className="font-display text-[9px] tracking-wider text-muted-foreground block mb-0.5">
+                  <Clock size={9} className="inline mr-0.5" />END
                 </label>
-                <input type="time" value={editEndTime} onChange={(e) => setEditEndTime(e.target.value)}
-                  className="w-full px-2.5 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-xs focus:outline-none focus:ring-1 focus:ring-primary" />
+                <input type="time" value={editEndTime} onChange={e => setEditEndTime(e.target.value)}
+                  className="w-full px-2 py-1.5 rounded-lg bg-secondary border border-border text-foreground font-body text-xs focus:outline-none focus:ring-1 focus:ring-primary" />
               </div>
-            </div>
-            <div className="flex gap-2">
-              <button onClick={handleSavePlan} disabled={savingPlan}
-                className="flex-1 py-2 rounded-lg bg-primary text-primary-foreground font-display text-[10px] tracking-wider hover:bg-primary/90 disabled:opacity-50 transition-colors flex items-center justify-center gap-1">
-                <Save size={12} /> {savingPlan ? "SAVING..." : "SAVE TRAINING DAY"}
-              </button>
-              <button onClick={() => setShowSaveBlock(true)}
-                className="py-2 px-3 rounded-lg border border-border text-muted-foreground font-display text-[10px] tracking-wider hover:text-foreground hover:border-primary/40 transition-colors">
-                <Layers size={12} />
-              </button>
-              <button onClick={handleCancelDay}
-                className="py-2 px-3 rounded-lg border border-destructive/30 text-destructive font-display text-[10px] tracking-wider hover:bg-destructive/10 transition-colors">
-                <Trash2 size={12} />
-              </button>
             </div>
           </div>
         )}
 
-        {/* Empty state with coach actions */}
+        {/* Loading */}
         {loading ? (
           <div className="flex justify-center py-12">
             <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
           </div>
-        ) : planItems.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="font-display text-xl text-muted-foreground">NO PLAN FOR THIS DAY</p>
-            <p className="font-body text-sm text-muted-foreground mt-2">
-              {isCoachOrAdmin ? "Add modules using training blocks." : "Your coach hasn't assigned a plan yet."}
-            </p>
-            {isCoachOrAdmin && (
-              <button onClick={() => setShowBlocksPanel(true)}
-                className="mt-4 px-4 py-2.5 rounded-xl bg-primary text-primary-foreground font-display text-xs tracking-wider hover:bg-primary/90 transition-colors inline-flex items-center gap-1.5">
-                <Layers size={14} /> USE BLOCK OR MODULES
-              </button>
-            )}
-          </div>
         ) : (
-          <div className="space-y-3">
-            {/* Coach builder header */}
-            {isCoachOrAdmin && (
-              <div className="flex items-center justify-between mb-1">
+          <>
+            {/* Workout summary header */}
+            {planItems.length > 0 && (
+              <div className="flex items-center justify-between mb-3">
                 <p className="font-display text-[10px] tracking-wider text-muted-foreground">
-                  WORKOUT · {planItems.length} MODULE{planItems.length !== 1 ? "S" : ""} · {totalDuration}MIN
+                  WORKOUT · {planItems.length} MODULE{planItems.length !== 1 ? "S" : ""} · {totalDuration} MIN
                 </p>
-                <button onClick={() => setShowBlocksPanel(true)}
-                  className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-primary text-primary-foreground font-display text-[9px] tracking-wider hover:bg-primary/90 transition-colors">
-                  <Plus size={11} /> ADD
-                </button>
+                {isCoachOrAdmin && (
+                  <button onClick={() => { setShowAddPanel(true); setAddTab("modules"); }}
+                    className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-primary text-primary-foreground font-display text-[9px] tracking-wider hover:bg-primary/90 transition-colors">
+                    <Plus size={11} /> ADD
+                  </button>
+                )}
               </div>
             )}
 
-            {planItems.map((item, index) => (
-              <motion.div key={item.id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.05 }}
-                className="bg-card border border-border rounded-xl overflow-hidden"
-              >
-                <div className="flex">
-                  <div className={`w-1 ${CATEGORY_COLORS[item.module.category] || "bg-muted"}`} />
-                  <div className="flex-1 p-4">
-                    <div className="flex items-start justify-between gap-2">
-                      {/* Coach reorder controls */}
-                      {isCoachOrAdmin && (
-                        <div className="flex flex-col gap-0.5 pt-1 shrink-0">
-                          <button
-                            onClick={() => handleMoveItem(index, "up")}
-                            disabled={index === 0}
-                            className="p-0.5 text-muted-foreground hover:text-foreground disabled:opacity-20 transition-colors"
-                          >
-                            <ChevronUp size={14} />
-                          </button>
-                          <button
-                            onClick={() => handleMoveItem(index, "down")}
-                            disabled={index === planItems.length - 1}
-                            className="p-0.5 text-muted-foreground hover:text-foreground disabled:opacity-20 transition-colors"
-                          >
-                            <ChevronDown size={14} />
-                          </button>
-                        </div>
-                      )}
-
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className="font-body text-[10px] font-semibold bg-primary/10 text-primary px-2 py-0.5 rounded-full uppercase">
-                            {item.module.category.replace("_", " ")}
-                          </span>
-                          <span className="flex items-center gap-1 text-muted-foreground text-xs font-body">
-                            <Clock size={12} /> {item.module.duration_minutes} min
-                          </span>
-                        </div>
-                        <h3 className="font-display text-lg text-foreground">{item.module.title}</h3>
-                      </div>
-
-                      <div className="flex items-center gap-1.5 shrink-0">
+            {/* Plan items — builder cards */}
+            {planItems.length > 0 ? (
+              <div className="space-y-2">
+                {planItems.map((item, index) => (
+                  <motion.div key={item.id}
+                    initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.03 }}
+                    className={`bg-card border border-border rounded-xl overflow-hidden border-l-4 ${CATEGORY_COLORS[item.module.category] || "border-l-muted"}`}>
+                    <div className="p-3">
+                      <div className="flex items-center gap-2">
+                        {/* Reorder controls (coach) */}
                         {isCoachOrAdmin && (
-                          <button onClick={() => handleRemoveItem(item.id)}
-                            className="p-1.5 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
-                            title="Remove module"
-                          >
-                            <Minus size={14} />
-                          </button>
-                        )}
-                        {!isCoachOrAdmin && (
-                          !item.is_completed ? (
-                            <button onClick={() => markComplete(item.id)}
-                              className="px-3 py-1.5 rounded-lg bg-primary text-primary-foreground font-display text-xs tracking-wider hover:bg-primary/90 transition-colors">
-                              COMPLETE
+                          <div className="flex flex-col gap-0.5 shrink-0">
+                            <button onClick={() => handleMoveItem(index, "up")} disabled={index === 0}
+                              className="p-0.5 text-muted-foreground hover:text-foreground disabled:opacity-20 transition-colors">
+                              <ChevronUp size={12} />
                             </button>
-                          ) : (
-                            <span className="flex items-center gap-1 text-green-500 font-body text-xs">
-                              <Check size={14} /> Done
-                            </span>
-                          )
-                        )}
-                        <button onClick={() => setExpandedItem(expandedItem === item.id ? null : item.id)}
-                          className="p-1 text-muted-foreground hover:text-foreground transition-colors">
-                          {expandedItem === item.id ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-                        </button>
-                      </div>
-                    </div>
-
-                    {expandedItem === item.id && (
-                      <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }}
-                        className="mt-3 pt-3 border-t border-border">
-                        {item.module.description && (
-                          <p className="text-sm font-body text-muted-foreground mb-3">{item.module.description}</p>
-                        )}
-                        {item.module.instructions && (
-                          <div className="text-sm font-body text-foreground mb-3 whitespace-pre-wrap">{item.module.instructions}</div>
-                        )}
-                        {item.module.video_url && (
-                          <div className="aspect-video rounded-lg overflow-hidden mb-3">
-                            <iframe
-                              src={item.module.video_url.replace("watch?v=", "embed/").replace("youtu.be/", "youtube.com/embed/")}
-                              className="w-full h-full" allowFullScreen loading="lazy" title={item.module.title} />
+                            <button onClick={() => handleMoveItem(index, "down")} disabled={index === planItems.length - 1}
+                              className="p-0.5 text-muted-foreground hover:text-foreground disabled:opacity-20 transition-colors">
+                              <ChevronDown size={12} />
+                            </button>
                           </div>
                         )}
-                         {item.coach_note && (
-                           <div className="bg-secondary rounded-lg p-3 mt-2">
-                             <p className="text-xs font-display tracking-wider text-muted-foreground mb-1">COACH NOTE</p>
-                             <p className="text-sm font-body text-foreground">{item.coach_note}</p>
-                           </div>
-                         )}
-                         {(item.module as any).coach_video_url && (
-                           <button
-                             onClick={() => {
-                               setCoachVideoUrl((item.module as any).coach_video_url);
-                               setCoachVideoTitle(item.module.title);
-                               setCoachVideoOpen(true);
-                             }}
-                             className="mt-2 flex items-center gap-2 px-3 py-2 rounded-lg bg-primary/10 text-primary font-display text-[10px] tracking-wider hover:bg-primary/20 transition-colors"
-                           >
-                             <Video size={14} /> WATCH COACH DEMO
-                           </button>
-                         )}
-                      </motion.div>
-                    )}
+
+                        {/* Module info */}
+                        <div className="flex-1 min-w-0" onClick={() => setExpandedItem(expandedItem === item.id ? null : item.id)}>
+                          <div className="flex items-center gap-2">
+                            <div className={`w-2 h-2 rounded-full shrink-0 ${CATEGORY_DOT[item.module.category] || "bg-muted-foreground"}`} />
+                            <span className="font-display text-sm text-foreground truncate">{item.module.title}</span>
+                          </div>
+                          <div className="flex items-center gap-2 mt-0.5 ml-4">
+                            <span className="font-body text-[10px] text-muted-foreground uppercase">
+                              {item.module.category.replace("_", " ")}
+                            </span>
+                            <span className="text-muted-foreground text-[10px]">·</span>
+                            <span className="flex items-center gap-0.5 text-muted-foreground text-[10px] font-body">
+                              <Clock size={9} /> {item.module.duration_minutes} min
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Actions */}
+                        <div className="flex items-center gap-1 shrink-0">
+                          {isCoachOrAdmin ? (
+                            <button onClick={() => handleRemoveItem(item.id)}
+                              className="p-1.5 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors">
+                              <Minus size={14} />
+                            </button>
+                          ) : (
+                            !item.is_completed ? (
+                              <button onClick={() => markComplete(item.id)}
+                                className="px-2.5 py-1 rounded-lg bg-primary text-primary-foreground font-display text-[9px] tracking-wider hover:bg-primary/90 transition-colors">
+                                DONE
+                              </button>
+                            ) : (
+                              <span className="flex items-center gap-1 text-green-500 font-body text-[10px]">
+                                <Check size={12} /> Done
+                              </span>
+                            )
+                          )}
+                          <button onClick={() => setExpandedItem(expandedItem === item.id ? null : item.id)}
+                            className="p-1 text-muted-foreground hover:text-foreground transition-colors">
+                            {expandedItem === item.id ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Expanded details */}
+                      <AnimatePresence>
+                        {expandedItem === item.id && (
+                          <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }}
+                            className="mt-3 pt-3 border-t border-border overflow-hidden">
+                            {item.module.description && (
+                              <p className="text-xs font-body text-muted-foreground mb-2">{item.module.description}</p>
+                            )}
+                            {item.module.instructions && (
+                              <div className="text-xs font-body text-foreground mb-2 whitespace-pre-wrap">{item.module.instructions}</div>
+                            )}
+                            {item.module.video_url && (
+                              <div className="aspect-video rounded-lg overflow-hidden mb-2">
+                                <iframe src={item.module.video_url.replace("watch?v=", "embed/").replace("youtu.be/", "youtube.com/embed/")}
+                                  className="w-full h-full" allowFullScreen loading="lazy" title={item.module.title} />
+                              </div>
+                            )}
+                            {item.coach_note && (
+                              <div className="bg-secondary rounded-lg p-2.5 mt-1">
+                                <p className="text-[9px] font-display tracking-wider text-muted-foreground mb-0.5">COACH NOTE</p>
+                                <p className="text-xs font-body text-foreground">{item.coach_note}</p>
+                              </div>
+                            )}
+                            {(item.module as any).coach_video_url && (
+                              <button onClick={() => { setCoachVideoUrl((item.module as any).coach_video_url); setCoachVideoTitle(item.module.title); setCoachVideoOpen(true); }}
+                                className="mt-2 flex items-center gap-2 px-3 py-1.5 rounded-lg bg-primary/10 text-primary font-display text-[9px] tracking-wider hover:bg-primary/20 transition-colors">
+                                <Video size={12} /> WATCH COACH DEMO
+                              </button>
+                            )}
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  </motion.div>
+                ))}
+
+                {/* Add more modules inline button */}
+                {isCoachOrAdmin && (
+                  <button onClick={() => { setShowAddPanel(true); setAddTab("modules"); }}
+                    className="w-full py-2.5 rounded-xl border border-dashed border-border text-muted-foreground font-display text-[10px] tracking-wider hover:border-primary hover:text-primary transition-colors flex items-center justify-center gap-1.5">
+                    <Plus size={12} /> ADD BLOCKS OR MODULES
+                  </button>
+                )}
+
+                {/* Player total */}
+                {!isCoachOrAdmin && (
+                  <div className="text-center pt-2">
+                    <p className="text-xs font-body text-muted-foreground">
+                      {planItems.filter(i => i.is_completed).length}/{planItems.length} completed · {totalDuration} min total
+                    </p>
                   </div>
+                )}
+              </div>
+            ) : (
+              /* Empty state */
+              <div className="text-center py-16">
+                <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-secondary flex items-center justify-center">
+                  <Layers size={24} className="text-muted-foreground" />
                 </div>
-              </motion.div>
-            ))}
-
-            <div className="text-center pt-4">
-              <p className="text-xs font-body text-muted-foreground">
-                Total: {totalDuration} minutes · {planItems.filter((i) => i.is_completed).length}/{planItems.length} completed
-              </p>
-            </div>
-
-            {/* Coach: add more modules button */}
-            {isCoachOrAdmin && (
-              <button onClick={() => setShowBlocksPanel(true)}
-                className="w-full py-2.5 rounded-xl border border-dashed border-border text-muted-foreground font-display text-[10px] tracking-wider hover:border-primary hover:text-primary transition-colors flex items-center justify-center gap-1.5">
-                <Plus size={12} /> ADD MORE MODULES FROM BLOCKS
-              </button>
+                <p className="font-display text-lg text-muted-foreground mb-1">NO PLAN YET</p>
+                <p className="font-body text-sm text-muted-foreground mb-4">
+                  {isCoachOrAdmin ? "Start building a workout for this day." : "Your coach hasn't assigned a plan yet."}
+                </p>
+                {isCoachOrAdmin && (
+                  <div className="flex gap-2 justify-center">
+                    <button onClick={() => { setShowAddPanel(true); setAddTab("blocks"); }}
+                      className="px-4 py-2.5 rounded-xl bg-primary text-primary-foreground font-display text-xs tracking-wider hover:bg-primary/90 transition-colors inline-flex items-center gap-1.5">
+                      <Layers size={14} /> USE A BLOCK
+                    </button>
+                    <button onClick={() => { setShowAddPanel(true); setAddTab("modules"); }}
+                      className="px-4 py-2.5 rounded-xl bg-card border border-border text-foreground font-display text-xs tracking-wider hover:bg-secondary transition-colors inline-flex items-center gap-1.5">
+                      <Plus size={14} /> ADD MODULES
+                    </button>
+                  </div>
+                )}
+              </div>
             )}
-          </div>
+          </>
         )}
       </div>
 
-      {/* Blocks Panel (slide-in) */}
-      {isCoachOrAdmin && (
-        <TrainingBlocksPanel
-          isOpen={showBlocksPanel}
-          onClose={() => setShowBlocksPanel(false)}
-          onApplyBlock={handleApplyBlock}
-          onSaveAsBlock={planItems.length > 0 ? () => setShowSaveBlock(true) : null}
-          modules={modules}
-        />
+      {/* ─── Sticky Footer (coach, has items) ─── */}
+      {isCoachOrAdmin && planItems.length > 0 && (
+        <div className="fixed bottom-0 left-0 right-0 bg-card/95 backdrop-blur-sm border-t border-border z-30 px-4 py-3">
+          <div className="max-w-3xl mx-auto flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <p className="font-display text-xs tracking-wider text-foreground">
+                {planItems.length} module{planItems.length !== 1 ? "s" : ""} · {totalDuration} min
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
+              <button onClick={handleCancelDay}
+                className="p-2 rounded-lg border border-destructive/30 text-destructive hover:bg-destructive/10 transition-colors">
+                <Trash2 size={14} />
+              </button>
+              <button onClick={handleSavePlan} disabled={savingPlan}
+                className="px-5 py-2 rounded-xl bg-primary text-primary-foreground font-display text-xs tracking-wider hover:bg-primary/90 disabled:opacity-50 transition-colors flex items-center gap-1.5">
+                <Save size={14} /> {savingPlan ? "SAVING..." : "SAVE PLAN"}
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
-      {/* Save as block dialog */}
+      {/* ─── Add Panel (slide-up) ─── */}
       <AnimatePresence>
-        {showSaveBlock && (
+        {showAddPanel && (
           <>
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-background/60 z-50" onClick={() => setShowSaveBlock(false)} />
-            <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }}
-              className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-sm bg-card border border-border rounded-2xl p-5 z-50 space-y-4">
-              <h3 className="font-display text-sm tracking-wider text-foreground">SAVE AS TRAINING BLOCK</h3>
-              <div>
-                <label className="font-display text-[10px] tracking-wider text-muted-foreground">BLOCK TITLE *</label>
-                <input value={blockTitle} onChange={(e) => setBlockTitle(e.target.value)}
-                  className="w-full mt-1 px-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary" />
+              className="fixed inset-0 bg-background/60 z-40" onClick={() => setShowAddPanel(false)} />
+            <motion.div
+              initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }}
+              transition={{ type: "spring", damping: 28, stiffness: 300 }}
+              className="fixed bottom-0 left-0 right-0 bg-card border-t border-border rounded-t-2xl z-50 max-h-[75vh] flex flex-col">
+
+              {/* Drag handle */}
+              <div className="flex justify-center pt-2 pb-1">
+                <div className="w-10 h-1 rounded-full bg-border" />
               </div>
-              <div>
-                <label className="font-display text-[10px] tracking-wider text-muted-foreground">GOAL</label>
-                <div className="flex flex-wrap gap-1 mt-1">
-                  {["Technique","Fitness","Footwork","Mental","Recovery","Warm Up","Match Preparation"].map(g => (
-                    <button key={g} onClick={() => setBlockGoal(g)}
-                      className={`px-2.5 py-1 rounded-lg font-display text-[9px] tracking-wider transition-colors ${
-                        blockGoal === g ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground"
-                      }`}>{g.toUpperCase()}</button>
-                  ))}
-                </div>
+
+              {/* Tabs */}
+              <div className="flex items-center gap-3 px-4 pb-2 border-b border-border">
+                <button onClick={() => setAddTab("modules")}
+                  className={`font-display text-xs tracking-wider pb-2 border-b-2 transition-colors ${addTab === "modules" ? "border-primary text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"}`}>
+                  MODULES
+                </button>
+                <button onClick={() => setAddTab("blocks")}
+                  className={`font-display text-xs tracking-wider pb-2 border-b-2 transition-colors ${addTab === "blocks" ? "border-primary text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"}`}>
+                  BLOCKS
+                </button>
+                <div className="flex-1" />
+                <button onClick={() => setShowAddPanel(false)} className="p-1 rounded-lg hover:bg-secondary">
+                  <X size={16} className="text-muted-foreground" />
+                </button>
               </div>
-              <p className="text-[10px] font-body text-muted-foreground">{planItems.length} modules · {totalDuration} min</p>
-              <div className="flex gap-2">
-                <button onClick={() => setShowSaveBlock(false)}
-                  className="flex-1 py-2 rounded-lg border border-border text-muted-foreground font-display text-[10px] tracking-wider">CANCEL</button>
-                <button onClick={handleSaveAsBlock} disabled={!blockTitle.trim()}
-                  className="flex-1 py-2 rounded-lg bg-primary text-primary-foreground font-display text-[10px] tracking-wider disabled:opacity-50">SAVE BLOCK</button>
+
+              <div className="flex-1 overflow-y-auto px-4 py-3">
+                {addTab === "modules" ? (
+                  <>
+                    {/* Search */}
+                    <div className="relative mb-3">
+                      <Search size={12} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                      <input value={moduleSearch} onChange={e => setModuleSearch(e.target.value)}
+                        placeholder="Search modules..."
+                        className="w-full pl-8 pr-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-xs focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-muted-foreground" />
+                    </div>
+
+                    {/* Category filters */}
+                    <div className="flex flex-wrap gap-1.5 mb-3">
+                      {MODULE_CATEGORIES.map(cat => (
+                        <button key={cat} onClick={() => setModuleCatFilter(cat)}
+                          className={`px-2.5 py-1 rounded-lg font-display text-[9px] tracking-wider transition-colors ${
+                            moduleCatFilter === cat ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground hover:text-foreground"
+                          }`}>{cat.toUpperCase()}</button>
+                      ))}
+                    </div>
+
+                    {/* Module list */}
+                    <div className="space-y-1.5">
+                      {filteredModules.map(mod => (
+                        <button key={mod.id} onClick={() => handleAddModule(mod)}
+                          className={`w-full text-left p-2.5 rounded-xl border border-border hover:border-primary/40 transition-colors flex items-center gap-3 border-l-4 ${CATEGORY_COLORS[mod.category] || "border-l-muted"}`}>
+                          <div className="flex-1 min-w-0">
+                            <p className="font-display text-xs text-foreground truncate">{mod.title}</p>
+                            <p className="text-[10px] font-body text-muted-foreground">{mod.category.replace("_", " ")} · {mod.duration_minutes || 15} min</p>
+                          </div>
+                          <Plus size={14} className="text-primary shrink-0" />
+                        </button>
+                      ))}
+                      {filteredModules.length === 0 && (
+                        <p className="text-xs font-body text-muted-foreground text-center py-6">No modules found</p>
+                      )}
+                    </div>
+                  </>
+                ) : (
+                  /* Blocks tab */
+                  <div className="space-y-1.5">
+                    {allBlocks.map(block => {
+                      const totalDur = block.module_durations?.reduce((s, d) => s + d, 0) || 0;
+                      return (
+                        <button key={block.id} onClick={() => { handleApplyBlock(block); setShowAddPanel(false); }}
+                          className="w-full text-left p-3 rounded-xl border border-border hover:border-primary/40 transition-colors">
+                          <div className="flex items-center justify-between mb-1">
+                            <p className="font-display text-xs text-foreground truncate flex-1">{block.title}</p>
+                            <Plus size={14} className="text-primary shrink-0 ml-2" />
+                          </div>
+                          {block.description && (
+                            <p className="text-[10px] font-body text-muted-foreground line-clamp-1 mb-0.5">{block.description}</p>
+                          )}
+                          <div className="flex items-center gap-2 text-[9px] font-body text-muted-foreground">
+                            <span>{block.module_ids.length} modules</span>
+                            <span>·</span>
+                            <span>{totalDur} min</span>
+                            {block.is_system && <span className="text-primary/60">SYSTEM</span>}
+                          </div>
+                        </button>
+                      );
+                    })}
+                    {allBlocks.length === 0 && (
+                      <p className="text-xs font-body text-muted-foreground text-center py-6">No blocks available</p>
+                    )}
+                  </div>
+                )}
               </div>
             </motion.div>
           </>
         )}
       </AnimatePresence>
 
-      <CoachVideoModal
-        open={coachVideoOpen}
-        onClose={() => setCoachVideoOpen(false)}
-        videoUrl={coachVideoUrl}
-        moduleTitle={coachVideoTitle}
-      />
+      <CoachVideoModal open={coachVideoOpen} onClose={() => setCoachVideoOpen(false)} videoUrl={coachVideoUrl} moduleTitle={coachVideoTitle} />
     </PortalLayout>
   );
 };
