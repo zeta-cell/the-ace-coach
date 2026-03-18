@@ -311,6 +311,11 @@ interface SelectionStepProps {
   filteredBlocks: TrainingBlock[]; filteredModules: ModuleItem[];
   selectedBlockId: string; setSelectedBlockId: (v: string) => void;
   selectedModuleIds: string[]; toggleModule: (id: string) => void;
+  selectedBlock?: TrainingBlock;
+  selectedModules: ModuleItem[];
+  totalDuration: number;
+  onRemoveModule: (id: string) => void;
+  onClearSelection: () => void;
   canProceed: boolean;
   onNext: () => void;
 }
