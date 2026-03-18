@@ -1088,6 +1088,38 @@ const Training = () => {
                               ));
                             })()}
                           </div>
+
+                          {/* Selected blocks summary + review */}
+                          {selectedBlockIds.size > 0 && (
+                            <div className="mt-3 p-3 rounded-xl border border-primary bg-primary/5 space-y-2">
+                              <div className="flex items-center justify-between">
+                                <div>
+                                  <p className="font-display text-xs text-primary">PLAN BUILDER</p>
+                                  <p className="text-[10px] font-body text-muted-foreground">
+                                    {selectedBlockIds.size} block{selectedBlockIds.size !== 1 ? "s" : ""} selected · {selectedBlocksTotalDur}min
+                                  </p>
+                                </div>
+                                <button onClick={() => setSelectedBlockIds(new Set())}
+                                  className="font-display text-[9px] tracking-wider text-muted-foreground hover:text-foreground transition-colors">
+                                  CLEAR
+                                </button>
+                              </div>
+                              {selectedBlocks.map(b => (
+                                <div key={b.id} className="p-2.5 rounded-lg border border-border bg-card">
+                                  <p className="font-display text-[10px] text-foreground">{b.title}</p>
+                                  <p className="text-[9px] font-body text-muted-foreground">{b.category} · {b.module_durations?.reduce((s, d) => s + d, 0) || 0}min · {b.module_ids.length} modules</p>
+                                </div>
+                              ))}
+                              <button onClick={async () => {
+                                for (const block of selectedBlocks) { await handleApplyBlock(block); }
+                                setSelectedBlockIds(new Set());
+                                setShowInlineBlocks(false);
+                              }}
+                                className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-display text-xs tracking-wider hover:bg-primary/90 transition-colors flex items-center justify-center gap-2">
+                                REVIEW PLAN <ChevronRight size={14} />
+                              </button>
+                            </div>
+                          )}
                         </div>
                       </motion.div>
                     )}
