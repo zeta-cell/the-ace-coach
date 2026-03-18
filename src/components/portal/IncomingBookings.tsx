@@ -321,15 +321,17 @@ const IncomingBookings = () => {
           return (
             <div key={b.id} className="bg-card border border-border rounded-xl p-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-primary/20 overflow-hidden flex items-center justify-center shrink-0">
+                <Link to={`/coach/players/${b.player_id}`} className="w-10 h-10 rounded-full bg-primary/20 overflow-hidden flex items-center justify-center shrink-0 hover:ring-2 hover:ring-primary/40 transition-all">
                   {b.player_avatar ? (
                     <img src={b.player_avatar} alt="" className="w-full h-full object-cover" />
                   ) : (
                     <span className="font-display text-sm text-primary">{b.player_name.charAt(0)}</span>
                   )}
-                </div>
+                </Link>
                 <div className="flex-1 min-w-0">
-                  <p className="font-display text-sm text-foreground">{b.player_name}</p>
+                  <Link to={`/coach/players/${b.player_id}`} className="font-display text-sm text-foreground hover:text-primary transition-colors">
+                    {b.player_name}
+                  </Link>
                   <div className="flex items-center gap-2 text-xs font-body text-muted-foreground">
                     <span>{format(new Date(b.booking_date + "T00:00:00"), "EEE, d MMM")}</span>
                     <span>·</span>
