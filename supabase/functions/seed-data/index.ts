@@ -273,45 +273,71 @@ Deno.serve(async (req) => {
 
     // --- Modules (comprehensive library) ---
     const moduleCategories = [
-      { title: "Dynamic Warm-Up", category: "warm_up", duration: 10, difficulty: "beginner", desc: "Full-body activation with ladder drills and arm circles." },
-      { title: "Joint Mobility Flow", category: "warm_up", duration: 8, difficulty: "beginner", desc: "Hip circles, shoulder rolls, ankle rotations for joint prep." },
-      { title: "Cardio Activation Run", category: "warm_up", duration: 10, difficulty: "beginner", desc: "5-min jog + high knees + butt kicks around the court." },
-      { title: "Resistance Band Warm-Up", category: "warm_up", duration: 12, difficulty: "beginner", desc: "Band walks, monster walks, and shoulder activation." },
-      { title: "Shadow Padel Warm-Up", category: "warm_up", duration: 10, difficulty: "intermediate", desc: "Simulate padel movements without ball — volleys, smashes, lobs." },
-      { title: "Agility Ladder Warm-Up", category: "warm_up", duration: 12, difficulty: "intermediate", desc: "In-out, lateral shuffle, and Icky shuffle patterns." },
-      { title: "Breathing & Focus Activation", category: "warm_up", duration: 5, difficulty: "beginner", desc: "Box breathing + mental focus exercise before play." },
-      { title: "Plyometric Activation", category: "warm_up", duration: 10, difficulty: "intermediate", desc: "Jump rope, box jumps, and lateral bounds to activate fast-twitch fibers." },
-      { title: "Forehand Cross-Court Rally", category: "padel_drill", duration: 20, difficulty: "intermediate", desc: "Consistency drill focusing on depth and angle." },
-      { title: "Bandeja & Vibora", category: "padel_drill", duration: 25, difficulty: "advanced", desc: "Overhead defense shots from mid-court." },
-      { title: "Net Approach & Volley", category: "padel_drill", duration: 20, difficulty: "intermediate", desc: "Transition from baseline to net with volley finishing." },
-      { title: "Lob Defense Drill", category: "padel_drill", duration: 20, difficulty: "intermediate", desc: "Recovering lobs from back wall and counter-attacking." },
-      { title: "Serve + 1 Pattern", category: "padel_drill", duration: 15, difficulty: "beginner", desc: "Practice serve and immediately follow with a forehand or backhand." },
-      { title: "Wall Play Rebound", category: "padel_drill", duration: 20, difficulty: "intermediate", desc: "Using the back and side walls to create angles." },
-      { title: "4-Point Rotation Drill", category: "padel_drill", duration: 25, difficulty: "advanced", desc: "Systematic coverage of all four court quadrants." },
-      { title: "Volley Clinic", category: "padel_drill", duration: 20, difficulty: "intermediate", desc: "Block volleys, drive volleys, and angled volleys at the net." },
-      { title: "Smash Technique", category: "padel_drill", duration: 20, difficulty: "intermediate", desc: "Overhead smash mechanics from mid-court and back." },
-      { title: "Point Construction Rally", category: "padel_drill", duration: 30, difficulty: "advanced", desc: "Build points systematically from defensive to offensive positions." },
-      { title: "Split-Step Footwork", category: "footwork", duration: 15, difficulty: "intermediate", desc: "Reaction-based movement patterns at the net." },
-      { title: "Lateral Shuffle Drill", category: "footwork", duration: 12, difficulty: "beginner", desc: "Side-to-side court coverage with proper stance." },
-      { title: "Spider Drill", category: "footwork", duration: 15, difficulty: "advanced", desc: "Multi-directional cone drill simulating match movement." },
-      { title: "Cone Agility Circuit", category: "footwork", duration: 15, difficulty: "advanced", desc: "12-cone circuit covering all movement patterns in padel." },
-      { title: "Core Stability Circuit", category: "fitness", duration: 15, difficulty: "intermediate", desc: "Planks, Russian twists, and medicine ball throws." },
-      { title: "HIIT Court Circuit", category: "fitness", duration: 20, difficulty: "advanced", desc: "Burpees, jump squats, mountain climbers on court." },
-      { title: "Tabata Core", category: "fitness", duration: 8, difficulty: "intermediate", desc: "8 rounds of 20s max effort / 10s rest — core focused." },
-      { title: "Jump Rope Circuit", category: "fitness", duration: 15, difficulty: "intermediate", desc: "Basic, double-unders, and cross jumps — 5 sets." },
-      { title: "Resistance Band Shoulders", category: "strength", duration: 12, difficulty: "beginner", desc: "Rotator cuff strengthening for injury prevention." },
-      { title: "Squat Circuit", category: "strength", duration: 15, difficulty: "intermediate", desc: "Goblet squats, jump squats, and split squats — 3 sets." },
-      { title: "Rotational Power", category: "strength", duration: 15, difficulty: "advanced", desc: "Medicine ball rotational throws for shot power." },
-      { title: "Pull-Up & Row Circuit", category: "strength", duration: 15, difficulty: "advanced", desc: "Pull-ups, TRX rows, and face pulls for back strength." },
-      { title: "Match Visualization", category: "mental", duration: 10, difficulty: "beginner", desc: "Guided imagery for pressure-point scenarios." },
-      { title: "Pressure Point Practice", category: "mental", duration: 15, difficulty: "intermediate", desc: "Simulate high-pressure points (4-4, match point) in training." },
-      { title: "Video Analysis Session", category: "mental", duration: 20, difficulty: "intermediate", desc: "Watch own match footage and identify patterns." },
-      { title: "Foam Rolling Recovery", category: "recovery", duration: 10, difficulty: "beginner", desc: "Full-body myofascial release routine." },
-      { title: "Static Stretching Routine", category: "recovery", duration: 15, difficulty: "beginner", desc: "Full-body hold stretches — 30s per muscle group." },
-      { title: "Yoga Recovery Flow", category: "recovery", duration: 20, difficulty: "beginner", desc: "Yin yoga poses held 2-3 minutes for deep tissue release." },
-      { title: "Pre-Match Nutrition Plan", category: "nutrition", duration: 5, difficulty: "beginner", desc: "Timing carbs, protein, and hydration before play." },
-      { title: "Post-Match Recovery Meal", category: "nutrition", duration: 5, difficulty: "beginner", desc: "Optimal protein + carb ratio within 30-60 min after play." },
-      { title: "Serve Technique Analysis", category: "video", duration: 15, difficulty: "intermediate", desc: "Frame-by-frame breakdown of serve mechanics." },
+      // Warm-ups (4)
+      { title: "Dynamic Warm-Up", category: "warm_up", duration: 10, difficulty: "beginner", desc: "Full-body activation with ladder drills and arm circles.", sport: "both" },
+      { title: "Shadow Court Warm-Up", category: "warm_up", duration: 10, difficulty: "intermediate", desc: "Simulate match movements without ball — volleys, smashes, lobs.", sport: "both" },
+      { title: "Resistance Band Activation", category: "warm_up", duration: 12, difficulty: "beginner", desc: "Band walks, monster walks, and shoulder activation.", sport: "both" },
+      { title: "Agility Ladder Warm-Up", category: "warm_up", duration: 12, difficulty: "intermediate", desc: "In-out, lateral shuffle, and Icky shuffle patterns.", sport: "both" },
+
+      // Padel drills (10)
+      { title: "Forehand Cross-Court Rally", category: "padel_drill", duration: 20, difficulty: "intermediate", desc: "Consistency drill focusing on depth and angle.", sport: "padel" },
+      { title: "Bandeja & Vibora", category: "padel_drill", duration: 25, difficulty: "advanced", desc: "Overhead defense shots from mid-court — the most important padel shots.", sport: "padel" },
+      { title: "Net Approach & Volley", category: "padel_drill", duration: 20, difficulty: "intermediate", desc: "Transition from baseline to net with volley finishing.", sport: "padel" },
+      { title: "Lob Defense Drill", category: "padel_drill", duration: 20, difficulty: "intermediate", desc: "Recovering lobs from back wall and counter-attacking.", sport: "padel" },
+      { title: "Wall Play Rebound", category: "padel_drill", duration: 20, difficulty: "intermediate", desc: "Using the back and side walls to create angles.", sport: "padel" },
+      { title: "4-Point Rotation Drill", category: "padel_drill", duration: 25, difficulty: "advanced", desc: "Systematic coverage of all four court quadrants.", sport: "padel" },
+      { title: "Volley Clinic", category: "padel_drill", duration: 20, difficulty: "intermediate", desc: "Block volleys, drive volleys, and angled volleys at the net.", sport: "padel" },
+      { title: "Smash Technique", category: "padel_drill", duration: 20, difficulty: "intermediate", desc: "Overhead smash mechanics from mid-court and back.", sport: "padel" },
+      { title: "Point Construction Rally", category: "padel_drill", duration: 30, difficulty: "advanced", desc: "Build points systematically from defensive to offensive positions.", sport: "padel" },
+      { title: "Serve + 1 Pattern", category: "padel_drill", duration: 15, difficulty: "beginner", desc: "Practice serve and immediately follow with a forehand or backhand.", sport: "padel" },
+
+      // Tennis drills (10)
+      { title: "Baseline Rally — Cross Court", category: "tennis_drill", duration: 20, difficulty: "intermediate", desc: "Consistent cross-court rallying with emphasis on depth and topspin.", sport: "tennis" },
+      { title: "Serve Progression Drill", category: "tennis_drill", duration: 25, difficulty: "intermediate", desc: "Flat, slice, and kick serve practice with target zones.", sport: "tennis" },
+      { title: "Approach Shot & Net Finish", category: "tennis_drill", duration: 20, difficulty: "intermediate", desc: "Hit approach shot, close to net, finish with volley or overhead.", sport: "tennis" },
+      { title: "Return of Serve Practice", category: "tennis_drill", duration: 20, difficulty: "intermediate", desc: "Block returns, chip returns, and aggressive return positioning.", sport: "tennis" },
+      { title: "Drop Shot & Lob Combo", category: "tennis_drill", duration: 15, difficulty: "advanced", desc: "Touch shots — alternating drop shots with defensive lobs.", sport: "tennis" },
+      { title: "Two-Ball Passing Shot Drill", category: "tennis_drill", duration: 20, difficulty: "advanced", desc: "Coach feeds two balls — hit passing shots down the line and cross-court.", sport: "tennis" },
+      { title: "First Strike Tennis", category: "tennis_drill", duration: 25, difficulty: "advanced", desc: "Serve + forehand inside-out pattern to dominate the first 3 shots.", sport: "tennis" },
+      { title: "Backhand Slice & Drive", category: "tennis_drill", duration: 20, difficulty: "intermediate", desc: "Alternate between slice and topspin backhands to build variety.", sport: "tennis" },
+      { title: "Doubles Net Play", category: "tennis_drill", duration: 20, difficulty: "intermediate", desc: "Poaching, I-formation, and reflex volleys for doubles players.", sport: "tennis" },
+      { title: "Match Point Simulation", category: "tennis_drill", duration: 25, difficulty: "advanced", desc: "Play out points starting from 30-40 / 40-30 pressure scenarios.", sport: "tennis" },
+
+      // Footwork (4)
+      { title: "Split-Step Footwork", category: "footwork", duration: 15, difficulty: "intermediate", desc: "Reaction-based movement patterns at the net.", sport: "both" },
+      { title: "Lateral Shuffle Drill", category: "footwork", duration: 12, difficulty: "beginner", desc: "Side-to-side court coverage with proper stance.", sport: "both" },
+      { title: "Spider Drill", category: "footwork", duration: 15, difficulty: "advanced", desc: "Multi-directional cone drill simulating match movement.", sport: "both" },
+      { title: "Cone Agility Circuit", category: "footwork", duration: 15, difficulty: "advanced", desc: "12-cone circuit covering all movement patterns.", sport: "both" },
+
+      // Fitness (4)
+      { title: "Core Stability Circuit", category: "fitness", duration: 15, difficulty: "intermediate", desc: "Planks, Russian twists, and medicine ball throws.", sport: "both" },
+      { title: "HIIT Court Circuit", category: "fitness", duration: 20, difficulty: "advanced", desc: "Burpees, jump squats, mountain climbers on court.", sport: "both" },
+      { title: "Tabata Core", category: "fitness", duration: 8, difficulty: "intermediate", desc: "8 rounds of 20s max effort / 10s rest — core focused.", sport: "both" },
+      { title: "Jump Rope Circuit", category: "fitness", duration: 15, difficulty: "intermediate", desc: "Basic, double-unders, and cross jumps — 5 sets.", sport: "both" },
+
+      // Strength (4)
+      { title: "Resistance Band Shoulders", category: "strength", duration: 12, difficulty: "beginner", desc: "Rotator cuff strengthening for injury prevention.", sport: "both" },
+      { title: "Squat Circuit", category: "strength", duration: 15, difficulty: "intermediate", desc: "Goblet squats, jump squats, and split squats — 3 sets.", sport: "both" },
+      { title: "Rotational Power", category: "strength", duration: 15, difficulty: "advanced", desc: "Medicine ball rotational throws for shot power.", sport: "both" },
+      { title: "Pull-Up & Row Circuit", category: "strength", duration: 15, difficulty: "advanced", desc: "Pull-ups, TRX rows, and face pulls for back strength.", sport: "both" },
+
+      // Mental (3)
+      { title: "Match Visualization", category: "mental", duration: 10, difficulty: "beginner", desc: "Guided imagery for pressure-point scenarios.", sport: "both" },
+      { title: "Pressure Point Practice", category: "mental", duration: 15, difficulty: "intermediate", desc: "Simulate high-pressure points (4-4, match point) in training.", sport: "both" },
+      { title: "Video Analysis Session", category: "mental", duration: 20, difficulty: "intermediate", desc: "Watch own match footage and identify patterns.", sport: "both" },
+
+      // Recovery (3)
+      { title: "Foam Rolling Recovery", category: "recovery", duration: 10, difficulty: "beginner", desc: "Full-body myofascial release routine.", sport: "both" },
+      { title: "Static Stretching Routine", category: "recovery", duration: 15, difficulty: "beginner", desc: "Full-body hold stretches — 30s per muscle group.", sport: "both" },
+      { title: "Yoga Recovery Flow", category: "recovery", duration: 20, difficulty: "beginner", desc: "Yin yoga poses held 2-3 minutes for deep tissue release.", sport: "both" },
+
+      // Cool-down (2)
+      { title: "Active Cool-Down Jog", category: "cool_down", duration: 8, difficulty: "beginner", desc: "Light jog + walking + breathing exercises to bring heart rate down.", sport: "both" },
+      { title: "Stretching Cool-Down", category: "cool_down", duration: 10, difficulty: "beginner", desc: "Quad, hamstring, hip flexor and shoulder stretches.", sport: "both" },
+
+      // Nutrition (2)
+      { title: "Pre-Match Nutrition Plan", category: "nutrition", duration: 5, difficulty: "beginner", desc: "Timing carbs, protein, and hydration before play.", sport: "both" },
+      { title: "Post-Match Recovery Meal", category: "nutrition", duration: 5, difficulty: "beginner", desc: "Optimal protein + carb ratio within 30-60 min after play.", sport: "both" },
     ];
 
     const moduleIdMap: Record<string, string> = {};
