@@ -156,7 +156,6 @@ const Training = () => {
   const [allBlocks, setAllBlocks] = useState<TrainingBlock[]>([]);
   const [showInlineBlocks, setShowInlineBlocks] = useState(false);
   const [blockSearch, setBlockSearch] = useState("");
-  const [expandedBlockGoal, setExpandedBlockGoal] = useState<string | null>(null);
   const [selectedBlockIds, setSelectedBlockIds] = useState<Set<string>>(new Set());
   const [expandedBlockDetail, setExpandedBlockDetail] = useState<string | null>(null);
   const [blockCatFilter, setBlockCatFilter] = useState("All");
