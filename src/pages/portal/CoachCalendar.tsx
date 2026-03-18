@@ -479,12 +479,11 @@ const CoachCalendar = () => {
     setQuickAddOpen(true);
   };
 
+  const currencySymbol = (c: string) => c === "EUR" ? "€" : c === "USD" ? "$" : c === "GBP" ? "£" : c;
+
   return (
     <PortalLayout>
       <div className="space-y-6">
-        {/* Availability grid */}
-        {!isAdminView && targetCoachId && <CoachAvailabilityGrid coachId={targetCoachId} />}
-
         {/* Header */}
         <div className="space-y-4">
           {isAdminView && (
@@ -496,19 +495,23 @@ const CoachCalendar = () => {
             <h1 className="font-display text-2xl md:text-3xl text-foreground tracking-wider">
               {isAdminView ? `${coachName.toUpperCase()}'S SCHEDULE` : "MY SCHEDULE"}
             </h1>
-            {/* View mode toggle */}
-            <div className="flex gap-0.5 bg-secondary rounded-lg p-0.5">
-              {(["week", "month"] as const).map(mode => (
-                <button key={mode} onClick={() => setViewMode(mode)}
-                  className={`px-3 py-1.5 rounded-md font-display text-[10px] tracking-wider transition-colors ${
-                    viewMode === mode ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
+          </div>
+
+          {/* Tab toggle: Bookings Calendar vs Availability */}
+          {!isAdminView && (
+            <div className="flex gap-1 bg-secondary rounded-lg p-0.5">
+              {([{ key: "bookings", label: "BOOKINGS CALENDAR", icon: CalendarIcon }, { key: "availability", label: "AVAILABILITY", icon: Shield }] as const).map(tab => (
+                <button key={tab.key} onClick={() => setCalendarTab(tab.key as "bookings" | "availability")}
+                  className={`flex-1 py-2.5 rounded-md font-display text-[10px] tracking-wider transition-colors flex items-center justify-center gap-1.5 ${
+                    calendarTab === tab.key ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
-                  {mode.toUpperCase()}
+                  <tab.icon size={14} /> {tab.label}
                 </button>
               ))}
             </div>
-          </div>
+          )}
+        </div>
         </div>
 
         {/* Three column layout */}
