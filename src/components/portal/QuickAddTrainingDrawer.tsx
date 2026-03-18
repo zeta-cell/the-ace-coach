@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { X, Search, Layers, BookOpen, Plus, Check, ArrowLeft, ArrowRight, Clock, User, CalendarDays } from "lucide-react";
+import { X, Search, Layers, BookOpen, Plus, Check, ArrowLeft, ArrowRight, Clock, User, CalendarDays, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 import { format } from "date-fns";
