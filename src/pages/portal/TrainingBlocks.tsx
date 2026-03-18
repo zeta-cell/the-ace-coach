@@ -75,7 +75,7 @@ const MODULE_CATEGORY_COLORS: Record<string, string> = {
   video: "bg-pink-500", tennis_drill: "bg-emerald-500",
 };
 
-const TrainingBlocksPage = () => {
+export const TrainingBlocksContent = ({ embedded = false }: { embedded?: boolean }) => {
   const { user, role } = useAuth();
   const [blocks, setBlocks] = useState<TrainingBlock[]>([]);
   const [search, setSearch] = useState("");
