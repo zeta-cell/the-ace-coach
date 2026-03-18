@@ -8,6 +8,7 @@ import {
   MapPin, Search, Star, CheckCircle, Shield, Zap, Crown,
   ShoppingBag, Heart, BookOpen, Brain, Dumbbell, Play,
   Clock, Users, ChevronRight, X, Award, Target,
+  Home, UserSearch, CalendarDays, UsersRound,
 } from "lucide-react";
 import BlockDetailDrawer from "@/components/portal/BlockDetailDrawer";
 
@@ -416,6 +417,35 @@ const Marketplace = () => {
         onToggleSave={toggleSave}
         isSaved={selectedBlock ? savedIds.has(selectedBlock.id) : false}
       />
+
+      {/* Mobile bottom nav */}
+      <nav className="md:hidden fixed inset-x-0 bottom-0 z-50 bg-card/95 backdrop-blur-xl border-t border-border pb-[env(safe-area-inset-bottom)]">
+        <div className="flex items-center justify-around h-14">
+          <Link to="/" className="flex flex-col items-center gap-0.5 text-muted-foreground">
+            <Home size={20} />
+            <span className="font-display text-[9px] tracking-wider">HOME</span>
+          </Link>
+          <Link to="/find-a-coach" className="flex flex-col items-center gap-0.5 text-muted-foreground">
+            <UserSearch size={20} />
+            <span className="font-display text-[9px] tracking-wider">COACHES</span>
+          </Link>
+          <Link to="/marketplace" className="flex flex-col items-center gap-0.5 text-primary">
+            <ShoppingBag size={20} />
+            <span className="font-display text-[9px] tracking-wider">MARKET</span>
+          </Link>
+          <Link to="/events" className="flex flex-col items-center gap-0.5 text-muted-foreground">
+            <CalendarDays size={20} />
+            <span className="font-display text-[9px] tracking-wider">EVENTS</span>
+          </Link>
+          <Link to="/community" className="flex flex-col items-center gap-0.5 text-muted-foreground">
+            <UsersRound size={20} />
+            <span className="font-display text-[9px] tracking-wider">COMMUNITY</span>
+          </Link>
+        </div>
+      </nav>
+
+      {/* Bottom spacer for mobile nav */}
+      <div className="md:hidden h-16" />
     </div>
   );
 };
