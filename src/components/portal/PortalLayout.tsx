@@ -136,13 +136,13 @@ const PortalLayout = ({ children }: { children: React.ReactNode }) => {
                   </Link>
                 );
               })}
-              {/* Center — Training Center */}
-              <Link to="/coach" className="flex flex-col items-center -mt-5">
+              {/* Center — Create Training */}
+              <button onClick={() => setFabDrawerOpen(true)} className="flex flex-col items-center -mt-5">
                 <div className="w-14 h-14 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg">
-                  <LayoutDashboard size={22} />
+                  <Plus size={22} />
                 </div>
-                <span className="text-[9px] font-display tracking-wider text-primary mt-1">TRAINING</span>
-              </Link>
+                <span className="text-[9px] font-display tracking-wider text-primary mt-1">CREATE</span>
+              </button>
               {/* Right two: Library, Videos */}
               {[
                 { label: "Library", icon: BookOpen, href: "/coach/modules" },
