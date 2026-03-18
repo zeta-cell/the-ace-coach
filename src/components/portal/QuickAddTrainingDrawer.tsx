@@ -390,6 +390,68 @@ const SelectionStep = ({
       ))}
     </div>
 
+    {/* Live builder */}
+    {((assignType === "block" && selectedBlock) || (assignType === "modules" && selectedModules.length > 0)) && (
+      <div className="rounded-xl border border-primary/20 bg-primary/5 p-3 space-y-3">
+        <div className="flex items-center justify-between gap-3">
+          <div>
+            <p className="font-display text-[10px] tracking-wider text-primary">PLAN BUILDER</p>
+            <p className="text-[11px] font-body text-muted-foreground">
+              {assignType === "block"
+                ? "1 block selected"
+                : `${selectedModules.length} module${selectedModules.length === 1 ? "" : "s"} selected`} · {totalDuration}min
+            </p>
+          </div>
+          <button
+            onClick={onClearSelection}
+            className="text-[10px] font-display tracking-wider text-muted-foreground hover:text-foreground transition-colors"
+          >
+            CLEAR
+          </button>
+        </div>
+
+        {assignType === "block" && selectedBlock ? (
+          <div className={`p-3 rounded-lg border border-l-4 border-border bg-secondary/60 ${
+            CATEGORY_BORDER_COLORS[selectedBlock.category?.toLowerCase()] || "border-l-muted-foreground"
+          }`}>
+            <p className="font-display text-xs text-foreground">{selectedBlock.title}</p>
+            <p className="text-[10px] font-body text-muted-foreground">
+              {selectedBlock.category} · {selectedBlock.duration_minutes}min · {selectedBlock.module_ids?.length || 0} modules
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-1.5 max-h-40 overflow-y-auto pr-1">
+            {selectedModules.map((module, index) => (
+              <div
+                key={module.id}
+                className={`flex items-center gap-3 p-3 rounded-lg border border-l-4 border-border bg-secondary/60 ${
+                  CATEGORY_BORDER_COLORS[module.category?.toLowerCase()] || "border-l-muted-foreground"
+                }`}
+              >
+                <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-display text-primary-foreground ${
+                  CATEGORY_DOT_COLORS[module.category?.toLowerCase()] || "bg-muted-foreground"
+                }`}>
+                  {index + 1}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-display text-xs text-foreground">{module.title}</p>
+                  <p className="text-[10px] font-body text-muted-foreground">
+                    {module.category?.replace("_", " ")} · {module.duration_minutes || 0}min
+                  </p>
+                </div>
+                <button
+                  onClick={() => onRemoveModule(module.id)}
+                  className="w-7 h-7 rounded-full bg-secondary text-muted-foreground hover:text-foreground transition-colors flex items-center justify-center"
+                >
+                  <X size={12} />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    )}
+
     {/* List */}
     <div className="space-y-1.5 max-h-[35vh] overflow-y-auto">
       {assignType === "block" ? (
