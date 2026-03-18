@@ -8,6 +8,7 @@ import {
   MapPin, Search, Star, CheckCircle, Shield, Zap, Crown,
   ShoppingBag, Heart, BookOpen, Brain, Dumbbell, Play,
   Clock, Users, ChevronRight, X, Award, Target,
+  Home, UserSearch, CalendarDays, UsersRound,
 } from "lucide-react";
 import BlockDetailDrawer from "@/components/portal/BlockDetailDrawer";
 
