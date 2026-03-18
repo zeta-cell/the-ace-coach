@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { X, Search, Layers, BookOpen } from "lucide-react";
+import { X, Search, Layers, BookOpen, Plus, Check } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 import { format } from "date-fns";
@@ -274,33 +274,57 @@ const QuickAddTrainingDrawer = ({
                 {assignType === "block" ? (
                   filteredBlocks.length === 0 ? (
                     <p className="text-xs font-body text-muted-foreground text-center py-6">No blocks found</p>
-                  ) : filteredBlocks.map(b => (
-                    <button key={b.id} onClick={() => setSelectedBlockId(b.id)}
-                      className={`w-full text-left p-3 rounded-lg border transition-colors ${
-                        selectedBlockId === b.id ? "border-primary bg-primary/5" : "border-border hover:border-primary/40"
-                      }`}
-                    >
-                      <p className="font-display text-xs text-foreground">{b.title}</p>
-                      <p className="text-[10px] font-body text-muted-foreground">
-                        {b.category} · {b.duration_minutes}min · {b.module_ids?.length || 0} modules
-                      </p>
-                    </button>
-                  ))
+                  ) : (
+                    filteredBlocks.map(b => {
+                      const isSelected = selectedBlockId === b.id;
+                      return (
+                        <button key={b.id} onClick={() => setSelectedBlockId(b.id)}
+                          className={`w-full text-left p-3 rounded-lg border transition-all flex items-center gap-3 ${
+                            isSelected ? "border-primary bg-primary/10" : "border-border hover:border-primary/40"
+                          }`}
+                        >
+                          <div className="flex-1 min-w-0">
+                            <p className="font-display text-xs text-foreground">{b.title}</p>
+                            <p className="text-[10px] font-body text-muted-foreground">
+                              {b.category} · {b.duration_minutes}min · {b.module_ids?.length || 0} modules
+                            </p>
+                          </div>
+                          <div className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-all ${
+                            isSelected ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground hover:text-foreground"
+                          }`}>
+                            {isSelected ? <Check size={14} /> : <Plus size={14} />}
+                          </div>
+                        </button>
+                      );
+                    })
+                  )
                 ) : (
                   filteredModules.length === 0 ? (
                     <p className="text-xs font-body text-muted-foreground text-center py-6">No modules found</p>
-                  ) : filteredModules.map(m => (
-                    <button key={m.id} onClick={() => toggleModule(m.id)}
-                      className={`w-full text-left p-3 rounded-lg border transition-colors ${
-                        selectedModuleIds.includes(m.id) ? "border-primary bg-primary/5" : "border-border hover:border-primary/40"
-                      }`}
-                    >
-                      <p className="font-display text-xs text-foreground">{m.title}</p>
-                      <p className="text-[10px] font-body text-muted-foreground">
-                        {m.category?.replace("_", " ")} · {m.duration_minutes || 0}min
-                      </p>
-                    </button>
-                  ))
+                  ) : (
+                    filteredModules.map(m => {
+                      const isSelected = selectedModuleIds.includes(m.id);
+                      return (
+                        <button key={m.id} onClick={() => toggleModule(m.id)}
+                          className={`w-full text-left p-3 rounded-lg border transition-all flex items-center gap-3 ${
+                            isSelected ? "border-primary bg-primary/10" : "border-border hover:border-primary/40"
+                          }`}
+                        >
+                          <div className="flex-1 min-w-0">
+                            <p className="font-display text-xs text-foreground">{m.title}</p>
+                            <p className="text-[10px] font-body text-muted-foreground">
+                              {m.category?.replace("_", " ")} · {m.duration_minutes || 0}min
+                            </p>
+                          </div>
+                          <div className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-all ${
+                            isSelected ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground hover:text-foreground"
+                          }`}>
+                            {isSelected ? <Check size={14} /> : <Plus size={14} />}
+                          </div>
+                        </button>
+                      );
+                    })
+                  )
                 )}
               </div>
 
