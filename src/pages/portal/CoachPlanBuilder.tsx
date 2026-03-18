@@ -350,10 +350,13 @@ const CoachPlanBuilder = () => {
       setPlanNotes(plan.notes || "");
       setStartTime(plan.start_time || "");
       setEndTime(plan.end_time || "");
-      setLocationName(plan.location_name || "");
-      setLocationAddress(plan.location_address || "");
+      const locName = plan.location_name || "";
+      const locAddr = plan.location_address || "";
+      setLocationName(locName);
+      setLocationAddress(locAddr);
       setLocationLat(plan.location_lat?.toString() || "");
       setLocationLng(plan.location_lng?.toString() || "");
+      if (locName || locAddr) setShowLocationSection(true);
       const { data: items } = await supabase
         .from("player_day_plan_items")
         .select("id, module_id, coach_note, order_index")
