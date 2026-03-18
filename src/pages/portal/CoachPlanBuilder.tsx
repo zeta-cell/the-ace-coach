@@ -415,8 +415,8 @@ const CoachPlanBuilder = () => {
     if (existingPlanId) {
       const { error } = await supabase.from("player_day_plan_items").delete().eq("id", tempId);
       if (error) {
-        setPlanItems(prev);
-        toast.error("Fehler beim Löschen");
+        toast.error("Failed to remove");
+        return;
         return;
       }
       toast.success("Modul entfernt", { duration: 1500 });
