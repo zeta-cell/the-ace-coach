@@ -271,6 +271,7 @@ const QuickAddTrainingDrawer = ({
                   search={search} setSearch={setSearch}
                   categoryFilter={categoryFilter} setCategoryFilter={setCategoryFilter}
                   filteredBlocks={filteredBlocks} filteredModules={filteredModules}
+                  allModules={modules}
                   selectedBlockId={selectedBlockId} setSelectedBlockId={setSelectedBlockId}
                   selectedModuleIds={selectedModuleIds} toggleModule={toggleModule}
                   selectedBlock={selectedBlock}
