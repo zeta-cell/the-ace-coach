@@ -431,15 +431,23 @@ const Training = () => {
         <div className="flex items-center justify-between mb-4">
           <div>
             <h1 className="font-display text-2xl text-foreground">
-              {isCoachViewingPlayer ? `${playerName || "Player"}'s Plan` : "TRAINING"}
+              {isCoachViewingPlayer ? "DAY PLAN" : "TRAINING"}
             </h1>
-            <p className="text-xs font-body text-muted-foreground mt-0.5">
-              {format(selectedDay, "EEEE, MMMM d, yyyy")}
-            </p>
+            {isCoachViewingPlayer && (
+              <p className="text-sm font-body text-muted-foreground mt-0.5">
+                for {playerName || "Player"}
+              </p>
+            )}
+            {!isCoachViewingPlayer && (
+              <p className="text-xs font-body text-muted-foreground mt-0.5">
+                {format(selectedDay, "EEEE, MMMM d, yyyy")}
+              </p>
+            )}
           </div>
           <button onClick={() => { setShowMonthCal(!showMonthCal); setCalMonth(selectedDay); }}
-            className={`p-2 rounded-lg border transition-colors ${showMonthCal ? "bg-primary text-primary-foreground border-primary" : "bg-card border-border text-muted-foreground hover:text-foreground"}`}>
-            <CalendarDays size={16} />
+            className={`px-3 py-1.5 rounded-lg border transition-colors flex items-center gap-1.5 font-display text-[10px] tracking-wider ${showMonthCal ? "bg-primary text-primary-foreground border-primary" : "bg-card border-border text-muted-foreground hover:text-foreground"}`}>
+            <CalendarDays size={14} />
+            {format(calMonth, "MMM yyyy").toUpperCase()}
           </button>
         </div>
 
@@ -512,10 +520,9 @@ const Training = () => {
           </div>
         )}
 
-        {/* Coach: session info card */}
+        {/* Coach: session info card (when plan has items) */}
         {isCoachOrAdmin && planItems.length > 0 && (
           <div className="bg-card border border-border rounded-xl p-4 mb-4">
-            {/* Editable fields */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div>
                 <label className="text-[10px] font-display tracking-wider text-muted-foreground mb-1 block">LOCATION</label>
@@ -584,14 +591,6 @@ const Training = () => {
             {/* Coach action buttons */}
             <div className="flex items-center justify-between mt-3 pt-3 border-t border-border flex-wrap gap-2">
               <div className="flex items-center gap-2 flex-wrap">
-                <button onClick={handleSavePlan} disabled={savingPlan}
-                  className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-primary text-primary-foreground font-display text-xs tracking-wider hover:bg-primary/90 transition-colors disabled:opacity-50">
-                  <Save size={14} /> {savingPlan ? "SAVING..." : "SAVE TRAINING DAY"}
-                </button>
-                <button onClick={handleEditInBuilder}
-                  className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-secondary text-foreground font-display text-xs tracking-wider hover:bg-secondary/80 transition-colors">
-                  <Plus size={12} /> EDIT IN BUILDER
-                </button>
                 <button onClick={handleSaveAsBlock}
                   className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-secondary text-foreground font-display text-xs tracking-wider hover:bg-secondary/80 transition-colors">
                   <Save size={12} /> SAVE AS BLOCK
@@ -758,28 +757,70 @@ const Training = () => {
                 )}
               </div>
             ) : (
-              /* Empty state */
-              <div className="text-center py-16">
-                <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-secondary flex items-center justify-center">
-                  <Layers size={24} className="text-muted-foreground" />
-                </div>
-                <p className="font-display text-lg text-muted-foreground mb-1">NO PLAN YET</p>
-                <p className="font-body text-sm text-muted-foreground mb-4">
-                  {isCoachOrAdmin ? "Start building a workout for this day." : "Your coach hasn't assigned a plan yet."}
-                </p>
-                {isCoachOrAdmin && (
-                  <div className="flex gap-2 justify-center">
-                    <button onClick={() => { setShowAddPanel(true); setAddTab("blocks"); }}
-                      className="px-4 py-2.5 rounded-xl bg-primary text-primary-foreground font-display text-xs tracking-wider hover:bg-primary/90 transition-colors inline-flex items-center gap-1.5">
-                      <Layers size={14} /> USE A BLOCK
-                    </button>
-                    <button onClick={() => { setShowAddPanel(true); setAddTab("modules"); }}
-                      className="px-4 py-2.5 rounded-xl bg-card border border-border text-foreground font-display text-xs tracking-wider hover:bg-secondary transition-colors inline-flex items-center gap-1.5">
-                      <Plus size={14} /> ADD MODULES
-                    </button>
+              /* Empty state — Coach inline builder */
+              isCoachOrAdmin ? (
+                <div className="space-y-4">
+                  {/* Start / End time */}
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="font-display text-[10px] tracking-wider text-primary mb-1.5 block">START TIME *</label>
+                      <input type="time" value={editStartTime} onChange={e => setEditStartTime(e.target.value)}
+                        className="w-full px-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary" />
+                    </div>
+                    <div>
+                      <label className="font-display text-[10px] tracking-wider text-primary mb-1.5 block">END TIME *</label>
+                      <input type="time" value={editEndTime} onChange={e => setEditEndTime(e.target.value)}
+                        className="w-full px-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary" />
+                    </div>
                   </div>
-                )}
-              </div>
+
+                  {/* Location */}
+                  <input value={editLocation} onChange={e => setEditLocation(e.target.value)}
+                    placeholder="Location (e.g. Court 3, Padel Club Valencia)..."
+                    className="w-full px-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-muted-foreground" />
+
+                  {/* Notes */}
+                  <input value={planNotes} onChange={e => setPlanNotes(e.target.value)}
+                    placeholder="Plan notes (optional)..."
+                    className="w-full px-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-muted-foreground" />
+
+                  {/* Add modules by category */}
+                  <div>
+                    <label className="font-display text-[10px] tracking-wider text-muted-foreground mb-2 block">ADD MODULES BY CATEGORY</label>
+                    <div className="flex flex-wrap gap-1.5">
+                      {MODULE_CATEGORIES.filter(c => c !== "All").map(cat => (
+                        <button key={cat} onClick={() => { setModuleCatFilter(cat); setShowAddPanel(true); setAddTab("modules"); }}
+                          className="px-3 py-1.5 rounded-lg bg-secondary border border-border text-muted-foreground font-display text-[9px] tracking-wider hover:border-primary hover:text-foreground transition-colors">
+                          {cat.toUpperCase()}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Search all modules */}
+                  <button onClick={() => { setModuleCatFilter("All"); setShowAddPanel(true); setAddTab("modules"); }}
+                    className="w-full py-3 rounded-xl border border-dashed border-border text-muted-foreground font-display text-[10px] tracking-wider hover:border-primary hover:text-primary transition-colors flex items-center justify-center gap-2">
+                    <Search size={14} /> SEARCH ALL MODULES
+                  </button>
+
+                  {/* Use a block */}
+                  <button onClick={() => { setShowAddPanel(true); setAddTab("blocks"); }}
+                    className="w-full py-3 rounded-xl border border-dashed border-border text-muted-foreground font-display text-[10px] tracking-wider hover:border-primary hover:text-primary transition-colors flex items-center justify-center gap-2">
+                    <Layers size={14} /> USE A BLOCK
+                  </button>
+                </div>
+              ) : (
+                /* Player empty state */
+                <div className="text-center py-16">
+                  <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-secondary flex items-center justify-center">
+                    <Layers size={24} className="text-muted-foreground" />
+                  </div>
+                  <p className="font-display text-lg text-muted-foreground mb-1">NO PLAN YET</p>
+                  <p className="font-body text-sm text-muted-foreground">
+                    Your coach hasn't assigned a plan yet.
+                  </p>
+                </div>
+              )
             )}
           </>
         )}
