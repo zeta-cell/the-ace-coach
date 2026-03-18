@@ -88,6 +88,7 @@ const CoachCalendar = () => {
   const [coachName, setCoachName] = useState("");
   const [assignedPlayers, setAssignedPlayers] = useState<AssignedPlayer[]>([]);
   const [selectedPlayerId, setSelectedPlayerId] = useState<string | null>(null);
+  const [selectedDayBookings, setSelectedDayBookings] = useState<DayBookingDetail[]>([]);
 
   // Quick add
   const [quickAddOpen, setQuickAddOpen] = useState(false);
