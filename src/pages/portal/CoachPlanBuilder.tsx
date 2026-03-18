@@ -368,7 +368,7 @@ const CoachPlanBuilder = () => {
     if (!user) return;
     const { data } = await supabase
       .from("modules")
-      .select("id, title, category, duration_minutes")
+      .select("id, title, category, duration_minutes, description, instructions, difficulty, equipment")
       .or(`created_by.eq.${user.id},is_shared.eq.true`)
       .order("category");
     setModules((data as ModuleItem[]) || []);
