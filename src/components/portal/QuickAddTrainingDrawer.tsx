@@ -120,6 +120,15 @@ const QuickAddTrainingDrawer = ({
     );
   };
 
+  const removeModule = (id: string) => {
+    setSelectedModuleIds(prev => prev.filter(moduleId => moduleId !== id));
+  };
+
+  const clearSelection = () => {
+    setSelectedBlockId("");
+    setSelectedModuleIds([]);
+  };
+
   const selectedBlock = blocks.find(b => b.id === selectedBlockId);
   const selectedModules = modules.filter(m => selectedModuleIds.includes(m.id));
   const playerName = players.find(p => p.player_id === playerId)?.full_name || "—";
