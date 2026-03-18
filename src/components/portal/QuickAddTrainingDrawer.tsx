@@ -27,6 +27,8 @@ interface ModuleItem {
   title: string;
   category: string;
   duration_minutes: number | null;
+  description: string | null;
+  instructions: string | null;
 }
 
 interface QuickAddTrainingDrawerProps {
