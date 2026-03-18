@@ -317,7 +317,9 @@ const QuickAddTrainingDrawer = ({
                       const isSelected = selectedModuleIds.includes(m.id);
                       return (
                         <button key={m.id} onClick={() => toggleModule(m.id)}
-                          className={`w-full text-left p-3 rounded-lg border transition-all flex items-center gap-3 ${
+                          className={`w-full text-left p-3 rounded-lg border border-l-4 transition-all flex items-center gap-3 ${
+                            CATEGORY_BORDER_COLORS[m.category?.toLowerCase()] || "border-l-muted-foreground"
+                          } ${
                             isSelected ? "border-primary bg-primary/10" : "border-border hover:border-primary/40"
                           }`}
                         >
