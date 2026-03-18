@@ -269,7 +269,7 @@ const IncomingBookings = () => {
 
               <div className="space-y-1.5 mb-3">
                 {g.participants.map(p => (
-                  <div key={p.id} className="flex items-center gap-2">
+                  <Link key={p.id} to={`/coach/players/${p.player_id}`} className="flex items-center gap-2 hover:bg-secondary/50 rounded-lg px-1 py-0.5 -mx-1 transition-colors">
                     <div className="w-7 h-7 rounded-full bg-primary/20 overflow-hidden flex items-center justify-center shrink-0">
                       {p.avatar ? (
                         <img src={p.avatar} alt="" className="w-full h-full object-cover" />
@@ -281,7 +281,7 @@ const IncomingBookings = () => {
                     <span className={`text-[9px] font-display px-2 py-0.5 rounded-full uppercase ${
                       p.status === "confirmed" ? "bg-green-500/10 text-green-400" : "bg-yellow-500/10 text-yellow-400"
                     }`}>{p.status}</span>
-                  </div>
+                  </Link>
                 ))}
                 {Array.from({ length: emptySlots }).map((_, i) => (
                   <div key={`empty-${i}`} className="flex items-center gap-2">
