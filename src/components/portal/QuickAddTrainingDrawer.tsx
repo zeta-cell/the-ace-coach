@@ -292,7 +292,6 @@ const QuickAddTrainingDrawer = ({
                           } ${
                             isSelected ? "border-primary bg-primary/10" : "border-border hover:border-primary/40"
                           }`}
-                          style={{ borderLeftColor: undefined }}
                         >
                           <div className="flex-1 min-w-0">
                             <p className="font-display text-xs text-foreground">{b.title}</p>
