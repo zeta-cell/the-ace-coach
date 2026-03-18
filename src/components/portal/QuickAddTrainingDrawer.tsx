@@ -27,6 +27,8 @@ interface ModuleItem {
   title: string;
   category: string;
   duration_minutes: number | null;
+  description: string | null;
+  instructions: string | null;
 }
 
 interface QuickAddTrainingDrawerProps {
@@ -108,7 +110,7 @@ const QuickAddTrainingDrawer = ({
   const fetchModules = async () => {
     if (!user) return;
     const { data } = await supabase.from("modules")
-      .select("id, title, category, duration_minutes")
+      .select("id, title, category, duration_minutes, description, instructions")
       .or(`created_by.eq.${user.id},is_shared.eq.true`)
       .order("category");
     setModules((data as ModuleItem[]) || []);
@@ -328,6 +330,7 @@ const SelectionStep = ({
   onRemoveModule, onClearSelection, canProceed, onNext,
 }: SelectionStepProps) => {
   const [expandedBlockId, setExpandedBlockId] = useState<string | null>(null);
+  const [expandedModuleId, setExpandedModuleId] = useState<string | null>(null);
 
   return (
   <>
@@ -513,26 +516,54 @@ const SelectionStep = ({
         ) : (
           filteredModules.map(m => {
             const isSelected = selectedModuleIds.includes(m.id);
+            const isExpanded = expandedModuleId === m.id;
+            const hasDetails = m.description || m.instructions;
             return (
-              <button key={m.id} onClick={() => toggleModule(m.id)}
-                className={`w-full text-left p-3 rounded-lg border border-l-4 transition-all flex items-center gap-3 ${
+              <div key={m.id}
+                className={`rounded-lg border border-l-4 transition-all overflow-hidden ${
                   CATEGORY_BORDER_COLORS[m.category?.toLowerCase()] || "border-l-muted-foreground"
                 } ${
                   isSelected ? "border-primary bg-primary/10" : "border-border hover:border-primary/40"
                 }`}
               >
-                <div className="flex-1 min-w-0">
-                  <p className="font-display text-xs text-foreground">{m.title}</p>
-                  <p className="text-[10px] font-body text-muted-foreground">
-                    {m.category?.replace("_", " ")} · {m.duration_minutes || 0}min
-                  </p>
+                <div className="flex items-center gap-3 p-3">
+                  <div className="flex-1 min-w-0">
+                    <p className="font-display text-xs text-foreground">{m.title}</p>
+                    <p className="text-[10px] font-body text-muted-foreground">
+                      {m.category?.replace("_", " ")} · {m.duration_minutes || 0}min
+                    </p>
+                  </div>
+                  {hasDetails && (
+                    <button onClick={() => setExpandedModuleId(isExpanded ? null : m.id)}
+                      className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground transition-colors shrink-0">
+                      <ChevronDown size={14} className={`transition-transform ${isExpanded ? "rotate-180" : ""}`} />
+                    </button>
+                  )}
+                  <button onClick={() => toggleModule(m.id)}
+                    className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-all ${
+                      isSelected ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground hover:text-foreground"
+                    }`}>
+                    {isSelected ? <Check size={14} /> : <Plus size={14} />}
+                  </button>
                 </div>
-                <div className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-all ${
-                  isSelected ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground hover:text-foreground"
-                }`}>
-                  {isSelected ? <Check size={14} /> : <Plus size={14} />}
-                </div>
-              </button>
+                <AnimatePresence>
+                  {isExpanded && hasDetails && (
+                    <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
+                      <div className="px-3 pb-3 pt-1 border-t border-border space-y-1.5">
+                        {m.description && (
+                          <p className="text-[10px] font-body text-muted-foreground">{m.description}</p>
+                        )}
+                        {m.instructions && (
+                          <div>
+                            <span className="text-[9px] font-display text-foreground/70 uppercase tracking-wider">Instructions</span>
+                            <p className="text-[10px] font-body text-muted-foreground mt-0.5 whitespace-pre-line">{m.instructions}</p>
+                          </div>
+                        )}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
             );
           })
         )
