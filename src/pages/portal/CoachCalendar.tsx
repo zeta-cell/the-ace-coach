@@ -39,6 +39,13 @@ interface PlanBlock { tempId: string; block: TrainingBlock; coach_note: string; 
 
 interface BookingDot { id: string; booking_date: string; status: string; }
 
+interface DayBookingDetail {
+  id: string; booking_date: string; start_time: string; end_time: string;
+  status: string; total_price: number; coach_payout: number; currency: string;
+  player_name: string; player_avatar: string | null; player_id: string;
+  package_title: string; location_type: string | null;
+}
+
 const CATEGORY_LABELS: Record<string, string> = {
   warm_up: "WARM UP", padel_drill: "TECHNICAL", footwork: "FOOTWORK",
   fitness: "FITNESS", strength: "STRENGTH", mental: "MENTAL",
