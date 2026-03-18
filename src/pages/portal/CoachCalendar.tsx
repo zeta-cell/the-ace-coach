@@ -15,7 +15,7 @@ import {
 import {
   ChevronLeft, ChevronRight, Users, Clock, ArrowLeft, Plus, X,
   Layers, Search, GripVertical, Trash2, Copy, Save, Dumbbell,
-  Calendar as CalendarIcon, Edit3,
+  Calendar as CalendarIcon, Edit3, MapPin, Shield,
 } from "lucide-react";
 
 /* ── types ── */
