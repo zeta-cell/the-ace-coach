@@ -20,7 +20,7 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { ArrowLeft, Plus, X, GripVertical, Clock, Save, Check, Search, CalendarDays } from "lucide-react";
+import { ArrowLeft, Plus, X, GripVertical, Clock, Save, Check, Search, CalendarDays, MapPin, ChevronDown, ChevronUp, FileText } from "lucide-react";
 import { toast } from "sonner";
 import { format, addDays, startOfWeek, startOfMonth, endOfMonth, isSameDay, isSameMonth, getWeek, subMonths, addMonths } from "date-fns";
 import PortalLayout from "@/components/portal/PortalLayout";
@@ -32,6 +32,7 @@ type ModuleCategory = Database["public"]["Enums"]["module_category"];
 const CATEGORY_COLORS: Record<string, string> = {
   warm_up: "bg-yellow-500",
   padel_drill: "bg-cyan-500",
+  tennis_drill: "bg-emerald-500",
   footwork: "bg-blue-500",
   fitness: "bg-orange-500",
   strength: "bg-orange-600",
@@ -186,7 +187,7 @@ const InlineAddModule = ({
         onClick={() => setOpen(true)}
         className="w-full py-3 rounded-xl border-2 border-dashed border-border text-muted-foreground font-display text-xs tracking-wider hover:border-primary hover:text-primary transition-colors flex items-center justify-center gap-2"
       >
-        <Plus size={14} /> MODUL HINZUFÜGEN
+        <Search size={14} /> SEARCH ALL MODULES
       </button>
     );
   }
@@ -200,7 +201,7 @@ const InlineAddModule = ({
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="Modul suchen..."
+          placeholder="Search modules..."
           className="flex-1 bg-transparent text-foreground font-body text-xs focus:outline-none placeholder:text-muted-foreground"
         />
         <button onClick={() => { setOpen(false); setSearch(""); }} className="p-0.5">
@@ -224,16 +225,16 @@ const InlineAddModule = ({
         </div>
       )}
       {search.length > 0 && results.length === 0 && (
-        <p className="text-center text-[10px] font-body text-muted-foreground py-3">Keine Module gefunden</p>
+        <p className="text-center text-[10px] font-body text-muted-foreground py-3">No modules found</p>
       )}
     </div>
   );
 };
 
 const CATEGORY_LABELS: Record<string, string> = {
-  all: "ALL", warm_up: "WARM UP", padel_drill: "PADEL", footwork: "FOOTWORK",
-  fitness: "FITNESS", strength: "STRENGTH", mental: "MENTAL", recovery: "RECOVERY",
-  cool_down: "COOL DOWN", nutrition: "NUTRITION", video: "VIDEO",
+  all: "ALL", warm_up: "WARM UP", padel_drill: "PADEL", tennis_drill: "TENNIS",
+  footwork: "FOOTWORK", fitness: "FITNESS", strength: "STRENGTH", mental: "MENTAL",
+  recovery: "RECOVERY", cool_down: "COOL DOWN", nutrition: "NUTRITION", video: "VIDEO",
 };
 
 /* ── Main component ── */
@@ -269,6 +270,7 @@ const CoachPlanBuilder = () => {
   const [blockTitle, setBlockTitle] = useState("");
   const [blockGoal, setBlockGoal] = useState("Technique");
   const [blockDesc, setBlockDesc] = useState("");
+  const [showLocationSection, setShowLocationSection] = useState(false);
 
   // Week context from CoachPlayerDetail
   const weekParam = searchParams.get("week");
@@ -349,10 +351,13 @@ const CoachPlanBuilder = () => {
       setPlanNotes(plan.notes || "");
       setStartTime(plan.start_time || "");
       setEndTime(plan.end_time || "");
-      setLocationName(plan.location_name || "");
-      setLocationAddress(plan.location_address || "");
+      const locName = plan.location_name || "";
+      const locAddr = plan.location_address || "";
+      setLocationName(locName);
+      setLocationAddress(locAddr);
       setLocationLat(plan.location_lat?.toString() || "");
       setLocationLng(plan.location_lng?.toString() || "");
+      if (locName || locAddr) setShowLocationSection(true);
       const { data: items } = await supabase
         .from("player_day_plan_items")
         .select("id, module_id, coach_note, order_index")
@@ -415,11 +420,11 @@ const CoachPlanBuilder = () => {
     if (existingPlanId) {
       const { error } = await supabase.from("player_day_plan_items").delete().eq("id", tempId);
       if (error) {
-        setPlanItems(prev);
-        toast.error("Fehler beim Löschen");
+        toast.error("Failed to remove");
+        return;
         return;
       }
-      toast.success("Modul entfernt", { duration: 1500 });
+      toast.success("Module removed", { duration: 1500 });
 
       // If no items left, delete the plan itself
       const remaining = prev.filter((i) => i.tempId !== tempId);
@@ -444,7 +449,7 @@ const CoachPlanBuilder = () => {
       .update({ duration_minutes: duration })
       .eq("id", moduleId);
     if (error) {
-      toast.error("Fehler beim Speichern");
+      toast.error("Failed to save duration");
     } else {
       toast.success("Saved", { duration: 1500 });
     }
@@ -637,6 +642,8 @@ const CoachPlanBuilder = () => {
 
   const today = new Date();
 
+  const selectedDateObj = new Date(planDate + "T00:00:00");
+
   return (
     <PortalLayout>
       <div className="flex gap-6">
@@ -650,386 +657,475 @@ const CoachPlanBuilder = () => {
         </aside>
 
         {/* Right: Plan builder */}
-        <div className="flex-1 max-w-3xl min-w-0">
-        <Link to={`/coach/players/${playerId}`} className="flex items-center gap-2 text-muted-foreground hover:text-foreground font-body text-sm mb-4 transition-colors">
-          <ArrowLeft size={16} /> Back to {playerName}
-        </Link>
+        <div className="flex-1 max-w-3xl min-w-0 pb-32">
 
-        {weekBlockData && weekParam && (
-          <div className="mb-4 p-3 rounded-xl bg-primary/5 border border-primary/20">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="font-display text-xs tracking-wider text-primary">
-                  EDITING WEEK {weekParam} OF {weekBlockData.title.toUpperCase()}
-                </p>
-                <p className="text-[10px] font-body text-muted-foreground">{weekBlockData.week_count}-week program</p>
+          {/* Header */}
+          <Link to={`/coach/players/${playerId}`} className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground font-body text-sm mb-6 transition-colors">
+            <ArrowLeft size={16} /> Back to {playerName}
+          </Link>
+
+          {weekBlockData && weekParam && (
+            <div className="mb-5 p-3 rounded-xl bg-primary/5 border border-primary/20">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="font-display text-xs tracking-wider text-primary">
+                    EDITING WEEK {weekParam} OF {weekBlockData.title.toUpperCase()}
+                  </p>
+                  <p className="text-[10px] font-body text-muted-foreground">{weekBlockData.week_count}-week program</p>
+                </div>
+                <Link to={`/coach/players/${playerId}`} className="text-[10px] font-display text-primary hover:underline">
+                  ← BACK TO PLAYER
+                </Link>
               </div>
-              <Link to={`/coach/players/${playerId}`} className="text-[10px] font-display text-primary hover:underline">
-                ← BACK TO PLAYER
-              </Link>
             </div>
-          </div>
-        )}
+          )}
 
-        <div className="flex items-start justify-between mb-1">
-          <div>
-            <h1 className="font-display text-3xl text-foreground">DAY PLAN</h1>
-            <p className="font-body text-sm text-muted-foreground mb-4">for {playerName}</p>
+          <div className="mb-6">
+            <h1 className="font-display text-2xl md:text-3xl text-foreground">DAY PLAN</h1>
+            <p className="font-body text-sm text-muted-foreground">for {playerName}</p>
           </div>
-          <button
-            onClick={() => setShowMonthCal(!showMonthCal)}
-            className={`flex items-center gap-1.5 px-3 py-2 rounded-lg font-display text-xs tracking-wider transition-colors ${
-              showMonthCal ? "bg-primary text-primary-foreground" : "bg-card border border-border text-muted-foreground hover:bg-secondary"
-            }`}
-          >
-            <CalendarDays size={14} />
-            {format(new Date(planDate), "MMM yyyy").toUpperCase()}
-          </button>
-        </div>
 
-        {/* Month calendar view */}
-        {showMonthCal && (() => {
-          const monthStart = startOfMonth(calMonth);
-          const monthEnd = endOfMonth(calMonth);
-          const calStart = startOfWeek(monthStart, { weekStartsOn: 1 });
-          const days: Date[] = [];
-          let d = calStart;
-          while (d <= monthEnd || days.length % 7 !== 0) {
-            days.push(d);
-            d = addDays(d, 1);
-          }
-          return (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              className="bg-card border border-border rounded-xl p-3 mb-4 overflow-hidden"
-            >
-              <div className="flex items-center justify-between mb-2">
-                <button onClick={() => setCalMonth(subMonths(calMonth, 1))} className="p-1 rounded-lg hover:bg-secondary text-muted-foreground">
-                  <ArrowLeft size={14} />
-                </button>
-                <p className="font-display text-sm tracking-wider text-foreground">
-                  {format(calMonth, "MMMM yyyy").toUpperCase()}
-                </p>
-                <button onClick={() => setCalMonth(addMonths(calMonth, 1))} className="p-1 rounded-lg hover:bg-secondary text-muted-foreground rotate-180">
-                  <ArrowLeft size={14} />
-                </button>
-              </div>
-              <div className="grid grid-cols-7 gap-0.5 mb-1">
-                {["M","T","W","T","F","S","S"].map((day, i) => (
-                  <div key={i} className="text-center font-display text-[10px] text-muted-foreground py-1">{day}</div>
-                ))}
-              </div>
-              <div className="grid grid-cols-7 gap-0.5">
-                {days.map((day) => {
-                  const val = format(day, "yyyy-MM-dd");
-                  const isSelected = planDate === val;
-                  const isToday2 = isSameDay(day, today);
-                  const inMonth = isSameMonth(day, calMonth);
-                  const hasPlan2 = weekPlanDates.has(val);
-                  return (
-                    <button
-                      key={val}
-                      onClick={() => { setPlanDate(val); }}
-                      className={`aspect-square rounded-lg text-center font-body text-xs transition-colors relative flex items-center justify-center ${
-                        !inMonth
-                          ? "text-muted-foreground/30"
-                          : isSelected
-                            ? "bg-primary text-primary-foreground"
-                            : isToday2
-                              ? "bg-secondary text-foreground ring-1 ring-primary/40"
-                              : "text-foreground hover:bg-secondary"
-                      }`}
-                    >
-                      {format(day, "d")}
-                      {hasPlan2 && !isSelected && inMonth && (
-                        <span className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-primary" />
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
-            </motion.div>
-          );
-        })()}
-        <div className="flex gap-2 mb-4 overflow-x-auto pb-1 scrollbar-none">
-          {dateOptions.map((d) => {
-            const isSelected = planDate === d.value;
-            const isToday = isSameDay(d.date, today);
-            const hasPlan = weekPlanDates.has(d.value);
-            return (
+          {/* ─── Date Selector Section ─── */}
+          <div className="bg-card border border-border rounded-2xl p-4 mb-4">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="font-display text-[10px] tracking-wider text-muted-foreground">SELECT DATE</h3>
               <button
-                key={d.value}
-                onClick={() => setPlanDate(d.value)}
-                className={`shrink-0 px-3 py-2 rounded-lg text-center transition-colors relative ${
-                  isSelected
-                    ? "bg-primary text-primary-foreground"
-                    : isToday
-                      ? "bg-secondary text-foreground border border-primary/30"
-                      : "bg-card border border-border text-muted-foreground hover:bg-secondary"
+                onClick={() => setShowMonthCal(!showMonthCal)}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-display text-[10px] tracking-wider transition-colors ${
+                  showMonthCal ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground hover:text-foreground"
                 }`}
               >
-                <span className="font-display text-xs block">{format(d.date, "EEE")}</span>
-                <span className="font-body text-xs">{format(d.date, "d")}</span>
-                {hasPlan && !isSelected && (
-                  <span className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-primary" />
-                )}
+                <CalendarDays size={12} />
+                {format(selectedDateObj, "MMM yyyy").toUpperCase()}
               </button>
-            );
-          })}
-        </div>
+            </div>
 
-        {/* Time & Notes */}
-        <div className="flex gap-2 mb-2">
-          <div className="flex-1">
-            <label className="font-display text-[10px] tracking-wider text-muted-foreground mb-1 block">START TIME <span className="text-destructive">*</span></label>
-            <input
-              type="time"
-              value={startTime}
-              onChange={(e) => setStartTime(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg bg-card border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary"
-            />
+            {/* Month calendar view */}
+            {showMonthCal && (() => {
+              const monthStart2 = startOfMonth(calMonth);
+              const monthEnd2 = endOfMonth(calMonth);
+              const calStart2 = startOfWeek(monthStart2, { weekStartsOn: 1 });
+              const days: Date[] = [];
+              let d2 = calStart2;
+              while (d2 <= monthEnd2 || days.length % 7 !== 0) {
+                days.push(d2);
+                d2 = addDays(d2, 1);
+              }
+              return (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  className="mb-4 overflow-hidden"
+                >
+                  <div className="flex items-center justify-between mb-2">
+                    <button onClick={() => setCalMonth(subMonths(calMonth, 1))} className="p-1.5 rounded-lg hover:bg-secondary text-muted-foreground">
+                      <ArrowLeft size={14} />
+                    </button>
+                    <p className="font-display text-xs tracking-wider text-foreground">
+                      {format(calMonth, "MMMM yyyy").toUpperCase()}
+                    </p>
+                    <button onClick={() => setCalMonth(addMonths(calMonth, 1))} className="p-1.5 rounded-lg hover:bg-secondary text-muted-foreground rotate-180">
+                      <ArrowLeft size={14} />
+                    </button>
+                  </div>
+                  <div className="grid grid-cols-7 gap-1 mb-1">
+                    {["M","T","W","T","F","S","S"].map((day, i) => (
+                      <div key={i} className="text-center font-display text-[10px] text-muted-foreground py-1">{day}</div>
+                    ))}
+                  </div>
+                  <div className="grid grid-cols-7 gap-1">
+                    {days.map((day) => {
+                      const val = format(day, "yyyy-MM-dd");
+                      const isSelected = planDate === val;
+                      const isToday2 = isSameDay(day, today);
+                      const inMonth = isSameMonth(day, calMonth);
+                      const hasPlan2 = weekPlanDates.has(val);
+                      return (
+                        <button
+                          key={val}
+                          onClick={() => setPlanDate(val)}
+                          className={`aspect-square rounded-xl text-center font-body text-xs transition-all relative flex items-center justify-center ${
+                            !inMonth
+                              ? "text-muted-foreground/20"
+                              : isSelected
+                                ? "bg-primary text-primary-foreground font-semibold shadow-md"
+                                : isToday2
+                                  ? "bg-secondary text-foreground ring-1 ring-primary/40"
+                                  : "text-foreground hover:bg-secondary"
+                          }`}
+                        >
+                          {format(day, "d")}
+                          {hasPlan2 && !isSelected && inMonth && (
+                            <span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-primary" />
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </motion.div>
+              );
+            })()}
+
+            {/* Horizontal date scroller */}
+            <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
+              {dateOptions.map((d) => {
+                const isSelected = planDate === d.value;
+                const isDayToday = isSameDay(d.date, today);
+                const hasPlan = weekPlanDates.has(d.value);
+                return (
+                  <button
+                    key={d.value}
+                    onClick={() => setPlanDate(d.value)}
+                    className={`shrink-0 w-14 py-2.5 rounded-xl text-center transition-all relative ${
+                      isSelected
+                        ? "bg-primary text-primary-foreground shadow-md scale-105"
+                        : isDayToday
+                          ? "bg-secondary text-foreground border border-primary/30"
+                          : "bg-secondary/50 text-muted-foreground hover:bg-secondary"
+                    }`}
+                  >
+                    <span className="font-display text-[10px] tracking-wider block">{format(d.date, "EEE").toUpperCase()}</span>
+                    <span className="font-display text-lg block leading-tight">{format(d.date, "d")}</span>
+                    {hasPlan && !isSelected && (
+                      <span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-primary" />
+                    )}
+                  </button>
+                );
+              })}
+            </div>
           </div>
-          <div className="flex-1">
-            <label className="font-display text-[10px] tracking-wider text-muted-foreground mb-1 block">END TIME <span className="text-destructive">*</span></label>
-            <input
-              type="time"
-              value={endTime}
-              onChange={(e) => setEndTime(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg bg-card border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary"
-            />
-          </div>
-        </div>
-        <input
-          placeholder="Plan notes (optional)..."
-          value={planNotes}
-          onChange={(e) => setPlanNotes(e.target.value)}
-          className="w-full px-3 py-2 rounded-lg bg-card border border-border text-foreground font-body text-sm mb-3 focus:outline-none focus:ring-1 focus:ring-primary"
-        />
 
-        {/* Location fields */}
-        <div className="grid grid-cols-2 gap-3 mb-4">
-          <input
-            placeholder="Location name (e.g. Padel Club)"
-            value={locationName}
-            onChange={(e) => setLocationName(e.target.value)}
-            className="w-full px-3 py-2 rounded-lg bg-card border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary"
-          />
-          <input
-            placeholder="Address (for Google Maps)"
-            value={locationAddress}
-            onChange={(e) => setLocationAddress(e.target.value)}
-            className="w-full px-3 py-2 rounded-lg bg-card border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary"
-          />
-          <input
-            placeholder="Latitude (optional)"
-            type="number"
-            step="any"
-            value={locationLat}
-            onChange={(e) => setLocationLat(e.target.value)}
-            className="w-full px-3 py-2 rounded-lg bg-card border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary"
-          />
-          <input
-            placeholder="Longitude (optional)"
-            type="number"
-            step="any"
-            value={locationLng}
-            onChange={(e) => setLocationLng(e.target.value)}
-            className="w-full px-3 py-2 rounded-lg bg-card border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary"
-          />
-        </div>
+          {/* ─── Session Details Section ─── */}
+          <div className="bg-card border border-border rounded-2xl p-4 mb-4 space-y-3">
+            <h3 className="font-display text-[10px] tracking-wider text-muted-foreground">SESSION DETAILS</h3>
 
-        {/* Module browser — on mobile appears before plan items, on desktop after */}
-        {renderModuleBrowser()}
-
-        {/* Plan items — dnd-kit reorderable */}
-        {planItems.length > 0 && (
-          <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-            <SortableContext items={planItems.map((i) => i.tempId)} strategy={verticalListSortingStrategy}>
-              <div className="space-y-2 mb-4">
-                {planItems.map((item) => (
-                  <SortablePlanItem key={item.tempId} item={item} onRemove={removeItem} onNoteChange={updateNote} onDurationChange={updateDuration} onDurationSave={saveDurationToDB} />
-                ))}
+            {/* Time row */}
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="font-display text-[10px] tracking-wider text-muted-foreground mb-1 block">START TIME <span className="text-destructive">*</span></label>
+                <input
+                  type="time"
+                  value={startTime}
+                  onChange={(e) => setStartTime(e.target.value)}
+                  className="w-full px-3 py-3 rounded-xl bg-secondary border border-border text-foreground font-display text-sm text-center focus:outline-none focus:ring-2 focus:ring-primary/50 transition-shadow"
+                />
               </div>
-            </SortableContext>
-          </DndContext>
-        )}
+              <div>
+                <label className="font-display text-[10px] tracking-wider text-muted-foreground mb-1 block">END TIME <span className="text-destructive">*</span></label>
+                <input
+                  type="time"
+                  value={endTime}
+                  onChange={(e) => setEndTime(e.target.value)}
+                  className="w-full px-3 py-3 rounded-xl bg-secondary border border-border text-foreground font-display text-sm text-center focus:outline-none focus:ring-2 focus:ring-primary/50 transition-shadow"
+                />
+              </div>
+            </div>
 
-        {/* Inline add module row */}
-        {user && (
-          <div className="mb-4">
-            <InlineAddModule onAdd={handleInlineAdd} userId={user.id} />
-          </div>
-        )}
+            {/* Notes */}
+            <div className="relative">
+              <FileText size={14} className="absolute left-3 top-3.5 text-muted-foreground" />
+              <input
+                placeholder="Session notes (e.g. Focus on net play)..."
+                value={planNotes}
+                onChange={(e) => setPlanNotes(e.target.value)}
+                className="w-full pl-9 pr-3 py-3 rounded-xl bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 transition-shadow placeholder:text-muted-foreground/60"
+              />
+            </div>
 
-        {/* Summary & Save */}
-        {planItems.length > 0 && (
-          <div className="flex items-center justify-between bg-card border border-border rounded-xl p-4">
-            <p className="font-body text-sm text-muted-foreground">
-              {planItems.length} modules · {totalDuration} min total
-            </p>
+            {/* Location — collapsible */}
             <button
-              onClick={handleSave}
-              disabled={saving}
-              className="flex items-center gap-2 px-6 py-2 rounded-lg bg-primary text-primary-foreground font-display text-sm tracking-wider hover:bg-primary/90 transition-colors disabled:opacity-50"
+              onClick={() => setShowLocationSection(!showLocationSection)}
+              className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors w-full"
             >
-              {saved ? <><Check size={16} /> SAVED</> : saving ? "SAVING..." : <><Save size={16} /> SAVE PLAN</>}
+              <MapPin size={14} />
+              <span className="font-display text-[10px] tracking-wider flex-1 text-left">
+                {locationName || "ADD LOCATION"}
+              </span>
+              {showLocationSection ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
             </button>
-          </div>
-        )}
 
-        {/* Module picker modal (search) */}
-        {showModulePicker && (
+            {showLocationSection && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                className="space-y-2 overflow-hidden"
+              >
+                <div className="grid grid-cols-2 gap-2">
+                  <input
+                    placeholder="Venue name"
+                    value={locationName}
+                    onChange={(e) => setLocationName(e.target.value)}
+                    className="w-full px-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 placeholder:text-muted-foreground/60"
+                  />
+                  <input
+                    placeholder="Address"
+                    value={locationAddress}
+                    onChange={(e) => setLocationAddress(e.target.value)}
+                    className="w-full px-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 placeholder:text-muted-foreground/60"
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <input
+                    placeholder="Latitude"
+                    type="number"
+                    step="any"
+                    value={locationLat}
+                    onChange={(e) => setLocationLat(e.target.value)}
+                    className="w-full px-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 placeholder:text-muted-foreground/60"
+                  />
+                  <input
+                    placeholder="Longitude"
+                    type="number"
+                    step="any"
+                    value={locationLng}
+                    onChange={(e) => setLocationLng(e.target.value)}
+                    className="w-full px-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 placeholder:text-muted-foreground/60"
+                  />
+                </div>
+              </motion.div>
+            )}
+          </div>
+
+          {/* ─── Training Modules Section ─── */}
+          <div className="bg-card border border-border rounded-2xl p-4 mb-4">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="font-display text-[10px] tracking-wider text-muted-foreground">TRAINING MODULES</h3>
+              {planItems.length > 0 && (
+                <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary/10">
+                  <Clock size={10} className="text-primary" />
+                  <span className="font-display text-[10px] tracking-wider text-primary">{planItems.length} MODULES · {totalDuration} MIN</span>
+                </div>
+              )}
+            </div>
+
+            {/* Plan items — dnd-kit reorderable */}
+            {planItems.length > 0 && (
+              <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                <SortableContext items={planItems.map((i) => i.tempId)} strategy={verticalListSortingStrategy}>
+                  <div className="space-y-2 mb-4">
+                    {planItems.map((item, idx) => (
+                      <motion.div
+                        key={item.tempId}
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: idx * 0.03 }}
+                      >
+                        <SortablePlanItem
+                          item={item}
+                          onRemove={removeItem}
+                          onNoteChange={updateNote}
+                          onDurationChange={updateDuration}
+                          onDurationSave={saveDurationToDB}
+                        />
+                      </motion.div>
+                    ))}
+                  </div>
+                </SortableContext>
+              </DndContext>
+            )}
+
+            {planItems.length === 0 && (
+              <div className="text-center py-8">
+                <div className="w-12 h-12 rounded-full bg-secondary flex items-center justify-center mx-auto mb-3">
+                  <Plus size={20} className="text-muted-foreground" />
+                </div>
+                <p className="font-body text-sm text-muted-foreground mb-1">No modules added yet</p>
+                <p className="font-body text-[10px] text-muted-foreground/60">Browse categories below or search to add modules</p>
+              </div>
+            )}
+
+            {/* Inline add module row */}
+            {user && (
+              <div className="mb-3">
+                <InlineAddModule onAdd={handleInlineAdd} userId={user.id} />
+              </div>
+            )}
+          </div>
+
+          {/* ─── Browse Modules Section ─── */}
+          <div className="bg-card border border-border rounded-2xl p-4 mb-4">
+            {renderModuleBrowser()}
+          </div>
+
+          {/* ─── Save Bar ─── */}
+          {planItems.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="fixed bottom-20 md:bottom-6 left-0 right-0 z-30 px-4 md:px-0 md:static"
+            >
+              <div className="flex items-center justify-between bg-card border border-border rounded-2xl p-4 shadow-lg md:shadow-none backdrop-blur-md bg-card/95">
+                <div>
+                  <p className="font-display text-sm text-foreground">{planItems.length} modules</p>
+                  <p className="font-body text-[10px] text-muted-foreground">{totalDuration} min · {format(selectedDateObj, "EEE d MMM")}</p>
+                </div>
+                <button
+                  onClick={handleSave}
+                  disabled={saving}
+                  className={`flex items-center gap-2 px-6 py-3 rounded-xl font-display text-sm tracking-wider transition-all disabled:opacity-50 ${
+                    saved
+                      ? "bg-green-500 text-white"
+                      : "bg-primary text-primary-foreground hover:bg-primary/90 shadow-md"
+                  }`}
+                >
+                  {saved ? <><Check size={16} /> SAVED</> : saving ? "SAVING..." : <><Save size={16} /> SAVE PLAN</>}
+                </button>
+              </div>
+            </motion.div>
+          )}
+
+          {/* Module picker modal (search) */}
+          {showModulePicker && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-background/80 backdrop-blur-sm"
+              onClick={() => { setShowModulePicker(false); setModuleSearch(""); setModuleCategory("all"); }}
+            >
+              <motion.div
+                initial={{ y: 50, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                onClick={(e) => e.stopPropagation()}
+                className="w-full max-w-lg max-h-[75vh] bg-card border border-border rounded-t-2xl md:rounded-2xl overflow-hidden flex flex-col"
+              >
+                <div className="p-4 border-b border-border">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="font-display text-lg text-foreground">SEARCH MODULES</h3>
+                    <button onClick={() => { setShowModulePicker(false); setModuleSearch(""); setModuleCategory("all"); }} className="p-1.5 rounded-lg hover:bg-secondary">
+                      <X size={18} className="text-muted-foreground" />
+                    </button>
+                  </div>
+                  <div className="flex gap-1.5 overflow-x-auto pb-2 scrollbar-none">
+                    {Object.entries(CATEGORY_LABELS).map(([key, label]) => (
+                      <button
+                        key={key}
+                        onClick={() => setModuleCategory(key)}
+                        className={`shrink-0 px-3 py-1.5 rounded-lg font-display text-[10px] tracking-wider transition-colors ${
+                          moduleCategory === key
+                            ? "bg-primary text-primary-foreground"
+                            : "bg-secondary text-muted-foreground hover:text-foreground"
+                        }`}
+                      >
+                        {label}
+                      </button>
+                    ))}
+                  </div>
+                  <div className="relative mt-2">
+                    <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                    <input
+                      autoFocus
+                      placeholder="Search modules..."
+                      value={moduleSearch}
+                      onChange={(e) => setModuleSearch(e.target.value)}
+                      className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+                    />
+                  </div>
+                </div>
+                <div className="overflow-y-auto flex-1 p-3 space-y-1">
+                  {filteredModules.length === 0 ? (
+                    <div className="p-6 text-center">
+                      <p className="font-body text-sm text-muted-foreground mb-3">
+                        {moduleSearch ? "No modules match your search." : "No modules yet."}
+                      </p>
+                      {!moduleSearch && (
+                        <button
+                          onClick={() => { setShowModulePicker(false); navigate("/coach/modules"); }}
+                          className="px-4 py-2 rounded-xl bg-primary text-primary-foreground font-display text-xs tracking-wider"
+                        >
+                          CREATE FIRST MODULE
+                        </button>
+                      )}
+                    </div>
+                  ) : (
+                    filteredModules.map((mod) => (
+                      <button
+                        key={mod.id}
+                        onClick={() => addModule(mod)}
+                        className={`w-full text-left flex items-center gap-3 p-3 rounded-xl transition-all ${
+                          justAddedId === mod.id ? "bg-green-500/20 ring-1 ring-green-500/40" : "hover:bg-secondary"
+                        }`}
+                      >
+                        <div className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${CATEGORY_COLORS[mod.category] || "bg-muted"}`} />
+                        <div className="flex-1 min-w-0">
+                          <p className="font-display text-sm text-foreground truncate">{mod.title}</p>
+                          <p className="text-[10px] font-body text-muted-foreground">{mod.category.replace("_", " ")} · {mod.duration_minutes || 0} min</p>
+                        </div>
+                        {justAddedId === mod.id ? <Check size={14} className="text-green-400 flex-shrink-0" /> : <Plus size={16} className="text-primary flex-shrink-0" />}
+                      </button>
+                    ))
+                  )}
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </div>
+
+        {/* Save as block modal */}
+        {showSaveBlock && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-background/80 backdrop-blur-sm"
-            onClick={() => { setShowModulePicker(false); setModuleSearch(""); setModuleCategory("all"); }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm p-4"
+            onClick={() => setShowSaveBlock(false)}
           >
             <motion.div
-              initial={{ y: 50, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
               onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-lg max-h-[70vh] bg-card border border-border rounded-t-xl md:rounded-xl overflow-hidden flex flex-col"
+              className="w-full max-w-md bg-card border border-border rounded-2xl p-6 space-y-4"
             >
-              <div className="p-4 border-b border-border">
-                <div className="flex items-center justify-between mb-3">
-                  <h3 className="font-display text-lg text-foreground">SEARCH MODULES</h3>
-                  <button onClick={() => { setShowModulePicker(false); setModuleSearch(""); setModuleCategory("all"); }}>
-                    <X size={20} className="text-muted-foreground" />
-                  </button>
-                </div>
-                <div className="flex gap-1.5 overflow-x-auto pb-2 scrollbar-none">
-                  {Object.entries(CATEGORY_LABELS).map(([key, label]) => (
+              <h3 className="font-display text-lg text-foreground">SAVE AS TRAINING BLOCK</h3>
+              <input
+                placeholder="Block title..."
+                value={blockTitle}
+                onChange={(e) => setBlockTitle(e.target.value)}
+                className="w-full px-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+              />
+              <input
+                placeholder="Short description..."
+                value={blockDesc}
+                onChange={(e) => setBlockDesc(e.target.value)}
+                className="w-full px-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+              />
+              <div>
+                <p className="font-display text-[10px] tracking-wider text-muted-foreground mb-2">GOAL</p>
+                <div className="flex flex-wrap gap-1.5">
+                  {["Technique", "Match Preparation", "Fitness", "Recovery", "Warm Up", "Footwork", "Mental", "Kids", "Beginner", "Advanced"].map((g) => (
                     <button
-                      key={key}
-                      onClick={() => setModuleCategory(key)}
-                      className={`shrink-0 px-3 py-1 rounded-lg font-display text-xs tracking-wider transition-colors ${
-                        moduleCategory === key
-                          ? "bg-primary text-primary-foreground"
-                          : "bg-secondary text-muted-foreground hover:text-foreground"
+                      key={g}
+                      onClick={() => setBlockGoal(g)}
+                      className={`px-3 py-1.5 rounded-lg font-display text-[10px] tracking-wider transition-colors ${
+                        blockGoal === g ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground hover:text-foreground"
                       }`}
                     >
-                      {label}
+                      {g.toUpperCase()}
                     </button>
                   ))}
                 </div>
-                <div className="relative mt-2">
-                  <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-                  <input
-                    autoFocus
-                    placeholder="Search modules..."
-                    value={moduleSearch}
-                    onChange={(e) => setModuleSearch(e.target.value)}
-                    className="w-full pl-9 pr-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-sm focus:outline-none"
-                  />
-                </div>
               </div>
-              <div className="overflow-y-auto flex-1 p-3 space-y-1">
-                {filteredModules.length === 0 ? (
-                  <div className="p-6 text-center">
-                    <p className="font-body text-sm text-muted-foreground mb-3">
-                      {moduleSearch ? "No modules match your search." : "No modules yet."}
-                    </p>
-                    {!moduleSearch && (
-                      <button
-                        onClick={() => { setShowModulePicker(false); navigate("/coach/modules"); }}
-                        className="px-4 py-2 rounded-lg bg-primary text-primary-foreground font-display text-xs tracking-wider"
-                      >
-                        CREATE FIRST MODULE
-                      </button>
-                    )}
-                  </div>
-                ) : (
-                  filteredModules.map((mod) => (
-                    <button
-                      key={mod.id}
-                      onClick={() => addModule(mod)}
-                      className={`w-full text-left flex items-center gap-3 p-3 rounded-lg transition-all ${
-                        justAddedId === mod.id ? "bg-green-500/20 ring-1 ring-green-500/40" : "hover:bg-secondary"
-                      }`}
-                    >
-                      <div className={`w-2 h-2 rounded-full flex-shrink-0 ${CATEGORY_COLORS[mod.category] || "bg-muted"}`} />
-                      <div className="flex-1 min-w-0">
-                        <p className="font-display text-foreground truncate">{mod.title}</p>
-                        <p className="text-[10px] font-body text-muted-foreground">{mod.category.replace("_", " ")} · {mod.duration_minutes || 0} min</p>
-                      </div>
-                      <Plus size={16} className="text-muted-foreground flex-shrink-0" />
-                    </button>
-                  ))
-                )}
+              <p className="text-xs font-body text-muted-foreground">{planItems.length} modules will be saved in this block</p>
+              <div className="flex gap-2">
+                <button onClick={() => setShowSaveBlock(false)} className="flex-1 py-2.5 rounded-xl border border-border font-display text-xs tracking-wider text-muted-foreground hover:text-foreground transition-colors">
+                  CANCEL
+                </button>
+                <button onClick={handleSaveAsBlock} className="flex-1 py-2.5 rounded-xl bg-primary font-display text-xs tracking-wider text-primary-foreground hover:bg-primary/90 transition-colors">
+                  SAVE BLOCK
+                </button>
               </div>
             </motion.div>
           </motion.div>
         )}
-      </div>
 
-      {/* Save as block modal */}
-      {showSaveBlock && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm"
-          onClick={() => setShowSaveBlock(false)}
-        >
-          <motion.div
-            initial={{ scale: 0.95, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-md bg-card border border-border rounded-xl p-5 space-y-4"
+        {/* Mobile: FAB */}
+        <div className="lg:hidden fixed bottom-24 right-4 z-40">
+          <button
+            onClick={() => setShowSaveBlock(true)}
+            className="w-14 h-14 rounded-full bg-primary text-primary-foreground shadow-lg flex items-center justify-center hover:scale-105 transition-transform"
+            title="Save as block"
           >
-            <h3 className="font-display text-lg text-foreground">SAVE AS TRAINING BLOCK</h3>
-            <input
-              placeholder="Block title..."
-              value={blockTitle}
-              onChange={(e) => setBlockTitle(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary"
-            />
-            <input
-              placeholder="Short description..."
-              value={blockDesc}
-              onChange={(e) => setBlockDesc(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary"
-            />
-            <div>
-              <p className="font-display text-[10px] tracking-wider text-muted-foreground mb-2">GOAL</p>
-              <div className="flex flex-wrap gap-1.5">
-                {["Technique", "Match Preparation", "Fitness", "Recovery", "Warm Up", "Footwork", "Mental", "Kids", "Beginner", "Advanced"].map((g) => (
-                  <button
-                    key={g}
-                    onClick={() => setBlockGoal(g)}
-                    className={`px-3 py-1.5 rounded-lg font-display text-[10px] tracking-wider transition-colors ${
-                      blockGoal === g ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground hover:text-foreground"
-                    }`}
-                  >
-                    {g.toUpperCase()}
-                  </button>
-                ))}
-              </div>
-            </div>
-            <p className="text-xs font-body text-muted-foreground">{planItems.length} modules will be saved in this block</p>
-            <div className="flex gap-2">
-              <button onClick={() => setShowSaveBlock(false)} className="flex-1 py-2.5 rounded-xl border border-border font-display text-xs tracking-wider text-muted-foreground hover:text-foreground transition-colors">
-                CANCEL
-              </button>
-              <button onClick={handleSaveAsBlock} className="flex-1 py-2.5 rounded-xl bg-primary font-display text-xs tracking-wider text-primary-foreground hover:bg-primary/90 transition-colors">
-                SAVE BLOCK
-              </button>
-            </div>
-          </motion.div>
-        </motion.div>
-      )}
-
-      {/* Mobile: Training blocks button */}
-      <div className="lg:hidden fixed bottom-20 right-4 z-40">
-        <button
-          onClick={() => setShowSaveBlock(true)}
-          className="w-12 h-12 rounded-full bg-primary text-primary-foreground shadow-lg flex items-center justify-center"
-          title="Save as block"
-        >
-          <Save size={20} />
-        </button>
-      </div>
+            <Plus size={22} />
+          </button>
+        </div>
       </div>
     </PortalLayout>
   );
