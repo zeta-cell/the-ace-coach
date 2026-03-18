@@ -287,9 +287,12 @@ const QuickAddTrainingDrawer = ({
                       const isSelected = selectedBlockId === b.id;
                       return (
                         <button key={b.id} onClick={() => setSelectedBlockId(b.id)}
-                          className={`w-full text-left p-3 rounded-lg border transition-all flex items-center gap-3 ${
+                          className={`w-full text-left p-3 rounded-lg border border-l-4 transition-all flex items-center gap-3 ${
+                            CATEGORY_BORDER_COLORS[b.category?.toLowerCase()] || "border-l-muted-foreground"
+                          } ${
                             isSelected ? "border-primary bg-primary/10" : "border-border hover:border-primary/40"
                           }`}
+                          style={{ borderLeftColor: undefined }}
                         >
                           <div className="flex-1 min-w-0">
                             <p className="font-display text-xs text-foreground">{b.title}</p>
