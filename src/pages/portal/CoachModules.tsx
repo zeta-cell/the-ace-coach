@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Search, Edit2, Trash2, X, Clock, Tag, Play, Upload, Video, Loader2 } from "lucide-react";
+import { Plus, Search, Edit2, Trash2, X, Clock, Tag, Play, Upload, Video, Loader2, ChevronDown } from "lucide-react";
 import PortalLayout from "@/components/portal/PortalLayout";
 import CoachVideoModal from "@/components/portal/CoachVideoModal";
 import type { Database } from "@/integrations/supabase/types";
