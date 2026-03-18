@@ -330,6 +330,7 @@ const SelectionStep = ({
   onRemoveModule, onClearSelection, canProceed, onNext,
 }: SelectionStepProps) => {
   const [expandedBlockId, setExpandedBlockId] = useState<string | null>(null);
+  const [expandedModuleId, setExpandedModuleId] = useState<string | null>(null);
 
   return (
   <>
