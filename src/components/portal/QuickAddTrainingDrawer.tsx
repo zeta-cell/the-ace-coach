@@ -172,12 +172,17 @@ const QuickAddTrainingDrawer = ({
     setSearch("");
   };
 
+  const matchesCategory = (cat: string) => {
+    if (categoryFilter === "All") return true;
+    return cat.toLowerCase().includes(categoryFilter.toLowerCase());
+  };
+
   const filteredBlocks = blocks.filter(b =>
-    b.title.toLowerCase().includes(search.toLowerCase())
+    b.title.toLowerCase().includes(search.toLowerCase()) && matchesCategory(b.category)
   );
 
   const filteredModules = modules.filter(m =>
-    m.title.toLowerCase().includes(search.toLowerCase())
+    m.title.toLowerCase().includes(search.toLowerCase()) && matchesCategory(m.category)
   );
 
   return (
