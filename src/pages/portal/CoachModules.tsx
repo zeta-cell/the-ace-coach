@@ -214,8 +214,7 @@ export const CoachModulesContent = ({ embedded = false }: { embedded?: boolean }
     return matchSearch && matchCat;
   });
 
-  return (
-    <PortalLayout>
+  const content = (
       <div className="max-w-4xl mx-auto">
         <div className="flex items-center justify-between mb-4">
           <h1 className="font-display text-3xl text-foreground">TRAINING LIBRARY</h1>
