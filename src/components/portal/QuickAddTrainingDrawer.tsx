@@ -38,6 +38,14 @@ interface QuickAddTrainingDrawerProps {
 
 const CATEGORY_FILTERS = ["All", "Padel", "Tennis", "Mental", "Fitness", "Tactical", "Recovery"] as const;
 
+const CATEGORY_BORDER_COLORS: Record<string, string> = {
+  warm_up: "border-l-yellow-500", padel_drill: "border-l-cyan-500", padel: "border-l-cyan-500",
+  footwork: "border-l-blue-500", fitness: "border-l-orange-500", strength: "border-l-orange-600",
+  mental: "border-l-purple-500", recovery: "border-l-green-500", cool_down: "border-l-teal-500",
+  nutrition: "border-l-lime-500", video: "border-l-pink-500", tennis: "border-l-emerald-500",
+  tactical: "border-l-amber-500", technique: "border-l-primary", general: "border-l-muted-foreground",
+};
+
 const QuickAddTrainingDrawer = ({
   open, onClose, prefilledDate, prefilledPlayerId, onSaved,
 }: QuickAddTrainingDrawerProps) => {
@@ -279,7 +287,9 @@ const QuickAddTrainingDrawer = ({
                       const isSelected = selectedBlockId === b.id;
                       return (
                         <button key={b.id} onClick={() => setSelectedBlockId(b.id)}
-                          className={`w-full text-left p-3 rounded-lg border transition-all flex items-center gap-3 ${
+                          className={`w-full text-left p-3 rounded-lg border border-l-4 transition-all flex items-center gap-3 ${
+                            CATEGORY_BORDER_COLORS[b.category?.toLowerCase()] || "border-l-muted-foreground"
+                          } ${
                             isSelected ? "border-primary bg-primary/10" : "border-border hover:border-primary/40"
                           }`}
                         >
@@ -306,7 +316,9 @@ const QuickAddTrainingDrawer = ({
                       const isSelected = selectedModuleIds.includes(m.id);
                       return (
                         <button key={m.id} onClick={() => toggleModule(m.id)}
-                          className={`w-full text-left p-3 rounded-lg border transition-all flex items-center gap-3 ${
+                          className={`w-full text-left p-3 rounded-lg border border-l-4 transition-all flex items-center gap-3 ${
+                            CATEGORY_BORDER_COLORS[m.category?.toLowerCase()] || "border-l-muted-foreground"
+                          } ${
                             isSelected ? "border-primary bg-primary/10" : "border-border hover:border-primary/40"
                           }`}
                         >
