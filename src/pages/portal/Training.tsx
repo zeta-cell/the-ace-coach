@@ -6,16 +6,16 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Check, ChevronDown, ChevronUp, ChevronLeft, ChevronRight,
   Clock, Layers, CalendarDays, MapPin, Save, Trash2, Plus, X, Video,
-  Minus, Search, GripVertical,
+  Minus, Search, User, Sun, Cloud, CloudRain, CloudSnow, Wind, ExternalLink,
 } from "lucide-react";
 import {
   format, startOfWeek, addDays, isSameDay, parseISO, isValid,
-  startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth,
+  startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, getDay,
 } from "date-fns";
 import PortalLayout from "@/components/portal/PortalLayout";
 import TrainingDayInfo from "@/components/portal/TrainingDayInfo";
 import CoachVideoModal from "@/components/portal/CoachVideoModal";
-import type { BlockPlanItem, ModuleItem as BlockModuleItem } from "@/types/training";
+import type { ModuleItem as BlockModuleItem } from "@/types/training";
 import { toast } from "sonner";
 
 /* ── colour maps ── */
@@ -36,6 +36,44 @@ const CATEGORY_DOT: Record<string, string> = {
 };
 
 const MODULE_CATEGORIES = ["All", "Padel", "Tennis", "Fitness", "Mental", "Recovery", "Tactical", "Warm Up"] as const;
+
+/* ── weather helpers ── */
+const getWeatherLabel = (code: number) => {
+  if (code <= 1) return "Clear";
+  if (code <= 3) return "Partly cloudy";
+  if (code <= 48) return "Fog";
+  if (code <= 57) return "Drizzle";
+  if (code <= 67) return "Rain";
+  if (code <= 77) return "Snow";
+  if (code <= 82) return "Showers";
+  return "Thunderstorm";
+};
+
+const getWeatherIcon = (code: number) => {
+  if (code <= 1) return <Sun size={18} className="text-yellow-400" />;
+  if (code <= 3) return <Cloud size={18} className="text-muted-foreground" />;
+  if (code <= 67) return <CloudRain size={18} className="text-blue-400" />;
+  if (code <= 77) return <CloudSnow size={18} className="text-blue-200" />;
+  return <CloudRain size={18} className="text-blue-400" />;
+};
+
+const useWeather = (date: Date) => {
+  const [weather, setWeather] = useState<{ temp: number; weatherCode: number; windSpeed: number } | null>(null);
+  useEffect(() => {
+    const diffDays = Math.abs((date.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
+    if (diffDays > 7) { setWeather(null); return; }
+    const dateStr = format(date, "yyyy-MM-dd");
+    fetch(`https://api.open-meteo.com/v1/forecast?latitude=39.47&longitude=-0.376&daily=temperature_2m_max,weathercode,windspeed_10m_max&start_date=${dateStr}&end_date=${dateStr}&timezone=Europe/Madrid`)
+      .then(r => r.json())
+      .then(data => {
+        if (data.daily) setWeather({ temp: Math.round(data.daily.temperature_2m_max[0]), weatherCode: data.daily.weathercode[0], windSpeed: Math.round(data.daily.windspeed_10m_max[0]) });
+      }).catch(() => {});
+  }, [date]);
+  return weather;
+};
+
+const getGoogleMapsUrl = (location: string) =>
+  `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location)}`;
 
 /* ── types ── */
 interface PlanItem {
@@ -81,6 +119,10 @@ const Training = () => {
   const [expandedItem, setExpandedItem] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // Coach info
+  const [coachName, setCoachName] = useState<string | null>(null);
+  const [coachAvatar, setCoachAvatar] = useState<string | null>(null);
+
   // Coach editing state
   const [editStartTime, setEditStartTime] = useState("");
   const [editEndTime, setEditEndTime] = useState("");
@@ -107,6 +149,8 @@ const Training = () => {
 
   // Player name (for coach view header)
   const [playerName, setPlayerName] = useState("");
+
+  const weather = useWeather(selectedDay);
 
   const weekStart = startOfWeek(selectedDay, { weekStartsOn: 1 });
   const weekDays = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
@@ -135,7 +179,7 @@ const Training = () => {
     if (!user) return;
     const { data } = await supabase.from("training_blocks")
       .select("*")
-      .or(`is_system.eq.true,coach_id.eq.${user.id}`)
+      .or(`is_system.eq.true,coach_id.eq.${user.id},is_public.eq.true`)
       .order("goal").order("title");
     setAllBlocks((data as TrainingBlock[]) || []);
   };
@@ -156,12 +200,13 @@ const Training = () => {
     setLoading(true);
     const dayStr = format(selectedDay, "yyyy-MM-dd");
     const { data: plan } = await supabase.from("player_day_plans")
-      .select("id, notes, start_time, end_time, location_name")
+      .select("id, notes, start_time, end_time, location_name, coach_id")
       .eq("player_id", targetPlayerId).eq("plan_date", dayStr).maybeSingle();
 
     if (!plan) {
       setPlanItems([]); setPlanNotes(""); setCurrentPlanId(null);
       setEditStartTime(""); setEditEndTime(""); setEditLocation("");
+      setCoachName(null); setCoachAvatar(null);
       setLoading(false); return;
     }
 
@@ -169,7 +214,15 @@ const Training = () => {
     setPlanNotes(plan.notes || "");
     setEditStartTime(plan.start_time || "");
     setEditEndTime(plan.end_time || "");
-    setEditLocation(plan.location_name || "");
+    setEditLocation((plan as any).location_name || "");
+
+    // Fetch coach info
+    if (plan.coach_id) {
+      const { data: coachProfile } = await supabase.from("profiles")
+        .select("full_name, avatar_url").eq("user_id", plan.coach_id).maybeSingle();
+      setCoachName(coachProfile?.full_name || null);
+      setCoachAvatar(coachProfile?.avatar_url || null);
+    }
 
     const { data: items } = await supabase.from("player_day_plan_items")
       .select("id, order_index, is_completed, completed_at, coach_note, module_id")
@@ -199,13 +252,6 @@ const Training = () => {
     setPlanItems(prev => prev.map(item =>
       item.id === itemId ? { ...item, is_completed: true, completed_at: new Date().toISOString() } : item
     ));
-    if (user) {
-      await supabase.rpc('award_xp', { p_user_id: user.id, p_amount: 25, p_event_type: 'session_complete', p_description: 'Completed a training session' });
-      await supabase.rpc('update_streak', { p_user_id: user.id });
-      await supabase.rpc('increment_raffle_tickets', { p_user_id: user.id });
-      const completedItem = planItems.find(item => item.id === itemId);
-      await supabase.rpc('increment_session_stats', { p_user_id: user.id, p_minutes: completedItem?.module?.duration_minutes || 0 });
-    }
   };
 
   /* ── Ensure plan exists ── */
@@ -260,23 +306,61 @@ const Training = () => {
   /* ── Save plan ── */
   const handleSavePlan = async () => {
     if (!currentPlanId) return;
+    if (!editStartTime || !editEndTime) {
+      toast.error("Please set both start and end times.");
+      return;
+    }
     setSavingPlan(true);
     await supabase.from("player_day_plans").update({
       start_time: editStartTime || null, end_time: editEndTime || null,
       location_name: editLocation || null, notes: planNotes || null,
     }).eq("id", currentPlanId);
-    toast.success("Plan saved!");
+    toast.success("Training day saved!");
     setSavingPlan(false);
+  };
+
+  /* ── Save as block ── */
+  const handleSaveAsBlock = async () => {
+    if (!user || planItems.length === 0) return;
+    const blockTitle = prompt("Name for this training block:");
+    if (!blockTitle) return;
+    const totalDur = planItems.reduce((sum, i) => sum + i.module.duration_minutes, 0);
+
+    const profileRes = await supabase.from("profiles").select("full_name, avatar_url").eq("user_id", user.id).single();
+    const { error } = await supabase.from("training_blocks").insert({
+      title: blockTitle,
+      description: `Custom block with ${planItems.length} modules`,
+      category: "padel_drill",
+      sport: "both",
+      difficulty: "intermediate",
+      duration_minutes: totalDur,
+      coach_id: user.id,
+      author_id: user.id,
+      author_name: profileRes.data?.full_name || "",
+      author_avatar_url: profileRes.data?.avatar_url || null,
+      goal: "Custom",
+      is_system: false,
+      is_custom: true,
+      is_public: false,
+      module_ids: planItems.map(i => i.module.id),
+      module_durations: planItems.map(i => i.module.duration_minutes),
+      module_notes: planItems.map(i => i.coach_note || ""),
+    });
+
+    if (error) { toast.error("Failed to save block"); return; }
+    toast.success(`Saved "${blockTitle}" as a training block`);
+    fetchBlocks();
   };
 
   /* ── Cancel day ── */
   const handleCancelDay = async () => {
-    if (!currentPlanId || !confirm("Delete this entire training day?")) return;
+    if (!currentPlanId || !confirm("Cancel this training day? All modules will be removed.")) return;
     await supabase.from("player_day_plan_items").delete().eq("plan_id", currentPlanId);
     await supabase.from("player_day_plans").delete().eq("id", currentPlanId);
-    toast.success("Training day removed");
+    toast.success("Training day cancelled");
     setCurrentPlanId(null); setPlanItems([]); setPlanNotes("");
     setEditStartTime(""); setEditEndTime(""); setEditLocation("");
+    setCoachName(null); setCoachAvatar(null);
   };
 
   /* ── Reorder ── */
@@ -309,6 +393,12 @@ const Training = () => {
     }
   };
 
+  /* ── Navigate to plan builder ── */
+  const handleEditInBuilder = () => {
+    if (!targetPlayerId) return;
+    navigate(`/coach/plan/${targetPlayerId}?date=${format(selectedDay, "yyyy-MM-dd")}`);
+  };
+
   const totalDuration = planItems.reduce((sum, i) => sum + (i.module.duration_minutes || 0), 0);
 
   // Filtered modules for add panel
@@ -320,12 +410,11 @@ const Training = () => {
     });
   }, [allModules, moduleCatFilter, moduleSearch]);
 
-  // Month calendar
+  // Month calendar days
   const monthStart = startOfMonth(calMonth);
-  const calDays = eachDayOfInterval({
-    start: startOfWeek(monthStart, { weekStartsOn: 1 }),
-    end: addDays(endOfMonth(calMonth), 6 - endOfMonth(calMonth).getDay()),
-  });
+  const mEnd = endOfMonth(calMonth);
+  const calStartPad = (getDay(monthStart) + 6) % 7;
+  const calDays = eachDayOfInterval({ start: monthStart, end: mEnd });
 
   return (
     <PortalLayout>
@@ -348,11 +437,53 @@ const Training = () => {
               {format(selectedDay, "EEEE, MMMM d, yyyy")}
             </p>
           </div>
-          <button onClick={() => setShowMonthCal(!showMonthCal)}
+          <button onClick={() => { setShowMonthCal(!showMonthCal); setCalMonth(selectedDay); }}
             className={`p-2 rounded-lg border transition-colors ${showMonthCal ? "bg-primary text-primary-foreground border-primary" : "bg-card border-border text-muted-foreground hover:text-foreground"}`}>
             <CalendarDays size={16} />
           </button>
         </div>
+
+        {/* Month calendar */}
+        <AnimatePresence>
+          {showMonthCal && (
+            <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden mb-4">
+              <div className="bg-card border border-border rounded-xl p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <button onClick={() => setCalMonth(m => new Date(m.getFullYear(), m.getMonth() - 1))} className="p-1 rounded hover:bg-secondary"><ChevronLeft size={16} /></button>
+                  <span className="font-display text-xs tracking-wider text-foreground">{format(calMonth, "MMMM yyyy").toUpperCase()}</span>
+                  <button onClick={() => setCalMonth(m => new Date(m.getFullYear(), m.getMonth() + 1))} className="p-1 rounded hover:bg-secondary"><ChevronRight size={16} /></button>
+                </div>
+                <div className="grid grid-cols-7 gap-1 mb-1">
+                  {["M","T","W","T","F","S","S"].map((d,i) => (
+                    <div key={i} className="text-center font-display text-[9px] tracking-wider text-muted-foreground py-0.5">{d}</div>
+                  ))}
+                </div>
+                <div className="grid grid-cols-7 gap-1">
+                  {Array(calStartPad).fill(null).map((_, i) => <div key={`pad-${i}`} />)}
+                  {calDays.map(day => {
+                    const dateStr = format(day, "yyyy-MM-dd");
+                    const selected = isSameDay(day, selectedDay);
+                    const isToday = isSameDay(day, new Date());
+                    const hasPlan = planDates.has(dateStr);
+                    return (
+                      <button key={dateStr} onClick={() => { setSelectedDay(day); setShowMonthCal(false); }}
+                        className={`relative py-1.5 rounded-md text-xs font-body transition-colors ${
+                          selected ? "bg-primary text-primary-foreground"
+                            : isToday ? "bg-secondary text-foreground"
+                            : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+                        }`}>
+                        {format(day, "d")}
+                        {hasPlan && !selected && (
+                          <span className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-primary" />
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Week strip */}
         <div className="flex gap-1.5 mb-4">
@@ -374,43 +505,6 @@ const Training = () => {
           })}
         </div>
 
-        {/* Month calendar (toggleable) */}
-        <AnimatePresence>
-          {showMonthCal && (
-            <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden mb-4">
-              <div className="bg-card border border-border rounded-xl p-4">
-                <div className="flex items-center justify-between mb-3">
-                  <button onClick={() => setCalMonth(m => new Date(m.getFullYear(), m.getMonth() - 1))} className="p-1 rounded hover:bg-secondary"><ChevronLeft size={16} /></button>
-                  <span className="font-display text-xs tracking-wider text-foreground">{format(calMonth, "MMMM yyyy").toUpperCase()}</span>
-                  <button onClick={() => setCalMonth(m => new Date(m.getFullYear(), m.getMonth() + 1))} className="p-1 rounded hover:bg-secondary"><ChevronRight size={16} /></button>
-                </div>
-                <div className="grid grid-cols-7 gap-1 mb-1">
-                  {["M","T","W","T","F","S","S"].map((d,i) => (
-                    <div key={i} className="text-center font-display text-[9px] tracking-wider text-muted-foreground py-0.5">{d}</div>
-                  ))}
-                </div>
-                <div className="grid grid-cols-7 gap-1">
-                  {calDays.map(day => {
-                    const dateStr = format(day, "yyyy-MM-dd");
-                    const inMonth = isSameMonth(day, calMonth);
-                    const selected = isSameDay(day, selectedDay);
-                    const hasPlan = planDates.has(dateStr);
-                    return (
-                      <button key={dateStr} onClick={() => { setSelectedDay(day); setShowMonthCal(false); }}
-                        className={`py-1.5 rounded-lg text-xs font-body relative transition-colors ${!inMonth ? "opacity-30" : ""} ${selected ? "bg-primary text-primary-foreground" : "hover:bg-secondary text-foreground"}`}>
-                        {format(day, "d")}
-                        {hasPlan && !selected && (
-                          <div className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-primary" />
-                        )}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
         {/* Player-only: training day info */}
         {targetPlayerId && !isCoachOrAdmin && (
           <div className="mb-6">
@@ -418,32 +512,106 @@ const Training = () => {
           </div>
         )}
 
-        {/* Coach: session info bar */}
+        {/* Coach: session info card */}
         {isCoachOrAdmin && planItems.length > 0 && (
-          <div className="bg-card border border-border rounded-xl p-3 mb-4">
-            <div className="grid grid-cols-3 gap-2">
+          <div className="bg-card border border-border rounded-xl p-4 mb-4">
+            {/* Editable fields */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div>
-                <label className="font-display text-[9px] tracking-wider text-muted-foreground block mb-0.5">
-                  <MapPin size={9} className="inline mr-0.5" />LOCATION
-                </label>
-                <input value={editLocation} onChange={e => setEditLocation(e.target.value)} placeholder="Venue..."
-                  className="w-full px-2 py-1.5 rounded-lg bg-secondary border border-border text-foreground font-body text-xs focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-muted-foreground" />
+                <label className="text-[10px] font-display tracking-wider text-muted-foreground mb-1 block">LOCATION</label>
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                    <MapPin size={14} className="text-primary" />
+                  </div>
+                  <input value={editLocation} onChange={e => setEditLocation(e.target.value)} placeholder="e.g. Court 3"
+                    className="flex-1 px-2.5 py-1.5 rounded-lg bg-secondary text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-muted-foreground" />
+                </div>
               </div>
               <div>
-                <label className="font-display text-[9px] tracking-wider text-muted-foreground block mb-0.5">
-                  <Clock size={9} className="inline mr-0.5" />START
-                </label>
-                <input type="time" value={editStartTime} onChange={e => setEditStartTime(e.target.value)}
-                  className="w-full px-2 py-1.5 rounded-lg bg-secondary border border-border text-foreground font-body text-xs focus:outline-none focus:ring-1 focus:ring-primary" />
+                <label className="text-[10px] font-display tracking-wider text-muted-foreground mb-1 block">START TIME</label>
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                    <Clock size={14} className="text-primary" />
+                  </div>
+                  <input type="time" value={editStartTime} onChange={e => setEditStartTime(e.target.value)}
+                    className="flex-1 px-2.5 py-1.5 rounded-lg bg-secondary text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary" />
+                </div>
               </div>
               <div>
-                <label className="font-display text-[9px] tracking-wider text-muted-foreground block mb-0.5">
-                  <Clock size={9} className="inline mr-0.5" />END
-                </label>
-                <input type="time" value={editEndTime} onChange={e => setEditEndTime(e.target.value)}
-                  className="w-full px-2 py-1.5 rounded-lg bg-secondary border border-border text-foreground font-body text-xs focus:outline-none focus:ring-1 focus:ring-primary" />
+                <label className="text-[10px] font-display tracking-wider text-muted-foreground mb-1 block">END TIME</label>
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                    <Clock size={14} className="text-primary" />
+                  </div>
+                  <input type="time" value={editEndTime} onChange={e => setEditEndTime(e.target.value)}
+                    className="flex-1 px-2.5 py-1.5 rounded-lg bg-secondary text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary" />
+                </div>
               </div>
             </div>
+
+            {/* Coach info + weather row */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-3 pt-3 border-t border-border">
+              {coachName && (
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center overflow-hidden shrink-0">
+                    {coachAvatar ? (
+                      <img src={coachAvatar} alt={coachName} className="w-full h-full object-cover" />
+                    ) : (
+                      <User size={14} className="text-primary" />
+                    )}
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-[10px] font-display tracking-wider text-muted-foreground">COACH</p>
+                    <p className="font-body text-sm text-foreground truncate">{coachName}</p>
+                  </div>
+                </div>
+              )}
+              {weather && (
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                    {getWeatherIcon(weather.weatherCode)}
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-[10px] font-display tracking-wider text-muted-foreground">WEATHER</p>
+                    <p className="font-body text-sm text-foreground">
+                      {weather.temp}°C · {getWeatherLabel(weather.weatherCode)}
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Coach action buttons */}
+            <div className="flex items-center justify-between mt-3 pt-3 border-t border-border flex-wrap gap-2">
+              <div className="flex items-center gap-2 flex-wrap">
+                <button onClick={handleSavePlan} disabled={savingPlan}
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-primary text-primary-foreground font-display text-xs tracking-wider hover:bg-primary/90 transition-colors disabled:opacity-50">
+                  <Save size={14} /> {savingPlan ? "SAVING..." : "SAVE TRAINING DAY"}
+                </button>
+                <button onClick={handleEditInBuilder}
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-secondary text-foreground font-display text-xs tracking-wider hover:bg-secondary/80 transition-colors">
+                  <Plus size={12} /> EDIT IN BUILDER
+                </button>
+                <button onClick={handleSaveAsBlock}
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-secondary text-foreground font-display text-xs tracking-wider hover:bg-secondary/80 transition-colors">
+                  <Save size={12} /> SAVE AS BLOCK
+                </button>
+              </div>
+              <button onClick={handleCancelDay}
+                className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-destructive hover:bg-destructive/10 font-display text-xs tracking-wider transition-colors">
+                <Trash2 size={14} /> CANCEL DAY
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Weather standalone when no plan */}
+        {weather && !loading && planItems.length === 0 && (
+          <div className="bg-card border border-border rounded-xl p-3 mb-4 flex items-center gap-2">
+            {getWeatherIcon(weather.weatherCode)}
+            <span className="font-body text-sm text-muted-foreground">
+              {weather.temp}°C · {getWeatherLabel(weather.weatherCode)} · Wind {weather.windSpeed} km/h
+            </span>
           </div>
         )}
 
@@ -494,7 +662,7 @@ const Training = () => {
                         )}
 
                         {/* Module info */}
-                        <div className="flex-1 min-w-0" onClick={() => setExpandedItem(expandedItem === item.id ? null : item.id)}>
+                        <div className="flex-1 min-w-0 cursor-pointer" onClick={() => setExpandedItem(expandedItem === item.id ? null : item.id)}>
                           <div className="flex items-center gap-2">
                             <div className={`w-2 h-2 rounded-full shrink-0 ${CATEGORY_DOT[item.module.category] || "bg-muted-foreground"}`} />
                             <span className="font-display text-sm text-foreground truncate">{item.module.title}</span>
@@ -621,11 +789,9 @@ const Training = () => {
       {isCoachOrAdmin && planItems.length > 0 && (
         <div className="fixed bottom-0 left-0 right-0 bg-card/95 backdrop-blur-sm border-t border-border z-30 px-4 py-3">
           <div className="max-w-3xl mx-auto flex items-center justify-between gap-3">
-            <div className="flex items-center gap-3">
-              <p className="font-display text-xs tracking-wider text-foreground">
-                {planItems.length} module{planItems.length !== 1 ? "s" : ""} · {totalDuration} min
-              </p>
-            </div>
+            <p className="font-display text-xs tracking-wider text-foreground">
+              {planItems.length} module{planItems.length !== 1 ? "s" : ""} · {totalDuration} min
+            </p>
             <div className="flex items-center gap-2">
               <button onClick={handleCancelDay}
                 className="p-2 rounded-lg border border-destructive/30 text-destructive hover:bg-destructive/10 transition-colors">
