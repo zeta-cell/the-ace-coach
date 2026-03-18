@@ -255,7 +255,7 @@ const QuickAddTrainingDrawer = ({
               </div>
 
               {/* Category filter */}
-              <div className="flex gap-1.5 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-none">
+              <div className="flex flex-wrap gap-1.5">
                 {CATEGORY_FILTERS.map(cat => (
                   <button key={cat} onClick={() => setCategoryFilter(cat)}
                     className={`px-3 py-1.5 rounded-full font-display text-[9px] tracking-wider whitespace-nowrap transition-colors border ${

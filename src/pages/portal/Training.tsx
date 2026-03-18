@@ -434,7 +434,7 @@ const Training = () => {
             {isCoachOrAdmin && (
               <button onClick={() => setShowBlocksPanel(true)}
                 className="mt-4 px-4 py-2.5 rounded-xl bg-primary text-primary-foreground font-display text-xs tracking-wider hover:bg-primary/90 transition-colors inline-flex items-center gap-1.5">
-                <Layers size={14} /> USE A BLOCK
+                <Layers size={14} /> USE BLOCK OR MODULES
               </button>
             )}
           </div>
