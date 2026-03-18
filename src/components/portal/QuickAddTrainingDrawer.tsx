@@ -254,8 +254,23 @@ const QuickAddTrainingDrawer = ({
                 />
               </div>
 
+              {/* Category filter */}
+              <div className="flex gap-1.5 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-none">
+                {CATEGORY_FILTERS.map(cat => (
+                  <button key={cat} onClick={() => setCategoryFilter(cat)}
+                    className={`px-3 py-1.5 rounded-full font-display text-[9px] tracking-wider whitespace-nowrap transition-colors border ${
+                      categoryFilter === cat
+                        ? "bg-primary text-primary-foreground border-primary"
+                        : "bg-secondary text-muted-foreground border-border hover:text-foreground"
+                    }`}
+                  >
+                    {cat.toUpperCase()}
+                  </button>
+                ))}
+              </div>
+
               {/* List */}
-              <div className="space-y-1.5 max-h-[40vh] overflow-y-auto">
+              <div className="space-y-1.5 max-h-[35vh] overflow-y-auto">
                 {assignType === "block" ? (
                   filteredBlocks.length === 0 ? (
                     <p className="text-xs font-body text-muted-foreground text-center py-6">No blocks found</p>
