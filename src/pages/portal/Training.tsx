@@ -46,11 +46,13 @@ const parseDateParam = (value: string | null) => {
 
 const Training = () => {
   const { user, role } = useAuth();
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const dateParam = searchParams.get("date");
   const playerParam = searchParams.get("player");
 
   const isCoachOrAdmin = role === "admin" || role === "coach";
+  const isCoachViewingPlayer = isCoachOrAdmin && !!playerParam;
   const targetPlayerId = isCoachOrAdmin ? (playerParam || user?.id) : user?.id;
 
   const [selectedDay, setSelectedDay] = useState(() => parseDateParam(dateParam));
