@@ -327,7 +327,7 @@ interface SelectionStepProps {
 const SelectionStep = ({
   date, setDate, playerId, setPlayerId, prefilledPlayerId, players,
   assignType, setAssignType, search, setSearch, categoryFilter, setCategoryFilter,
-  filteredBlocks, filteredModules, selectedBlockId, setSelectedBlockId,
+  filteredBlocks, filteredModules, allModules, selectedBlockId, setSelectedBlockId,
   selectedModuleIds, toggleModule, selectedBlock, selectedModules, totalDuration,
   onRemoveModule, onClearSelection, canProceed, onNext,
 }: SelectionStepProps) => {
