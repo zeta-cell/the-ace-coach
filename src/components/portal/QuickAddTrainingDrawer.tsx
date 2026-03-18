@@ -532,7 +532,8 @@ const SelectionStep = ({
       REVIEW PLAN <ArrowRight size={16} />
     </button>
   </>
-);
+  );
+};
 
 /* ─── Step 2: Review ─── */
 interface ReviewStepProps {
