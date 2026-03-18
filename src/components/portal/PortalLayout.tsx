@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   LayoutDashboard, Calendar, BookOpen, Video,
   MessageSquare, User, LogOut, Menu, X, ChevronLeft, ChevronRight,
-  Users, Settings, Home, CreditCard, Link2, CalendarDays, UserCheck, Search, ShoppingBag, Eye, Plus
+  Users, Settings, Home, CreditCard, Link2, CalendarDays, UserCheck, Search, ShoppingBag, Eye, Plus, Blocks
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import NotificationBell from "@/components/portal/NotificationBell";
@@ -25,7 +25,8 @@ const playerNav = [
 const coachNav = [
   { label: "Training Center", icon: LayoutDashboard, href: "/coach" },
   { label: "Players", icon: Users, href: "/coach/players" },
-  { label: "Training Library", icon: BookOpen, href: "/coach/modules" },
+  { label: "Modules", icon: BookOpen, href: "/coach/modules" },
+  { label: "Training Blocks", icon: Blocks, href: "/coach/blocks" },
   { label: "Videos", icon: Video, href: "/coach/videos" },
   { label: "Calendar", icon: CalendarDays, href: "/coach/calendar" },
   { label: "Events", icon: Calendar, href: "/coach/events" },
@@ -125,8 +126,8 @@ const PortalLayout = ({ children }: { children: React.ReactNode }) => {
             <>
               {/* Left two: Players, Calendar */}
               {[
+                { label: "Training Center", icon: LayoutDashboard, href: "/coach" },
                 { label: "Players", icon: Users, href: "/coach/players" },
-                { label: "Calendar", icon: CalendarDays, href: "/coach/calendar" },
               ].map((item) => {
                 const isActive = location.pathname === item.href;
                 return (
@@ -145,8 +146,9 @@ const PortalLayout = ({ children }: { children: React.ReactNode }) => {
               </button>
               {/* Right two: Library, Videos */}
               {[
-                { label: "Library", icon: BookOpen, href: "/coach/modules" },
-                { label: "Messages", icon: MessageSquare, href: "/messages" },
+                { label: "Modules", icon: BookOpen, href: "/coach/modules" },
+                { label: "Training Blocks", icon: Blocks, href: "/coach/blocks" },
+                { label: "Videos", icon: Video, href: "/coach/videos" },
               ].map((item) => {
                 const isActive = location.pathname === item.href;
                 return (
