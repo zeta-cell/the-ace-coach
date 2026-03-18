@@ -1033,23 +1033,49 @@ const Training = () => {
                                         className="overflow-hidden">
                                         <div className="space-y-2 pl-1 pb-2">
                                           {grouped[goal].map(block => {
-                                            const totalDur = block.module_durations?.reduce((s, d) => s + d, 0) || 0;
+                                            const bDur = block.module_durations?.reduce((s, d) => s + d, 0) || 0;
+                                            const isSelected = selectedBlockIds.has(block.id);
+                                            const isExpanded = expandedBlockDetail === block.id;
                                             return (
-                                              <div key={block.id} className="flex items-center gap-3 p-3 rounded-xl border border-border bg-secondary/40">
-                                                <div className="flex-1 min-w-0">
-                                                  <p className="font-display text-xs text-foreground truncate">{block.title}</p>
-                                                  {block.description && (
-                                                    <p className="text-[10px] font-body text-muted-foreground line-clamp-1 mt-0.5">{block.description}</p>
-                                                  )}
-                                                  <div className="flex items-center gap-2 text-[9px] font-body text-muted-foreground mt-1">
-                                                    <span className="flex items-center gap-0.5"><Clock size={9} /> {totalDur}m</span>
-                                                    <span className="uppercase px-1.5 py-0.5 rounded bg-secondary font-display text-[8px] tracking-wider">{goal}</span>
+                                              <div key={block.id} className={`rounded-xl border overflow-hidden transition-colors ${isSelected ? "border-primary bg-primary/10" : "border-border bg-secondary/40"}`}>
+                                                <div className="flex items-center gap-3 p-3">
+                                                  <div className={`w-1 self-stretch rounded-full shrink-0 ${CATEGORY_DOT[block.category] || "bg-muted-foreground"}`} />
+                                                  <div className="flex-1 min-w-0">
+                                                    <p className="font-display text-xs text-foreground truncate">{block.title}</p>
+                                                    <p className="text-[10px] font-body text-muted-foreground mt-0.5">
+                                                      {block.category} · {bDur}min · {block.module_ids.length} modules
+                                                    </p>
                                                   </div>
+                                                  <button onClick={() => setExpandedBlockDetail(isExpanded ? null : block.id)}
+                                                    className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground transition-colors shrink-0">
+                                                    <ChevronDown size={14} className={`transition-transform ${isExpanded ? "rotate-180" : ""}`} />
+                                                  </button>
+                                                  <button onClick={() => toggleBlockSelection(block.id)}
+                                                    className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-colors ${
+                                                      isSelected ? "bg-primary text-primary-foreground" : "bg-secondary border border-border text-muted-foreground hover:border-primary hover:text-primary"
+                                                    }`}>
+                                                    {isSelected ? <Check size={14} /> : <Plus size={14} />}
+                                                  </button>
                                                 </div>
-                                                <button onClick={() => { handleApplyBlock(block); setShowInlineBlocks(false); }}
-                                                  className="w-7 h-7 rounded-full bg-primary text-primary-foreground flex items-center justify-center shrink-0 hover:bg-primary/90 transition-colors">
-                                                  <Plus size={14} />
-                                                </button>
+                                                <AnimatePresence>
+                                                  {isExpanded && (
+                                                    <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
+                                                      <div className="px-3 pb-3 pt-1 border-t border-border space-y-1.5">
+                                                        {block.description && <p className="text-[10px] font-body text-muted-foreground">{block.description}</p>}
+                                                        <div className="flex flex-wrap gap-1.5 text-[9px] font-body text-muted-foreground">
+                                                          <span className="flex items-center gap-0.5"><Clock size={9} /> {bDur} min</span>
+                                                          <span>·</span>
+                                                          <span>{block.difficulty}</span>
+                                                          <span>·</span>
+                                                          <span className="uppercase">{block.sport}</span>
+                                                        </div>
+                                                        {block.module_ids.length > 0 && (
+                                                          <p className="text-[9px] font-body text-muted-foreground">{block.module_ids.length} modules included</p>
+                                                        )}
+                                                      </div>
+                                                    </motion.div>
+                                                  )}
+                                                </AnimatePresence>
                                               </div>
                                             );
                                           })}
