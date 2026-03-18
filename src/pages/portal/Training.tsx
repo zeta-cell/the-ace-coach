@@ -144,6 +144,7 @@ const Training = () => {
   const [editLocation, setEditLocation] = useState("");
   const [savingPlan, setSavingPlan] = useState(false);
   const [justSaved, setJustSaved] = useState(false);
+  const [showSessionDetails, setShowSessionDetails] = useState(false);
 
   // Add panel state
   const [showAddPanel, setShowAddPanel] = useState(false);
@@ -660,16 +661,8 @@ const Training = () => {
         )}
 
         {/* Weather standalone when no plan */}
-        {weather && !loading && planItems.length === 0 && isCoachOrAdmin && (
-          <div className="bg-card border border-border rounded-2xl p-4 mb-5 flex items-center gap-3">
-            {getWeatherIcon(weather.weatherCode)}
-            <span className="font-body text-base text-muted-foreground">
-              {weather.temp}°C · {getWeatherLabel(weather.weatherCode)} · Wind {weather.windSpeed} km/h
-            </span>
-          </div>
-        )}
-        {weather && !loading && planItems.length === 0 && !isCoachOrAdmin && (
-          <div className="bg-card border border-border rounded-xl p-3 mb-4 flex items-center gap-2">
+        {weather && !loading && planItems.length === 0 && (
+          <div className="bg-card border border-border rounded-xl p-3 mb-4 flex items-center gap-2.5">
             {getWeatherIcon(weather.weatherCode)}
             <span className="font-body text-sm text-muted-foreground">
               {weather.temp}°C · {getWeatherLabel(weather.weatherCode)} · Wind {weather.windSpeed} km/h
@@ -857,30 +850,51 @@ const Training = () => {
             ) : (
               /* Empty state — Coach inline builder */
               isCoachOrAdmin ? (
-                <div className="space-y-5">
-                  {/* Start / End time */}
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="font-display text-[11px] tracking-wider text-primary mb-2 block">START TIME *</label>
-                      <input type="time" value={editStartTime} onChange={e => setEditStartTime(e.target.value)}
-                        className="w-full px-4 py-4 rounded-2xl bg-secondary/80 border border-border text-foreground font-body text-base focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all [color-scheme:dark]" />
+                <div className="space-y-4">
+                  {/* Session details — collapsible */}
+                  <button onClick={() => setShowSessionDetails(!showSessionDetails)}
+                    className="w-full flex items-center gap-2 p-3 rounded-xl bg-card border border-border hover:border-primary/40 transition-colors">
+                    <div className="w-7 h-7 rounded-lg bg-primary/15 flex items-center justify-center shrink-0">
+                      {showSessionDetails ? <Minus size={12} className="text-primary" /> : <Plus size={12} className="text-primary" />}
                     </div>
-                    <div>
-                      <label className="font-display text-[11px] tracking-wider text-primary mb-2 block">END TIME *</label>
-                      <input type="time" value={editEndTime} onChange={e => setEditEndTime(e.target.value)}
-                        className="w-full px-4 py-4 rounded-2xl bg-secondary/80 border border-border text-foreground font-body text-base focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all [color-scheme:dark]" />
+                    <div className="flex-1 text-left">
+                      <span className="font-display text-[10px] tracking-wider text-foreground">SESSION DETAILS</span>
+                      {(editStartTime || editLocation) && !showSessionDetails && (
+                        <span className="text-[10px] font-body text-muted-foreground ml-2">
+                          {editStartTime && `${editStartTime}`}{editStartTime && editEndTime && ` – ${editEndTime}`}{editLocation && ` · ${editLocation}`}
+                        </span>
+                      )}
                     </div>
-                  </div>
+                    <ChevronDown size={14} className={`text-muted-foreground transition-transform ${showSessionDetails ? "rotate-180" : ""}`} />
+                  </button>
 
-                  {/* Location */}
-                  <input value={editLocation} onChange={e => setEditLocation(e.target.value)}
-                    placeholder="Location (e.g. Court 3, Padel Club Valencia)..."
-                    className="w-full px-4 py-4 rounded-2xl bg-secondary/80 border border-border text-foreground font-body text-base focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all placeholder:text-muted-foreground" />
-
-                  {/* Notes */}
-                  <input value={planNotes} onChange={e => setPlanNotes(e.target.value)}
-                    placeholder="Plan notes (optional)..."
-                    className="w-full px-4 py-4 rounded-2xl bg-secondary/80 border border-border text-foreground font-body text-base focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all placeholder:text-muted-foreground" />
+                  <AnimatePresence>
+                    {showSessionDetails && (
+                      <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }}
+                        className="overflow-hidden">
+                        <div className="space-y-3 pb-2">
+                          <div className="grid grid-cols-2 gap-3">
+                            <div>
+                              <label className="font-display text-[9px] tracking-wider text-primary mb-1 block">START TIME</label>
+                              <input type="time" value={editStartTime} onChange={e => setEditStartTime(e.target.value)}
+                                className="w-full px-3 py-2.5 rounded-xl bg-card border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary transition-all [color-scheme:dark]" />
+                            </div>
+                            <div>
+                              <label className="font-display text-[9px] tracking-wider text-primary mb-1 block">END TIME</label>
+                              <input type="time" value={editEndTime} onChange={e => setEditEndTime(e.target.value)}
+                                className="w-full px-3 py-2.5 rounded-xl bg-card border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary transition-all [color-scheme:dark]" />
+                            </div>
+                          </div>
+                          <input value={editLocation} onChange={e => setEditLocation(e.target.value)}
+                            placeholder="Location (e.g. Court 3)..."
+                            className="w-full px-3 py-2.5 rounded-xl bg-card border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-muted-foreground transition-all" />
+                          <input value={planNotes} onChange={e => setPlanNotes(e.target.value)}
+                            placeholder="Plan notes (optional)..."
+                            className="w-full px-3 py-2.5 rounded-xl bg-card border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-muted-foreground transition-all" />
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
 
                   {/* Add modules by category */}
                   <div>
