@@ -224,7 +224,7 @@ const InlineAddModule = ({
         </div>
       )}
       {search.length > 0 && results.length === 0 && (
-        <p className="text-center text-[10px] font-body text-muted-foreground py-3">Keine Module gefunden</p>
+        <p className="text-center text-[10px] font-body text-muted-foreground py-3">No modules found</p>
       )}
     </div>
   );
