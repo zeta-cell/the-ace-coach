@@ -324,7 +324,70 @@ const CoachPlayerDetail = () => {
             </Link>
           </div>
 
-          {/* Upcoming training — collapsible */}
+          {/* Quick Day Navigator */}
+          <div className="bg-card border border-border rounded-xl mb-6 overflow-hidden">
+            <div className="flex items-center justify-between px-4 py-3">
+              <button
+                onClick={() => setQuickDate(subDays(quickDate, 1))}
+                className="w-8 h-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+              >
+                <ChevronLeft size={18} />
+              </button>
+              <div className="text-center">
+                <p className="font-display text-sm tracking-wider text-foreground">
+                  {isToday(quickDate) ? "TODAY" : format(quickDate, "EEEE").toUpperCase()}
+                </p>
+                <p className="font-body text-xs text-muted-foreground">{format(quickDate, "d MMM yyyy")}</p>
+              </div>
+              <button
+                onClick={() => setQuickDate(addDays(quickDate, 1))}
+                className="w-8 h-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+              >
+                <ChevronRight size={18} />
+              </button>
+            </div>
+            <div className="border-t border-border px-4 py-4">
+              {quickDayLoading ? (
+                <div className="flex justify-center py-2">
+                  <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                </div>
+              ) : quickDayPlan ? (
+                <Link
+                  to={`/training?player=${playerId}&date=${format(quickDate, "yyyy-MM-dd")}`}
+                  className="flex items-center gap-3 p-3 rounded-xl bg-secondary hover:bg-secondary/80 transition-colors group"
+                >
+                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                    <Dumbbell size={16} className="text-primary" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-body text-sm text-foreground truncate">{quickDayPlan.notes || "Training session"}</p>
+                    {quickDayPlan.start_time && (
+                      <div className="flex items-center gap-1 mt-0.5">
+                        <Clock size={10} className="text-muted-foreground" />
+                        <span className="text-[10px] font-body text-muted-foreground">
+                          {quickDayPlan.start_time?.slice(0, 5)}
+                          {quickDayPlan.end_time ? ` – ${quickDayPlan.end_time?.slice(0, 5)}` : ""}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                  <ChevronRight size={14} className="text-muted-foreground group-hover:text-foreground transition-colors shrink-0" />
+                </Link>
+              ) : (
+                <div className="text-center space-y-3">
+                  <p className="font-body text-sm text-muted-foreground">No plan for this day</p>
+                  <button
+                    onClick={() => navigate(`/training?player=${playerId}&date=${format(quickDate, "yyyy-MM-dd")}`)}
+                    className="inline-flex items-center gap-2 px-5 py-2 rounded-xl bg-primary text-primary-foreground font-display text-xs tracking-widest hover:bg-primary/90 transition-colors"
+                  >
+                    <Plus size={14} /> CREATE PLAN
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+
+
           {upcomingPlans.length > 0 && (
             <div className="mb-6">
               <button
