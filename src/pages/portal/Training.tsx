@@ -1043,12 +1043,50 @@ const Training = () => {
                                   CLEAR
                                 </button>
                               </div>
-                              {selectedBlocks.map(b => (
-                                <div key={b.id} className="p-2.5 rounded-lg border border-border bg-card">
-                                  <p className="font-display text-[10px] text-foreground">{b.title}</p>
-                                  <p className="text-[9px] font-body text-muted-foreground">{b.category} · {b.module_durations?.reduce((s, d) => s + d, 0) || 0}min · {b.module_ids.length} modules</p>
-                                </div>
-                              ))}
+                              {selectedBlocks.map(b => {
+                                const moduleMap = new Map(allModules.map(m => [m.id, m]));
+                                const isExpanded = expandedBlockDetail === `selected-${b.id}`;
+                                return (
+                                  <div key={b.id} className="rounded-lg border border-border bg-card overflow-hidden">
+                                    <button
+                                      onClick={() => setExpandedBlockDetail(isExpanded ? null : `selected-${b.id}`)}
+                                      className="w-full p-2.5 flex items-center gap-2 text-left"
+                                    >
+                                      <div className={`w-1 self-stretch rounded-full ${CATEGORY_DOT[b.category?.toLowerCase()] || "bg-muted"}`} />
+                                      <div className="flex-1 min-w-0">
+                                        <p className="font-display text-[10px] text-foreground">{b.title}</p>
+                                        <p className="text-[9px] font-body text-muted-foreground">{b.category} · {b.module_durations?.reduce((s, d) => s + d, 0) || 0}min · {b.module_ids.length} modules</p>
+                                      </div>
+                                      {isExpanded ? <ChevronUp size={14} className="text-primary shrink-0" /> : <ChevronDown size={14} className="text-muted-foreground shrink-0" />}
+                                    </button>
+                                    <AnimatePresence>
+                                      {isExpanded && (
+                                        <motion.div
+                                          initial={{ opacity: 0, height: 0 }}
+                                          animate={{ opacity: 1, height: "auto" }}
+                                          exit={{ opacity: 0, height: 0 }}
+                                          className="overflow-hidden"
+                                        >
+                                          <div className="px-3 pb-3 space-y-1">
+                                            {b.module_ids.map((mId, idx) => {
+                                              const mod = moduleMap.get(mId);
+                                              const dur = b.module_durations?.[idx] || mod?.duration_minutes || 0;
+                                              return (
+                                                <div key={`${mId}-${idx}`} className="flex items-center gap-2 px-2 py-1.5 rounded-lg bg-secondary/50">
+                                                  <div className={`w-1 h-5 rounded-full ${CATEGORY_DOT[mod?.category?.toLowerCase() || ""] || "bg-muted"}`} />
+                                                  <span className="text-[10px] font-body text-muted-foreground w-4">{idx + 1}.</span>
+                                                  <span className="text-xs font-body text-foreground flex-1 truncate">{mod?.title || "Unknown module"}</span>
+                                                  <span className="text-[10px] font-body text-muted-foreground">{dur}m</span>
+                                                </div>
+                                              );
+                                            })}
+                                          </div>
+                                        </motion.div>
+                                      )}
+                                    </AnimatePresence>
+                                  </div>
+                                );
+                              })}
                             </div>
                           )}
 
