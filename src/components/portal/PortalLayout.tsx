@@ -123,8 +123,11 @@ const PortalLayout = ({ children }: { children: React.ReactNode }) => {
         <div className="flex items-center justify-around py-2">
           {role === "coach" ? (
             <>
-              {/* Left two */}
-              {[coachNav[1], coachNav[4]].map((item) => {
+              {/* Left two: Players, Calendar */}
+              {[
+                { label: "Players", icon: Users, href: "/coach/players" },
+                { label: "Calendar", icon: CalendarDays, href: "/coach/calendar" },
+              ].map((item) => {
                 const isActive = location.pathname === item.href;
                 return (
                   <Link key={item.href} to={item.href} className={`flex flex-col items-center gap-0.5 p-1.5 rounded-lg transition-colors ${isActive ? "text-primary" : "text-muted-foreground"}`}>
@@ -133,15 +136,18 @@ const PortalLayout = ({ children }: { children: React.ReactNode }) => {
                   </Link>
                 );
               })}
-              {/* Center — Create Training */}
+              {/* Center — Training Center */}
               <Link to="/coach" className="flex flex-col items-center -mt-5">
-                <div className={`w-14 h-14 rounded-full flex items-center justify-center shadow-lg transition-colors ${location.pathname === "/coach" ? "bg-primary text-primary-foreground" : "bg-primary text-primary-foreground"}`}>
-                  <Plus size={24} />
+                <div className="w-14 h-14 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg">
+                  <LayoutDashboard size={22} />
                 </div>
-                <span className="text-[9px] font-display tracking-wider text-primary mt-1">CREATE</span>
+                <span className="text-[9px] font-display tracking-wider text-primary mt-1">TRAINING</span>
               </Link>
-              {/* Right two */}
-              {[coachNav[2], coachNav[3]].map((item) => {
+              {/* Right two: Library, Videos */}
+              {[
+                { label: "Library", icon: BookOpen, href: "/coach/modules" },
+                { label: "Videos", icon: Video, href: "/coach/videos" },
+              ].map((item) => {
                 const isActive = location.pathname === item.href;
                 return (
                   <Link key={item.href} to={item.href} className={`flex flex-col items-center gap-0.5 p-1.5 rounded-lg transition-colors ${isActive ? "text-primary" : "text-muted-foreground"}`}>
