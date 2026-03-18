@@ -39,7 +39,7 @@ const adminNav = [
   { label: "Players", icon: Users, href: "/admin/users?role=player" },
   { label: "Coaches", icon: UserCheck, href: "/admin/users?role=coach" },
   { label: "Assignments", icon: Link2, href: "/admin/assignments" },
-  { label: "Modules", icon: BookOpen, href: "/admin/modules" },
+  { label: "Training Library", icon: BookOpen, href: "/admin/modules" },
   { label: "Blocks", icon: ShoppingBag, href: "/admin/marketplace" },
   { label: "Events", icon: Calendar, href: "/admin/events" },
   { label: "Payments", icon: CreditCard, href: "/admin/payments" },
