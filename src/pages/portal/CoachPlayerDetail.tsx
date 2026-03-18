@@ -111,6 +111,36 @@ const CoachPlayerDetail = () => {
     setActivePrograms((prev) => prev.map((p) => p.block_id === prog.block_id ? { ...p, current_week: nextWeek } : p));
   };
 
+  const handleSaveAbilities = async () => {
+    if (!playerId || !editData) return;
+    setSaving(true);
+    const { error } = await supabase.from("player_profiles").update({
+      fitness_level: editData.fitness_level,
+      playtomic_level: editData.playtomic_level,
+      dominant_hand: editData.dominant_hand,
+      preferred_sport: editData.preferred_sport,
+      best_shot: editData.best_shot,
+      weakest_shot: editData.weakest_shot,
+      volley_pct: editData.volley_pct,
+      forehand_pct: editData.forehand_pct,
+      serve_pct: editData.serve_pct,
+      smash_pct: editData.smash_pct,
+      backhand_pct: editData.backhand_pct,
+      lob_pct: editData.lob_pct,
+      left_tendency_pct: editData.left_tendency_pct,
+      right_tendency_pct: editData.right_tendency_pct,
+    }).eq("user_id", playerId);
+
+    if (error) {
+      toast.error("Failed to save changes");
+    } else {
+      setPlayerData({ ...playerData, ...editData });
+      toast.success("Player abilities updated");
+      setEditMode(false);
+    }
+    setSaving(false);
+  };
+
   if (loading) {
     return <PortalLayout><div className="flex justify-center py-12"><div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" /></div></PortalLayout>;
   }
