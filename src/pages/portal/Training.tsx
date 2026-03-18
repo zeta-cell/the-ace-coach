@@ -873,23 +873,21 @@ const Training = () => {
                       <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }}
                         className="overflow-hidden">
                         <div className="space-y-3 pb-2">
-                          <div className="grid grid-cols-2 gap-3">
-                            <div>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div className="min-w-0">
                               <label className="font-display text-[9px] tracking-wider text-primary mb-1 block">START TIME</label>
-                              <div className="relative">
+                              <div className="relative min-w-0">
                                 <Clock size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
                                 <input type="time" value={editStartTime} onChange={e => setEditStartTime(e.target.value)}
-                                  placeholder="00:00"
-                                  className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-background border-2 border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all [color-scheme:dark]" />
+                                  className="w-full min-w-0 pl-9 pr-3 py-2.5 rounded-xl bg-background border-2 border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all [color-scheme:dark] appearance-none" />
                               </div>
                             </div>
-                            <div>
+                            <div className="min-w-0">
                               <label className="font-display text-[9px] tracking-wider text-primary mb-1 block">END TIME</label>
-                              <div className="relative">
+                              <div className="relative min-w-0">
                                 <Clock size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
                                 <input type="time" value={editEndTime} onChange={e => setEditEndTime(e.target.value)}
-                                  placeholder="00:00"
-                                  className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-background border-2 border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all [color-scheme:dark]" />
+                                  className="w-full min-w-0 pl-9 pr-3 py-2.5 rounded-xl bg-background border-2 border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all [color-scheme:dark] appearance-none" />
                               </div>
                             </div>
                           </div>
