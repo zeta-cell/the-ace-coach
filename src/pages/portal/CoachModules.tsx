@@ -81,6 +81,7 @@ const CoachModules = () => {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState(emptyForm);
   const [uploadingVideoId, setUploadingVideoId] = useState<string | null>(null);
+  const [expandedModuleId, setExpandedModuleId] = useState<string | null>(null);
   const [videoModalOpen, setVideoModalOpen] = useState(false);
   const [videoModalUrl, setVideoModalUrl] = useState("");
   const [videoModalTitle, setVideoModalTitle] = useState("");
