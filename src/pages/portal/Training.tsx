@@ -36,7 +36,21 @@ const CATEGORY_DOT: Record<string, string> = {
   tactical: "bg-amber-500", technique: "bg-primary",
 };
 
-const MODULE_CATEGORIES = ["All", "Padel", "Tennis", "Fitness", "Mental", "Recovery", "Tactical", "Warm Up"] as const;
+const MODULE_CATEGORIES = ["All", "Warm Up", "Padel", "Tennis", "Footwork", "Fitness", "Strength", "Mental", "Recovery", "Tactical", "Cool Down"] as const;
+
+/* ── Category sort order for auto-placement ── */
+const CATEGORY_SORT_ORDER: Record<string, number> = {
+  warm_up: 0,
+  footwork: 1,
+  padel_drill: 2, padel: 2,
+  tennis: 3,
+  tactical: 4, technique: 4,
+  fitness: 5, strength: 5,
+  mental: 6,
+  recovery: 7,
+  cool_down: 8,
+  nutrition: 9, video: 9,
+};
 
 /* ── weather helpers ── */
 const getWeatherLabel = (code: number) => {
@@ -129,6 +143,7 @@ const Training = () => {
   const [editEndTime, setEditEndTime] = useState("");
   const [editLocation, setEditLocation] = useState("");
   const [savingPlan, setSavingPlan] = useState(false);
+  const [justSaved, setJustSaved] = useState(false);
 
   // Add panel state
   const [showAddPanel, setShowAddPanel] = useState(false);
@@ -271,21 +286,45 @@ const Training = () => {
     return newPlan.id;
   };
 
+  /* ── Find correct insert position by category sort order ── */
+  const findInsertIndex = (items: PlanItem[], category: string): number => {
+    const newOrder = CATEGORY_SORT_ORDER[category] ?? 5;
+    // Find first item whose category comes AFTER the new one
+    for (let i = 0; i < items.length; i++) {
+      const existingOrder = CATEGORY_SORT_ORDER[items[i].module.category] ?? 5;
+      if (existingOrder > newOrder) return i;
+    }
+    return items.length; // append at end
+  };
+
   /* ── Add single module ── */
   const handleAddModule = async (mod: BlockModuleItem) => {
     const planId = await ensurePlan();
     if (!planId) return;
-    const orderIndex = planItems.length;
+
+    const newItem: PlanItem = {
+      id: "", order_index: 0, is_completed: false,
+      completed_at: null, coach_note: null,
+      module: { ...mod, description: null, instructions: null, video_url: null, coach_video_url: null, duration_minutes: mod.duration_minutes || 15 },
+    };
+
+    const insertIdx = findInsertIndex(planItems, mod.category);
+    const updated = [...planItems];
+    updated.splice(insertIdx, 0, newItem);
+    const reordered = updated.map((item, i) => ({ ...item, order_index: i }));
+
     const { data } = await supabase.from("player_day_plan_items")
-      .insert({ plan_id: planId, module_id: mod.id, order_index: orderIndex })
+      .insert({ plan_id: planId, module_id: mod.id, order_index: insertIdx })
       .select("id").single();
     if (data) {
-      setPlanItems(prev => [...prev, {
-        id: data.id, order_index: orderIndex, is_completed: false,
-        completed_at: null, coach_note: null,
-        module: { ...mod, description: null, instructions: null, video_url: null, coach_video_url: null, duration_minutes: mod.duration_minutes || 15 },
-      }]);
+      reordered[insertIdx] = { ...reordered[insertIdx], id: data.id };
+      setPlanItems(reordered);
+      // Update order_index for shifted items
+      for (let i = insertIdx + 1; i < reordered.length; i++) {
+        supabase.from("player_day_plan_items").update({ order_index: i }).eq("id", reordered[i].id);
+      }
       toast.success(`Added "${mod.title}"`);
+      setJustSaved(false);
     }
   };
 
@@ -310,17 +349,20 @@ const Training = () => {
   /* ── Save plan ── */
   const handleSavePlan = async () => {
     if (!currentPlanId) return;
-    if (!editStartTime || !editEndTime) {
-      toast.error("Please set both start and end times.");
-      return;
-    }
     setSavingPlan(true);
     await supabase.from("player_day_plans").update({
       start_time: editStartTime || null, end_time: editEndTime || null,
       location_name: editLocation || null, notes: planNotes || null,
     }).eq("id", currentPlanId);
-    toast.success("Training day saved!");
+    // Also persist any coach notes
+    for (const item of planItems) {
+      await supabase.from("player_day_plan_items").update({ coach_note: item.coach_note || null }).eq("id", item.id);
+    }
     setSavingPlan(false);
+    setJustSaved(true);
+    toast.success("Plan saved!");
+    // Reset saved state after 3 seconds
+    setTimeout(() => setJustSaved(false), 3000);
   };
 
   /* ── Save as block ── */
@@ -387,6 +429,7 @@ const Training = () => {
     const remaining = planItems.filter(i => i.id !== itemId);
     const reordered = remaining.map((item, i) => ({ ...item, order_index: i }));
     setPlanItems(reordered);
+    setJustSaved(false);
     for (const item of reordered) {
       await supabase.from("player_day_plan_items").update({ order_index: item.order_index }).eq("id", item.id);
     }
@@ -958,19 +1001,23 @@ const Training = () => {
       {isCoachOrAdmin && planItems.length > 0 && (
         <div className="fixed bottom-0 left-0 right-0 bg-card/95 backdrop-blur-sm border-t border-border z-30 px-4 py-3">
           <div className="max-w-3xl mx-auto flex items-center justify-between gap-3">
-            <p className="font-display text-xs tracking-wider text-foreground">
-              {planItems.length} module{planItems.length !== 1 ? "s" : ""} · {totalDuration} min
+            <p className="font-body text-sm text-foreground">
+              {planItems.length} module{planItems.length !== 1 ? "s" : ""} · {totalDuration} min total
             </p>
-            <div className="flex items-center gap-2">
-              <button onClick={handleCancelDay}
-                className="p-2 rounded-lg border border-destructive/30 text-destructive hover:bg-destructive/10 transition-colors">
-                <Trash2 size={14} />
-              </button>
-              <button onClick={handleSavePlan} disabled={savingPlan}
-                className="px-5 py-2 rounded-xl bg-primary text-primary-foreground font-display text-xs tracking-wider hover:bg-primary/90 disabled:opacity-50 transition-colors flex items-center gap-1.5">
-                <Save size={14} /> {savingPlan ? "SAVING..." : "SAVE PLAN"}
-              </button>
-            </div>
+            <button onClick={handleSavePlan} disabled={savingPlan || justSaved}
+              className={`px-6 py-2.5 rounded-xl font-display text-xs tracking-wider transition-all flex items-center gap-2 ${
+                justSaved
+                  ? "bg-primary/80 text-primary-foreground"
+                  : "bg-primary text-primary-foreground hover:bg-primary/90"
+              } disabled:opacity-90`}>
+              {justSaved ? (
+                <><Check size={14} /> SAVED</>
+              ) : savingPlan ? (
+                <><Save size={14} className="animate-pulse" /> SAVING...</>
+              ) : (
+                <><Save size={14} /> SAVE PLAN</>
+              )}
+            </button>
           </div>
         </div>
       )}
