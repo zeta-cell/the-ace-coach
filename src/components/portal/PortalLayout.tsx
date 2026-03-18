@@ -25,8 +25,7 @@ const playerNav = [
 const coachNav = [
   { label: "Training Center", icon: LayoutDashboard, href: "/coach" },
   { label: "Players", icon: Users, href: "/coach/players" },
-  { label: "Modules", icon: BookOpen, href: "/coach/modules" },
-  { label: "Training Blocks", icon: Blocks, href: "/coach/blocks" },
+  { label: "Library", icon: BookOpen, href: "/coach/library" },
   { label: "Videos", icon: Video, href: "/coach/videos" },
   { label: "Calendar", icon: CalendarDays, href: "/coach/calendar" },
   { label: "Events", icon: Calendar, href: "/coach/events" },
