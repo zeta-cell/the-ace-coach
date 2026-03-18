@@ -3,7 +3,7 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion } from "framer-motion";
-import { ArrowLeft, Target, TrendingDown, Calendar, CalendarDays, Plus, Mail, Phone, MessageCircle, ChevronDown, ChevronUp, User, BookOpen, CheckCircle, Video, Dumbbell, Globe, Edit3, Save, X } from "lucide-react";
+import { ArrowLeft, Target, TrendingDown, Calendar, CalendarDays, Plus, Mail, Phone, MessageCircle, ChevronDown, ChevronUp, User, BookOpen, CheckCircle, Video, Dumbbell, Globe, Edit3, Save, X, Clock } from "lucide-react";
 import UpcomingSchedule from "@/components/portal/UpcomingSchedule";
 import { format, addDays } from "date-fns";
 import PortalLayout from "@/components/portal/PortalLayout";
@@ -30,6 +30,7 @@ const CoachPlayerDetail = () => {
   const [rackets, setRackets] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [infoOpen, setInfoOpen] = useState(false);
+  const [upcomingOpen, setUpcomingOpen] = useState(false);
   const [activePrograms, setActivePrograms] = useState<ActiveProgram[]>([]);
   const [expandedProgram, setExpandedProgram] = useState<string | null>(null);
   const [trainDrawerOpen, setTrainDrawerOpen] = useState(false);
@@ -302,27 +303,53 @@ const CoachPlayerDetail = () => {
             </Link>
           </div>
 
-          {/* Upcoming training timeline */}
+          {/* Upcoming training — collapsible */}
           {upcomingPlans.length > 0 && (
-            <div className="bg-card border border-border rounded-xl p-4 mb-6">
-              <h3 className="font-display text-sm tracking-wider text-muted-foreground mb-3">UPCOMING TRAINING (7 DAYS)</h3>
-              <div className="space-y-2">
-                {upcomingPlans.map(plan => (
-                  <Link key={plan.id} to={`/training?player=${playerId}&date=${plan.plan_date}`}
-                    className="flex items-center gap-3 p-2 rounded-lg hover:bg-secondary transition-colors">
-                    <div className="w-10 text-center">
-                      <p className="font-display text-xs text-primary">{format(new Date(plan.plan_date + "T00:00:00"), "EEE")}</p>
-                      <p className="font-display text-lg text-foreground">{format(new Date(plan.plan_date + "T00:00:00"), "d")}</p>
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="font-body text-sm text-foreground truncate">{plan.notes || "Training session"}</p>
-                      {plan.start_time && (
-                        <p className="text-xs font-body text-muted-foreground">{plan.start_time?.slice(0, 5)}</p>
-                      )}
-                    </div>
-                  </Link>
-                ))}
-              </div>
+            <div className="mb-6">
+              <button
+                onClick={() => setUpcomingOpen(!upcomingOpen)}
+                className="w-full flex items-center justify-between bg-card border border-border rounded-xl px-4 py-3 hover:bg-secondary/50 transition-colors"
+              >
+                <div className="flex items-center gap-2">
+                  <CalendarDays size={14} className="text-primary" />
+                  <span className="font-display text-[10px] tracking-wider text-muted-foreground">UPCOMING TRAINING</span>
+                  <span className="ml-1 px-2 py-0.5 rounded-full bg-primary/10 font-display text-[10px] text-primary">{upcomingPlans.length}</span>
+                </div>
+                {upcomingOpen ? <ChevronUp size={14} className="text-muted-foreground" /> : <ChevronDown size={14} className="text-muted-foreground" />}
+              </button>
+              {upcomingOpen && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  className="mt-2 space-y-1.5 overflow-hidden"
+                >
+                  {upcomingPlans.map((plan, idx) => (
+                    <Link key={plan.id} to={`/training?player=${playerId}&date=${plan.plan_date}`}>
+                      <motion.div
+                        initial={{ opacity: 0, x: -8 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: idx * 0.05 }}
+                        className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-card border border-border hover:border-primary/30 transition-colors"
+                      >
+                        <div className="w-10 h-10 rounded-lg bg-primary/10 flex flex-col items-center justify-center shrink-0">
+                          <span className="font-display text-[9px] tracking-wider text-primary leading-none">{format(new Date(plan.plan_date + "T00:00:00"), "EEE").toUpperCase()}</span>
+                          <span className="font-display text-base text-foreground leading-tight">{format(new Date(plan.plan_date + "T00:00:00"), "d")}</span>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-body text-sm text-foreground truncate">{plan.notes || "Training session"}</p>
+                          {plan.start_time && (
+                            <div className="flex items-center gap-1 mt-0.5">
+                              <Clock size={10} className="text-muted-foreground" />
+                              <span className="text-[10px] font-body text-muted-foreground">{plan.start_time?.slice(0, 5)}</span>
+                            </div>
+                          )}
+                        </div>
+                        <ChevronDown size={12} className="text-muted-foreground -rotate-90 shrink-0" />
+                      </motion.div>
+                    </Link>
+                  ))}
+                </motion.div>
+              )}
             </div>
           )}
 
