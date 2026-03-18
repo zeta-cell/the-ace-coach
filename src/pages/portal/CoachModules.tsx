@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Search, Edit2, Trash2, X, Clock, Tag, Play, Upload, Video, Loader2 } from "lucide-react";
+import { Plus, Search, Edit2, Trash2, X, Clock, Tag, Play, Upload, Video, Loader2, ChevronDown } from "lucide-react";
 import PortalLayout from "@/components/portal/PortalLayout";
 import CoachVideoModal from "@/components/portal/CoachVideoModal";
 import type { Database } from "@/integrations/supabase/types";
@@ -81,6 +81,7 @@ const CoachModules = () => {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState(emptyForm);
   const [uploadingVideoId, setUploadingVideoId] = useState<string | null>(null);
+  const [expandedModuleId, setExpandedModuleId] = useState<string | null>(null);
   const [videoModalOpen, setVideoModalOpen] = useState(false);
   const [videoModalUrl, setVideoModalUrl] = useState("");
   const [videoModalTitle, setVideoModalTitle] = useState("");
@@ -282,7 +283,13 @@ const CoachModules = () => {
                     </span>
                     <h3 className="font-display text-lg text-foreground mt-1">{mod.title}</h3>
                   </div>
-                  <div className="flex gap-1">
+                  <div className="flex gap-1 items-center">
+                    <button
+                      onClick={() => setExpandedModuleId(expandedModuleId === mod.id ? null : mod.id)}
+                      className="p-1.5 rounded-lg hover:bg-secondary transition-colors"
+                    >
+                      <ChevronDown size={14} className={`text-muted-foreground transition-transform duration-200 ${expandedModuleId === mod.id ? "rotate-180" : ""}`} />
+                    </button>
                     <button onClick={() => handleEdit(mod)} className="p-1.5 rounded-lg hover:bg-secondary transition-colors">
                       <Edit2 size={14} className="text-muted-foreground" />
                     </button>
@@ -307,9 +314,39 @@ const CoachModules = () => {
                     </button>
                   )}
                 </div>
-                {mod.description && (
-                  <p className="text-xs font-body text-muted-foreground mt-2 line-clamp-2">{mod.description}</p>
-                )}
+                <AnimatePresence>
+                  {expandedModuleId === mod.id && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className="overflow-hidden"
+                    >
+                      <div className="mt-3 pt-3 border-t border-border space-y-2">
+                        {mod.description && (
+                          <p className="text-xs font-body text-muted-foreground">{mod.description}</p>
+                        )}
+                        {mod.instructions && (
+                          <div>
+                            <span className="text-[10px] font-display text-foreground/70 uppercase tracking-wider">Instructions</span>
+                            <p className="text-xs font-body text-muted-foreground mt-0.5 whitespace-pre-line">{mod.instructions}</p>
+                          </div>
+                        )}
+                        {mod.tags && mod.tags.length > 0 && (
+                          <div className="flex flex-wrap gap-1">
+                            {mod.tags.map(tag => (
+                              <span key={tag} className="text-[10px] font-body px-1.5 py-0.5 rounded bg-secondary text-muted-foreground">{tag}</span>
+                            ))}
+                          </div>
+                        )}
+                        {mod.equipment && mod.equipment.length > 0 && (
+                          <p className="text-[10px] font-body text-muted-foreground">Equipment: {mod.equipment.join(", ")}</p>
+                        )}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
                 {/* Coach video upload */}
                 <div className="mt-2 flex items-center gap-2">
                   {!mod.coach_video_url ? (
