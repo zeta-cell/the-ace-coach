@@ -7,6 +7,7 @@ import {
   Check, ChevronDown, ChevronUp, ChevronLeft, ChevronRight,
   Clock, Layers, CalendarDays, MapPin, Save, Trash2, Plus, X, Video,
   Minus, Search, User, Sun, Cloud, CloudRain, CloudSnow, Wind, ExternalLink,
+  GripVertical,
 } from "lucide-react";
 import {
   format, startOfWeek, addDays, isSameDay, parseISO, isValid,
