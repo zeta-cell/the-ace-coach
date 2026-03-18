@@ -326,7 +326,10 @@ const SelectionStep = ({
   filteredBlocks, filteredModules, selectedBlockId, setSelectedBlockId,
   selectedModuleIds, toggleModule, selectedBlock, selectedModules, totalDuration,
   onRemoveModule, onClearSelection, canProceed, onNext,
-}: SelectionStepProps) => (
+}: SelectionStepProps) => {
+  const [expandedBlockId, setExpandedBlockId] = useState<string | null>(null);
+
+  return (
   <>
     {/* Date */}
     <div>
