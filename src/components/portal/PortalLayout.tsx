@@ -126,8 +126,8 @@ const PortalLayout = ({ children }: { children: React.ReactNode }) => {
             <>
               {/* Left two: Players, Calendar */}
               {[
+                { label: "Training Center", icon: LayoutDashboard, href: "/coach" },
                 { label: "Players", icon: Users, href: "/coach/players" },
-                { label: "Calendar", icon: CalendarDays, href: "/coach/calendar" },
               ].map((item) => {
                 const isActive = location.pathname === item.href;
                 return (
