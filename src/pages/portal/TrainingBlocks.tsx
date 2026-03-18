@@ -75,7 +75,7 @@ const MODULE_CATEGORY_COLORS: Record<string, string> = {
   video: "bg-pink-500", tennis_drill: "bg-emerald-500",
 };
 
-const TrainingBlocksPage = () => {
+export const TrainingBlocksContent = ({ embedded = false }: { embedded?: boolean }) => {
   const { user, role } = useAuth();
   const [blocks, setBlocks] = useState<TrainingBlock[]>([]);
   const [search, setSearch] = useState("");
@@ -220,8 +220,7 @@ const TrainingBlocksPage = () => {
     return matchesSearch && matchesCat;
   });
 
-  return (
-    <PortalLayout>
+  const content = (
       <div className="max-w-5xl mx-auto">
         <div className="flex items-center justify-between mb-6">
           <h1 className="font-display text-3xl text-foreground">TRAINING BLOCKS</h1>
@@ -488,8 +487,11 @@ const TrainingBlocksPage = () => {
           </div>
         )}
       </div>
-    </PortalLayout>
   );
+
+  if (embedded) return content;
+  return <PortalLayout>{content}</PortalLayout>;
 };
 
+const TrainingBlocksPage = () => <TrainingBlocksContent />;
 export default TrainingBlocksPage;

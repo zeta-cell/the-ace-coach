@@ -71,7 +71,7 @@ const emptyForm = {
   is_shared: false,
 };
 
-const CoachModules = () => {
+export const CoachModulesContent = ({ embedded = false }: { embedded?: boolean }) => {
   const { user, role } = useAuth();
   const [modules, setModules] = useState<Module[]>([]);
   const [search, setSearch] = useState("");
@@ -214,8 +214,7 @@ const CoachModules = () => {
     return matchSearch && matchCat;
   });
 
-  return (
-    <PortalLayout>
+  const content = (
       <div className="max-w-4xl mx-auto">
         <div className="flex items-center justify-between mb-4">
           <h1 className="font-display text-3xl text-foreground">TRAINING LIBRARY</h1>
@@ -492,8 +491,11 @@ const CoachModules = () => {
           coachName={user ? "You" : undefined}
         />
       </div>
-    </PortalLayout>
   );
+
+  if (embedded) return content;
+  return <PortalLayout>{content}</PortalLayout>;
 };
 
+const CoachModules = () => <CoachModulesContent />;
 export default CoachModules;
