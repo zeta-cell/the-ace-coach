@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { X, Search, Layers, BookOpen, Plus, Check, ArrowLeft, ArrowRight, Clock, User, CalendarDays } from "lucide-react";
+import { X, Search, Layers, BookOpen, Plus, Check, ArrowLeft, ArrowRight, Clock, User, CalendarDays, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 import { format } from "date-fns";
@@ -326,7 +326,10 @@ const SelectionStep = ({
   filteredBlocks, filteredModules, selectedBlockId, setSelectedBlockId,
   selectedModuleIds, toggleModule, selectedBlock, selectedModules, totalDuration,
   onRemoveModule, onClearSelection, canProceed, onNext,
-}: SelectionStepProps) => (
+}: SelectionStepProps) => {
+  const [expandedBlockId, setExpandedBlockId] = useState<string | null>(null);
+
+  return (
   <>
     {/* Date */}
     <div>
@@ -460,26 +463,47 @@ const SelectionStep = ({
         ) : (
           filteredBlocks.map(b => {
             const isSelected = selectedBlockId === b.id;
+            const isExpanded = expandedBlockId === b.id;
             return (
-              <button key={b.id} onClick={() => setSelectedBlockId(b.id)}
-                className={`w-full text-left p-3 rounded-lg border border-l-4 transition-all flex items-center gap-3 ${
+              <div key={b.id}
+                className={`rounded-lg border border-l-4 transition-all overflow-hidden ${
                   CATEGORY_BORDER_COLORS[b.category?.toLowerCase()] || "border-l-muted-foreground"
                 } ${
                   isSelected ? "border-primary bg-primary/10" : "border-border hover:border-primary/40"
                 }`}
               >
-                <div className="flex-1 min-w-0">
-                  <p className="font-display text-xs text-foreground">{b.title}</p>
-                  <p className="text-[10px] font-body text-muted-foreground">
-                    {b.category} · {b.duration_minutes}min · {b.module_ids?.length || 0} modules
-                  </p>
+                <div className="flex items-center gap-3 p-3">
+                  <div className="flex-1 min-w-0">
+                    <p className="font-display text-xs text-foreground">{b.title}</p>
+                    <p className="text-[10px] font-body text-muted-foreground">
+                      {b.category} · {b.duration_minutes}min · {b.module_ids?.length || 0} modules
+                    </p>
+                  </div>
+                  <button onClick={() => setExpandedBlockId(isExpanded ? null : b.id)}
+                    className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground transition-colors shrink-0">
+                    <ChevronDown size={14} className={`transition-transform ${isExpanded ? "rotate-180" : ""}`} />
+                  </button>
+                  <button onClick={() => setSelectedBlockId(isSelected ? "" : b.id)}
+                    className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-all ${
+                      isSelected ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground hover:text-foreground"
+                    }`}>
+                    {isSelected ? <Check size={14} /> : <Plus size={14} />}
+                  </button>
                 </div>
-                <div className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-all ${
-                  isSelected ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground hover:text-foreground"
-                }`}>
-                  {isSelected ? <Check size={14} /> : <Plus size={14} />}
-                </div>
-              </button>
+                <AnimatePresence>
+                  {isExpanded && (
+                    <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
+                      <div className="px-3 pb-3 pt-1 border-t border-border space-y-1">
+                        <div className="flex flex-wrap gap-1.5 text-[9px] font-body text-muted-foreground">
+                          <span className="flex items-center gap-0.5"><Clock size={9} /> {b.duration_minutes} min</span>
+                          <span>·</span>
+                          <span>{b.module_ids?.length || 0} modules</span>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
             );
           })
         )
@@ -529,7 +553,8 @@ const SelectionStep = ({
       REVIEW PLAN <ArrowRight size={16} />
     </button>
   </>
-);
+  );
+};
 
 /* ─── Step 2: Review ─── */
 interface ReviewStepProps {
