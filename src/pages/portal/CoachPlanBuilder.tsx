@@ -20,7 +20,7 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { ArrowLeft, Plus, X, GripVertical, Clock, Save, Check, Search, CalendarDays } from "lucide-react";
+import { ArrowLeft, Plus, X, GripVertical, Clock, Save, Check, Search, CalendarDays, MapPin, ChevronDown, ChevronUp, FileText } from "lucide-react";
 import { toast } from "sonner";
 import { format, addDays, startOfWeek, startOfMonth, endOfMonth, isSameDay, isSameMonth, getWeek, subMonths, addMonths } from "date-fns";
 import PortalLayout from "@/components/portal/PortalLayout";
