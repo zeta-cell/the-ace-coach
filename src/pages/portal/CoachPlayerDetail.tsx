@@ -537,8 +537,6 @@ const CoachPlayerDetail = () => {
             </div>
           )}
 
-          {/* Upcoming schedule */}
-          {playerId && <UpcomingSchedule playerId={playerId} linkPrefix="coach-plan" showCoach={false} daysAhead={21} />}
 
           {/* Quick plan link */}
           <Link to={`/coach/plan/${playerId}`}
