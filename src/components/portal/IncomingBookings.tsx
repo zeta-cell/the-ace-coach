@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Calendar, MapPin, Users, Link2, Copy, MessageSquare } from "lucide-react";
 import { format, startOfWeek, endOfWeek } from "date-fns";
 import { toast } from "sonner";
+import { Link } from "react-router-dom";
 import GroupFeedbackDrawer from "./GroupFeedbackDrawer";
 
 interface Booking {
@@ -268,7 +269,7 @@ const IncomingBookings = () => {
 
               <div className="space-y-1.5 mb-3">
                 {g.participants.map(p => (
-                  <div key={p.id} className="flex items-center gap-2">
+                  <Link key={p.id} to={`/coach/players/${p.player_id}`} className="flex items-center gap-2 hover:bg-secondary/50 rounded-lg px-1 py-0.5 -mx-1 transition-colors">
                     <div className="w-7 h-7 rounded-full bg-primary/20 overflow-hidden flex items-center justify-center shrink-0">
                       {p.avatar ? (
                         <img src={p.avatar} alt="" className="w-full h-full object-cover" />
@@ -280,7 +281,7 @@ const IncomingBookings = () => {
                     <span className={`text-[9px] font-display px-2 py-0.5 rounded-full uppercase ${
                       p.status === "confirmed" ? "bg-green-500/10 text-green-400" : "bg-yellow-500/10 text-yellow-400"
                     }`}>{p.status}</span>
-                  </div>
+                  </Link>
                 ))}
                 {Array.from({ length: emptySlots }).map((_, i) => (
                   <div key={`empty-${i}`} className="flex items-center gap-2">
@@ -320,15 +321,17 @@ const IncomingBookings = () => {
           return (
             <div key={b.id} className="bg-card border border-border rounded-xl p-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-primary/20 overflow-hidden flex items-center justify-center shrink-0">
+                <Link to={`/coach/players/${b.player_id}`} className="w-10 h-10 rounded-full bg-primary/20 overflow-hidden flex items-center justify-center shrink-0 hover:ring-2 hover:ring-primary/40 transition-all">
                   {b.player_avatar ? (
                     <img src={b.player_avatar} alt="" className="w-full h-full object-cover" />
                   ) : (
                     <span className="font-display text-sm text-primary">{b.player_name.charAt(0)}</span>
                   )}
-                </div>
+                </Link>
                 <div className="flex-1 min-w-0">
-                  <p className="font-display text-sm text-foreground">{b.player_name}</p>
+                  <Link to={`/coach/players/${b.player_id}`} className="font-display text-sm text-foreground hover:text-primary transition-colors">
+                    {b.player_name}
+                  </Link>
                   <div className="flex items-center gap-2 text-xs font-body text-muted-foreground">
                     <span>{format(new Date(b.booking_date + "T00:00:00"), "EEE, d MMM")}</span>
                     <span>·</span>
