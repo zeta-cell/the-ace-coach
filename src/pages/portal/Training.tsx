@@ -902,23 +902,26 @@ const Training = () => {
                                     {expandedBlockGoal === goal && (
                                       <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }}
                                         className="overflow-hidden">
-                                        <div className="space-y-1.5 pl-2 pb-2">
+                                        <div className="space-y-2 pl-1 pb-2">
                                           {grouped[goal].map(block => {
                                             const totalDur = block.module_durations?.reduce((s, d) => s + d, 0) || 0;
                                             return (
-                                              <button key={block.id} onClick={() => { handleApplyBlock(block); setShowInlineBlocks(false); }}
-                                                className="w-full text-left p-3 rounded-xl border border-border hover:border-primary/40 transition-colors bg-secondary/40">
-                                                <p className="font-display text-xs text-foreground truncate">{block.title}</p>
-                                                {block.description && (
-                                                  <p className="text-[10px] font-body text-muted-foreground line-clamp-1 mt-0.5">{block.description}</p>
-                                                )}
-                                                <div className="flex items-center gap-2 text-[9px] font-body text-muted-foreground mt-1">
-                                                  <span>{block.module_ids.length} modules</span>
-                                                  <span>·</span>
-                                                  <span>{totalDur} min</span>
-                                                  {block.is_system && <span className="text-primary/60">SYSTEM</span>}
+                                              <div key={block.id} className="flex items-center gap-3 p-3 rounded-xl border border-border bg-secondary/40">
+                                                <div className="flex-1 min-w-0">
+                                                  <p className="font-display text-xs text-foreground truncate">{block.title}</p>
+                                                  {block.description && (
+                                                    <p className="text-[10px] font-body text-muted-foreground line-clamp-1 mt-0.5">{block.description}</p>
+                                                  )}
+                                                  <div className="flex items-center gap-2 text-[9px] font-body text-muted-foreground mt-1">
+                                                    <span className="flex items-center gap-0.5"><Clock size={9} /> {totalDur}m</span>
+                                                    <span className="uppercase px-1.5 py-0.5 rounded bg-secondary font-display text-[8px] tracking-wider">{goal}</span>
+                                                  </div>
                                                 </div>
-                                              </button>
+                                                <button onClick={() => { handleApplyBlock(block); setShowInlineBlocks(false); }}
+                                                  className="w-7 h-7 rounded-full bg-primary text-primary-foreground flex items-center justify-center shrink-0 hover:bg-primary/90 transition-colors">
+                                                  <Plus size={14} />
+                                                </button>
+                                              </div>
                                             );
                                           })}
                                         </div>
