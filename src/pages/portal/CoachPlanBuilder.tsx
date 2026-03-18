@@ -444,7 +444,7 @@ const CoachPlanBuilder = () => {
       .update({ duration_minutes: duration })
       .eq("id", moduleId);
     if (error) {
-      toast.error("Fehler beim Speichern");
+      toast.error("Failed to save duration");
     } else {
       toast.success("Saved", { duration: 1500 });
     }
