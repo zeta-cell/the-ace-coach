@@ -324,7 +324,8 @@ const SelectionStep = ({
   date, setDate, playerId, setPlayerId, prefilledPlayerId, players,
   assignType, setAssignType, search, setSearch, categoryFilter, setCategoryFilter,
   filteredBlocks, filteredModules, selectedBlockId, setSelectedBlockId,
-  selectedModuleIds, toggleModule, canProceed, onNext,
+  selectedModuleIds, toggleModule, selectedBlock, selectedModules, totalDuration,
+  onRemoveModule, onClearSelection, canProceed, onNext,
 }: SelectionStepProps) => (
   <>
     {/* Date */}
