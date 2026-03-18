@@ -312,6 +312,7 @@ interface SelectionStepProps {
   search: string; setSearch: (v: string) => void;
   categoryFilter: string; setCategoryFilter: (v: string) => void;
   filteredBlocks: TrainingBlock[]; filteredModules: ModuleItem[];
+  allModules: ModuleItem[];
   selectedBlockId: string; setSelectedBlockId: (v: string) => void;
   selectedModuleIds: string[]; toggleModule: (id: string) => void;
   selectedBlock?: TrainingBlock;
