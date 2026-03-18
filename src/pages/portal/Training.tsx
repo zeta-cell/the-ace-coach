@@ -36,7 +36,21 @@ const CATEGORY_DOT: Record<string, string> = {
   tactical: "bg-amber-500", technique: "bg-primary",
 };
 
-const MODULE_CATEGORIES = ["All", "Padel", "Tennis", "Fitness", "Mental", "Recovery", "Tactical", "Warm Up"] as const;
+const MODULE_CATEGORIES = ["All", "Warm Up", "Padel", "Tennis", "Footwork", "Fitness", "Strength", "Mental", "Recovery", "Tactical", "Cool Down"] as const;
+
+/* ── Category sort order for auto-placement ── */
+const CATEGORY_SORT_ORDER: Record<string, number> = {
+  warm_up: 0,
+  footwork: 1,
+  padel_drill: 2, padel: 2,
+  tennis: 3,
+  tactical: 4, technique: 4,
+  fitness: 5, strength: 5,
+  mental: 6,
+  recovery: 7,
+  cool_down: 8,
+  nutrition: 9, video: 9,
+};
 
 /* ── weather helpers ── */
 const getWeatherLabel = (code: number) => {
