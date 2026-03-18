@@ -38,6 +38,9 @@ const CoachPlayerDetail = () => {
   const [editMode, setEditMode] = useState(false);
   const [editData, setEditData] = useState<any>(null);
   const [saving, setSaving] = useState(false);
+  const [quickDate, setQuickDate] = useState(new Date());
+  const [quickDayPlan, setQuickDayPlan] = useState<any>(null);
+  const [quickDayLoading, setQuickDayLoading] = useState(false);
 
   useEffect(() => {
     if (user && playerId) fetchAll();
