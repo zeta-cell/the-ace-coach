@@ -482,6 +482,22 @@ const Training = () => {
     });
   }, [allModules, moduleCatFilter, moduleSearch]);
 
+  const BLOCK_CATEGORIES = ["All", "Padel", "Tennis", "Fitness", "Mental", "Tactical", "Recovery"] as const;
+  const DIFFICULTY_COLORS: Record<string, string> = {
+    beginner: "bg-green-500/20 text-green-400",
+    intermediate: "bg-yellow-500/20 text-yellow-400",
+    advanced: "bg-orange-500/20 text-orange-400",
+    expert: "bg-red-500/20 text-red-400",
+  };
+
+  const filteredBlocks = useMemo(() => {
+    return allBlocks.filter(b => {
+      const matchCat = blockCatFilter === "All" || b.category?.toLowerCase().includes(blockCatFilter.toLowerCase()) || b.sport?.toLowerCase().includes(blockCatFilter.toLowerCase()) || b.goal?.toLowerCase().includes(blockCatFilter.toLowerCase());
+      const matchSearch = !blockSearch || b.title.toLowerCase().includes(blockSearch.toLowerCase()) || b.description?.toLowerCase().includes(blockSearch.toLowerCase());
+      return matchCat && matchSearch;
+    });
+  }, [allBlocks, blockCatFilter, blockSearch]);
+
   // Month calendar days
   const monthStart = startOfMonth(calMonth);
   const mEnd = endOfMonth(calMonth);
