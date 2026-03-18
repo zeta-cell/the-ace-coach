@@ -145,8 +145,7 @@ const PortalLayout = ({ children }: { children: React.ReactNode }) => {
               </button>
               {/* Right two: Library, Videos */}
               {[
-                { label: "Modules", icon: BookOpen, href: "/coach/modules" },
-                { label: "Training Blocks", icon: Blocks, href: "/coach/blocks" },
+                { label: "Library", icon: BookOpen, href: "/coach/library" },
                 { label: "Videos", icon: Video, href: "/coach/videos" },
               ].map((item) => {
                 const isActive = location.pathname === item.href;
