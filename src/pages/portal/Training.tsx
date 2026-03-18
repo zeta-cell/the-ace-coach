@@ -457,6 +457,18 @@ const Training = () => {
     navigate(`/coach/plan/${targetPlayerId}?date=${format(selectedDay, "yyyy-MM-dd")}`);
   };
 
+  const toggleBlockSelection = (blockId: string) => {
+    setSelectedBlockIds(prev => {
+      const next = new Set(prev);
+      if (next.has(blockId)) next.delete(blockId);
+      else next.add(blockId);
+      return next;
+    });
+  };
+
+  const selectedBlocks = allBlocks.filter(b => selectedBlockIds.has(b.id));
+  const selectedBlocksTotalDur = selectedBlocks.reduce((s, b) => s + (b.module_durations?.reduce((a, d) => a + d, 0) || 0), 0);
+
   const totalDuration = planItems.reduce((sum, i) => sum + (i.module.duration_minutes || 0), 0);
 
   // Filtered modules for add panel
