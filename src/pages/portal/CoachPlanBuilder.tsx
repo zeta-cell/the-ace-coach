@@ -48,6 +48,10 @@ interface ModuleItem {
   title: string;
   category: ModuleCategory;
   duration_minutes: number | null;
+  description?: string | null;
+  instructions?: string | null;
+  difficulty?: string | null;
+  equipment?: string[] | null;
 }
 
 interface PlanItem {
