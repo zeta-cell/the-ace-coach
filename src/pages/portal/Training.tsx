@@ -1238,66 +1238,90 @@ const Training = () => {
                     </div>
                   </>
                 ) : (
-                  /* Blocks tab */
-                  <div className="space-y-1.5">
-                    {allBlocks.map(block => {
-                      const bDur = block.module_durations?.reduce((s, d) => s + d, 0) || 0;
-                      const isSelected = selectedBlockIds.has(block.id);
-                      const isExpanded = expandedBlockDetail === block.id;
-                      return (
-                        <div key={block.id} className={`rounded-xl border overflow-hidden transition-colors ${isSelected ? "border-primary bg-primary/10" : "border-border"}`}>
-                          <div className="flex items-center gap-3 p-3">
-                            <div className={`w-1 self-stretch rounded-full shrink-0 ${CATEGORY_DOT[block.category] || "bg-muted-foreground"}`} />
-                            <div className="flex-1 min-w-0">
-                              <p className="font-display text-xs text-foreground truncate">{block.title}</p>
-                              <p className="text-[10px] font-body text-muted-foreground mt-0.5">
-                                {block.category} · {bDur}min · {block.module_ids.length} modules
-                              </p>
+                  /* Blocks tab — card grid */
+                  <div className="space-y-3">
+                    {/* Search */}
+                    <div className="relative">
+                      <Search size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                      <input value={blockSearch} onChange={e => setBlockSearch(e.target.value)}
+                        placeholder="Search blocks..."
+                        className="w-full pl-9 pr-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-muted-foreground" />
+                    </div>
+
+                    {/* Category chips */}
+                    <div className="flex flex-wrap gap-1.5">
+                      {BLOCK_CATEGORIES.map(cat => (
+                        <button key={cat} onClick={() => setBlockCatFilter(cat)}
+                          className={`px-2.5 py-1 rounded-lg font-display text-[9px] tracking-wider transition-colors ${
+                            blockCatFilter === cat ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground hover:text-foreground"
+                          }`}>{cat.toUpperCase()}</button>
+                      ))}
+                    </div>
+
+                    {/* Card grid */}
+                    <div className="grid grid-cols-2 gap-2">
+                      {filteredBlocks.map(block => {
+                        const bDur = block.module_durations?.reduce((s, d) => s + d, 0) || 0;
+                        const isSelected = selectedBlockIds.has(block.id);
+                        const isExpanded = expandedBlockDetail === block.id;
+                        return (
+                          <div key={block.id} className={`rounded-xl border overflow-hidden transition-colors ${isSelected ? "border-primary bg-primary/10" : "border-border bg-secondary/40"}`}>
+                            <div className="p-3 space-y-2">
+                              <div className="flex items-start gap-2">
+                                <div className={`w-1 h-8 rounded-full shrink-0 mt-0.5 ${CATEGORY_DOT[block.category] || "bg-muted-foreground"}`} />
+                                <p className="font-display text-[11px] text-foreground leading-tight line-clamp-2">{block.title}</p>
+                              </div>
+                              <div className="flex flex-wrap gap-1">
+                                <span className={`px-1.5 py-0.5 rounded font-display text-[8px] tracking-wider ${DIFFICULTY_COLORS[block.difficulty] || "bg-secondary text-muted-foreground"}`}>
+                                  {block.difficulty?.toUpperCase() || "—"}
+                                </span>
+                                <span className="px-1.5 py-0.5 rounded bg-secondary font-display text-[8px] tracking-wider text-muted-foreground uppercase">
+                                  {block.sport}
+                                </span>
+                              </div>
+                              <div className="flex items-center justify-between text-[9px] font-body text-muted-foreground">
+                                <span className="flex items-center gap-0.5"><Clock size={9} /> {bDur}m</span>
+                                <span>{block.module_ids.length} mod</span>
+                              </div>
+                              <div className="flex items-center justify-between pt-1 border-t border-border">
+                                <button onClick={() => setExpandedBlockDetail(isExpanded ? null : block.id)}
+                                  className="p-1 rounded text-muted-foreground hover:text-foreground transition-colors">
+                                  <ChevronDown size={12} className={`transition-transform ${isExpanded ? "rotate-180" : ""}`} />
+                                </button>
+                                <button onClick={() => toggleBlockSelection(block.id)}
+                                  className={`w-6 h-6 rounded-full flex items-center justify-center transition-colors ${
+                                    isSelected ? "bg-primary text-primary-foreground" : "bg-secondary border border-border text-muted-foreground hover:border-primary hover:text-primary"
+                                  }`}>
+                                  {isSelected ? <Check size={12} /> : <Plus size={12} />}
+                                </button>
+                              </div>
                             </div>
-                            <button onClick={() => setExpandedBlockDetail(isExpanded ? null : block.id)}
-                              className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground transition-colors shrink-0">
-                              <ChevronDown size={14} className={`transition-transform ${isExpanded ? "rotate-180" : ""}`} />
-                            </button>
-                            <button onClick={() => toggleBlockSelection(block.id)}
-                              className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-colors ${
-                                isSelected ? "bg-primary text-primary-foreground" : "bg-secondary border border-border text-muted-foreground hover:border-primary hover:text-primary"
-                              }`}>
-                              {isSelected ? <Check size={14} /> : <Plus size={14} />}
-                            </button>
-                          </div>
-                          <AnimatePresence>
-                            {isExpanded && (
-                              <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
-                                <div className="px-3 pb-3 pt-1 border-t border-border space-y-1.5">
-                                  {block.description && <p className="text-[10px] font-body text-muted-foreground">{block.description}</p>}
-                                  <div className="flex flex-wrap gap-1.5 text-[9px] font-body text-muted-foreground">
-                                    <span className="flex items-center gap-0.5"><Clock size={9} /> {bDur} min</span>
-                                    <span>·</span>
-                                    <span>{block.difficulty}</span>
-                                    <span>·</span>
-                                    <span className="uppercase">{block.sport}</span>
+                            <AnimatePresence>
+                              {isExpanded && (
+                                <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
+                                  <div className="px-3 pb-3 pt-1 border-t border-border space-y-1">
+                                    {block.description && <p className="text-[9px] font-body text-muted-foreground">{block.description}</p>}
+                                    <p className="text-[9px] font-body text-muted-foreground">Goal: {block.goal}</p>
                                   </div>
-                                  {block.module_ids.length > 0 && (
-                                    <p className="text-[9px] font-body text-muted-foreground">{block.module_ids.length} modules included</p>
-                                  )}
-                                </div>
-                              </motion.div>
-                            )}
-                          </AnimatePresence>
-                        </div>
-                      );
-                    })}
-                    {allBlocks.length === 0 && (
-                      <p className="text-xs font-body text-muted-foreground text-center py-6">No blocks available</p>
+                                </motion.div>
+                              )}
+                            </AnimatePresence>
+                          </div>
+                        );
+                      })}
+                    </div>
+                    {filteredBlocks.length === 0 && (
+                      <p className="text-xs font-body text-muted-foreground text-center py-6">No blocks found</p>
                     )}
-                    {/* Apply selected blocks button */}
+
+                    {/* Apply selected */}
                     {selectedBlockIds.size > 0 && (
                       <button onClick={async () => {
                         for (const block of selectedBlocks) { await handleApplyBlock(block); }
                         setSelectedBlockIds(new Set());
                         setShowAddPanel(false);
                       }}
-                        className="w-full mt-3 py-3 rounded-xl bg-primary text-primary-foreground font-display text-xs tracking-wider hover:bg-primary/90 transition-colors flex items-center justify-center gap-2">
+                        className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-display text-xs tracking-wider hover:bg-primary/90 transition-colors flex items-center justify-center gap-2">
                         REVIEW PLAN <ChevronRight size={14} />
                       </button>
                     )}
