@@ -429,6 +429,7 @@ const Training = () => {
     const remaining = planItems.filter(i => i.id !== itemId);
     const reordered = remaining.map((item, i) => ({ ...item, order_index: i }));
     setPlanItems(reordered);
+    setJustSaved(false);
     for (const item of reordered) {
       await supabase.from("player_day_plan_items").update({ order_index: item.order_index }).eq("id", item.id);
     }
