@@ -211,20 +211,12 @@ const PortalLayout = ({ children }: { children: React.ReactNode }) => {
         </div>
       </main>
 
-      {/* Coach FAB */}
+      {/* Coach QuickAdd Drawer (triggered from bottom nav) */}
       {role === "coach" && (
-        <>
-          <button
-            onClick={() => setFabDrawerOpen(true)}
-            className="fixed bottom-20 md:bottom-6 right-4 z-50 w-14 h-14 rounded-full bg-primary text-primary-foreground shadow-lg hover:bg-primary/90 transition-colors flex items-center justify-center"
-          >
-            <Plus size={24} />
-          </button>
-          <QuickAddTrainingDrawer
-            open={fabDrawerOpen}
-            onClose={() => setFabDrawerOpen(false)}
-          />
-        </>
+        <QuickAddTrainingDrawer
+          open={fabDrawerOpen}
+          onClose={() => setFabDrawerOpen(false)}
+        />
       )}
     </div>
   );
