@@ -292,7 +292,7 @@ const QuickAddTrainingDrawer = ({
                 disabled={saving || !playerId || !date || (assignType === "block" ? !selectedBlockId : selectedModuleIds.length === 0)}
                 className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-display text-sm tracking-wider hover:bg-primary/90 transition-colors disabled:opacity-50"
               >
-                {saving ? "SAVING..." : "ASSIGN TRAINING"}
+                {saving ? "SAVING..." : "CREATE TRAINING"}
               </button>
             </div>
           </motion.div>

@@ -290,7 +290,7 @@ const CoachPlayerDetail = () => {
           <div className="grid grid-cols-3 gap-2 mb-6">
             <button onClick={() => setTrainDrawerOpen(true)}
               className="py-2.5 rounded-xl bg-primary text-primary-foreground font-display text-xs tracking-widest hover:bg-primary/90 transition-colors flex items-center justify-center gap-2">
-              <Dumbbell size={14} /> ASSIGN TRAINING
+              <Dumbbell size={14} /> CREATE TRAINING
             </button>
             <button onClick={() => navigate(`/messages?to=${playerId}`)}
               className="py-2.5 rounded-xl bg-card border border-border text-foreground font-display text-xs tracking-widest hover:bg-secondary transition-colors flex items-center justify-center gap-2">
