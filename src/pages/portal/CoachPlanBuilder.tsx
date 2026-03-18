@@ -419,7 +419,7 @@ const CoachPlanBuilder = () => {
         return;
         return;
       }
-      toast.success("Modul entfernt", { duration: 1500 });
+      toast.success("Module removed", { duration: 1500 });
 
       // If no items left, delete the plan itself
       const remaining = prev.filter((i) => i.tempId !== tempId);
