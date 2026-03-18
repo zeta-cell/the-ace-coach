@@ -967,6 +967,58 @@ const CoachCalendar = () => {
             </motion.div>
           )}
         </AnimatePresence>
+
+        {/* Selected day bookings — shown below calendar on mobile & desktop */}
+        {selectedDay && selectedDayBookings.length > 0 && (
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-2">
+            <h3 className="font-display text-sm tracking-wider text-foreground">
+              BOOKINGS — {format(new Date(selectedDay + "T00:00:00"), "EEE d MMM").toUpperCase()}
+            </h3>
+            {selectedDayBookings.map(b => (
+              <Link key={b.id} to={`/coach/players/${b.player_id}`}
+                className="flex items-center gap-3 p-3 rounded-xl bg-card border border-border hover:border-primary/40 transition-colors">
+                <div className="w-10 h-10 rounded-full bg-primary/20 overflow-hidden flex items-center justify-center shrink-0">
+                  {b.player_avatar ? (
+                    <img src={b.player_avatar} alt="" className="w-full h-full object-cover" />
+                  ) : (
+                    <span className="font-display text-sm text-primary">{b.player_name.charAt(0)}</span>
+                  )}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-display text-sm text-foreground">{b.player_name}</p>
+                  <div className="flex items-center gap-2 text-xs font-body text-muted-foreground">
+                    <span className="flex items-center gap-1"><Clock size={11} className="text-primary" />{b.start_time.slice(0, 5)} – {b.end_time.slice(0, 5)}</span>
+                    <span>·</span>
+                    <span>{b.package_title}</span>
+                  </div>
+                  <div className="flex items-center gap-2 mt-0.5">
+                    <span className={`text-[9px] font-display px-2 py-0.5 rounded-full uppercase ${
+                      b.status === "confirmed" ? "bg-green-500/10 text-green-400" : "bg-yellow-500/10 text-yellow-400"
+                    }`}>{b.status}</span>
+                    {b.location_type && (
+                      <span className="text-[9px] font-body text-muted-foreground flex items-center gap-0.5">
+                        <MapPin size={8} /> {b.location_type === "in_person" ? "In Person" : "Online"}
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <div className="text-right shrink-0">
+                  <p className="font-display text-foreground">{currencySymbol(b.currency)}{Number(b.total_price).toFixed(0)}</p>
+                  <p className="font-body text-[9px] text-muted-foreground">Your cut: {currencySymbol(b.currency)}{Number(b.coach_payout).toFixed(0)}</p>
+                </div>
+              </Link>
+            ))}
+          </motion.div>
+        )}
+
+        {selectedDay && selectedDayBookings.length === 0 && calendarTab === "bookings" && (
+          <div className="text-center py-4">
+            <p className="text-sm font-body text-muted-foreground">No bookings on this day</p>
+          </div>
+        )}
+
+        </>
+        )}
       </div>
 
       <CreateTrainingBlockDrawer
