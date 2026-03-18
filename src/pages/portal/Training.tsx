@@ -159,6 +159,7 @@ const Training = () => {
   const [expandedBlockGoal, setExpandedBlockGoal] = useState<string | null>(null);
   const [selectedBlockIds, setSelectedBlockIds] = useState<Set<string>>(new Set());
   const [expandedBlockDetail, setExpandedBlockDetail] = useState<string | null>(null);
+  const [blockCatFilter, setBlockCatFilter] = useState("All");
 
   // Month calendar
   const [showMonthCal, setShowMonthCal] = useState(false);
