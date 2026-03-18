@@ -627,40 +627,95 @@ Deno.serve(async (req) => {
       });
     }
 
-    // --- Day Plans (more comprehensive) ---
+    // --- Day Plans (realistic sessions) ---
     if (coach1Id) {
-      const { data: mods } = await admin.from("modules").select("id").eq("created_by", coach1Id).limit(12);
-      const modIds = mods?.map((m) => m.id) || [];
+      // Group modules by category for building realistic sessions
+      const allModIds = Object.values(moduleIdMap);
+      const modsByCat: Record<string, string[]> = {};
+      for (const [title, id] of Object.entries(moduleIdMap)) {
+        const mod = moduleCategories.find(m => m.title === title);
+        if (mod) {
+          const cat = mod.category;
+          if (!modsByCat[cat]) modsByCat[cat] = [];
+          modsByCat[cat].push(id);
+        }
+      }
 
-      for (let p = 0; p < Math.min(4, playerIds.length); p++) {
+      // Session templates — realistic structures
+      const sessionTemplates = [
+        { notes: "Net play & volleys focus", structure: ["warm_up", "padel_drill", "padel_drill", "footwork", "cool_down"] },
+        { notes: "Baseline rally + fitness", structure: ["warm_up", "padel_drill", "fitness", "padel_drill", "recovery"] },
+        { notes: "Match simulation day", structure: ["warm_up", "footwork", "padel_drill", "padel_drill", "mental"] },
+        { notes: "Technique refinement session", structure: ["warm_up", "padel_drill", "padel_drill", "strength", "cool_down"] },
+        { notes: "Recovery & light drills", structure: ["warm_up", "recovery", "padel_drill", "cool_down"] },
+        { notes: "Serve & return practice", structure: ["warm_up", "padel_drill", "padel_drill", "fitness", "cool_down"] },
+        { notes: "Wall play intensive", structure: ["warm_up", "footwork", "padel_drill", "padel_drill", "recovery"] },
+        { notes: "Tennis baseline session", structure: ["warm_up", "tennis_drill", "tennis_drill", "footwork", "cool_down"] },
+        { notes: "Tennis serve & volley", structure: ["warm_up", "tennis_drill", "tennis_drill", "fitness", "recovery"] },
+        { notes: "Cross-training day", structure: ["warm_up", "strength", "fitness", "footwork", "cool_down"] },
+      ];
+
+      // Track used indices per category so we rotate through modules
+      const catUsed: Record<string, number> = {};
+      const pickModule = (cat: string): string | null => {
+        const pool = modsByCat[cat];
+        if (!pool || pool.length === 0) return null;
+        const idx = (catUsed[cat] || 0) % pool.length;
+        catUsed[cat] = idx + 1;
+        return pool[idx];
+      };
+
+      for (let p = 0; p < Math.min(5, playerIds.length); p++) {
         for (let d = -2; d < 5; d++) {
           const planDate = new Date();
           planDate.setDate(planDate.getDate() + d);
           const dateStr = planDate.toISOString().split("T")[0];
 
-          // Skip weekends
+          // Skip Sundays
           if (planDate.getDay() === 0) continue;
 
           const { data: existingPlan } = await admin.from("player_day_plans").select("id").eq("player_id", playerIds[p]).eq("plan_date", dateStr).maybeSingle();
-          if (!existingPlan && modIds.length >= 4) {
+          if (!existingPlan) {
+            const templateIdx = Math.abs((p * 7 + d + 10) % sessionTemplates.length);
+            const template = sessionTemplates[templateIdx];
             const startHour = 9 + (p % 3) * 2;
+
             const { data: plan } = await admin.from("player_day_plans").insert({
               player_id: playerIds[p], coach_id: coach1Id, plan_date: dateStr,
               start_time: `${startHour}:00`, end_time: `${startHour + 1}:30`,
-              notes: ["Net play focus", "Recovery day", "Match simulation", "Technique refinement", "Fitness + padel combo", "Wall play practice", "Serve & return"][Math.abs(d + 2) % 7],
+              notes: template.notes,
               location_name: "Club Deportivo Padel Madrid",
               location_address: "Calle de Serrano 45",
             }).select("id").single();
 
             if (plan) {
-              const startIdx = ((p + d + 10) * 3) % Math.max(modIds.length - 3, 1);
-              const items = modIds.slice(startIdx, startIdx + 3).map((mid, idx) => ({
-                plan_id: plan.id, module_id: mid, order_index: idx,
-                coach_note: idx === 0 ? "Start with light intensity" : null,
-                is_completed: d < 0,
-                completed_at: d < 0 ? new Date().toISOString() : null,
-              }));
-              await admin.from("player_day_plan_items").insert(items);
+              const coachNotes = [
+                "Start light, build intensity gradually",
+                "Focus on consistency over power",
+                "Keep feet moving between shots",
+                "Watch the wrist angle on contact",
+                "Deep breaths between points",
+                null, null, null,
+              ];
+
+              const items = [];
+              for (let idx = 0; idx < template.structure.length; idx++) {
+                const cat = template.structure[idx];
+                const modId = pickModule(cat);
+                if (modId) {
+                  items.push({
+                    plan_id: plan.id,
+                    module_id: modId,
+                    order_index: idx,
+                    coach_note: idx < 2 ? coachNotes[(p + d + idx + 10) % coachNotes.length] : null,
+                    is_completed: d < 0,
+                    completed_at: d < 0 ? new Date().toISOString() : null,
+                  });
+                }
+              }
+              if (items.length > 0) {
+                await admin.from("player_day_plan_items").insert(items);
+              }
             }
           }
         }
