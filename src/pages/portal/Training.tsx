@@ -108,6 +108,7 @@ interface TrainingBlock {
   id: string; title: string; description: string | null; goal: string;
   category: string; module_ids: string[]; module_durations: number[];
   module_notes: string[]; is_system: boolean; coach_id: string | null;
+  difficulty: string; sport: string;
 }
 
 const parseDateParam = (value: string | null) => {
@@ -156,6 +157,8 @@ const Training = () => {
   const [showInlineBlocks, setShowInlineBlocks] = useState(false);
   const [blockSearch, setBlockSearch] = useState("");
   const [expandedBlockGoal, setExpandedBlockGoal] = useState<string | null>(null);
+  const [selectedBlockIds, setSelectedBlockIds] = useState<Set<string>>(new Set());
+  const [expandedBlockDetail, setExpandedBlockDetail] = useState<string | null>(null);
 
   // Month calendar
   const [showMonthCal, setShowMonthCal] = useState(false);
@@ -454,6 +457,18 @@ const Training = () => {
     if (!targetPlayerId) return;
     navigate(`/coach/plan/${targetPlayerId}?date=${format(selectedDay, "yyyy-MM-dd")}`);
   };
+
+  const toggleBlockSelection = (blockId: string) => {
+    setSelectedBlockIds(prev => {
+      const next = new Set(prev);
+      if (next.has(blockId)) next.delete(blockId);
+      else next.add(blockId);
+      return next;
+    });
+  };
+
+  const selectedBlocks = allBlocks.filter(b => selectedBlockIds.has(b.id));
+  const selectedBlocksTotalDur = selectedBlocks.reduce((s, b) => s + (b.module_durations?.reduce((a, d) => a + d, 0) || 0), 0);
 
   const totalDuration = planItems.reduce((sum, i) => sum + (i.module.duration_minutes || 0), 0);
 
@@ -1019,23 +1034,49 @@ const Training = () => {
                                         className="overflow-hidden">
                                         <div className="space-y-2 pl-1 pb-2">
                                           {grouped[goal].map(block => {
-                                            const totalDur = block.module_durations?.reduce((s, d) => s + d, 0) || 0;
+                                            const bDur = block.module_durations?.reduce((s, d) => s + d, 0) || 0;
+                                            const isSelected = selectedBlockIds.has(block.id);
+                                            const isExpanded = expandedBlockDetail === block.id;
                                             return (
-                                              <div key={block.id} className="flex items-center gap-3 p-3 rounded-xl border border-border bg-secondary/40">
-                                                <div className="flex-1 min-w-0">
-                                                  <p className="font-display text-xs text-foreground truncate">{block.title}</p>
-                                                  {block.description && (
-                                                    <p className="text-[10px] font-body text-muted-foreground line-clamp-1 mt-0.5">{block.description}</p>
-                                                  )}
-                                                  <div className="flex items-center gap-2 text-[9px] font-body text-muted-foreground mt-1">
-                                                    <span className="flex items-center gap-0.5"><Clock size={9} /> {totalDur}m</span>
-                                                    <span className="uppercase px-1.5 py-0.5 rounded bg-secondary font-display text-[8px] tracking-wider">{goal}</span>
+                                              <div key={block.id} className={`rounded-xl border overflow-hidden transition-colors ${isSelected ? "border-primary bg-primary/10" : "border-border bg-secondary/40"}`}>
+                                                <div className="flex items-center gap-3 p-3">
+                                                  <div className={`w-1 self-stretch rounded-full shrink-0 ${CATEGORY_DOT[block.category] || "bg-muted-foreground"}`} />
+                                                  <div className="flex-1 min-w-0">
+                                                    <p className="font-display text-xs text-foreground truncate">{block.title}</p>
+                                                    <p className="text-[10px] font-body text-muted-foreground mt-0.5">
+                                                      {block.category} · {bDur}min · {block.module_ids.length} modules
+                                                    </p>
                                                   </div>
+                                                  <button onClick={() => setExpandedBlockDetail(isExpanded ? null : block.id)}
+                                                    className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground transition-colors shrink-0">
+                                                    <ChevronDown size={14} className={`transition-transform ${isExpanded ? "rotate-180" : ""}`} />
+                                                  </button>
+                                                  <button onClick={() => toggleBlockSelection(block.id)}
+                                                    className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-colors ${
+                                                      isSelected ? "bg-primary text-primary-foreground" : "bg-secondary border border-border text-muted-foreground hover:border-primary hover:text-primary"
+                                                    }`}>
+                                                    {isSelected ? <Check size={14} /> : <Plus size={14} />}
+                                                  </button>
                                                 </div>
-                                                <button onClick={() => { handleApplyBlock(block); setShowInlineBlocks(false); }}
-                                                  className="w-7 h-7 rounded-full bg-primary text-primary-foreground flex items-center justify-center shrink-0 hover:bg-primary/90 transition-colors">
-                                                  <Plus size={14} />
-                                                </button>
+                                                <AnimatePresence>
+                                                  {isExpanded && (
+                                                    <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
+                                                      <div className="px-3 pb-3 pt-1 border-t border-border space-y-1.5">
+                                                        {block.description && <p className="text-[10px] font-body text-muted-foreground">{block.description}</p>}
+                                                        <div className="flex flex-wrap gap-1.5 text-[9px] font-body text-muted-foreground">
+                                                          <span className="flex items-center gap-0.5"><Clock size={9} /> {bDur} min</span>
+                                                          <span>·</span>
+                                                          <span>{block.difficulty}</span>
+                                                          <span>·</span>
+                                                          <span className="uppercase">{block.sport}</span>
+                                                        </div>
+                                                        {block.module_ids.length > 0 && (
+                                                          <p className="text-[9px] font-body text-muted-foreground">{block.module_ids.length} modules included</p>
+                                                        )}
+                                                      </div>
+                                                    </motion.div>
+                                                  )}
+                                                </AnimatePresence>
                                               </div>
                                             );
                                           })}
@@ -1047,6 +1088,38 @@ const Training = () => {
                               ));
                             })()}
                           </div>
+
+                          {/* Selected blocks summary + review */}
+                          {selectedBlockIds.size > 0 && (
+                            <div className="mt-3 p-3 rounded-xl border border-primary bg-primary/5 space-y-2">
+                              <div className="flex items-center justify-between">
+                                <div>
+                                  <p className="font-display text-xs text-primary">PLAN BUILDER</p>
+                                  <p className="text-[10px] font-body text-muted-foreground">
+                                    {selectedBlockIds.size} block{selectedBlockIds.size !== 1 ? "s" : ""} selected · {selectedBlocksTotalDur}min
+                                  </p>
+                                </div>
+                                <button onClick={() => setSelectedBlockIds(new Set())}
+                                  className="font-display text-[9px] tracking-wider text-muted-foreground hover:text-foreground transition-colors">
+                                  CLEAR
+                                </button>
+                              </div>
+                              {selectedBlocks.map(b => (
+                                <div key={b.id} className="p-2.5 rounded-lg border border-border bg-card">
+                                  <p className="font-display text-[10px] text-foreground">{b.title}</p>
+                                  <p className="text-[9px] font-body text-muted-foreground">{b.category} · {b.module_durations?.reduce((s, d) => s + d, 0) || 0}min · {b.module_ids.length} modules</p>
+                                </div>
+                              ))}
+                              <button onClick={async () => {
+                                for (const block of selectedBlocks) { await handleApplyBlock(block); }
+                                setSelectedBlockIds(new Set());
+                                setShowInlineBlocks(false);
+                              }}
+                                className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-display text-xs tracking-wider hover:bg-primary/90 transition-colors flex items-center justify-center gap-2">
+                                REVIEW PLAN <ChevronRight size={14} />
+                              </button>
+                            </div>
+                          )}
                         </div>
                       </motion.div>
                     )}
@@ -1168,28 +1241,65 @@ const Training = () => {
                   /* Blocks tab */
                   <div className="space-y-1.5">
                     {allBlocks.map(block => {
-                      const totalDur = block.module_durations?.reduce((s, d) => s + d, 0) || 0;
+                      const bDur = block.module_durations?.reduce((s, d) => s + d, 0) || 0;
+                      const isSelected = selectedBlockIds.has(block.id);
+                      const isExpanded = expandedBlockDetail === block.id;
                       return (
-                        <button key={block.id} onClick={() => { handleApplyBlock(block); setShowAddPanel(false); }}
-                          className="w-full text-left p-3 rounded-xl border border-border hover:border-primary/40 transition-colors">
-                          <div className="flex items-center justify-between mb-1">
-                            <p className="font-display text-xs text-foreground truncate flex-1">{block.title}</p>
-                            <Plus size={14} className="text-primary shrink-0 ml-2" />
+                        <div key={block.id} className={`rounded-xl border overflow-hidden transition-colors ${isSelected ? "border-primary bg-primary/10" : "border-border"}`}>
+                          <div className="flex items-center gap-3 p-3">
+                            <div className={`w-1 self-stretch rounded-full shrink-0 ${CATEGORY_DOT[block.category] || "bg-muted-foreground"}`} />
+                            <div className="flex-1 min-w-0">
+                              <p className="font-display text-xs text-foreground truncate">{block.title}</p>
+                              <p className="text-[10px] font-body text-muted-foreground mt-0.5">
+                                {block.category} · {bDur}min · {block.module_ids.length} modules
+                              </p>
+                            </div>
+                            <button onClick={() => setExpandedBlockDetail(isExpanded ? null : block.id)}
+                              className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground transition-colors shrink-0">
+                              <ChevronDown size={14} className={`transition-transform ${isExpanded ? "rotate-180" : ""}`} />
+                            </button>
+                            <button onClick={() => toggleBlockSelection(block.id)}
+                              className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-colors ${
+                                isSelected ? "bg-primary text-primary-foreground" : "bg-secondary border border-border text-muted-foreground hover:border-primary hover:text-primary"
+                              }`}>
+                              {isSelected ? <Check size={14} /> : <Plus size={14} />}
+                            </button>
                           </div>
-                          {block.description && (
-                            <p className="text-[10px] font-body text-muted-foreground line-clamp-1 mb-0.5">{block.description}</p>
-                          )}
-                          <div className="flex items-center gap-2 text-[9px] font-body text-muted-foreground">
-                            <span>{block.module_ids.length} modules</span>
-                            <span>·</span>
-                            <span>{totalDur} min</span>
-                            {block.is_system && <span className="text-primary/60">SYSTEM</span>}
-                          </div>
-                        </button>
+                          <AnimatePresence>
+                            {isExpanded && (
+                              <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
+                                <div className="px-3 pb-3 pt-1 border-t border-border space-y-1.5">
+                                  {block.description && <p className="text-[10px] font-body text-muted-foreground">{block.description}</p>}
+                                  <div className="flex flex-wrap gap-1.5 text-[9px] font-body text-muted-foreground">
+                                    <span className="flex items-center gap-0.5"><Clock size={9} /> {bDur} min</span>
+                                    <span>·</span>
+                                    <span>{block.difficulty}</span>
+                                    <span>·</span>
+                                    <span className="uppercase">{block.sport}</span>
+                                  </div>
+                                  {block.module_ids.length > 0 && (
+                                    <p className="text-[9px] font-body text-muted-foreground">{block.module_ids.length} modules included</p>
+                                  )}
+                                </div>
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                        </div>
                       );
                     })}
                     {allBlocks.length === 0 && (
                       <p className="text-xs font-body text-muted-foreground text-center py-6">No blocks available</p>
+                    )}
+                    {/* Apply selected blocks button */}
+                    {selectedBlockIds.size > 0 && (
+                      <button onClick={async () => {
+                        for (const block of selectedBlocks) { await handleApplyBlock(block); }
+                        setSelectedBlockIds(new Set());
+                        setShowAddPanel(false);
+                      }}
+                        className="w-full mt-3 py-3 rounded-xl bg-primary text-primary-foreground font-display text-xs tracking-wider hover:bg-primary/90 transition-colors flex items-center justify-center gap-2">
+                        REVIEW PLAN <ChevronRight size={14} />
+                      </button>
                     )}
                   </div>
                 )}
