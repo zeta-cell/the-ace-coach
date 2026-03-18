@@ -712,17 +712,44 @@ const Training = () => {
                             }`}>
                               {item.module.category.replace("_", " ").toUpperCase()}
                             </span>
-                            <span className="flex items-center gap-0.5 text-muted-foreground text-[10px] font-body">
-                              <Clock size={10} /> {item.module.duration_minutes} <span className="text-[9px]">m</span>
-                            </span>
                             <div className="flex-1" />
                             <button onClick={() => handleRemoveItem(item.id)}
-                              className="p-1 text-muted-foreground hover:text-destructive transition-colors">
-                              <X size={14} />
+                              className="p-1.5 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
+                              title="Remove module">
+                              <Trash2 size={14} />
                             </button>
                           </div>
                           {/* Title */}
                           <p className="font-display text-sm text-foreground">{item.module.title}</p>
+                          {/* Duration editor */}
+                          <div className="flex items-center gap-2">
+                            <Clock size={12} className="text-muted-foreground shrink-0" />
+                            <div className="flex items-center gap-1 bg-secondary rounded-lg border border-border">
+                              <button
+                                onClick={() => {
+                                  const newDur = Math.max(5, item.module.duration_minutes - 5);
+                                  setPlanItems(prev => prev.map(i => i.id === item.id ? { ...i, module: { ...i.module, duration_minutes: newDur } } : i));
+                                  setJustSaved(false);
+                                }}
+                                className="px-2 py-1 text-muted-foreground hover:text-foreground transition-colors"
+                              >
+                                <Minus size={12} />
+                              </button>
+                              <span className="font-body text-xs text-foreground min-w-[40px] text-center tabular-nums">
+                                {item.module.duration_minutes} min
+                              </span>
+                              <button
+                                onClick={() => {
+                                  const newDur = item.module.duration_minutes + 5;
+                                  setPlanItems(prev => prev.map(i => i.id === item.id ? { ...i, module: { ...i.module, duration_minutes: newDur } } : i));
+                                  setJustSaved(false);
+                                }}
+                                className="px-2 py-1 text-muted-foreground hover:text-foreground transition-colors"
+                              >
+                                <Plus size={12} />
+                              </button>
+                            </div>
+                          </div>
                           {/* Coach note input */}
                           <input
                             value={item.coach_note || ""}
