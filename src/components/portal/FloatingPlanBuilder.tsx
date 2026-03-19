@@ -68,9 +68,9 @@ const FloatingPlanBuilder = ({
       initial={{ y: 100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       exit={{ y: 100, opacity: 0 }}
-      className="fixed bottom-0 left-0 right-0 z-40"
+      className="fixed bottom-0 left-0 right-0 z-[60]"
     >
-      <div className="max-w-3xl mx-auto px-2 pb-2">
+      <div className="max-w-3xl mx-auto px-2 pb-[calc(env(safe-area-inset-bottom)+3.75rem)] md:pb-2">
         <div className="bg-card border border-primary rounded-xl shadow-lg shadow-primary/20 overflow-hidden">
           {/* Header — always visible */}
           <button
