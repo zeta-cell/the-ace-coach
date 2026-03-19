@@ -156,9 +156,21 @@ const Training = () => {
   const [allBlocks, setAllBlocks] = useState<TrainingBlock[]>([]);
   const [showInlineBlocks, setShowInlineBlocks] = useState(false);
   const [blockSearch, setBlockSearch] = useState("");
-  const [selectedBlockIds, setSelectedBlockIds] = useState<Set<string>>(new Set());
   const [expandedBlockDetail, setExpandedBlockDetail] = useState<string | null>(null);
   const [blockCatFilter, setBlockCatFilter] = useState("All");
+
+  // Staged plan items — editable modules from selected blocks
+  interface StagedItem {
+    tempId: string;
+    moduleId: string;
+    module: BlockModuleItem;
+    coachNote: string;
+    duration: number;
+    sourceBlockTitle: string;
+  }
+  const [stagedItems, setStagedItems] = useState<StagedItem[]>([]);
+  const [showStagedAddModule, setShowStagedAddModule] = useState(false);
+  const [stagedModuleSearch, setStagedModuleSearch] = useState("");
 
   // Month calendar
   const [showMonthCal, setShowMonthCal] = useState(false);
