@@ -504,26 +504,8 @@ const Training = () => {
     toast.success(`Added "${mod.title}"`);
   };
 
-  const moveStagedItem = (index: number, direction: "up" | "down") => {
-    const newIndex = direction === "up" ? index - 1 : index + 1;
-    if (newIndex < 0 || newIndex >= stagedItems.length) return;
-    const updated = [...stagedItems];
-    const [moved] = updated.splice(index, 1);
-    updated.splice(newIndex, 0, moved);
-    setStagedItems(updated);
-  };
-
+  // moveStagedItem and stagedBlockGroups moved to FloatingPlanBuilder
   const stagedTotalDur = stagedItems.reduce((s, i) => s + i.duration, 0);
-
-  const stagedBlockGroups = useMemo(() => {
-    const groups = new Map<string, StagedItem[]>();
-    stagedItems.forEach(item => {
-      const list = groups.get(item.sourceBlockTitle) || [];
-      list.push(item);
-      groups.set(item.sourceBlockTitle, list);
-    });
-    return groups;
-  }, [stagedItems]);
   const totalDuration = planItems.reduce((sum, i) => sum + (i.module.duration_minutes || 0), 0);
 
   // Filtered modules for add panel
