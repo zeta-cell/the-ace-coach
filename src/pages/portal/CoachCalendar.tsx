@@ -109,6 +109,10 @@ const CoachCalendar = () => {
   const [copyDateOpen, setCopyDateOpen] = useState(false);
   const [copyDate, setCopyDate] = useState("");
 
+  // Drag state for plan reordering
+  const [dragIdx, setDragIdx] = useState<number | null>(null);
+  const [dragOverIdx, setDragOverIdx] = useState<number | null>(null);
+
   // Expanded plans — inline module view
   const [expandedPlans, setExpandedPlans] = useState<Record<string, boolean>>({});
   const [planModules, setPlanModules] = useState<Record<string, { id: string; title: string; category: string; duration_minutes: number | null; order_index: number; coach_note: string | null }[]>>({});
