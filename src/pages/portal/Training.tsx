@@ -623,31 +623,31 @@ const Training = () => {
         {/* Back button for coach */}
         {isCoachViewingPlayer && (
           <button onClick={() => navigate(`/coach/players/${playerParam}`)}
-            className="inline-flex items-center gap-2 mb-3 text-muted-foreground hover:text-foreground transition-colors font-body text-sm">
-            <ChevronLeft size={16} /> Back to {playerName || "Player"}
+            className="inline-flex items-center gap-1.5 mb-1.5 text-muted-foreground hover:text-foreground transition-colors font-body text-xs">
+            <ChevronLeft size={14} /> Back to {playerName || "Player"}
           </button>
         )}
 
         {/* Header */}
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between mb-2">
           <div>
-            <h1 className="font-display text-2xl text-foreground">
+            <h1 className="font-display text-lg text-foreground leading-tight">
               {isCoachViewingPlayer ? "DAY PLAN" : "TRAINING"}
             </h1>
             {isCoachViewingPlayer && (
-              <p className="text-sm font-body text-muted-foreground mt-0.5">
+              <p className="text-xs font-body text-muted-foreground">
                 for {playerName || "Player"}
               </p>
             )}
             {!isCoachViewingPlayer && (
-              <p className="text-xs font-body text-muted-foreground mt-0.5">
+              <p className="text-[10px] font-body text-muted-foreground">
                 {format(selectedDay, "EEEE, MMMM d, yyyy")}
               </p>
             )}
           </div>
           <button onClick={() => { setShowMonthCal(!showMonthCal); setCalMonth(selectedDay); }}
-            className={`px-3 py-1.5 rounded-lg border transition-colors flex items-center gap-1.5 font-display text-[10px] tracking-wider ${showMonthCal ? "bg-primary text-primary-foreground border-primary" : "bg-card border-border text-muted-foreground hover:text-foreground"}`}>
-            <CalendarDays size={14} />
+            className={`px-2.5 py-1 rounded-lg border transition-colors flex items-center gap-1.5 font-display text-[9px] tracking-wider ${showMonthCal ? "bg-primary text-primary-foreground border-primary" : "bg-card border-border text-muted-foreground hover:text-foreground"}`}>
+            <CalendarDays size={12} />
             {format(calMonth, "MMM yyyy").toUpperCase()}
           </button>
         </div>
@@ -695,17 +695,17 @@ const Training = () => {
         </AnimatePresence>
 
         {/* Week strip */}
-        <div className="flex gap-1.5 mb-4">
+        <div className="flex gap-1 mb-3">
           {weekDays.map(day => {
             const isSelected = isSameDay(day, selectedDay);
             const hasPlan = planDates.has(format(day, "yyyy-MM-dd"));
             return (
               <button key={day.toISOString()} onClick={() => setSelectedDay(day)}
-                className={`flex-1 py-2 rounded-lg text-center transition-colors relative ${
+                className={`flex-1 py-1.5 rounded-lg text-center transition-colors relative ${
                   isSelected ? "bg-primary text-primary-foreground" : "bg-card text-muted-foreground hover:bg-secondary"
                 }`}>
-                <span className="font-display text-[10px] block">{format(day, "EEE")}</span>
-                <span className="font-body text-xs">{format(day, "d")}</span>
+                <span className="font-display text-[9px] block">{format(day, "EEE")}</span>
+                <span className="font-body text-[11px]">{format(day, "d")}</span>
                 {hasPlan && !isSelected && (
                   <div className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-primary" />
                 )}
@@ -723,84 +723,72 @@ const Training = () => {
 
         {/* Coach: session info card (when plan has items) */}
         {isCoachOrAdmin && planItems.length > 0 && (
-          <div className="bg-card border border-border rounded-xl p-4 mb-4">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div className="bg-card border border-border rounded-xl p-3 mb-3">
+            <div className="grid grid-cols-3 gap-2">
               <div>
-                <label className="text-[10px] font-display tracking-wider text-muted-foreground mb-1 block">LOCATION</label>
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                    <MapPin size={14} className="text-primary" />
+                <label className="text-[8px] font-display tracking-wider text-muted-foreground mb-0.5 block">LOCATION</label>
+                <div className="flex items-center gap-1.5">
+                  <div className="w-6 h-6 rounded-md bg-primary/10 flex items-center justify-center shrink-0">
+                    <MapPin size={11} className="text-primary" />
                   </div>
-                  <input value={editLocation} onChange={e => setEditLocation(e.target.value)} placeholder="e.g. Court 3"
-                    className="flex-1 px-2.5 py-1.5 rounded-lg bg-secondary text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-muted-foreground" />
+                  <input value={editLocation} onChange={e => setEditLocation(e.target.value)} placeholder="e.g. Club Deportivo"
+                    className="flex-1 min-w-0 px-2 py-1 rounded-md bg-secondary text-foreground font-body text-xs focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-muted-foreground" />
                 </div>
               </div>
               <div>
-                <label className="text-[10px] font-display tracking-wider text-muted-foreground mb-1 block">START TIME</label>
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                    <Clock size={14} className="text-primary" />
+                <label className="text-[8px] font-display tracking-wider text-muted-foreground mb-0.5 block">START TIME</label>
+                <div className="flex items-center gap-1.5">
+                  <div className="w-6 h-6 rounded-md bg-primary/10 flex items-center justify-center shrink-0">
+                    <Clock size={11} className="text-primary" />
                   </div>
                   <input type="time" value={editStartTime} onChange={e => setEditStartTime(e.target.value)}
-                    className="flex-1 px-2.5 py-1.5 rounded-lg bg-secondary text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary" />
+                    className="flex-1 min-w-0 px-2 py-1 rounded-md bg-secondary text-foreground font-body text-xs focus:outline-none focus:ring-1 focus:ring-primary" />
                 </div>
               </div>
               <div>
-                <label className="text-[10px] font-display tracking-wider text-muted-foreground mb-1 block">END TIME</label>
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                    <Clock size={14} className="text-primary" />
+                <label className="text-[8px] font-display tracking-wider text-muted-foreground mb-0.5 block">END TIME</label>
+                <div className="flex items-center gap-1.5">
+                  <div className="w-6 h-6 rounded-md bg-primary/10 flex items-center justify-center shrink-0">
+                    <Clock size={11} className="text-primary" />
                   </div>
                   <input type="time" value={editEndTime} onChange={e => setEditEndTime(e.target.value)}
-                    className="flex-1 px-2.5 py-1.5 rounded-lg bg-secondary text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary" />
+                    className="flex-1 min-w-0 px-2 py-1 rounded-md bg-secondary text-foreground font-body text-xs focus:outline-none focus:ring-1 focus:ring-primary" />
                 </div>
               </div>
             </div>
 
-            {/* Coach info + weather row */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-3 pt-3 border-t border-border">
-              {coachName && (
-                <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center overflow-hidden shrink-0">
-                    {coachAvatar ? (
-                      <img src={coachAvatar} alt={coachName} className="w-full h-full object-cover" />
-                    ) : (
-                      <User size={14} className="text-primary" />
-                    )}
+            {/* Coach info + weather + actions row */}
+            <div className="flex items-center justify-between mt-2 pt-2 border-t border-border gap-2">
+              <div className="flex items-center gap-3">
+                {coachName && (
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-5 h-5 rounded-md bg-primary/10 flex items-center justify-center overflow-hidden shrink-0">
+                      {coachAvatar ? (
+                        <img src={coachAvatar} alt={coachName} className="w-full h-full object-cover" />
+                      ) : (
+                        <User size={10} className="text-primary" />
+                      )}
+                    </div>
+                    <span className="font-body text-[10px] text-muted-foreground truncate max-w-[80px]">{coachName}</span>
                   </div>
-                  <div className="min-w-0">
-                    <p className="text-[10px] font-display tracking-wider text-muted-foreground">COACH</p>
-                    <p className="font-body text-sm text-foreground truncate">{coachName}</p>
-                  </div>
-                </div>
-              )}
-              {weather && (
-                <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                )}
+                {weather && (
+                  <div className="flex items-center gap-1">
                     {getWeatherIcon(weather.weatherCode)}
+                    <span className="font-body text-[10px] text-muted-foreground">{weather.temp}°C</span>
                   </div>
-                  <div className="min-w-0">
-                    <p className="text-[10px] font-display tracking-wider text-muted-foreground">WEATHER</p>
-                    <p className="font-body text-sm text-foreground">
-                      {weather.temp}°C · {getWeatherLabel(weather.weatherCode)}
-                    </p>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Coach action buttons */}
-            <div className="flex items-center justify-between mt-3 pt-3 border-t border-border flex-wrap gap-2">
-              <div className="flex items-center gap-2 flex-wrap">
+                )}
+              </div>
+              <div className="flex items-center gap-1.5">
                 <button onClick={handleSaveAsBlock}
-                  className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-secondary text-foreground font-display text-xs tracking-wider hover:bg-secondary/80 transition-colors">
-                  <Save size={12} /> SAVE AS BLOCK
+                  className="flex items-center gap-1 px-2 py-1 rounded-md bg-secondary text-foreground font-display text-[8px] tracking-wider hover:bg-secondary/80 transition-colors">
+                  <Save size={10} /> SAVE
+                </button>
+                <button onClick={handleCancelDay}
+                  className="flex items-center gap-1 px-2 py-1 rounded-md text-destructive hover:bg-destructive/10 font-display text-[8px] tracking-wider transition-colors">
+                  <Trash2 size={10} /> CANCEL
                 </button>
               </div>
-              <button onClick={handleCancelDay}
-                className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-destructive hover:bg-destructive/10 font-display text-xs tracking-wider transition-colors">
-                <Trash2 size={14} /> CANCEL DAY
-              </button>
             </div>
           </div>
         )}
