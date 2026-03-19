@@ -1336,25 +1336,7 @@ const Training = () => {
                       <p className="text-xs font-body text-muted-foreground text-center py-6">No blocks found</p>
                     )}
 
-                    {/* Apply selected */}
-                    {stagedItems.length > 0 && (
-                      <button onClick={async () => {
-                        const planId = await ensurePlan();
-                        if (!planId) return;
-                        const existingMax = planItems.length;
-                        const inserts = stagedItems.map((item, idx) => ({
-                          plan_id: planId, module_id: item.moduleId, order_index: existingMax + idx, coach_note: item.coachNote || null,
-                        }));
-                        await supabase.from("player_day_plan_items").insert(inserts);
-                        toast.success(`Applied ${stagedItems.length} modules to plan`);
-                        setStagedItems([]);
-                        setShowAddPanel(false);
-                        fetchDayPlan();
-                      }}
-                        className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-display text-xs tracking-wider hover:bg-primary/90 transition-colors flex items-center justify-center gap-2">
-                        REVIEW PLAN <ChevronRight size={14} />
-                      </button>
-                    )}
+                    {/* Review handled by floating plan builder */}
                   </div>
                 )}
               </div>
