@@ -435,12 +435,47 @@ const Training = () => {
     fetchBlocks();
   };
 
-  /* ── Cancel day ── */
+  /* ── Cancel day (coach/admin) ── */
   const handleCancelDay = async () => {
     if (!currentPlanId || !confirm("Cancel this training day? All modules will be removed.")) return;
     await supabase.from("player_day_plan_items").delete().eq("plan_id", currentPlanId);
     await supabase.from("player_day_plans").delete().eq("id", currentPlanId);
     toast.success("Training day cancelled");
+    setCurrentPlanId(null); setPlanItems([]); setPlanNotes("");
+    setEditStartTime(""); setEditEndTime(""); setEditLocation("");
+    setCoachName(null); setCoachAvatar(null);
+    fetchPlanDates();
+  };
+
+  /* ── Cancel day (player) with 48h policy ── */
+  const getHoursUntilSession = () => {
+    const sessionDate = new Date(selectedDay);
+    if (editStartTime) {
+      const [h, m] = editStartTime.split(":").map(Number);
+      sessionDate.setHours(h, m, 0, 0);
+    } else {
+      sessionDate.setHours(9, 0, 0, 0); // default 9am if no start time
+    }
+    return (sessionDate.getTime() - Date.now()) / (1000 * 60 * 60);
+  };
+
+  const isFreeCancellation = getHoursUntilSession() >= 48;
+
+  const handlePlayerCancelDay = async () => {
+    if (!currentPlanId) return;
+    const hoursLeft = getHoursUntilSession();
+    const isFree = hoursLeft >= 48;
+
+    const message = isFree
+      ? "Cancel this training day? No fee will be charged."
+      : "Cancel this training day? A late cancellation fee will apply as the session is within 48 hours.";
+
+    if (!confirm(message)) return;
+
+    // TODO: If !isFree, charge cancellation fee via payment system
+    await supabase.from("player_day_plan_items").delete().eq("plan_id", currentPlanId);
+    await supabase.from("player_day_plans").delete().eq("id", currentPlanId);
+    toast.success(isFree ? "Training day cancelled" : "Training day cancelled — a late cancellation fee applies");
     setCurrentPlanId(null); setPlanItems([]); setPlanNotes("");
     setEditStartTime(""); setEditEndTime(""); setEditLocation("");
     setCoachName(null); setCoachAvatar(null);
