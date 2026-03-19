@@ -255,13 +255,23 @@ const Training = () => {
     }
 
     const { data: items } = await supabase.from("player_day_plan_items")
-      .select("id, order_index, is_completed, completed_at, coach_note, module_id")
+      .select("id, order_index, is_completed, completed_at, coach_note, module_id, block_id")
       .eq("plan_id", plan.id).order("order_index");
 
     const moduleIds = items?.map(i => i.module_id) || [];
     const { data: mods } = await supabase.from("modules")
       .select("id, title, category, duration_minutes, description, instructions, video_url, coach_video_url")
       .in("id", moduleIds.length > 0 ? moduleIds : ["00000000-0000-0000-0000-000000000000"]);
+
+    // Fetch block names for items that have a block_id
+    const blockIds = [...new Set((items || []).map(i => i.block_id).filter(Boolean))] as string[];
+    let blockNameMap = new Map<string, string>();
+    if (blockIds.length > 0) {
+      const { data: blocks } = await supabase.from("training_blocks")
+        .select("id, title").in("id", blockIds);
+      blockNameMap = new Map(blocks?.map(b => [b.id, b.title]) || []);
+    }
+    setPlanBlockNames(blockNameMap);
 
     const moduleMap = new Map(mods?.map((m: any) => [m.id, m]) || []);
     setPlanItems(
