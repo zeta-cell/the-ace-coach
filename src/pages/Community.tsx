@@ -324,6 +324,7 @@ const Community = () => {
           </section>
         )}
       </div>
+      <PublicBottomNav />
     </div>
   );
 };

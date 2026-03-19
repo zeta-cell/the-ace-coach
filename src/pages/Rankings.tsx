@@ -186,6 +186,7 @@ const Rankings = () => {
           </div>
         )}
       </div>
+      <PublicBottomNav />
     </div>
   );
 };

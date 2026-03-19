@@ -685,6 +685,7 @@ const FindACoach = () => {
           )}
         </main>
       </div>
+      <PublicBottomNav />
     </div>
   );
 };
