@@ -119,8 +119,8 @@ const PortalLayout = ({ children }: { children: React.ReactNode }) => {
       </aside>
 
       {/* Mobile bottom nav */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-card border-t border-border">
-        <div className="flex items-center justify-around py-2">
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-card/95 backdrop-blur-xl border-t border-border pb-[env(safe-area-inset-bottom)]">
+        <div className="flex items-center justify-around h-14">
           {role === "coach" ? (
             <>
               {/* Left two: Players, Calendar */}
@@ -130,9 +130,9 @@ const PortalLayout = ({ children }: { children: React.ReactNode }) => {
               ].map((item) => {
                 const isActive = location.pathname === item.href;
                 return (
-                  <Link key={item.href} to={item.href} className={`flex flex-col items-center gap-0.5 p-1.5 rounded-lg transition-colors ${isActive ? "text-primary" : "text-muted-foreground"}`}>
+                  <Link key={item.href} to={item.href} className={`flex flex-col items-center gap-0.5 ${isActive ? "text-primary" : "text-muted-foreground"}`}>
                     <item.icon size={20} />
-                    <span className="text-[10px] font-body font-medium">{item.label}</span>
+                    <span className="font-display text-[9px] tracking-wider">{item.label.toUpperCase()}</span>
                   </Link>
                 );
               })}
@@ -150,20 +150,20 @@ const PortalLayout = ({ children }: { children: React.ReactNode }) => {
               ].map((item) => {
                 const isActive = location.pathname === item.href;
                 return (
-                  <Link key={item.href} to={item.href} className={`flex flex-col items-center gap-0.5 p-1.5 rounded-lg transition-colors ${isActive ? "text-primary" : "text-muted-foreground"}`}>
+                  <Link key={item.href} to={item.href} className={`flex flex-col items-center gap-0.5 ${isActive ? "text-primary" : "text-muted-foreground"}`}>
                     <item.icon size={20} />
-                    <span className="text-[10px] font-body font-medium">{item.label}</span>
+                    <span className="font-display text-[9px] tracking-wider">{item.label.toUpperCase()}</span>
                   </Link>
                 );
               })}
             </>
           ) : (
             (role === "player" ? playerNav.slice(0, 5) : navItems.slice(0, 5)).map((item) => {
-              const isActive = location.pathname === item.href;
+              const isActive = location.pathname === item.href || (item.href === "/dashboard" && location.pathname === "/dashboard");
               return (
-                <Link key={item.href} to={item.href} className={`flex flex-col items-center gap-0.5 p-1.5 rounded-lg transition-colors ${isActive ? "text-primary" : "text-muted-foreground"}`}>
+                <Link key={item.href} to={item.href} className={`flex flex-col items-center gap-0.5 ${isActive ? "text-primary" : "text-muted-foreground"}`}>
                   <item.icon size={20} />
-                  <span className="text-[10px] font-body font-medium">{item.label}</span>
+                  <span className="font-display text-[9px] tracking-wider">{item.label.toUpperCase()}</span>
                 </Link>
               );
             })
