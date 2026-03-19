@@ -220,11 +220,25 @@ const Training = () => {
     if (!targetPlayerId) return;
     const ms = startOfMonth(calMonth);
     const me = endOfMonth(calMonth);
+    // Only mark dates that actually have plan items (not empty plans)
     const { data } = await supabase.from("player_day_plans")
-      .select("plan_date").eq("player_id", targetPlayerId)
+      .select("id, plan_date")
+      .eq("player_id", targetPlayerId)
       .gte("plan_date", format(ms, "yyyy-MM-dd"))
       .lte("plan_date", format(me, "yyyy-MM-dd"));
-    setPlanDates(new Set(data?.map(d => d.plan_date) || []));
+    if (!data || data.length === 0) { setPlanDates(new Set()); return; }
+    const planIds = data.map(d => d.id);
+    const { data: items } = await supabase.from("player_day_plan_items")
+      .select("plan_id")
+      .in("plan_id", planIds);
+    const planIdsWithItems = new Set(items?.map(i => i.plan_id) || []);
+    const planDateMap = new Map(data.map(d => [d.id, d.plan_date]));
+    const datesWithItems = new Set<string>();
+    planIdsWithItems.forEach(pid => {
+      const date = planDateMap.get(pid);
+      if (date) datesWithItems.add(date);
+    });
+    setPlanDates(datesWithItems);
   };
 
   const fetchDayPlan = async () => {
