@@ -418,6 +418,7 @@ const Training = () => {
     setCurrentPlanId(null); setPlanItems([]); setPlanNotes("");
     setEditStartTime(""); setEditEndTime(""); setEditLocation("");
     setCoachName(null); setCoachAvatar(null);
+    fetchPlanDates();
   };
 
   /* ── Reorder ── */
