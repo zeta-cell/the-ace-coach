@@ -113,14 +113,7 @@ interface TrainingBlock {
   difficulty: string; sport: string;
 }
 
-interface StagedItem {
-  tempId: string;
-  moduleId: string;
-  module: BlockModuleItem;
-  coachNote: string;
-  duration: number;
-  sourceBlockTitle: string;
-}
+// StagedItem imported from FloatingPlanBuilder
 
 const parseDateParam = (value: string | null) => {
   if (!value) return new Date();
