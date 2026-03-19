@@ -559,27 +559,7 @@ const FindACoach = () => {
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* Sticky nav */}
-      <nav className="sticky top-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border">
-        <div className="max-w-7xl mx-auto px-4 md:px-6 h-16 flex items-center gap-4">
-          <Link to="/" className="font-display text-2xl tracking-wider text-foreground shrink-0">
-            ACE<span className="text-primary">.</span>
-          </Link>
-          <div className="flex-1 flex items-center gap-2 max-w-2xl mx-auto">
-            <div className="flex items-center gap-2 flex-1 bg-card border border-border rounded-xl px-3 py-2">
-              <MapPin size={16} className="text-muted-foreground shrink-0" />
-              <input type="text" value={citySearch} onChange={(e) => setCitySearch(e.target.value)}
-                placeholder="London, Berlin, Madrid..."
-                className="flex-1 bg-transparent font-body text-sm text-foreground placeholder:text-muted-foreground focus:outline-none min-w-0" />
-            </div>
-          </div>
-          <div className="hidden md:flex items-center gap-3 shrink-0">
-            <Link to="/events" className="font-display text-xs tracking-wider text-muted-foreground hover:text-foreground transition-colors">EVENTS</Link>
-            <Link to="/community" className="font-display text-xs tracking-wider text-muted-foreground hover:text-foreground transition-colors">COMMUNITY</Link>
-            <Link to="/login" className="font-display text-sm tracking-wider text-muted-foreground hover:text-foreground transition-colors">LOG IN</Link>
-            <Link to="/login" className="font-display text-sm tracking-wider bg-primary text-primary-foreground px-5 py-2 rounded-lg hover:bg-primary/90 transition-colors">SIGN UP</Link>
-          </div>
-        </div>
-      </nav>
+      <PublicHeader />
 
       {/* Filter toggle (all screens) */}
       <div className="px-4 md:px-6 py-3 border-b border-border flex items-center gap-2 max-w-7xl mx-auto">
