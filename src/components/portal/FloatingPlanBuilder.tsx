@@ -71,33 +71,37 @@ const FloatingPlanBuilder = ({
       className="fixed bottom-0 left-0 right-0 z-40"
     >
       <div className="max-w-3xl mx-auto px-2 pb-2">
-        <div className="bg-card border border-primary/40 rounded-xl shadow-lg shadow-primary/10 overflow-hidden">
+        <div className={`bg-card border rounded-xl shadow-lg overflow-hidden ${collapsed ? "border-primary shadow-primary/20" : "border-primary/40 shadow-primary/10"}`}>
           {/* Header */}
           <button
             onClick={() => setCollapsed(!collapsed)}
-            className="w-full flex items-center justify-between px-3 py-2 hover:bg-secondary/30 transition-colors"
+            className={`w-full flex items-center justify-between px-3 transition-colors ${collapsed ? "py-3 bg-primary/5 hover:bg-primary/10" : "py-2 hover:bg-secondary/30"}`}
           >
             <div className="flex items-center gap-2">
-              <Layers size={12} className="text-primary" />
-              <span className="font-display text-[10px] text-primary tracking-wider">PLAN BUILDER</span>
-              <span className="font-body text-[9px] text-muted-foreground">
+              <Layers size={collapsed ? 14 : 12} className="text-primary" />
+              <span className={`font-display text-primary tracking-wider ${collapsed ? "text-xs" : "text-[10px]"}`}>PLAN BUILDER</span>
+              <span className={`font-body text-muted-foreground ${collapsed ? "text-[10px]" : "text-[9px]"}`}>
                 {stagedItems.length} module{stagedItems.length !== 1 ? "s" : ""} · {totalDur}min
               </span>
             </div>
             <div className="flex items-center gap-1.5">
-              <button
-                onClick={(e) => { e.stopPropagation(); setStagedItems([]); }}
-                className="font-display text-[8px] tracking-wider text-destructive/70 hover:text-destructive transition-colors px-1.5 py-0.5 rounded border border-transparent hover:border-destructive/30"
-              >
-                CANCEL
-              </button>
-              <button
-                onClick={(e) => { e.stopPropagation(); setStagedItems([]); }}
-                className="font-display text-[8px] tracking-wider text-muted-foreground hover:text-foreground transition-colors px-1.5 py-0.5"
-              >
-                CLEAR
-              </button>
-              {collapsed ? <ChevronUp size={12} className="text-muted-foreground" /> : <ChevronDown size={12} className="text-muted-foreground" />}
+              {!collapsed && (
+                <>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); setStagedItems([]); }}
+                    className="font-display text-[8px] tracking-wider text-destructive/70 hover:text-destructive transition-colors px-1.5 py-0.5 rounded border border-transparent hover:border-destructive/30"
+                  >
+                    CANCEL
+                  </button>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); setStagedItems([]); }}
+                    className="font-display text-[8px] tracking-wider text-muted-foreground hover:text-foreground transition-colors px-1.5 py-0.5"
+                  >
+                    CLEAR
+                  </button>
+                </>
+              )}
+              {collapsed ? <ChevronUp size={14} className="text-primary" /> : <ChevronDown size={12} className="text-muted-foreground" />}
             </div>
           </button>
 
