@@ -15,7 +15,7 @@ import {
 import {
   ChevronLeft, ChevronRight, Users, Clock, ArrowLeft, Plus, X,
   Layers, Search, GripVertical, Trash2, Copy, Save, Dumbbell,
-  Calendar as CalendarIcon, Edit3, MapPin, Shield,
+  Calendar as CalendarIcon, Edit3, MapPin, Shield, ChevronDown,
 } from "lucide-react";
 
 /* ── types ── */
@@ -112,6 +112,10 @@ const CoachCalendar = () => {
   // Drag state for plan reordering
   const [dragIdx, setDragIdx] = useState<number | null>(null);
   const [dragOverIdx, setDragOverIdx] = useState<number | null>(null);
+
+  // Expanded plans — inline module view
+  const [expandedPlans, setExpandedPlans] = useState<Record<string, boolean>>({});
+  const [planModules, setPlanModules] = useState<Record<string, { id: string; title: string; category: string; duration_minutes: number | null; order_index: number; coach_note: string | null }[]>>({});
 
   // Drag from block library to plan
   const [draggingBlock, setDraggingBlock] = useState<TrainingBlock | null>(null);
@@ -250,6 +254,40 @@ const CoachCalendar = () => {
   const getBookingsForDay = (date: Date) => monthBookings.filter(b => b.booking_date === format(date, "yyyy-MM-dd"));
   const selectedDayPlans = selectedDay ? plans.filter(p => p.plan_date === selectedDay) : [];
   const totalDuration = planBlocks.reduce((s, pb) => s + (pb.block.duration_minutes || 0), 0);
+
+  const togglePlanExpanded = async (planId: string) => {
+    const isOpen = !expandedPlans[planId];
+    setExpandedPlans(prev => ({ ...prev, [planId]: isOpen }));
+    if (isOpen && !planModules[planId]) {
+      const { data: items } = await supabase
+        .from("player_day_plan_items")
+        .select("id, module_id, order_index, coach_note")
+        .eq("plan_id", planId)
+        .order("order_index");
+      if (items && items.length > 0) {
+        const moduleIds = items.map(i => i.module_id);
+        const { data: modules } = await supabase
+          .from("modules")
+          .select("id, title, category, duration_minutes")
+          .in("id", moduleIds);
+        const moduleMap = new Map(modules?.map(m => [m.id, m]) || []);
+        const merged = items.map(i => {
+          const mod = moduleMap.get(i.module_id);
+          return {
+            id: i.id,
+            title: mod?.title || "Unknown",
+            category: mod?.category || "padel_drill",
+            duration_minutes: mod?.duration_minutes || null,
+            order_index: i.order_index,
+            coach_note: i.coach_note,
+          };
+        });
+        setPlanModules(prev => ({ ...prev, [planId]: merged }));
+      } else {
+        setPlanModules(prev => ({ ...prev, [planId]: [] }));
+      }
+    }
+  };
 
   const addBlockToPlan = (block: TrainingBlock) => {
     if (!selectedDay) { toast.error("Select a day first"); return; }
@@ -734,32 +772,58 @@ const CoachCalendar = () => {
                     <div className="space-y-1.5">
                       <p className="font-display text-[10px] tracking-wider text-muted-foreground">EXISTING SESSIONS</p>
                       {selectedDayPlans.map((plan) => (
-                        <div key={plan.id} onClick={() => navigate(`/coach/plan/${plan.player_id}?date=${selectedDay}`)}
-                          className="flex items-center gap-2 p-2 rounded-lg bg-secondary hover:bg-secondary/80 cursor-pointer transition-colors">
-                          <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center">
-                            <span className="text-primary font-display text-[9px]">{plan.player_name.charAt(0)}</span>
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-xs font-display text-foreground truncate">{plan.player_name}</p>
-                          <p className="text-[9px] font-body text-muted-foreground">
-                              {formatTime(plan.start_time) || "—"} · {plan.item_count} modules
-                            </p>
-                            {plan.program_author && (
-                              <div className="flex items-center gap-1 mt-0.5">
-                                {plan.program_author_avatar ? (
-                                  <img src={plan.program_author_avatar} className="w-3 h-3 rounded-full" />
-                                ) : (
-                                  <div className="w-3 h-3 rounded-full bg-primary/20 flex items-center justify-center text-primary font-display text-[6px]">
-                                    {plan.program_author.charAt(0)}
-                                  </div>
-                                )}
-                                <span className="font-body text-[8px] text-muted-foreground">
-                                  Program by {plan.program_author}
-                                </span>
-                              </div>
+                        <div key={plan.id} className="rounded-lg bg-secondary overflow-hidden">
+                          <button
+                            onClick={() => togglePlanExpanded(plan.id)}
+                            className="flex items-center gap-2 p-2 w-full text-left hover:bg-secondary/80 transition-colors"
+                          >
+                            <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center">
+                              <span className="text-primary font-display text-[9px]">{plan.player_name.charAt(0)}</span>
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-xs font-display text-foreground truncate">{plan.player_name}</p>
+                              <p className="text-[9px] font-body text-muted-foreground">
+                                {formatTime(plan.start_time) || "—"} · {plan.item_count} modules
+                              </p>
+                            </div>
+                            <ChevronDown size={12} className={`text-muted-foreground shrink-0 transition-transform ${expandedPlans[plan.id] ? "rotate-180" : ""}`} />
+                          </button>
+                          <AnimatePresence>
+                            {expandedPlans[plan.id] && (
+                              <motion.div
+                                initial={{ height: 0, opacity: 0 }}
+                                animate={{ height: "auto", opacity: 1 }}
+                                exit={{ height: 0, opacity: 0 }}
+                                transition={{ duration: 0.2 }}
+                                className="overflow-hidden"
+                              >
+                                <div className="px-2 pb-2 space-y-1">
+                                  <div className="h-px bg-border" />
+                                  {!planModules[plan.id] ? (
+                                    <p className="text-[9px] font-body text-muted-foreground py-1 text-center">Loading…</p>
+                                  ) : planModules[plan.id].length === 0 ? (
+                                    <p className="text-[9px] font-body text-muted-foreground py-1 text-center">No modules</p>
+                                  ) : (
+                                    planModules[plan.id].map((mod, idx) => (
+                                      <div key={mod.id} className="flex items-center gap-1.5 py-0.5">
+                                        <div className={`w-4 h-4 rounded-full flex items-center justify-center text-[8px] font-display text-primary-foreground ${CATEGORY_COLORS[mod.category]?.split(" ")[0] || "bg-muted"}`}>
+                                          {idx + 1}
+                                        </div>
+                                        <p className="text-[10px] font-body text-foreground flex-1 truncate">{mod.title}</p>
+                                        <span className="text-[9px] font-body text-muted-foreground">{mod.duration_minutes ? `${mod.duration_minutes}m` : ""}</span>
+                                      </div>
+                                    ))
+                                  )}
+                                  <button
+                                    onClick={() => navigate(`/coach/plan/${plan.player_id}?date=${selectedDay}`)}
+                                    className="w-full mt-0.5 py-1 rounded border border-border text-[9px] font-display tracking-wider text-muted-foreground hover:text-foreground hover:border-primary/40 transition-colors"
+                                  >
+                                    EDIT FULL PLAN
+                                  </button>
+                                </div>
+                              </motion.div>
                             )}
-                          </div>
-                          <ChevronRight size={14} className="text-muted-foreground" />
+                          </AnimatePresence>
                         </div>
                       ))}
                     </div>
@@ -920,45 +984,73 @@ const CoachCalendar = () => {
                 ) : (
                   <div className="space-y-2">
                     {selectedDayPlans.map((plan) => (
-                      <div
-                        key={plan.id}
-                        onClick={() => navigate(`/coach/plan/${plan.player_id}?date=${selectedDay}`)}
-                        className="flex items-center gap-3 p-3 rounded-xl bg-secondary hover:bg-secondary/80 cursor-pointer transition-colors"
-                      >
-                        <div className="w-9 h-9 rounded-full bg-primary/20 flex items-center justify-center shrink-0">
-                          <span className="text-primary font-display text-sm">{plan.player_name.charAt(0)}</span>
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-display text-foreground truncate">{plan.player_name}</p>
-                          <div className="flex items-center gap-2 mt-0.5">
-                            {plan.start_time && (
-                              <span className="flex items-center gap-1 text-xs font-body text-muted-foreground">
-                                <Clock size={11} className="text-primary" />
-                                {formatTime(plan.start_time)}
-                                {plan.end_time ? ` – ${formatTime(plan.end_time)}` : ""}
-                              </span>
-                            )}
-                            <span className="flex items-center gap-1 text-xs font-body text-muted-foreground">
-                              <Dumbbell size={11} className="text-primary" />
-                              {plan.item_count} modules
-                            </span>
+                      <div key={plan.id} className="rounded-xl bg-secondary overflow-hidden">
+                        <button
+                          onClick={() => togglePlanExpanded(plan.id)}
+                          className="flex items-center gap-3 p-3 w-full text-left transition-colors hover:bg-secondary/80"
+                        >
+                          <div className="w-9 h-9 rounded-full bg-primary/20 flex items-center justify-center shrink-0">
+                            <span className="text-primary font-display text-sm">{plan.player_name.charAt(0)}</span>
                           </div>
-                          {plan.program_author && (
-                            <div className="flex items-center gap-1 mt-0.5">
-                              {plan.program_author_avatar ? (
-                                <img src={plan.program_author_avatar} className="w-3.5 h-3.5 rounded-full" />
-                              ) : (
-                                <div className="w-3.5 h-3.5 rounded-full bg-primary/20 flex items-center justify-center text-primary font-display text-[7px]">
-                                  {plan.program_author.charAt(0)}
-                                </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-display text-foreground truncate">{plan.player_name}</p>
+                            <div className="flex items-center gap-2 mt-0.5">
+                              {plan.start_time && (
+                                <span className="flex items-center gap-1 text-xs font-body text-muted-foreground">
+                                  <Clock size={11} className="text-primary" />
+                                  {formatTime(plan.start_time)}
+                                  {plan.end_time ? ` – ${formatTime(plan.end_time)}` : ""}
+                                </span>
                               )}
-                              <span className="font-body text-[10px] text-muted-foreground">
-                                Program by {plan.program_author}
+                              <span className="flex items-center gap-1 text-xs font-body text-muted-foreground">
+                                <Dumbbell size={11} className="text-primary" />
+                                {plan.item_count} modules
                               </span>
                             </div>
+                          </div>
+                          <ChevronDown size={16} className={`text-muted-foreground shrink-0 transition-transform ${expandedPlans[plan.id] ? "rotate-180" : ""}`} />
+                        </button>
+                        <AnimatePresence>
+                          {expandedPlans[plan.id] && (
+                            <motion.div
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: "auto", opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
+                              transition={{ duration: 0.2 }}
+                              className="overflow-hidden"
+                            >
+                              <div className="px-3 pb-3 space-y-1.5">
+                                <div className="h-px bg-border" />
+                                {!planModules[plan.id] ? (
+                                  <p className="text-[10px] font-body text-muted-foreground py-2 text-center">Loading…</p>
+                                ) : planModules[plan.id].length === 0 ? (
+                                  <p className="text-[10px] font-body text-muted-foreground py-2 text-center">No modules</p>
+                                ) : (
+                                  planModules[plan.id].map((mod, idx) => (
+                                    <div key={mod.id} className="flex items-center gap-2 py-1">
+                                      <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-display text-primary-foreground ${CATEGORY_COLORS[mod.category]?.split(" ")[0] || "bg-muted"}`}>
+                                        {idx + 1}
+                                      </div>
+                                      <div className="flex-1 min-w-0">
+                                        <p className="text-xs font-body text-foreground truncate">{mod.title}</p>
+                                        {mod.coach_note && <p className="text-[9px] font-body text-muted-foreground truncate">{mod.coach_note}</p>}
+                                      </div>
+                                      <span className="text-[10px] font-body text-muted-foreground shrink-0">
+                                        {mod.duration_minutes ? `${mod.duration_minutes}m` : ""}
+                                      </span>
+                                    </div>
+                                  ))
+                                )}
+                                <button
+                                  onClick={() => navigate(`/coach/plan/${plan.player_id}?date=${selectedDay}`)}
+                                  className="w-full mt-1 py-1.5 rounded-lg border border-border text-[10px] font-display tracking-wider text-muted-foreground hover:text-foreground hover:border-primary/40 transition-colors"
+                                >
+                                  EDIT FULL PLAN
+                                </button>
+                              </div>
+                            </motion.div>
                           )}
-                        </div>
-                        <ChevronRight size={16} className="text-muted-foreground shrink-0" />
+                        </AnimatePresence>
                       </div>
                     ))}
                   </div>
