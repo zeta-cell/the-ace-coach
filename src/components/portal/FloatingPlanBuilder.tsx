@@ -1,8 +1,8 @@
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence, Reorder } from "framer-motion";
 import {
   ChevronUp, ChevronDown, Plus, Minus, Trash2, Search,
-  ChevronRight, X, Layers, GripVertical,
+  ChevronRight, X, Layers, GripVertical, Save,
 } from "lucide-react";
 import type { ModuleItem } from "@/types/training";
 
@@ -71,37 +71,24 @@ const FloatingPlanBuilder = ({
       className="fixed bottom-0 left-0 right-0 z-40"
     >
       <div className="max-w-3xl mx-auto px-2 pb-2">
-        <div className={`bg-card border rounded-xl shadow-lg overflow-hidden ${collapsed ? "border-primary shadow-primary/20" : "border-primary/40 shadow-primary/10"}`}>
-          {/* Header */}
+        <div className="bg-card border border-primary rounded-xl shadow-lg shadow-primary/20 overflow-hidden">
+          {/* Header — always visible */}
           <button
             onClick={() => setCollapsed(!collapsed)}
-            className={`w-full flex items-center justify-between px-3 transition-colors ${collapsed ? "py-3 bg-primary/5 hover:bg-primary/10" : "py-2 hover:bg-secondary/30"}`}
+            className="w-full flex items-center justify-between px-3 py-2.5 bg-primary/5 hover:bg-primary/10 transition-colors"
           >
             <div className="flex items-center gap-2">
-              <Layers size={collapsed ? 14 : 12} className="text-primary" />
-              <span className={`font-display text-primary tracking-wider ${collapsed ? "text-xs" : "text-[10px]"}`}>PLAN BUILDER</span>
-              <span className={`font-body text-muted-foreground ${collapsed ? "text-[10px]" : "text-[9px]"}`}>
+              <Layers size={14} className="text-primary" />
+              <span className="font-display text-xs text-primary tracking-wider">PLAN BUILDER</span>
+              <span className="font-body text-[10px] text-muted-foreground">
                 {stagedItems.length} module{stagedItems.length !== 1 ? "s" : ""} · {totalDur}min
               </span>
             </div>
-            <div className="flex items-center gap-1.5">
-              {!collapsed && (
-                <>
-                  <button
-                    onClick={(e) => { e.stopPropagation(); setStagedItems([]); }}
-                    className="font-display text-[8px] tracking-wider text-destructive/70 hover:text-destructive transition-colors px-1.5 py-0.5 rounded border border-transparent hover:border-destructive/30"
-                  >
-                    CANCEL
-                  </button>
-                  <button
-                    onClick={(e) => { e.stopPropagation(); setStagedItems([]); }}
-                    className="font-display text-[8px] tracking-wider text-muted-foreground hover:text-foreground transition-colors px-1.5 py-0.5"
-                  >
-                    CLEAR
-                  </button>
-                </>
+            <div className="flex items-center gap-2">
+              {collapsed && (
+                <span className="font-display text-[8px] tracking-wider text-primary/70 animate-pulse">TAP TO EXPAND</span>
               )}
-              {collapsed ? <ChevronUp size={14} className="text-primary" /> : <ChevronDown size={12} className="text-muted-foreground" />}
+              {collapsed ? <ChevronUp size={14} className="text-primary" /> : <ChevronDown size={14} className="text-muted-foreground" />}
             </div>
           </button>
 
@@ -188,11 +175,15 @@ const FloatingPlanBuilder = ({
                   </AnimatePresence>
                 </div>
 
-                {/* Apply button */}
-                <div className="px-3 pb-2">
+                {/* Save / Cancel buttons */}
+                <div className="px-3 pb-2 flex items-center gap-2">
+                  <button onClick={() => setStagedItems([])}
+                    className="flex-1 py-2 rounded-xl border border-border text-muted-foreground font-display text-[10px] tracking-wider hover:bg-secondary hover:text-foreground transition-colors flex items-center justify-center gap-1.5">
+                    <X size={11} /> CANCEL
+                  </button>
                   <button onClick={onApply} disabled={applying}
-                    className="w-full py-2.5 rounded-xl bg-primary text-primary-foreground font-display text-[10px] tracking-wider hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 disabled:opacity-70">
-                    APPLY TO PLAN <ChevronRight size={12} />
+                    className="flex-[2] py-2 rounded-xl bg-primary text-primary-foreground font-display text-[10px] tracking-wider hover:bg-primary/90 transition-colors flex items-center justify-center gap-1.5 disabled:opacity-70">
+                    <Save size={11} /> SAVE TO PLAN
                   </button>
                 </div>
               </motion.div>
