@@ -772,32 +772,58 @@ const CoachCalendar = () => {
                     <div className="space-y-1.5">
                       <p className="font-display text-[10px] tracking-wider text-muted-foreground">EXISTING SESSIONS</p>
                       {selectedDayPlans.map((plan) => (
-                        <div key={plan.id} onClick={() => navigate(`/coach/plan/${plan.player_id}?date=${selectedDay}`)}
-                          className="flex items-center gap-2 p-2 rounded-lg bg-secondary hover:bg-secondary/80 cursor-pointer transition-colors">
-                          <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center">
-                            <span className="text-primary font-display text-[9px]">{plan.player_name.charAt(0)}</span>
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-xs font-display text-foreground truncate">{plan.player_name}</p>
-                          <p className="text-[9px] font-body text-muted-foreground">
-                              {formatTime(plan.start_time) || "—"} · {plan.item_count} modules
-                            </p>
-                            {plan.program_author && (
-                              <div className="flex items-center gap-1 mt-0.5">
-                                {plan.program_author_avatar ? (
-                                  <img src={plan.program_author_avatar} className="w-3 h-3 rounded-full" />
-                                ) : (
-                                  <div className="w-3 h-3 rounded-full bg-primary/20 flex items-center justify-center text-primary font-display text-[6px]">
-                                    {plan.program_author.charAt(0)}
-                                  </div>
-                                )}
-                                <span className="font-body text-[8px] text-muted-foreground">
-                                  Program by {plan.program_author}
-                                </span>
-                              </div>
+                        <div key={plan.id} className="rounded-lg bg-secondary overflow-hidden">
+                          <button
+                            onClick={() => togglePlanExpanded(plan.id)}
+                            className="flex items-center gap-2 p-2 w-full text-left hover:bg-secondary/80 transition-colors"
+                          >
+                            <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center">
+                              <span className="text-primary font-display text-[9px]">{plan.player_name.charAt(0)}</span>
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-xs font-display text-foreground truncate">{plan.player_name}</p>
+                              <p className="text-[9px] font-body text-muted-foreground">
+                                {formatTime(plan.start_time) || "—"} · {plan.item_count} modules
+                              </p>
+                            </div>
+                            <ChevronDown size={12} className={`text-muted-foreground shrink-0 transition-transform ${expandedPlans[plan.id] ? "rotate-180" : ""}`} />
+                          </button>
+                          <AnimatePresence>
+                            {expandedPlans[plan.id] && (
+                              <motion.div
+                                initial={{ height: 0, opacity: 0 }}
+                                animate={{ height: "auto", opacity: 1 }}
+                                exit={{ height: 0, opacity: 0 }}
+                                transition={{ duration: 0.2 }}
+                                className="overflow-hidden"
+                              >
+                                <div className="px-2 pb-2 space-y-1">
+                                  <div className="h-px bg-border" />
+                                  {!planModules[plan.id] ? (
+                                    <p className="text-[9px] font-body text-muted-foreground py-1 text-center">Loading…</p>
+                                  ) : planModules[plan.id].length === 0 ? (
+                                    <p className="text-[9px] font-body text-muted-foreground py-1 text-center">No modules</p>
+                                  ) : (
+                                    planModules[plan.id].map((mod, idx) => (
+                                      <div key={mod.id} className="flex items-center gap-1.5 py-0.5">
+                                        <div className={`w-4 h-4 rounded-full flex items-center justify-center text-[8px] font-display text-primary-foreground ${CATEGORY_COLORS[mod.category]?.split(" ")[0] || "bg-muted"}`}>
+                                          {idx + 1}
+                                        </div>
+                                        <p className="text-[10px] font-body text-foreground flex-1 truncate">{mod.title}</p>
+                                        <span className="text-[9px] font-body text-muted-foreground">{mod.duration_minutes ? `${mod.duration_minutes}m` : ""}</span>
+                                      </div>
+                                    ))
+                                  )}
+                                  <button
+                                    onClick={() => navigate(`/coach/plan/${plan.player_id}?date=${selectedDay}`)}
+                                    className="w-full mt-0.5 py-1 rounded border border-border text-[9px] font-display tracking-wider text-muted-foreground hover:text-foreground hover:border-primary/40 transition-colors"
+                                  >
+                                    EDIT FULL PLAN
+                                  </button>
+                                </div>
+                              </motion.div>
                             )}
-                          </div>
-                          <ChevronRight size={14} className="text-muted-foreground" />
+                          </AnimatePresence>
                         </div>
                       ))}
                     </div>
