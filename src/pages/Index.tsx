@@ -237,6 +237,7 @@ const Index = () => {
           </p>
         </div>
       </footer>
+      <PublicBottomNav />
     </div>
   );
 };
