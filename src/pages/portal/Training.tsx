@@ -1444,11 +1444,19 @@ const Training = () => {
                     )}
 
                     {/* Apply selected */}
-                    {selectedBlockIds.size > 0 && (
+                    {stagedItems.length > 0 && (
                       <button onClick={async () => {
-                        for (const block of selectedBlocks) { await handleApplyBlock(block); }
-                        setSelectedBlockIds(new Set());
+                        const planId = await ensurePlan();
+                        if (!planId) return;
+                        const existingMax = planItems.length;
+                        const inserts = stagedItems.map((item, idx) => ({
+                          plan_id: planId, module_id: item.moduleId, order_index: existingMax + idx, coach_note: item.coachNote || null,
+                        }));
+                        await supabase.from("player_day_plan_items").insert(inserts);
+                        toast.success(`Applied ${stagedItems.length} modules to plan`);
+                        setStagedItems([]);
                         setShowAddPanel(false);
+                        fetchDayPlan();
                       }}
                         className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-display text-xs tracking-wider hover:bg-primary/90 transition-colors flex items-center justify-center gap-2">
                         REVIEW PLAN <ChevronRight size={14} />
