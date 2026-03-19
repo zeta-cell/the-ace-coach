@@ -99,6 +99,7 @@ interface PlanItem {
   is_completed: boolean;
   completed_at: string | null;
   coach_note: string | null;
+  block_id: string | null;
   module: {
     id: string; title: string; category: string; duration_minutes: number;
     description: string | null; instructions: string | null; video_url: string | null;
