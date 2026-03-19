@@ -723,70 +723,48 @@ const Training = () => {
 
         {/* Coach: session info card (when plan has items) */}
         {isCoachOrAdmin && planItems.length > 0 && (
-          <div className="bg-card border border-border rounded-xl p-3 mb-3">
-            <div className="grid grid-cols-3 gap-2">
-              <div>
-                <label className="text-[8px] font-display tracking-wider text-muted-foreground mb-0.5 block">LOCATION</label>
-                <div className="flex items-center gap-1.5">
-                  <div className="w-6 h-6 rounded-md bg-primary/10 flex items-center justify-center shrink-0">
-                    <MapPin size={11} className="text-primary" />
-                  </div>
-                  <input value={editLocation} onChange={e => setEditLocation(e.target.value)} placeholder="e.g. Club Deportivo"
-                    className="flex-1 min-w-0 px-2 py-1 rounded-md bg-secondary text-foreground font-body text-xs focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-muted-foreground" />
+          <div className="bg-card border border-border rounded-xl p-3 mb-3 space-y-2">
+            {/* Row 1: Location + Weather */}
+            <div className="grid grid-cols-2 gap-2">
+              <div className="flex items-center gap-1.5">
+                <div className="w-6 h-6 rounded-md bg-primary/10 flex items-center justify-center shrink-0">
+                  <MapPin size={11} className="text-primary" />
                 </div>
+                <input value={editLocation} onChange={e => setEditLocation(e.target.value)} placeholder="e.g. Club Deportivo"
+                  className="flex-1 min-w-0 px-2 py-1 rounded-md bg-secondary text-foreground font-body text-xs focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-muted-foreground" />
               </div>
-              <div>
-                <label className="text-[8px] font-display tracking-wider text-muted-foreground mb-0.5 block">START TIME</label>
-                <div className="flex items-center gap-1.5">
-                  <div className="w-6 h-6 rounded-md bg-primary/10 flex items-center justify-center shrink-0">
-                    <Clock size={11} className="text-primary" />
-                  </div>
-                  <input type="time" value={editStartTime} onChange={e => setEditStartTime(e.target.value)}
-                    className="flex-1 min-w-0 px-2 py-1 rounded-md bg-secondary text-foreground font-body text-xs focus:outline-none focus:ring-1 focus:ring-primary" />
-                </div>
-              </div>
-              <div>
-                <label className="text-[8px] font-display tracking-wider text-muted-foreground mb-0.5 block">END TIME</label>
-                <div className="flex items-center gap-1.5">
-                  <div className="w-6 h-6 rounded-md bg-primary/10 flex items-center justify-center shrink-0">
-                    <Clock size={11} className="text-primary" />
-                  </div>
-                  <input type="time" value={editEndTime} onChange={e => setEditEndTime(e.target.value)}
-                    className="flex-1 min-w-0 px-2 py-1 rounded-md bg-secondary text-foreground font-body text-xs focus:outline-none focus:ring-1 focus:ring-primary" />
-                </div>
+              <div className="flex items-center gap-1.5 justify-end">
+                {weather ? (
+                  <>
+                    {getWeatherIcon(weather.weatherCode)}
+                    <span className="font-body text-xs text-muted-foreground">{weather.temp}°C · {getWeatherLabel(weather.weatherCode)}</span>
+                  </>
+                ) : (
+                  <span className="font-body text-[10px] text-muted-foreground italic">No weather</span>
+                )}
               </div>
             </div>
 
-            {/* Coach info + weather + actions row */}
-            <div className="flex items-center justify-between mt-2 pt-2 border-t border-border gap-2">
-              <div className="flex items-center gap-3">
-                {coachName && (
-                  <div className="flex items-center gap-1.5">
-                    <div className="w-5 h-5 rounded-md bg-primary/10 flex items-center justify-center overflow-hidden shrink-0">
-                      {coachAvatar ? (
-                        <img src={coachAvatar} alt={coachName} className="w-full h-full object-cover" />
-                      ) : (
-                        <User size={10} className="text-primary" />
-                      )}
-                    </div>
-                    <span className="font-body text-[10px] text-muted-foreground truncate max-w-[80px]">{coachName}</span>
-                  </div>
-                )}
-                {weather && (
-                  <div className="flex items-center gap-1">
-                    {getWeatherIcon(weather.weatherCode)}
-                    <span className="font-body text-[10px] text-muted-foreground">{weather.temp}°C</span>
-                  </div>
-                )}
+            {/* Row 2: Start–End time + Actions */}
+            <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5 flex-1 min-w-0">
+                <div className="w-6 h-6 rounded-md bg-primary/10 flex items-center justify-center shrink-0">
+                  <Clock size={11} className="text-primary" />
+                </div>
+                <input type="time" value={editStartTime} onChange={e => setEditStartTime(e.target.value)}
+                  className="w-20 min-w-0 px-2 py-1 rounded-md bg-secondary text-foreground font-body text-xs focus:outline-none focus:ring-1 focus:ring-primary" />
+                <span className="text-[10px] font-body text-muted-foreground shrink-0">–</span>
+                <input type="time" value={editEndTime} onChange={e => setEditEndTime(e.target.value)}
+                  className="w-20 min-w-0 px-2 py-1 rounded-md bg-secondary text-foreground font-body text-xs focus:outline-none focus:ring-1 focus:ring-primary" />
               </div>
-              <div className="flex items-center gap-1.5">
+              <div className="flex items-center gap-1.5 shrink-0">
                 <button onClick={handleSaveAsBlock}
                   className="flex items-center gap-1 px-2 py-1 rounded-md bg-secondary text-foreground font-display text-[8px] tracking-wider hover:bg-secondary/80 transition-colors">
                   <Save size={10} /> SAVE
                 </button>
                 <button onClick={handleCancelDay}
                   className="flex items-center gap-1 px-2 py-1 rounded-md text-destructive hover:bg-destructive/10 font-display text-[8px] tracking-wider transition-colors">
-                  <Trash2 size={10} /> CANCEL
+                  <Trash2 size={10} />
                 </button>
               </div>
             </div>
