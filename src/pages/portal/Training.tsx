@@ -1394,7 +1394,7 @@ const Training = () => {
                         const isInStaged = stagedItems.some(i => i.sourceBlockTitle === block.title);
                         const isExpanded = expandedBlockDetail === block.id;
                         return (
-                          <div key={block.id} className={`rounded-xl border overflow-hidden transition-colors ${isSelected ? "border-primary bg-primary/10" : "border-border bg-secondary/40"}`}>
+                          <div key={block.id} className={`rounded-xl border overflow-hidden transition-colors ${isInStaged ? "border-primary bg-primary/10" : "border-border bg-secondary/40"}`}>
                             <div className="p-3 space-y-2">
                               <div className="flex items-start gap-2">
                                 <div className={`w-1 h-8 rounded-full shrink-0 mt-0.5 ${CATEGORY_DOT[block.category] || "bg-muted-foreground"}`} />
