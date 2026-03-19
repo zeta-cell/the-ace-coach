@@ -16,6 +16,8 @@ import {
 import PortalLayout from "@/components/portal/PortalLayout";
 import TrainingDayInfo from "@/components/portal/TrainingDayInfo";
 import CoachVideoModal from "@/components/portal/CoachVideoModal";
+import FloatingPlanBuilder from "@/components/portal/FloatingPlanBuilder";
+import type { StagedItem } from "@/components/portal/FloatingPlanBuilder";
 import type { ModuleItem as BlockModuleItem } from "@/types/training";
 import { toast } from "sonner";
 
