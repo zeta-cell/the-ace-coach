@@ -449,6 +449,7 @@ const Training = () => {
     if (reordered.length === 0 && currentPlanId) {
       await supabase.from("player_day_plans").delete().eq("id", currentPlanId);
       setCurrentPlanId(null); setPlanNotes("");
+      fetchPlanDates();
     }
   };
 
