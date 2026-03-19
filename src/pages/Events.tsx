@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import {
   MapPin, Search, Calendar, Clock, Users, Globe, ChevronRight,
   Zap, Star, Crown, Shield, Award, CheckCircle,
+  Home, UserSearch, ShoppingBag, CalendarDays, UsersRound,
 } from "lucide-react";
 import { format, isWithinInterval, addDays } from "date-fns";
 import { toast } from "sonner";
