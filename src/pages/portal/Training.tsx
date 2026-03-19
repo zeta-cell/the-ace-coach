@@ -623,31 +623,31 @@ const Training = () => {
         {/* Back button for coach */}
         {isCoachViewingPlayer && (
           <button onClick={() => navigate(`/coach/players/${playerParam}`)}
-            className="inline-flex items-center gap-2 mb-3 text-muted-foreground hover:text-foreground transition-colors font-body text-sm">
-            <ChevronLeft size={16} /> Back to {playerName || "Player"}
+            className="inline-flex items-center gap-1.5 mb-1.5 text-muted-foreground hover:text-foreground transition-colors font-body text-xs">
+            <ChevronLeft size={14} /> Back to {playerName || "Player"}
           </button>
         )}
 
         {/* Header */}
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between mb-2">
           <div>
-            <h1 className="font-display text-2xl text-foreground">
+            <h1 className="font-display text-lg text-foreground leading-tight">
               {isCoachViewingPlayer ? "DAY PLAN" : "TRAINING"}
             </h1>
             {isCoachViewingPlayer && (
-              <p className="text-sm font-body text-muted-foreground mt-0.5">
+              <p className="text-xs font-body text-muted-foreground">
                 for {playerName || "Player"}
               </p>
             )}
             {!isCoachViewingPlayer && (
-              <p className="text-xs font-body text-muted-foreground mt-0.5">
+              <p className="text-[10px] font-body text-muted-foreground">
                 {format(selectedDay, "EEEE, MMMM d, yyyy")}
               </p>
             )}
           </div>
           <button onClick={() => { setShowMonthCal(!showMonthCal); setCalMonth(selectedDay); }}
-            className={`px-3 py-1.5 rounded-lg border transition-colors flex items-center gap-1.5 font-display text-[10px] tracking-wider ${showMonthCal ? "bg-primary text-primary-foreground border-primary" : "bg-card border-border text-muted-foreground hover:text-foreground"}`}>
-            <CalendarDays size={14} />
+            className={`px-2.5 py-1 rounded-lg border transition-colors flex items-center gap-1.5 font-display text-[9px] tracking-wider ${showMonthCal ? "bg-primary text-primary-foreground border-primary" : "bg-card border-border text-muted-foreground hover:text-foreground"}`}>
+            <CalendarDays size={12} />
             {format(calMonth, "MMM yyyy").toUpperCase()}
           </button>
         </div>
