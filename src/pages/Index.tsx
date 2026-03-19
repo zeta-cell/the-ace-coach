@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import PublicBottomNav from "@/components/PublicBottomNav";
+import PublicHeader from "@/components/PublicHeader";
 import { motion } from "framer-motion";
 import { Search, Calendar, Shield, Users, Trophy, Zap, MapPin, ArrowRight } from "lucide-react";
 import heroPadel from "@/assets/hero-padel.jpg";
@@ -25,22 +26,7 @@ const stats = [
 const Index = () => {
   return (
     <div className="min-h-screen bg-background text-foreground overflow-hidden">
-      {/* Nav */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <span className="font-display text-2xl tracking-wider text-foreground">
-            ACE<span className="text-primary">.</span>
-          </span>
-          <div className="flex items-center gap-4">
-            <Link to="/find-a-coach" className="font-display text-xs tracking-wider text-muted-foreground hover:text-foreground transition-colors hidden md:block">FIND A COACH</Link>
-            <Link to="/marketplace" className="font-display text-xs tracking-wider text-muted-foreground hover:text-foreground transition-colors hidden md:block">MARKETPLACE</Link>
-            <Link to="/events" className="font-display text-xs tracking-wider text-muted-foreground hover:text-foreground transition-colors hidden md:block">EVENTS</Link>
-            <Link to="/community" className="font-display text-xs tracking-wider text-muted-foreground hover:text-foreground transition-colors hidden md:block">COMMUNITY</Link>
-            <Link to="/login" className="font-display text-sm tracking-wider text-muted-foreground hover:text-foreground transition-colors">LOG IN</Link>
-            <Link to="/login" className="font-display text-sm tracking-wider bg-primary text-primary-foreground px-5 py-2 rounded-lg hover:bg-primary/90 transition-colors">GET STARTED</Link>
-          </div>
-        </div>
-      </nav>
+      <PublicHeader />
 
       {/* Hero — full-bleed image */}
       <section className="relative min-h-[100vh] flex items-end">

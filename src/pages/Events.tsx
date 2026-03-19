@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
+import PublicHeader from "@/components/PublicHeader";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -269,21 +270,7 @@ const Events = () => {
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* Nav */}
-      <nav className="sticky top-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border">
-        <div className="max-w-7xl mx-auto px-4 md:px-6 h-16 flex items-center gap-4">
-          <Link to="/" className="font-display text-2xl tracking-wider text-foreground shrink-0">ACE<span className="text-primary">.</span></Link>
-          <div className="hidden md:flex items-center gap-6 flex-1 justify-center">
-            <Link to="/find-a-coach" className="font-display text-xs tracking-wider text-muted-foreground hover:text-foreground transition-colors">FIND A COACH</Link>
-            <Link to="/marketplace" className="font-display text-xs tracking-wider text-muted-foreground hover:text-foreground transition-colors">MARKETPLACE</Link>
-            <Link to="/events" className="font-display text-xs tracking-wider text-primary">EVENTS</Link>
-            <Link to="/community" className="font-display text-xs tracking-wider text-muted-foreground hover:text-foreground transition-colors">COMMUNITY</Link>
-          </div>
-          <div className="hidden md:flex items-center gap-3 shrink-0">
-            <Link to="/login" className="font-display text-sm tracking-wider text-muted-foreground hover:text-foreground transition-colors">LOG IN</Link>
-            <Link to="/login" className="font-display text-sm tracking-wider bg-primary text-primary-foreground px-5 py-2 rounded-lg hover:bg-primary/90 transition-colors">SIGN UP</Link>
-          </div>
-        </div>
-      </nav>
+      <PublicHeader />
 
       {/* Hero */}
       <div className="bg-card border-b border-border py-12 px-4 text-center relative overflow-hidden">
