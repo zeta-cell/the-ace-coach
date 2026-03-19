@@ -111,6 +111,15 @@ interface TrainingBlock {
   difficulty: string; sport: string;
 }
 
+interface StagedItem {
+  tempId: string;
+  moduleId: string;
+  module: BlockModuleItem;
+  coachNote: string;
+  duration: number;
+  sourceBlockTitle: string;
+}
+
 const parseDateParam = (value: string | null) => {
   if (!value) return new Date();
   const parsed = parseISO(value);
@@ -156,9 +165,13 @@ const Training = () => {
   const [allBlocks, setAllBlocks] = useState<TrainingBlock[]>([]);
   const [showInlineBlocks, setShowInlineBlocks] = useState(false);
   const [blockSearch, setBlockSearch] = useState("");
-  const [selectedBlockIds, setSelectedBlockIds] = useState<Set<string>>(new Set());
   const [expandedBlockDetail, setExpandedBlockDetail] = useState<string | null>(null);
   const [blockCatFilter, setBlockCatFilter] = useState("All");
+
+  // Staged plan items — editable modules from selected blocks
+  const [stagedItems, setStagedItems] = useState<StagedItem[]>([]);
+  const [showStagedAddModule, setShowStagedAddModule] = useState(false);
+  const [stagedModuleSearch, setStagedModuleSearch] = useState("");
 
   // Month calendar
   const [showMonthCal, setShowMonthCal] = useState(false);
@@ -458,18 +471,65 @@ const Training = () => {
     navigate(`/coach/plan/${targetPlayerId}?date=${format(selectedDay, "yyyy-MM-dd")}`);
   };
 
-  const toggleBlockSelection = (blockId: string) => {
-    setSelectedBlockIds(prev => {
-      const next = new Set(prev);
-      if (next.has(blockId)) next.delete(blockId);
-      else next.add(blockId);
-      return next;
-    });
+  const addBlockToStaged = (block: TrainingBlock) => {
+    const moduleMap = new Map(allModules.map(m => [m.id, m]));
+    const newItems: StagedItem[] = block.module_ids.map((mId, idx) => {
+      const mod = moduleMap.get(mId);
+      if (!mod) return null;
+      return {
+        tempId: crypto.randomUUID(),
+        moduleId: mId,
+        module: mod,
+        coachNote: block.module_notes?.[idx] || "",
+        duration: block.module_durations?.[idx] || mod.duration_minutes || 15,
+        sourceBlockTitle: block.title,
+      };
+    }).filter(Boolean) as StagedItem[];
+    if (newItems.length === 0) { toast.error("Block references modules you don't have"); return; }
+    setStagedItems(prev => [...prev, ...newItems]);
+    toast.success(`Added "${block.title}" — ${newItems.length} modules`);
   };
 
-  const selectedBlocks = allBlocks.filter(b => selectedBlockIds.has(b.id));
-  const selectedBlocksTotalDur = selectedBlocks.reduce((s, b) => s + (b.module_durations?.reduce((a, d) => a + d, 0) || 0), 0);
+  const removeBlockFromStaged = (blockTitle: string) => {
+    setStagedItems(prev => prev.filter(i => i.sourceBlockTitle !== blockTitle));
+  };
 
+  const removeStagedItem = (tempId: string) => {
+    setStagedItems(prev => prev.filter(i => i.tempId !== tempId));
+  };
+
+  const addModuleToStaged = (mod: BlockModuleItem) => {
+    setStagedItems(prev => [...prev, {
+      tempId: crypto.randomUUID(),
+      moduleId: mod.id,
+      module: mod,
+      coachNote: "",
+      duration: mod.duration_minutes || 15,
+      sourceBlockTitle: "Custom",
+    }]);
+    toast.success(`Added "${mod.title}"`);
+  };
+
+  const moveStagedItem = (index: number, direction: "up" | "down") => {
+    const newIndex = direction === "up" ? index - 1 : index + 1;
+    if (newIndex < 0 || newIndex >= stagedItems.length) return;
+    const updated = [...stagedItems];
+    const [moved] = updated.splice(index, 1);
+    updated.splice(newIndex, 0, moved);
+    setStagedItems(updated);
+  };
+
+  const stagedTotalDur = stagedItems.reduce((s, i) => s + i.duration, 0);
+
+  const stagedBlockGroups = useMemo(() => {
+    const groups = new Map<string, StagedItem[]>();
+    stagedItems.forEach(item => {
+      const list = groups.get(item.sourceBlockTitle) || [];
+      list.push(item);
+      groups.set(item.sourceBlockTitle, list);
+    });
+    return groups;
+  }, [stagedItems]);
   const totalDuration = planItems.reduce((sum, i) => sum + (i.module.duration_minutes || 0), 0);
 
   // Filtered modules for add panel
@@ -1028,65 +1088,90 @@ const Training = () => {
                             ))}
                           </div>
 
-                          {/* Selected blocks summary */}
-                          {selectedBlockIds.size > 0 && (
+                          {/* Staged plan builder */}
+                          {stagedItems.length > 0 && (
                             <div className="p-3 rounded-xl border border-primary bg-primary/5 space-y-2">
                               <div className="flex items-center justify-between">
                                 <div>
                                   <p className="font-display text-xs text-primary">PLAN BUILDER</p>
                                   <p className="text-[10px] font-body text-muted-foreground">
-                                    {selectedBlockIds.size} block{selectedBlockIds.size !== 1 ? "s" : ""} selected · {selectedBlocksTotalDur}min
+                                    {stagedItems.length} module{stagedItems.length !== 1 ? "s" : ""} · {stagedTotalDur}min
                                   </p>
                                 </div>
-                                <button onClick={() => setSelectedBlockIds(new Set())}
+                                <button onClick={() => setStagedItems([])}
                                   className="font-display text-[9px] tracking-wider text-muted-foreground hover:text-foreground transition-colors">
                                   CLEAR
                                 </button>
                               </div>
-                              {selectedBlocks.map(b => {
-                                const moduleMap = new Map(allModules.map(m => [m.id, m]));
-                                const isExpanded = expandedBlockDetail === `selected-${b.id}`;
-                                return (
-                                  <div key={b.id} className="rounded-lg border border-border bg-card overflow-hidden">
-                                    <button
-                                      onClick={() => setExpandedBlockDetail(isExpanded ? null : `selected-${b.id}`)}
-                                      className="w-full p-2.5 flex items-center gap-2 text-left"
-                                    >
-                                      <div className={`w-1 self-stretch rounded-full ${CATEGORY_DOT[b.category?.toLowerCase()] || "bg-muted"}`} />
-                                      <div className="flex-1 min-w-0">
-                                        <p className="font-display text-[10px] text-foreground">{b.title}</p>
-                                        <p className="text-[9px] font-body text-muted-foreground">{b.category} · {b.module_durations?.reduce((s, d) => s + d, 0) || 0}min · {b.module_ids.length} modules</p>
-                                      </div>
-                                      {isExpanded ? <ChevronUp size={14} className="text-primary shrink-0" /> : <ChevronDown size={14} className="text-muted-foreground shrink-0" />}
+
+                              {/* Editable module list */}
+                              <div className="space-y-1">
+                                {stagedItems.map((item, idx) => (
+                                  <div key={item.tempId} className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg bg-card border border-border group">
+                                    {/* Reorder */}
+                                    <div className="flex flex-col gap-0">
+                                      <button onClick={() => moveStagedItem(idx, "up")} disabled={idx === 0}
+                                        className="text-muted-foreground hover:text-foreground disabled:opacity-20 transition-colors p-0.5">
+                                        <ChevronUp size={10} />
+                                      </button>
+                                      <button onClick={() => moveStagedItem(idx, "down")} disabled={idx === stagedItems.length - 1}
+                                        className="text-muted-foreground hover:text-foreground disabled:opacity-20 transition-colors p-0.5">
+                                        <ChevronDown size={10} />
+                                      </button>
+                                    </div>
+                                    <div className={`w-1 h-6 rounded-full ${CATEGORY_DOT[item.module.category?.toLowerCase() || ""] || "bg-muted"}`} />
+                                    <div className="flex-1 min-w-0">
+                                      <p className="text-[10px] font-display text-foreground truncate">{item.module.title}</p>
+                                      <p className="text-[9px] font-body text-muted-foreground">{item.duration}m · {item.sourceBlockTitle}</p>
+                                    </div>
+                                    {/* Duration adjuster */}
+                                    <div className="flex items-center gap-0.5">
+                                      <button onClick={() => setStagedItems(prev => prev.map(i => i.tempId === item.tempId ? { ...i, duration: Math.max(5, i.duration - 5) } : i))}
+                                        className="p-0.5 text-muted-foreground hover:text-foreground transition-colors"><Minus size={10} /></button>
+                                      <span className="text-[9px] font-body text-muted-foreground w-6 text-center tabular-nums">{item.duration}</span>
+                                      <button onClick={() => setStagedItems(prev => prev.map(i => i.tempId === item.tempId ? { ...i, duration: i.duration + 5 } : i))}
+                                        className="p-0.5 text-muted-foreground hover:text-foreground transition-colors"><Plus size={10} /></button>
+                                    </div>
+                                    {/* Remove */}
+                                    <button onClick={() => removeStagedItem(item.tempId)}
+                                      className="p-1 text-muted-foreground hover:text-destructive transition-colors opacity-0 group-hover:opacity-100">
+                                      <Trash2 size={11} />
                                     </button>
-                                    <AnimatePresence>
-                                      {isExpanded && (
-                                        <motion.div
-                                          initial={{ opacity: 0, height: 0 }}
-                                          animate={{ opacity: 1, height: "auto" }}
-                                          exit={{ opacity: 0, height: 0 }}
-                                          className="overflow-hidden"
-                                        >
-                                          <div className="px-3 pb-3 space-y-1">
-                                            {b.module_ids.map((mId, idx) => {
-                                              const mod = moduleMap.get(mId);
-                                              const dur = b.module_durations?.[idx] || mod?.duration_minutes || 0;
-                                              return (
-                                                <div key={`${mId}-${idx}`} className="flex items-center gap-2 px-2 py-1.5 rounded-lg bg-secondary/50">
-                                                  <div className={`w-1 h-5 rounded-full ${CATEGORY_DOT[mod?.category?.toLowerCase() || ""] || "bg-muted"}`} />
-                                                  <span className="text-[10px] font-body text-muted-foreground w-4">{idx + 1}.</span>
-                                                  <span className="text-xs font-body text-foreground flex-1 truncate">{mod?.title || "Unknown module"}</span>
-                                                  <span className="text-[10px] font-body text-muted-foreground">{dur}m</span>
-                                                </div>
-                                              );
-                                            })}
-                                          </div>
-                                        </motion.div>
-                                      )}
-                                    </AnimatePresence>
                                   </div>
-                                );
-                              })}
+                                ))}
+                              </div>
+
+                              {/* Add module to staged */}
+                              <button onClick={() => setShowStagedAddModule(!showStagedAddModule)}
+                                className="w-full py-2 rounded-lg border border-dashed border-border text-muted-foreground font-display text-[9px] tracking-wider hover:border-primary hover:text-primary transition-colors flex items-center justify-center gap-1.5">
+                                <Plus size={11} /> ADD MODULE
+                              </button>
+
+                              <AnimatePresence>
+                                {showStagedAddModule && (
+                                  <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
+                                    <div className="space-y-2 pt-1">
+                                      <div className="relative">
+                                        <Search size={10} className="absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                                        <input value={stagedModuleSearch} onChange={e => setStagedModuleSearch(e.target.value)}
+                                          placeholder="Search modules..."
+                                          className="w-full pl-7 pr-3 py-1.5 rounded-lg bg-secondary border border-border text-foreground font-body text-[10px] focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-muted-foreground" />
+                                      </div>
+                                      <div className="max-h-40 overflow-y-auto space-y-1 scrollbar-none">
+                                        {allModules.filter(m => !stagedModuleSearch || m.title.toLowerCase().includes(stagedModuleSearch.toLowerCase())).slice(0, 20).map(mod => (
+                                          <button key={mod.id} onClick={() => { addModuleToStaged(mod); setShowStagedAddModule(false); setStagedModuleSearch(""); }}
+                                            className="w-full text-left px-2 py-1.5 rounded-lg hover:bg-secondary/80 transition-colors flex items-center gap-2">
+                                            <div className={`w-1 h-4 rounded-full ${CATEGORY_DOT[mod.category?.toLowerCase() || ""] || "bg-muted"}`} />
+                                            <span className="text-[10px] font-body text-foreground flex-1 truncate">{mod.title}</span>
+                                            <span className="text-[9px] font-body text-muted-foreground">{mod.duration_minutes || 15}m</span>
+                                            <Plus size={10} className="text-primary shrink-0" />
+                                          </button>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  </motion.div>
+                                )}
+                              </AnimatePresence>
                             </div>
                           )}
 
@@ -1094,10 +1179,10 @@ const Training = () => {
                           <div className="grid grid-cols-2 gap-2">
                             {filteredBlocks.map(block => {
                               const bDur = block.module_durations?.reduce((s, d) => s + d, 0) || 0;
-                              const isSelected = selectedBlockIds.has(block.id);
+                              const isInStaged = stagedItems.some(i => i.sourceBlockTitle === block.title);
                               const isExpanded = expandedBlockDetail === block.id;
                               return (
-                                <div key={block.id} className={`rounded-xl border overflow-hidden transition-colors ${isSelected ? "border-primary bg-primary/10" : "border-border bg-secondary/40"}`}>
+                                <div key={block.id} className={`rounded-xl border overflow-hidden transition-colors ${isInStaged ? "border-primary bg-primary/10" : "border-border bg-secondary/40"}`}>
                                   <div className="p-3 space-y-2">
                                     <div className="flex items-start gap-2">
                                       <div className={`w-1 h-8 rounded-full shrink-0 mt-0.5 ${CATEGORY_DOT[block.category] || "bg-muted-foreground"}`} />
@@ -1120,11 +1205,11 @@ const Training = () => {
                                         className="p-1 rounded text-muted-foreground hover:text-foreground transition-colors">
                                         <ChevronDown size={12} className={`transition-transform ${isExpanded ? "rotate-180" : ""}`} />
                                       </button>
-                                      <button onClick={() => toggleBlockSelection(block.id)}
+                                      <button onClick={() => isInStaged ? removeBlockFromStaged(block.title) : addBlockToStaged(block)}
                                         className={`w-6 h-6 rounded-full flex items-center justify-center transition-colors ${
-                                          isSelected ? "bg-primary text-primary-foreground" : "bg-secondary border border-border text-muted-foreground hover:border-primary hover:text-primary"
+                                          isInStaged ? "bg-primary text-primary-foreground" : "bg-secondary border border-border text-muted-foreground hover:border-primary hover:text-primary"
                                         }`}>
-                                        {isSelected ? <Check size={12} /> : <Plus size={12} />}
+                                        {isInStaged ? <Check size={12} /> : <Plus size={12} />}
                                       </button>
                                     </div>
                                   </div>
@@ -1147,11 +1232,19 @@ const Training = () => {
                           )}
 
                           {/* Review button */}
-                          {selectedBlockIds.size > 0 && (
+                          {stagedItems.length > 0 && (
                             <button onClick={async () => {
-                              for (const block of selectedBlocks) { await handleApplyBlock(block); }
-                              setSelectedBlockIds(new Set());
+                              const planId = await ensurePlan();
+                              if (!planId) return;
+                              const existingMax = planItems.length;
+                              const inserts = stagedItems.map((item, idx) => ({
+                                plan_id: planId, module_id: item.moduleId, order_index: existingMax + idx, coach_note: item.coachNote || null,
+                              }));
+                              await supabase.from("player_day_plan_items").insert(inserts);
+                              toast.success(`Applied ${stagedItems.length} modules to plan`);
+                              setStagedItems([]);
                               setShowInlineBlocks(false);
+                              fetchDayPlan();
                             }}
                               className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-display text-xs tracking-wider hover:bg-primary/90 transition-colors flex items-center justify-center gap-2">
                               REVIEW PLAN <ChevronRight size={14} />
@@ -1299,10 +1392,10 @@ const Training = () => {
                     <div className="grid grid-cols-2 gap-2">
                       {filteredBlocks.map(block => {
                         const bDur = block.module_durations?.reduce((s, d) => s + d, 0) || 0;
-                        const isSelected = selectedBlockIds.has(block.id);
+                        const isInStaged = stagedItems.some(i => i.sourceBlockTitle === block.title);
                         const isExpanded = expandedBlockDetail === block.id;
                         return (
-                          <div key={block.id} className={`rounded-xl border overflow-hidden transition-colors ${isSelected ? "border-primary bg-primary/10" : "border-border bg-secondary/40"}`}>
+                          <div key={block.id} className={`rounded-xl border overflow-hidden transition-colors ${isInStaged ? "border-primary bg-primary/10" : "border-border bg-secondary/40"}`}>
                             <div className="p-3 space-y-2">
                               <div className="flex items-start gap-2">
                                 <div className={`w-1 h-8 rounded-full shrink-0 mt-0.5 ${CATEGORY_DOT[block.category] || "bg-muted-foreground"}`} />
@@ -1325,11 +1418,11 @@ const Training = () => {
                                   className="p-1 rounded text-muted-foreground hover:text-foreground transition-colors">
                                   <ChevronDown size={12} className={`transition-transform ${isExpanded ? "rotate-180" : ""}`} />
                                 </button>
-                                <button onClick={() => toggleBlockSelection(block.id)}
+                                <button onClick={() => isInStaged ? removeBlockFromStaged(block.title) : addBlockToStaged(block)}
                                   className={`w-6 h-6 rounded-full flex items-center justify-center transition-colors ${
-                                    isSelected ? "bg-primary text-primary-foreground" : "bg-secondary border border-border text-muted-foreground hover:border-primary hover:text-primary"
+                                    isInStaged ? "bg-primary text-primary-foreground" : "bg-secondary border border-border text-muted-foreground hover:border-primary hover:text-primary"
                                   }`}>
-                                  {isSelected ? <Check size={12} /> : <Plus size={12} />}
+                                  {isInStaged ? <Check size={12} /> : <Plus size={12} />}
                                 </button>
                               </div>
                             </div>
@@ -1352,11 +1445,19 @@ const Training = () => {
                     )}
 
                     {/* Apply selected */}
-                    {selectedBlockIds.size > 0 && (
+                    {stagedItems.length > 0 && (
                       <button onClick={async () => {
-                        for (const block of selectedBlocks) { await handleApplyBlock(block); }
-                        setSelectedBlockIds(new Set());
+                        const planId = await ensurePlan();
+                        if (!planId) return;
+                        const existingMax = planItems.length;
+                        const inserts = stagedItems.map((item, idx) => ({
+                          plan_id: planId, module_id: item.moduleId, order_index: existingMax + idx, coach_note: item.coachNote || null,
+                        }));
+                        await supabase.from("player_day_plan_items").insert(inserts);
+                        toast.success(`Applied ${stagedItems.length} modules to plan`);
+                        setStagedItems([]);
                         setShowAddPanel(false);
+                        fetchDayPlan();
                       }}
                         className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-display text-xs tracking-wider hover:bg-primary/90 transition-colors flex items-center justify-center gap-2">
                         REVIEW PLAN <ChevronRight size={14} />
