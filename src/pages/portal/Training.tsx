@@ -327,7 +327,7 @@ const Training = () => {
 
     const newItem: PlanItem = {
       id: "", order_index: 0, is_completed: false,
-      completed_at: null, coach_note: null,
+      completed_at: null, coach_note: null, block_id: null,
       module: { ...mod, description: null, instructions: null, video_url: null, coach_video_url: null, duration_minutes: mod.duration_minutes || 15 },
     };
 
