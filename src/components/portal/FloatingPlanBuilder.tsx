@@ -113,7 +113,9 @@ const FloatingPlanBuilder = ({
                   {/* Module list */}
                   {stagedItems.map((item, idx) => (
                     <div key={item.tempId} className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg bg-secondary/60 border border-border group">
-                      {/* Reorder */}
+                      <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-display text-primary-foreground ${CATEGORY_DOT[item.module.category?.toLowerCase() || ""] || "bg-muted"}`}>
+                        {idx + 1}
+                      </div>
                       <div className="flex flex-col gap-0">
                         <button onClick={() => moveStagedItem(idx, "up")} disabled={idx === 0}
                           className="text-muted-foreground hover:text-foreground disabled:opacity-20 transition-colors p-0.5">
@@ -128,10 +130,9 @@ const FloatingPlanBuilder = ({
                       <div className="flex-1 min-w-0">
                         <p className="text-[10px] font-display text-foreground truncate">{item.module.title}</p>
                         <p className="text-[9px] font-body text-muted-foreground">
-                          {item.module.category?.replace("_", " ")} · {item.sourceBlockTitle !== "Custom" && <span className="text-primary/60">{item.sourceBlockTitle}</span>}
+                          {item.module.category?.replace("_", " ")} · {item.sourceBlockTitle !== "Custom" ? <span className="text-primary/60">{item.sourceBlockTitle}</span> : "Custom"}
                         </p>
                       </div>
-                      {/* Duration adjuster */}
                       <div className="flex items-center gap-0.5">
                         <button onClick={() => setStagedItems(prev => prev.map(i => i.tempId === item.tempId ? { ...i, duration: Math.max(5, i.duration - 5) } : i))}
                           className="p-0.5 text-muted-foreground hover:text-foreground transition-colors"><Minus size={10} /></button>
@@ -139,7 +140,6 @@ const FloatingPlanBuilder = ({
                         <button onClick={() => setStagedItems(prev => prev.map(i => i.tempId === item.tempId ? { ...i, duration: i.duration + 5 } : i))}
                           className="p-0.5 text-muted-foreground hover:text-foreground transition-colors"><Plus size={10} /></button>
                       </div>
-                      {/* Remove */}
                       <button onClick={() => removeStagedItem(item.tempId)}
                         className="p-1 text-muted-foreground hover:text-destructive transition-colors">
                         <Trash2 size={11} />
