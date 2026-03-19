@@ -1417,11 +1417,11 @@ const Training = () => {
                                   className="p-1 rounded text-muted-foreground hover:text-foreground transition-colors">
                                   <ChevronDown size={12} className={`transition-transform ${isExpanded ? "rotate-180" : ""}`} />
                                 </button>
-                                <button onClick={() => toggleBlockSelection(block.id)}
+                                <button onClick={() => isInStaged ? removeBlockFromStaged(block.title) : addBlockToStaged(block)}
                                   className={`w-6 h-6 rounded-full flex items-center justify-center transition-colors ${
-                                    isSelected ? "bg-primary text-primary-foreground" : "bg-secondary border border-border text-muted-foreground hover:border-primary hover:text-primary"
+                                    isInStaged ? "bg-primary text-primary-foreground" : "bg-secondary border border-border text-muted-foreground hover:border-primary hover:text-primary"
                                   }`}>
-                                  {isSelected ? <Check size={12} /> : <Plus size={12} />}
+                                  {isInStaged ? <Check size={12} /> : <Plus size={12} />}
                                 </button>
                               </div>
                             </div>
