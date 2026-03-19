@@ -6,6 +6,8 @@ import { X, Search, Layers, BookOpen, Plus, Check, ArrowLeft, ArrowRight, Clock,
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 import { format } from "date-fns";
+import FloatingPlanBuilder from "@/components/portal/FloatingPlanBuilder";
+import type { StagedItem } from "@/components/portal/FloatingPlanBuilder";
 
 interface AssignedPlayer {
   player_id: string;
@@ -69,8 +71,7 @@ const QuickAddTrainingDrawer = ({
   const [players, setPlayers] = useState<AssignedPlayer[]>([]);
   const [blocks, setBlocks] = useState<TrainingBlock[]>([]);
   const [modules, setModules] = useState<ModuleItem[]>([]);
-  const [selectedBlockId, setSelectedBlockId] = useState("");
-  const [selectedModuleIds, setSelectedModuleIds] = useState<string[]>([]);
+  const [stagedItems, setStagedItems] = useState<StagedItem[]>([]);
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<string>("All");
   const [saving, setSaving] = useState(false);
@@ -116,33 +117,70 @@ const QuickAddTrainingDrawer = ({
     setModules((data as ModuleItem[]) || []);
   };
 
-  const toggleModule = (id: string) => {
-    setSelectedModuleIds(prev =>
-      prev.includes(id) ? prev.filter(m => m !== id) : [...prev, id]
-    );
+  const addBlockToStaged = (block: TrainingBlock) => {
+    const moduleMap = new Map(modules.map(module => [module.id, module]));
+    const newItems = block.module_ids.map((moduleId, index) => {
+      const module = moduleMap.get(moduleId);
+      if (!module) return null;
+      return {
+        tempId: crypto.randomUUID(),
+        moduleId,
+        module,
+        coachNote: block.module_notes?.[index] || "",
+        duration: block.module_durations?.[index] || module.duration_minutes || 15,
+        sourceBlockTitle: block.title,
+      } satisfies StagedItem;
+    }).filter(Boolean) as StagedItem[];
+
+    if (newItems.length === 0) {
+      toast.error("Block references modules you don't have");
+      return;
+    }
+
+    setStagedItems(prev => [
+      ...prev.filter(item => item.sourceBlockTitle !== block.title),
+      ...newItems,
+    ]);
+    setAssignType("block");
+    toast.success(`Added \"${block.title}\" — ${newItems.length} modules`);
   };
 
-  const removeModule = (id: string) => {
-    setSelectedModuleIds(prev => prev.filter(moduleId => moduleId !== id));
+  const removeBlockFromStaged = (blockTitle: string) => {
+    setStagedItems(prev => prev.filter(item => item.sourceBlockTitle !== blockTitle));
+  };
+
+  const addModuleToStaged = (module: ModuleItem) => {
+    setStagedItems(prev => [...prev, {
+      tempId: crypto.randomUUID(),
+      moduleId: module.id,
+      module,
+      coachNote: "",
+      duration: module.duration_minutes || 15,
+      sourceBlockTitle: "Custom",
+    }]);
+    setAssignType("modules");
+    toast.success(`Added \"${module.title}\"`);
+  };
+
+  const toggleModule = (id: string) => {
+    const hasCustomModule = stagedItems.some(item => item.moduleId === id && item.sourceBlockTitle === "Custom");
+
+    if (hasCustomModule) {
+      setStagedItems(prev => prev.filter(item => !(item.moduleId === id && item.sourceBlockTitle === "Custom")));
+      return;
+    }
+
+    const module = modules.find(item => item.id === id);
+    if (module) addModuleToStaged(module);
   };
 
   const clearSelection = () => {
-    setSelectedBlockId("");
-    setSelectedModuleIds([]);
+    setStagedItems([]);
   };
 
-  const selectedBlock = blocks.find(b => b.id === selectedBlockId);
-  const selectedModules = modules.filter(m => selectedModuleIds.includes(m.id));
   const playerName = players.find(p => p.player_id === playerId)?.full_name || "—";
-
-  const totalDuration = assignType === "block"
-    ? (selectedBlock?.duration_minutes || 0)
-    : selectedModules.reduce((sum, m) => sum + (m.duration_minutes || 0), 0);
-
-  const canProceedToReview = playerId && date && (
-    (assignType === "block" && selectedBlockId) ||
-    (assignType === "modules" && selectedModuleIds.length > 0)
-  );
+  const totalDuration = stagedItems.reduce((sum, item) => sum + item.duration, 0);
+  const canProceedToReview = Boolean(playerId && date && stagedItems.length > 0);
 
   const handleReview = () => {
     if (!canProceedToReview) {
@@ -153,44 +191,38 @@ const QuickAddTrainingDrawer = ({
   };
 
   const handleSave = async () => {
-    if (!user || !playerId || !date) return;
+    if (!user || !playerId || !date || stagedItems.length === 0) return;
     setSaving(true);
 
-    if (assignType === "block" && selectedBlock) {
-      const { data: plan } = await supabase.from("player_day_plans").insert({
-        coach_id: user.id, player_id: playerId, plan_date: date,
-        notes: selectedBlock.title, start_time: "09:00",
-      }).select("id").single();
+    const sourceBlocks = Array.from(new Set(stagedItems
+      .map(item => item.sourceBlockTitle)
+      .filter(title => title !== "Custom")));
 
-      if (plan && selectedBlock.module_ids?.length > 0) {
-        for (let i = 0; i < selectedBlock.module_ids.length; i++) {
-          await supabase.from("player_day_plan_items").insert({
-            plan_id: plan.id,
-            module_id: selectedBlock.module_ids[i],
-            order_index: i,
-            coach_note: selectedBlock.module_notes?.[i] || null,
-            block_id: selectedBlock.id,
-          });
-        }
-      }
-    } else if (assignType === "modules" && selectedModuleIds.length > 0) {
-      const { data: plan } = await supabase.from("player_day_plans").insert({
-        coach_id: user.id, player_id: playerId, plan_date: date,
-        notes: `${selectedModuleIds.length} modules`, start_time: "09:00",
-      }).select("id").single();
+    const planLabel = sourceBlocks.length === 1 && stagedItems.every(item => item.sourceBlockTitle === sourceBlocks[0])
+      ? sourceBlocks[0]
+      : `${stagedItems.length} modules`;
 
-      if (plan) {
-        for (let i = 0; i < selectedModuleIds.length; i++) {
-          await supabase.from("player_day_plan_items").insert({
-            plan_id: plan.id,
-            module_id: selectedModuleIds[i],
-            order_index: i,
-          });
-        }
-      }
+    const { data: plan } = await supabase.from("player_day_plans").insert({
+      coach_id: user.id,
+      player_id: playerId,
+      plan_date: date,
+      notes: planLabel,
+      start_time: "09:00",
+    }).select("id").single();
+
+    if (plan) {
+      const blockIdByTitle = new Map(blocks.map(block => [block.title, block.id]));
+      await supabase.from("player_day_plan_items").insert(
+        stagedItems.map((item, index) => ({
+          plan_id: plan.id,
+          module_id: item.moduleId,
+          order_index: index,
+          coach_note: item.coachNote || null,
+          block_id: item.sourceBlockTitle !== "Custom" ? blockIdByTitle.get(item.sourceBlockTitle) || null : null,
+        })),
+      );
     }
 
-    // Notify player
     await supabase.from("notifications").insert({
       user_id: playerId,
       title: "New training assigned",
@@ -202,13 +234,12 @@ const QuickAddTrainingDrawer = ({
     setSaving(false);
     onSaved?.();
 
-    // Reset state
-    setSelectedBlockId("");
-    setSelectedModuleIds([]);
+    setStagedItems([]);
     setSearch("");
+    setCategoryFilter("All");
+    setAssignType("block");
     setStep("select");
 
-    // Close and navigate to the player's training page
     onClose();
     navigate(`/training?date=${date}&player=${playerId}`);
   };
@@ -218,16 +249,20 @@ const QuickAddTrainingDrawer = ({
     return cat.toLowerCase().includes(categoryFilter.toLowerCase());
   };
 
-  const filteredBlocks = blocks.filter(b =>
-    b.title.toLowerCase().includes(search.toLowerCase()) && matchesCategory(b.category)
+  const filteredBlocks = blocks.filter(block =>
+    block.title.toLowerCase().includes(search.toLowerCase()) && matchesCategory(block.category)
   );
 
-  const filteredModules = modules.filter(m =>
-    m.title.toLowerCase().includes(search.toLowerCase()) && matchesCategory(m.category)
+  const filteredModules = modules.filter(module =>
+    module.title.toLowerCase().includes(search.toLowerCase()) && matchesCategory(module.category)
   );
 
   const handleClose = () => {
     setStep("select");
+    setAssignType("block");
+    setSearch("");
+    setCategoryFilter("All");
+    setStagedItems([]);
     onClose();
   };
 
@@ -245,8 +280,7 @@ const QuickAddTrainingDrawer = ({
             transition={{ type: "spring", damping: 25 }}
             className="fixed right-0 top-0 bottom-0 w-full max-w-md bg-card border-l border-border z-50 overflow-y-auto"
           >
-            <div className="p-5 space-y-4">
-              {/* Header */}
+            <div className="p-5 space-y-4 pb-32">
               <div className="flex items-center justify-between">
                 {step === "review" ? (
                   <button onClick={() => setStep("select")} className="flex items-center gap-1.5 text-muted-foreground hover:text-foreground transition-colors">
@@ -272,29 +306,37 @@ const QuickAddTrainingDrawer = ({
                   categoryFilter={categoryFilter} setCategoryFilter={setCategoryFilter}
                   filteredBlocks={filteredBlocks} filteredModules={filteredModules}
                   allModules={modules}
-                  selectedBlockId={selectedBlockId} setSelectedBlockId={setSelectedBlockId}
-                  selectedModuleIds={selectedModuleIds} toggleModule={toggleModule}
-                  selectedBlock={selectedBlock}
-                  selectedModules={selectedModules}
-                  totalDuration={totalDuration}
-                  onRemoveModule={removeModule}
+                  stagedItems={stagedItems}
+                  toggleModule={toggleModule}
+                  onAddBlock={addBlockToStaged}
+                  onRemoveBlock={removeBlockFromStaged}
                   onClearSelection={clearSelection}
-                  canProceed={!!canProceedToReview}
+                  canProceed={canProceedToReview}
                   onNext={handleReview}
                 />
               ) : (
                 <ReviewStep
                   playerName={playerName}
                   date={date}
-                  assignType={assignType}
-                  selectedBlock={selectedBlock}
-                  selectedModules={selectedModules}
+                  stagedItems={stagedItems}
                   totalDuration={totalDuration}
                   saving={saving}
                   onConfirm={handleSave}
                 />
               )}
             </div>
+
+            <AnimatePresence>
+              {step === "select" && stagedItems.length > 0 && (
+                <FloatingPlanBuilder
+                  stagedItems={stagedItems}
+                  setStagedItems={setStagedItems}
+                  allModules={modules}
+                  onApply={handleReview}
+                  applying={false}
+                />
+              )}
+            </AnimatePresence>
           </motion.div>
         </>
       )}
@@ -302,7 +344,6 @@ const QuickAddTrainingDrawer = ({
   );
 };
 
-/* ─── Step 1: Selection ─── */
 interface SelectionStepProps {
   date: string; setDate: (v: string) => void;
   playerId: string; setPlayerId: (v: string) => void;
@@ -313,12 +354,10 @@ interface SelectionStepProps {
   categoryFilter: string; setCategoryFilter: (v: string) => void;
   filteredBlocks: TrainingBlock[]; filteredModules: ModuleItem[];
   allModules: ModuleItem[];
-  selectedBlockId: string; setSelectedBlockId: (v: string) => void;
-  selectedModuleIds: string[]; toggleModule: (id: string) => void;
-  selectedBlock?: TrainingBlock;
-  selectedModules: ModuleItem[];
-  totalDuration: number;
-  onRemoveModule: (id: string) => void;
+  stagedItems: StagedItem[];
+  toggleModule: (id: string) => void;
+  onAddBlock: (block: TrainingBlock) => void;
+  onRemoveBlock: (blockTitle: string) => void;
   onClearSelection: () => void;
   canProceed: boolean;
   onNext: () => void;
@@ -327,305 +366,236 @@ interface SelectionStepProps {
 const SelectionStep = ({
   date, setDate, playerId, setPlayerId, prefilledPlayerId, players,
   assignType, setAssignType, search, setSearch, categoryFilter, setCategoryFilter,
-  filteredBlocks, filteredModules, allModules, selectedBlockId, setSelectedBlockId,
-  selectedModuleIds, toggleModule, selectedBlock, selectedModules, totalDuration,
-  onRemoveModule, onClearSelection, canProceed, onNext,
+  filteredBlocks, filteredModules, allModules, stagedItems, toggleModule,
+  onAddBlock, onRemoveBlock, onClearSelection, canProceed, onNext,
 }: SelectionStepProps) => {
   const [expandedBlockId, setExpandedBlockId] = useState<string | null>(null);
   const [expandedModuleId, setExpandedModuleId] = useState<string | null>(null);
 
   return (
-  <>
-    {/* Date */}
-    <div>
-      <label className="font-display text-[10px] tracking-wider text-muted-foreground block mb-1">DATE</label>
-      <input
-        type="date" value={date} onChange={e => setDate(e.target.value)}
-        className="w-full px-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary"
-      />
-    </div>
-
-    {/* Player */}
-    <div>
-      <label className="font-display text-[10px] tracking-wider text-muted-foreground block mb-1">PLAYER</label>
-      <select
-        value={playerId} onChange={e => setPlayerId(e.target.value)}
-        disabled={!!prefilledPlayerId}
-        className="w-full px-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary disabled:opacity-70"
-      >
-        <option value="">Select player...</option>
-        {players.map(p => (
-          <option key={p.player_id} value={p.player_id}>{p.full_name}</option>
-        ))}
-      </select>
-    </div>
-
-    {/* Type toggle */}
-    <div className="flex gap-1 bg-secondary rounded-lg p-0.5">
-      {(["block", "modules"] as const).map(t => (
-        <button key={t} onClick={() => setAssignType(t)}
-          className={`flex-1 py-2 rounded-md font-display text-[10px] tracking-wider transition-colors flex items-center justify-center gap-1.5 ${
-            assignType === t ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
-          }`}
-        >
-          {t === "block" ? <><Layers size={12} /> ASSIGN BLOCK</> : <><BookOpen size={12} /> PICK MODULES</>}
-        </button>
-      ))}
-    </div>
-
-    {/* Search */}
-    <div className="relative">
-      <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-      <input
-        placeholder={assignType === "block" ? "Search blocks..." : "Search modules..."}
-        value={search} onChange={e => setSearch(e.target.value)}
-        className="w-full pl-9 pr-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary"
-      />
-    </div>
-
-    {/* Category filter */}
-    <div className="flex flex-wrap gap-1.5">
-      {CATEGORY_FILTERS.map(cat => (
-        <button key={cat} onClick={() => setCategoryFilter(cat)}
-          className={`px-3 py-1.5 rounded-full font-display text-[9px] tracking-wider whitespace-nowrap transition-colors border ${
-            categoryFilter === cat
-              ? "bg-primary text-primary-foreground border-primary"
-              : "bg-secondary text-muted-foreground border-border hover:text-foreground"
-          }`}
-        >
-          {cat.toUpperCase()}
-        </button>
-      ))}
-    </div>
-
-    {/* Live builder */}
-    {((assignType === "block" && selectedBlock) || (assignType === "modules" && selectedModules.length > 0)) && (
-      <div className="rounded-xl border border-primary/20 bg-primary/5 p-3 space-y-3">
-        <div className="flex items-center justify-between gap-3">
-          <div>
-            <p className="font-display text-[10px] tracking-wider text-primary">PLAN BUILDER</p>
-            <p className="text-[11px] font-body text-muted-foreground">
-              {assignType === "block"
-                ? "1 block selected"
-                : `${selectedModules.length} module${selectedModules.length === 1 ? "" : "s"} selected`} · {totalDuration}min
-            </p>
-          </div>
-          <button
-            onClick={onClearSelection}
-            className="text-[10px] font-display tracking-wider text-muted-foreground hover:text-foreground transition-colors"
-          >
-            CLEAR
-          </button>
-        </div>
-
-        {assignType === "block" && selectedBlock ? (
-          <div className={`p-3 rounded-lg border border-l-4 border-border bg-secondary/60 ${
-            CATEGORY_BORDER_COLORS[selectedBlock.category?.toLowerCase()] || "border-l-muted-foreground"
-          }`}>
-            <p className="font-display text-xs text-foreground">{selectedBlock.title}</p>
-            <p className="text-[10px] font-body text-muted-foreground">
-              {selectedBlock.category} · {selectedBlock.duration_minutes}min · {selectedBlock.module_ids?.length || 0} modules
-            </p>
-          </div>
-        ) : (
-          <div className="space-y-1.5 max-h-40 overflow-y-auto pr-1">
-            {selectedModules.map((module, index) => (
-              <div
-                key={module.id}
-                className={`flex items-center gap-3 p-3 rounded-lg border border-l-4 border-border bg-secondary/60 ${
-                  CATEGORY_BORDER_COLORS[module.category?.toLowerCase()] || "border-l-muted-foreground"
-                }`}
-              >
-                <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-display text-primary-foreground ${
-                  CATEGORY_DOT_COLORS[module.category?.toLowerCase()] || "bg-muted-foreground"
-                }`}>
-                  {index + 1}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="font-display text-xs text-foreground">{module.title}</p>
-                  <p className="text-[10px] font-body text-muted-foreground">
-                    {module.category?.replace("_", " ")} · {module.duration_minutes || 0}min
-                  </p>
-                </div>
-                <button
-                  onClick={() => onRemoveModule(module.id)}
-                  className="w-7 h-7 rounded-full bg-secondary text-muted-foreground hover:text-foreground transition-colors flex items-center justify-center"
-                >
-                  <X size={12} />
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
+    <>
+      <div>
+        <label className="font-display text-[10px] tracking-wider text-muted-foreground block mb-1">DATE</label>
+        <input
+          type="date" value={date} onChange={e => setDate(e.target.value)}
+          className="w-full px-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+        />
       </div>
-    )}
 
-    {/* List */}
-    <div className="space-y-1.5 max-h-[35vh] overflow-y-auto">
-      {assignType === "block" ? (
-        filteredBlocks.length === 0 ? (
-          <p className="text-xs font-body text-muted-foreground text-center py-6">No blocks found</p>
-        ) : (
-          filteredBlocks.map(b => {
-            const isSelected = selectedBlockId === b.id;
-            const isExpanded = expandedBlockId === b.id;
-            return (
-              <div key={b.id}
-                className={`rounded-lg border border-l-4 transition-all overflow-hidden ${
-                  CATEGORY_BORDER_COLORS[b.category?.toLowerCase()] || "border-l-muted-foreground"
-                } ${
-                  isSelected ? "border-primary bg-primary/10" : "border-border hover:border-primary/40"
-                }`}
-              >
-                <div className="flex items-center gap-3 p-3">
-                  <div className="flex-1 min-w-0">
-                    <p className="font-display text-xs text-foreground">{b.title}</p>
-                    <p className="text-[10px] font-body text-muted-foreground">
-                      {b.category} · {b.duration_minutes}min · {b.module_ids?.length || 0} modules
-                    </p>
-                  </div>
-                  <button onClick={() => setExpandedBlockId(isExpanded ? null : b.id)}
-                    className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground transition-colors shrink-0">
-                    <ChevronDown size={14} className={`transition-transform ${isExpanded ? "rotate-180" : ""}`} />
-                  </button>
-                  <button onClick={() => setSelectedBlockId(isSelected ? "" : b.id)}
-                    className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-all ${
-                      isSelected ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground hover:text-foreground"
-                    }`}>
-                    {isSelected ? <Check size={14} /> : <Plus size={14} />}
-                  </button>
-                </div>
-                <AnimatePresence>
-                  {isExpanded && (
-                    <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
-                      <div className="px-3 pb-3 pt-1 border-t border-border space-y-1.5">
-                        <div className="flex flex-wrap gap-1.5 text-[9px] font-body text-muted-foreground">
-                          <span className="flex items-center gap-0.5"><Clock size={9} /> {b.duration_minutes} min</span>
-                          <span>·</span>
-                          <span>{b.module_ids?.length || 0} modules</span>
-                        </div>
-                        {b.module_ids && b.module_ids.length > 0 && (
-                          <div className="space-y-1">
-                            {b.module_ids.map((mId, idx) => {
-                              const mod = allModules.find(m => m.id === mId);
-                              const dur = b.module_durations?.[idx];
-                              return (
-                                <div key={`${mId}-${idx}`} className={`flex items-center gap-2 py-1.5 px-2 rounded-md bg-secondary/80 border-l-2 ${
-                                  CATEGORY_BORDER_COLORS[mod?.category?.toLowerCase() || ""] || "border-l-muted-foreground"
-                                }`}>
-                                  <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[8px] font-display text-primary-foreground ${
-                                    CATEGORY_DOT_COLORS[mod?.category?.toLowerCase() || ""] || "bg-muted-foreground"
-                                  }`}>{idx + 1}</span>
-                                  <div className="flex-1 min-w-0">
-                                    <p className="font-display text-[10px] text-foreground truncate">{mod?.title || "Unknown module"}</p>
-                                    <p className="text-[9px] font-body text-muted-foreground">
-                                      {mod?.category?.replace("_", " ") || "—"} · {dur || mod?.duration_minutes || 0}min
-                                    </p>
-                                  </div>
-                                </div>
-                              );
-                            })}
-                          </div>
-                        )}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            );
-          })
-        )
-      ) : (
-        filteredModules.length === 0 ? (
-          <p className="text-xs font-body text-muted-foreground text-center py-6">No modules found</p>
-        ) : (
-          filteredModules.map(m => {
-            const isSelected = selectedModuleIds.includes(m.id);
-            const isExpanded = expandedModuleId === m.id;
-            const hasDetails = m.description || m.instructions;
-            return (
-              <div key={m.id}
-                className={`rounded-lg border border-l-4 transition-all overflow-hidden ${
-                  CATEGORY_BORDER_COLORS[m.category?.toLowerCase()] || "border-l-muted-foreground"
-                } ${
-                  isSelected ? "border-primary bg-primary/10" : "border-border hover:border-primary/40"
-                }`}
-              >
-                <div className="flex items-center gap-3 p-3">
-                  <div className="flex-1 min-w-0">
-                    <p className="font-display text-xs text-foreground">{m.title}</p>
-                    <p className="text-[10px] font-body text-muted-foreground">
-                      {m.category?.replace("_", " ")} · {m.duration_minutes || 0}min
-                    </p>
-                  </div>
-                  {hasDetails && (
-                    <button onClick={() => setExpandedModuleId(isExpanded ? null : m.id)}
+      <div>
+        <label className="font-display text-[10px] tracking-wider text-muted-foreground block mb-1">PLAYER</label>
+        <select
+          value={playerId} onChange={e => setPlayerId(e.target.value)}
+          disabled={!!prefilledPlayerId}
+          className="w-full px-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary disabled:opacity-70"
+        >
+          <option value="">Select player...</option>
+          {players.map(player => (
+            <option key={player.player_id} value={player.player_id}>{player.full_name}</option>
+          ))}
+        </select>
+      </div>
+
+      <div className="flex gap-1 bg-secondary rounded-lg p-0.5">
+        {(["block", "modules"] as const).map(type => (
+          <button key={type} onClick={() => setAssignType(type)}
+            className={`flex-1 py-2 rounded-md font-display text-[10px] tracking-wider transition-colors flex items-center justify-center gap-1.5 ${
+              assignType === type ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            {type === "block" ? <><Layers size={12} /> ASSIGN BLOCK</> : <><BookOpen size={12} /> PICK MODULES</>}
+          </button>
+        ))}
+      </div>
+
+      <div className="relative">
+        <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+        <input
+          placeholder={assignType === "block" ? "Search blocks..." : "Search modules..."}
+          value={search} onChange={e => setSearch(e.target.value)}
+          className="w-full pl-9 pr-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+        />
+      </div>
+
+      <div className="flex flex-wrap gap-1.5">
+        {CATEGORY_FILTERS.map(category => (
+          <button key={category} onClick={() => setCategoryFilter(category)}
+            className={`px-3 py-1.5 rounded-full font-display text-[9px] tracking-wider whitespace-nowrap transition-colors border ${
+              categoryFilter === category
+                ? "bg-primary text-primary-foreground border-primary"
+                : "bg-secondary text-muted-foreground border-border hover:text-foreground"
+            }`}
+          >
+            {category.toUpperCase()}
+          </button>
+        ))}
+      </div>
+
+      <div className={`space-y-1.5 max-h-[35vh] overflow-y-auto ${stagedItems.length > 0 ? "pb-28" : ""}`}>
+        {assignType === "block" ? (
+          filteredBlocks.length === 0 ? (
+            <p className="text-xs font-body text-muted-foreground text-center py-6">No blocks found</p>
+          ) : (
+            filteredBlocks.map(block => {
+              const isSelected = stagedItems.some(item => item.sourceBlockTitle === block.title);
+              const isExpanded = expandedBlockId === block.id;
+              return (
+                <div key={block.id}
+                  className={`rounded-lg border border-l-4 transition-all overflow-hidden ${
+                    CATEGORY_BORDER_COLORS[block.category?.toLowerCase()] || "border-l-muted-foreground"
+                  } ${
+                    isSelected ? "border-primary bg-primary/10" : "border-border hover:border-primary/40"
+                  }`}
+                >
+                  <div className="flex items-center gap-3 p-3">
+                    <div className="flex-1 min-w-0">
+                      <p className="font-display text-xs text-foreground">{block.title}</p>
+                      <p className="text-[10px] font-body text-muted-foreground">
+                        {block.category} · {block.duration_minutes}min · {block.module_ids?.length || 0} modules
+                      </p>
+                    </div>
+                    <button onClick={() => setExpandedBlockId(isExpanded ? null : block.id)}
                       className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground transition-colors shrink-0">
                       <ChevronDown size={14} className={`transition-transform ${isExpanded ? "rotate-180" : ""}`} />
                     </button>
-                  )}
-                  <button onClick={() => toggleModule(m.id)}
-                    className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-all ${
-                      isSelected ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground hover:text-foreground"
-                    }`}>
-                    {isSelected ? <Check size={14} /> : <Plus size={14} />}
-                  </button>
-                </div>
-                <AnimatePresence>
-                  {isExpanded && hasDetails && (
-                    <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
-                      <div className="px-3 pb-3 pt-1 border-t border-border space-y-1.5">
-                        {m.description && (
-                          <p className="text-[10px] font-body text-muted-foreground">{m.description}</p>
-                        )}
-                        {m.instructions && (
-                          <div>
-                            <span className="text-[9px] font-display text-foreground/70 uppercase tracking-wider">Instructions</span>
-                            <p className="text-[10px] font-body text-muted-foreground mt-0.5 whitespace-pre-line">{m.instructions}</p>
+                    <button onClick={() => isSelected ? onRemoveBlock(block.title) : onAddBlock(block)}
+                      className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-all ${
+                        isSelected ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground hover:text-foreground"
+                      }`}>
+                      {isSelected ? <Check size={14} /> : <Plus size={14} />}
+                    </button>
+                  </div>
+                  <AnimatePresence>
+                    {isExpanded && (
+                      <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
+                        <div className="px-3 pb-3 pt-1 border-t border-border space-y-1.5">
+                          <div className="flex flex-wrap gap-1.5 text-[9px] font-body text-muted-foreground">
+                            <span className="flex items-center gap-0.5"><Clock size={9} /> {block.duration_minutes} min</span>
+                            <span>·</span>
+                            <span>{block.module_ids?.length || 0} modules</span>
                           </div>
-                        )}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            );
-          })
-        )
+                          {block.module_ids && block.module_ids.length > 0 && (
+                            <div className="space-y-1">
+                              {block.module_ids.map((moduleId, index) => {
+                                const module = allModules.find(item => item.id === moduleId);
+                                const duration = block.module_durations?.[index];
+                                return (
+                                  <div key={`${moduleId}-${index}`} className={`flex items-center gap-2 py-1.5 px-2 rounded-md bg-secondary/80 border-l-2 ${
+                                    CATEGORY_BORDER_COLORS[module?.category?.toLowerCase() || ""] || "border-l-muted-foreground"
+                                  }`}>
+                                    <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[8px] font-display text-primary-foreground ${
+                                      CATEGORY_DOT_COLORS[module?.category?.toLowerCase() || ""] || "bg-muted-foreground"
+                                    }`}>{index + 1}</span>
+                                    <div className="flex-1 min-w-0">
+                                      <p className="font-display text-[10px] text-foreground truncate">{module?.title || "Unknown module"}</p>
+                                      <p className="text-[9px] font-body text-muted-foreground">
+                                        {module?.category?.replace("_", " ") || "—"} · {duration || module?.duration_minutes || 0}min
+                                      </p>
+                                    </div>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          )}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              );
+            })
+          )
+        ) : (
+          filteredModules.length === 0 ? (
+            <p className="text-xs font-body text-muted-foreground text-center py-6">No modules found</p>
+          ) : (
+            filteredModules.map(module => {
+              const isSelected = stagedItems.some(item => item.moduleId === module.id && item.sourceBlockTitle === "Custom");
+              const isExpanded = expandedModuleId === module.id;
+              const hasDetails = module.description || module.instructions;
+              return (
+                <div key={module.id}
+                  className={`rounded-lg border border-l-4 transition-all overflow-hidden ${
+                    CATEGORY_BORDER_COLORS[module.category?.toLowerCase()] || "border-l-muted-foreground"
+                  } ${
+                    isSelected ? "border-primary bg-primary/10" : "border-border hover:border-primary/40"
+                  }`}
+                >
+                  <div className="flex items-center gap-3 p-3">
+                    <div className="flex-1 min-w-0">
+                      <p className="font-display text-xs text-foreground">{module.title}</p>
+                      <p className="text-[10px] font-body text-muted-foreground">
+                        {module.category?.replace("_", " ")} · {module.duration_minutes || 0}min
+                      </p>
+                    </div>
+                    {hasDetails && (
+                      <button onClick={() => setExpandedModuleId(isExpanded ? null : module.id)}
+                        className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground transition-colors shrink-0">
+                        <ChevronDown size={14} className={`transition-transform ${isExpanded ? "rotate-180" : ""}`} />
+                      </button>
+                    )}
+                    <button onClick={() => toggleModule(module.id)}
+                      className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-all ${
+                        isSelected ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground hover:text-foreground"
+                      }`}>
+                      {isSelected ? <Check size={14} /> : <Plus size={14} />}
+                    </button>
+                  </div>
+                  <AnimatePresence>
+                    {isExpanded && hasDetails && (
+                      <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
+                        <div className="px-3 pb-3 pt-1 border-t border-border space-y-1.5">
+                          {module.description && (
+                            <p className="text-[10px] font-body text-muted-foreground">{module.description}</p>
+                          )}
+                          {module.instructions && (
+                            <div>
+                              <span className="text-[9px] font-display text-foreground/70 uppercase tracking-wider">Instructions</span>
+                              <p className="text-[10px] font-body text-muted-foreground mt-0.5 whitespace-pre-line">{module.instructions}</p>
+                            </div>
+                          )}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              );
+            })
+          )
+        )}
+      </div>
+
+      {stagedItems.length > 0 && (
+        <button
+          onClick={onClearSelection}
+          className="w-full py-2 rounded-xl border border-border text-muted-foreground font-display text-[10px] tracking-wider hover:text-foreground hover:border-primary transition-colors"
+        >
+          CLEAR STAGED PLAN
+        </button>
       )}
-    </div>
 
-    {/* Selection summary */}
-    {assignType === "modules" && selectedModuleIds.length > 0 && (
-      <p className="text-xs font-body text-primary">{selectedModuleIds.length} modules selected</p>
-    )}
-
-    {/* Next */}
-    <button
-      onClick={onNext}
-      disabled={!canProceed}
-      className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-display text-sm tracking-wider hover:bg-primary/90 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
-    >
-      REVIEW PLAN <ArrowRight size={16} />
-    </button>
-  </>
+      <button
+        onClick={onNext}
+        disabled={!canProceed}
+        className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-display text-sm tracking-wider hover:bg-primary/90 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+      >
+        REVIEW PLAN <ArrowRight size={16} />
+      </button>
+    </>
   );
 };
 
-/* ─── Step 2: Review ─── */
 interface ReviewStepProps {
   playerName: string;
   date: string;
-  assignType: "block" | "modules";
-  selectedBlock?: TrainingBlock;
-  selectedModules: ModuleItem[];
+  stagedItems: StagedItem[];
   totalDuration: number;
   saving: boolean;
   onConfirm: () => void;
 }
 
 const ReviewStep = ({
-  playerName, date, assignType, selectedBlock, selectedModules,
+  playerName, date, stagedItems,
   totalDuration, saving, onConfirm,
 }: ReviewStepProps) => {
   const formattedDate = (() => {
@@ -637,7 +607,6 @@ const ReviewStep = ({
     <>
       <h2 className="font-display text-lg tracking-wider text-foreground">REVIEW PLAN</h2>
 
-      {/* Summary cards */}
       <div className="grid grid-cols-3 gap-2">
         <div className="bg-secondary rounded-lg p-3 text-center">
           <User size={14} className="mx-auto mb-1 text-primary" />
@@ -656,53 +625,41 @@ const ReviewStep = ({
         </div>
       </div>
 
-      {/* Plan content */}
       <div>
         <p className="font-display text-[10px] tracking-wider text-muted-foreground mb-2">
-          {assignType === "block" ? "TRAINING BLOCK" : `MODULES (${selectedModules.length})`}
+          MODULES ({stagedItems.length})
         </p>
 
-        {assignType === "block" && selectedBlock ? (
-          <div className={`p-4 rounded-lg border border-l-4 ${CATEGORY_BORDER_COLORS[selectedBlock.category?.toLowerCase()] || "border-l-muted-foreground"} border-border bg-secondary/50`}>
-            <p className="font-display text-sm text-foreground mb-1">{selectedBlock.title}</p>
-            <p className="text-[10px] font-body text-muted-foreground">
-              {selectedBlock.category} · {selectedBlock.duration_minutes}min · {selectedBlock.module_ids?.length || 0} modules
-            </p>
-          </div>
-        ) : (
-          <div className="space-y-1.5 max-h-[40vh] overflow-y-auto">
-            {selectedModules.map((m, i) => (
-              <div
-                key={m.id}
-                className={`flex items-center gap-3 p-3 rounded-lg border border-l-4 border-border bg-secondary/50 ${
-                  CATEGORY_BORDER_COLORS[m.category?.toLowerCase()] || "border-l-muted-foreground"
-                }`}
-              >
-                <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-display text-primary-foreground ${
-                  CATEGORY_DOT_COLORS[m.category?.toLowerCase()] || "bg-muted-foreground"
-                }`}>
-                  {i + 1}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="font-display text-xs text-foreground">{m.title}</p>
-                  <p className="text-[10px] font-body text-muted-foreground">
-                    {m.category?.replace("_", " ")} · {m.duration_minutes || 0}min
-                  </p>
-                </div>
+        <div className="space-y-1.5 max-h-[40vh] overflow-y-auto">
+          {stagedItems.map((item, index) => (
+            <div
+              key={item.tempId}
+              className={`flex items-center gap-3 p-3 rounded-lg border border-l-4 border-border bg-secondary/50 ${
+                CATEGORY_BORDER_COLORS[item.module.category?.toLowerCase()] || "border-l-muted-foreground"
+              }`}
+            >
+              <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-display text-primary-foreground ${
+                CATEGORY_DOT_COLORS[item.module.category?.toLowerCase()] || "bg-muted-foreground"
+              }`}>
+                {index + 1}
               </div>
-            ))}
-          </div>
-        )}
+              <div className="flex-1 min-w-0">
+                <p className="font-display text-xs text-foreground">{item.module.title}</p>
+                <p className="text-[10px] font-body text-muted-foreground">
+                  {item.module.category?.replace("_", " ")} · {item.duration}min{item.sourceBlockTitle !== "Custom" ? ` · ${item.sourceBlockTitle}` : ""}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
-      {/* Info callout */}
       <div className="bg-primary/5 border border-primary/20 rounded-lg p-3">
         <p className="text-[11px] font-body text-muted-foreground leading-relaxed">
           This will create a training plan for <span className="text-foreground font-semibold">{playerName}</span> on <span className="text-foreground font-semibold">{formattedDate}</span>. The player will be notified.
         </p>
       </div>
 
-      {/* Confirm */}
       <button
         onClick={onConfirm}
         disabled={saving}
