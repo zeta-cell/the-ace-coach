@@ -280,18 +280,18 @@ const QuickAddTrainingDrawer = ({
             transition={{ type: "spring", damping: 25 }}
             className="fixed right-0 top-0 bottom-0 w-full max-w-md bg-card border-l border-border z-50 overflow-y-auto"
           >
-            <div className="p-5 space-y-4 pb-32">
+            <div className="px-4 pt-3 pb-32 space-y-2.5">
               <div className="flex items-center justify-between">
                 {step === "review" ? (
                   <button onClick={() => setStep("select")} className="flex items-center gap-1.5 text-muted-foreground hover:text-foreground transition-colors">
-                    <ArrowLeft size={16} />
-                    <span className="font-display text-[10px] tracking-wider">BACK</span>
+                    <ArrowLeft size={14} />
+                    <span className="font-display text-[9px] tracking-wider">BACK</span>
                   </button>
                 ) : (
-                  <h2 className="font-display text-lg tracking-wider text-foreground">CREATE TRAINING</h2>
+                  <h2 className="font-display text-sm tracking-wider text-foreground">CREATE TRAINING</h2>
                 )}
                 <button onClick={handleClose} className="p-1 rounded-lg hover:bg-secondary">
-                  <X size={18} className="text-muted-foreground" />
+                  <X size={16} className="text-muted-foreground" />
                 </button>
               </div>
 
@@ -374,53 +374,53 @@ const SelectionStep = ({
 
   return (
     <>
-      <div>
-        <label className="font-display text-[10px] tracking-wider text-muted-foreground block mb-1">DATE</label>
-        <input
-          type="date" value={date} onChange={e => setDate(e.target.value)}
-          className="w-full px-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary"
-        />
-      </div>
-
-      <div>
-        <label className="font-display text-[10px] tracking-wider text-muted-foreground block mb-1">PLAYER</label>
-        <select
-          value={playerId} onChange={e => setPlayerId(e.target.value)}
-          disabled={!!prefilledPlayerId}
-          className="w-full px-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary disabled:opacity-70"
-        >
-          <option value="">Select player...</option>
-          {players.map(player => (
-            <option key={player.player_id} value={player.player_id}>{player.full_name}</option>
-          ))}
-        </select>
+      {/* Date + Player in one row */}
+      <div className="flex gap-2">
+        <div className="flex-1">
+          <input
+            type="date" value={date} onChange={e => setDate(e.target.value)}
+            className="w-full px-2.5 py-1.5 rounded-lg bg-secondary border border-border text-foreground font-body text-xs focus:outline-none focus:ring-1 focus:ring-primary"
+          />
+        </div>
+        <div className="flex-1">
+          <select
+            value={playerId} onChange={e => setPlayerId(e.target.value)}
+            disabled={!!prefilledPlayerId}
+            className="w-full px-2.5 py-1.5 rounded-lg bg-secondary border border-border text-foreground font-body text-xs focus:outline-none focus:ring-1 focus:ring-primary disabled:opacity-70"
+          >
+            <option value="">Player...</option>
+            {players.map(player => (
+              <option key={player.player_id} value={player.player_id}>{player.full_name}</option>
+            ))}
+          </select>
+        </div>
       </div>
 
       <div className="flex gap-1 bg-secondary rounded-lg p-0.5">
         {(["block", "modules"] as const).map(type => (
           <button key={type} onClick={() => setAssignType(type)}
-            className={`flex-1 py-2 rounded-md font-display text-[10px] tracking-wider transition-colors flex items-center justify-center gap-1.5 ${
+            className={`flex-1 py-1.5 rounded-md font-display text-[9px] tracking-wider transition-colors flex items-center justify-center gap-1 ${
               assignType === type ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
             }`}
           >
-            {type === "block" ? <><Layers size={12} /> ASSIGN BLOCK</> : <><BookOpen size={12} /> PICK MODULES</>}
+            {type === "block" ? <><Layers size={10} /> BLOCKS</> : <><BookOpen size={10} /> MODULES</>}
           </button>
         ))}
       </div>
 
       <div className="relative">
-        <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+        <Search size={12} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
         <input
           placeholder={assignType === "block" ? "Search blocks..." : "Search modules..."}
           value={search} onChange={e => setSearch(e.target.value)}
-          className="w-full pl-9 pr-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+          className="w-full pl-8 pr-3 py-1.5 rounded-lg bg-secondary border border-border text-foreground font-body text-xs focus:outline-none focus:ring-1 focus:ring-primary"
         />
       </div>
 
-      <div className="flex flex-wrap gap-1.5">
+      <div className="flex flex-wrap gap-1">
         {CATEGORY_FILTERS.map(category => (
           <button key={category} onClick={() => setCategoryFilter(category)}
-            className={`px-3 py-1.5 rounded-full font-display text-[9px] tracking-wider whitespace-nowrap transition-colors border ${
+            className={`px-2 py-1 rounded-full font-display text-[8px] tracking-wider whitespace-nowrap transition-colors border ${
               categoryFilter === category
                 ? "bg-primary text-primary-foreground border-primary"
                 : "bg-secondary text-muted-foreground border-border hover:text-foreground"
