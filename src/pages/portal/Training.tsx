@@ -883,7 +883,7 @@ const Training = () => {
                                 <div className={`w-2 h-2 rounded-full shrink-0 ${CATEGORY_DOT[item.module.category] || "bg-muted-foreground"}`} />
                                 <span className="font-display text-sm text-foreground truncate">{item.module.title}</span>
                               </div>
-                              <div className="flex items-center gap-2 mt-0.5 ml-4">
+                              <div className="flex items-center gap-2 mt-0.5 ml-4 flex-wrap">
                                 <span className="font-body text-[10px] text-muted-foreground uppercase">
                                   {item.module.category.replace("_", " ")}
                                 </span>
@@ -891,6 +891,14 @@ const Training = () => {
                                 <span className="flex items-center gap-0.5 text-muted-foreground text-[10px] font-body">
                                   <Clock size={9} /> {item.module.duration_minutes} min
                                 </span>
+                                {item.block_id && planBlockNames.get(item.block_id) && (
+                                  <>
+                                    <span className="text-muted-foreground text-[10px]">·</span>
+                                    <span className="px-1.5 py-0.5 rounded bg-primary/10 text-primary text-[9px] font-display tracking-wider truncate max-w-[120px]">
+                                      {planBlockNames.get(item.block_id)}
+                                    </span>
+                                  </>
+                                )}
                               </div>
                             </div>
 
