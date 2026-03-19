@@ -435,12 +435,47 @@ const Training = () => {
     fetchBlocks();
   };
 
-  /* ── Cancel day ── */
+  /* ── Cancel day (coach/admin) ── */
   const handleCancelDay = async () => {
     if (!currentPlanId || !confirm("Cancel this training day? All modules will be removed.")) return;
     await supabase.from("player_day_plan_items").delete().eq("plan_id", currentPlanId);
     await supabase.from("player_day_plans").delete().eq("id", currentPlanId);
     toast.success("Training day cancelled");
+    setCurrentPlanId(null); setPlanItems([]); setPlanNotes("");
+    setEditStartTime(""); setEditEndTime(""); setEditLocation("");
+    setCoachName(null); setCoachAvatar(null);
+    fetchPlanDates();
+  };
+
+  /* ── Cancel day (player) with 48h policy ── */
+  const getHoursUntilSession = () => {
+    const sessionDate = new Date(selectedDay);
+    if (editStartTime) {
+      const [h, m] = editStartTime.split(":").map(Number);
+      sessionDate.setHours(h, m, 0, 0);
+    } else {
+      sessionDate.setHours(9, 0, 0, 0); // default 9am if no start time
+    }
+    return (sessionDate.getTime() - Date.now()) / (1000 * 60 * 60);
+  };
+
+  const isFreeCancellation = getHoursUntilSession() >= 48;
+
+  const handlePlayerCancelDay = async () => {
+    if (!currentPlanId) return;
+    const hoursLeft = getHoursUntilSession();
+    const isFree = hoursLeft >= 48;
+
+    const message = isFree
+      ? "Cancel this training day? No fee will be charged."
+      : "Cancel this training day? A late cancellation fee will apply as the session is within 48 hours.";
+
+    if (!confirm(message)) return;
+
+    // TODO: If !isFree, charge cancellation fee via payment system
+    await supabase.from("player_day_plan_items").delete().eq("plan_id", currentPlanId);
+    await supabase.from("player_day_plans").delete().eq("id", currentPlanId);
+    toast.success(isFree ? "Training day cancelled" : "Training day cancelled — a late cancellation fee applies");
     setCurrentPlanId(null); setPlanItems([]); setPlanNotes("");
     setEditStartTime(""); setEditEndTime(""); setEditLocation("");
     setCoachName(null); setCoachAvatar(null);
@@ -974,6 +1009,39 @@ const Training = () => {
                         {planItems.filter(i => i.is_completed).length}/{planItems.length} completed · {totalDuration} min total
                       </p>
                     </div>
+
+                    {/* Player cancel section */}
+                    {!isCoachOrAdmin && currentPlanId && (
+                      <div className="mt-4 bg-card border border-border rounded-xl p-4 space-y-3">
+                        <div className="flex items-start gap-2.5">
+                          <div className="w-8 h-8 rounded-lg bg-destructive/10 flex items-center justify-center shrink-0 mt-0.5">
+                            <X size={14} className="text-destructive" />
+                          </div>
+                          <div className="flex-1">
+                            <p className="font-display text-xs tracking-wider text-foreground mb-1">CANCELLATION POLICY</p>
+                            <p className="font-body text-[11px] text-muted-foreground leading-relaxed">
+                              Kostenlose Stornierung bis <span className="text-foreground font-semibold">48 Stunden</span> vor dem Training. 
+                              Bei späterer Absage wird eine Stornogebühr erhoben.
+                            </p>
+                          </div>
+                        </div>
+                        {isFreeCancellation ? (
+                          <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-green-500/10 border border-green-500/20">
+                            <Check size={14} className="text-green-500 shrink-0" />
+                            <p className="font-body text-[11px] text-green-500">Kostenlose Stornierung möglich</p>
+                          </div>
+                        ) : (
+                          <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-destructive/10 border border-destructive/20">
+                            <Clock size={14} className="text-destructive shrink-0" />
+                            <p className="font-body text-[11px] text-destructive">Weniger als 48 Std. — Stornogebühr fällig</p>
+                          </div>
+                        )}
+                        <button onClick={handlePlayerCancelDay}
+                          className="w-full py-2.5 rounded-xl bg-destructive/10 text-destructive font-display text-xs tracking-wider hover:bg-destructive/20 transition-colors flex items-center justify-center gap-2">
+                          <Trash2 size={14} /> TRAINING ABSAGEN
+                        </button>
+                      </div>
+                    )}
                   </>
                 )}
               </div>
