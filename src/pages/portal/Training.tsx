@@ -169,15 +169,9 @@ const Training = () => {
   const [blockCatFilter, setBlockCatFilter] = useState("All");
 
   // Staged plan items — editable modules from selected blocks
-  interface StagedItem {
-    tempId: string;
-    moduleId: string;
-    module: BlockModuleItem;
-    coachNote: string;
-    duration: number;
-    sourceBlockTitle: string;
-  }
   const [stagedItems, setStagedItems] = useState<StagedItem[]>([]);
+  const [showStagedAddModule, setShowStagedAddModule] = useState(false);
+  const [stagedModuleSearch, setStagedModuleSearch] = useState("");
   const [showStagedAddModule, setShowStagedAddModule] = useState(false);
   const [stagedModuleSearch, setStagedModuleSearch] = useState("");
 
