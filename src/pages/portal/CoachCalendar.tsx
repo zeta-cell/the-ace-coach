@@ -255,6 +255,40 @@ const CoachCalendar = () => {
   const selectedDayPlans = selectedDay ? plans.filter(p => p.plan_date === selectedDay) : [];
   const totalDuration = planBlocks.reduce((s, pb) => s + (pb.block.duration_minutes || 0), 0);
 
+  const togglePlanExpanded = async (planId: string) => {
+    const isOpen = !expandedPlans[planId];
+    setExpandedPlans(prev => ({ ...prev, [planId]: isOpen }));
+    if (isOpen && !planModules[planId]) {
+      const { data: items } = await supabase
+        .from("player_day_plan_items")
+        .select("id, module_id, order_index, coach_note")
+        .eq("plan_id", planId)
+        .order("order_index");
+      if (items && items.length > 0) {
+        const moduleIds = items.map(i => i.module_id);
+        const { data: modules } = await supabase
+          .from("modules")
+          .select("id, title, category, duration_minutes")
+          .in("id", moduleIds);
+        const moduleMap = new Map(modules?.map(m => [m.id, m]) || []);
+        const merged = items.map(i => {
+          const mod = moduleMap.get(i.module_id);
+          return {
+            id: i.id,
+            title: mod?.title || "Unknown",
+            category: mod?.category || "padel_drill",
+            duration_minutes: mod?.duration_minutes || null,
+            order_index: i.order_index,
+            coach_note: i.coach_note,
+          };
+        });
+        setPlanModules(prev => ({ ...prev, [planId]: merged }));
+      } else {
+        setPlanModules(prev => ({ ...prev, [planId]: [] }));
+      }
+    }
+  };
+
   const addBlockToPlan = (block: TrainingBlock) => {
     if (!selectedDay) { toast.error("Select a day first"); return; }
     setPlanBlocks((prev) => [...prev, { tempId: crypto.randomUUID(), block, coach_note: "", block_id: block.id }]);
