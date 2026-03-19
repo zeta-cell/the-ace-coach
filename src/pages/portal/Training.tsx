@@ -165,8 +165,7 @@ const Training = () => {
 
   // Staged plan items — editable modules from selected blocks
   const [stagedItems, setStagedItems] = useState<StagedItem[]>([]);
-  const [showStagedAddModule, setShowStagedAddModule] = useState(false);
-  const [stagedModuleSearch, setStagedModuleSearch] = useState("");
+  // showStagedAddModule and stagedModuleSearch moved to FloatingPlanBuilder
 
   // Month calendar
   const [showMonthCal, setShowMonthCal] = useState(false);
