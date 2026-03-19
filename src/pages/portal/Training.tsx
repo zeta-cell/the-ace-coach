@@ -1225,120 +1225,124 @@ const Training = () => {
                     </div>
                   </div>
 
-                  {/* Add modules by category */}
-                  <div>
-                    <label className="font-display text-[10px] tracking-wider text-muted-foreground mb-2 block">ADD MODULES BY CATEGORY</label>
-                    <div className="flex flex-wrap gap-1.5">
-                      {MODULE_CATEGORIES.filter(c => c !== "All").map(cat => (
-                        <button key={cat} onClick={() => { setModuleCatFilter(cat); setShowAddPanel(true); setAddTab("modules"); }}
-                          className="px-3 py-1.5 rounded-lg bg-secondary border border-border text-muted-foreground font-display text-[9px] tracking-wider hover:border-primary hover:text-foreground transition-colors">
-                          {cat.toUpperCase()}
-                        </button>
-                      ))}
+                  {/* Inline tabbed browser for blocks & modules */}
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3 border-b border-border">
+                      <button onClick={() => setAddTab("blocks")}
+                        className={`font-display text-xs tracking-wider pb-2 border-b-2 transition-colors ${addTab === "blocks" ? "border-primary text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"}`}>
+                        BLOCKS
+                      </button>
+                      <button onClick={() => setAddTab("modules")}
+                        className={`font-display text-xs tracking-wider pb-2 border-b-2 transition-colors ${addTab === "modules" ? "border-primary text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"}`}>
+                        MODULES
+                      </button>
                     </div>
-                  </div>
 
-                  {/* Search all modules */}
-                  <button onClick={() => { setModuleCatFilter("All"); setShowAddPanel(true); setAddTab("modules"); }}
-                    className="w-full py-3 rounded-xl border border-dashed border-border text-muted-foreground font-display text-[10px] tracking-wider hover:border-primary hover:text-primary transition-colors flex items-center justify-center gap-2">
-                    <Search size={14} /> SEARCH ALL MODULES
-                  </button>
-
-                  {/* Use a block — inline toggle */}
-                  <button onClick={() => setShowInlineBlocks(!showInlineBlocks)}
-                    className={`w-full py-3 rounded-xl border border-dashed font-display text-[10px] tracking-wider transition-colors flex items-center justify-center gap-2 ${
-                      showInlineBlocks ? "border-primary text-primary" : "border-border text-muted-foreground hover:border-primary hover:text-primary"
-                    }`}>
-                    <Layers size={14} /> {showInlineBlocks ? "HIDE BLOCKS" : "USE A BLOCK"}
-                  </button>
-
-                  {/* Inline blocks browser */}
-                  <AnimatePresence>
-                    {showInlineBlocks && (
-                      <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }}
-                        className="overflow-hidden">
-                        <div className="bg-card border border-border rounded-xl p-4 space-y-3">
-                          {/* Search */}
-                          <div className="relative">
-                            <Search size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-                            <input value={blockSearch} onChange={e => setBlockSearch(e.target.value)}
-                              placeholder="Search blocks..."
-                              className="w-full pl-9 pr-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-muted-foreground" />
-                          </div>
-
-                          {/* Category filter chips */}
-                          <div className="flex flex-wrap gap-1.5">
-                            {BLOCK_CATEGORIES.map(cat => (
-                              <button key={cat} onClick={() => setBlockCatFilter(cat)}
-                                className={`px-2.5 py-1 rounded-lg font-display text-[9px] tracking-wider transition-colors ${
-                                  blockCatFilter === cat ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground hover:text-foreground"
-                                }`}>{cat.toUpperCase()}</button>
-                            ))}
-                          </div>
-
-                          {/* Card grid (no more inline staged builder - it's floating now) */}
-
-                          {/* Card grid */}
-                          <div className="grid grid-cols-2 gap-2">
-                            {filteredBlocks.map(block => {
-                              const bDur = block.module_durations?.reduce((s, d) => s + d, 0) || 0;
-                              const isInStaged = stagedItems.some(i => i.sourceBlockTitle === block.title);
-                              const isExpanded = expandedBlockDetail === block.id;
-                              return (
-                                <div key={block.id} className={`rounded-xl border overflow-hidden transition-colors ${isInStaged ? "border-primary bg-primary/10" : "border-border bg-secondary/40"}`}>
-                                  <div className="p-3 space-y-2">
-                                    <div className="flex items-start gap-2">
-                                      <div className={`w-1 h-8 rounded-full shrink-0 mt-0.5 ${CATEGORY_DOT[block.category] || "bg-muted-foreground"}`} />
-                                      <p className="font-display text-[11px] text-foreground leading-tight line-clamp-2">{block.title}</p>
-                                    </div>
-                                    <div className="flex flex-wrap gap-1">
-                                      <span className={`px-1.5 py-0.5 rounded font-display text-[8px] tracking-wider ${DIFFICULTY_COLORS[block.difficulty] || "bg-secondary text-muted-foreground"}`}>
-                                        {block.difficulty?.toUpperCase() || "—"}
-                                      </span>
-                                      <span className="px-1.5 py-0.5 rounded bg-secondary font-display text-[8px] tracking-wider text-muted-foreground uppercase">
-                                        {block.sport}
-                                      </span>
-                                    </div>
-                                    <div className="flex items-center justify-between text-[9px] font-body text-muted-foreground">
-                                      <span className="flex items-center gap-0.5"><Clock size={9} /> {bDur}m</span>
-                                      <span>{block.module_ids.length} mod</span>
-                                    </div>
-                                    <div className="flex items-center justify-between pt-1 border-t border-border">
-                                      <button onClick={() => setExpandedBlockDetail(isExpanded ? null : block.id)}
-                                        className="p-1 rounded text-muted-foreground hover:text-foreground transition-colors">
-                                        <ChevronDown size={12} className={`transition-transform ${isExpanded ? "rotate-180" : ""}`} />
-                                      </button>
-                                      <button onClick={() => isInStaged ? removeBlockFromStaged(block.title) : addBlockToStaged(block)}
-                                        className={`w-6 h-6 rounded-full flex items-center justify-center transition-colors ${
-                                          isInStaged ? "bg-primary text-primary-foreground" : "bg-secondary border border-border text-muted-foreground hover:border-primary hover:text-primary"
-                                        }`}>
-                                        {isInStaged ? <Check size={12} /> : <Plus size={12} />}
-                                      </button>
-                                    </div>
-                                  </div>
-                                  <AnimatePresence>
-                                    {isExpanded && (
-                                      <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
-                                        <div className="px-3 pb-3 pt-1 border-t border-border space-y-1">
-                                          {block.description && <p className="text-[9px] font-body text-muted-foreground">{block.description}</p>}
-                                          <p className="text-[9px] font-body text-muted-foreground">Goal: {block.goal}</p>
-                                        </div>
-                                      </motion.div>
-                                    )}
-                                  </AnimatePresence>
-                                </div>
-                              );
-                            })}
-                          </div>
-                          {filteredBlocks.length === 0 && (
-                            <p className="text-xs font-body text-muted-foreground text-center py-4">No blocks found</p>
-                          )}
-
-                          {/* Review handled by floating plan builder */}
+                    {addTab === "modules" ? (
+                      <div className="space-y-3">
+                        <div className="relative">
+                          <Search size={12} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                          <input value={moduleSearch} onChange={e => setModuleSearch(e.target.value)}
+                            placeholder="Search modules..."
+                            className="w-full pl-8 pr-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-xs focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-muted-foreground" />
                         </div>
-                      </motion.div>
+                        <div className="flex flex-wrap gap-1.5">
+                          {MODULE_CATEGORIES.map(cat => (
+                            <button key={cat} onClick={() => setModuleCatFilter(cat)}
+                              className={`px-2.5 py-1 rounded-lg font-display text-[9px] tracking-wider transition-colors ${
+                                moduleCatFilter === cat ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground hover:text-foreground"
+                              }`}>{cat.toUpperCase()}</button>
+                          ))}
+                        </div>
+                        <div className="space-y-1.5">
+                          {filteredModules.map(mod => (
+                            <button key={mod.id} onClick={() => addModuleToStaged(mod)}
+                              className={`w-full text-left p-2.5 rounded-xl border border-border hover:border-primary/40 transition-colors flex items-center gap-3 border-l-4 ${CATEGORY_COLORS[mod.category] || "border-l-muted"}`}>
+                              <div className="flex-1 min-w-0">
+                                <p className="font-display text-xs text-foreground truncate">{mod.title}</p>
+                                <p className="text-[10px] font-body text-muted-foreground">{mod.category.replace("_", " ")} · {mod.duration_minutes || 15} min</p>
+                              </div>
+                              <Plus size={14} className="text-primary shrink-0" />
+                            </button>
+                          ))}
+                          {filteredModules.length === 0 && (
+                            <p className="text-xs font-body text-muted-foreground text-center py-6">No modules found</p>
+                          )}
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="space-y-3">
+                        <div className="relative">
+                          <Search size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                          <input value={blockSearch} onChange={e => setBlockSearch(e.target.value)}
+                            placeholder="Search blocks..."
+                            className="w-full pl-9 pr-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-muted-foreground" />
+                        </div>
+                        <div className="flex flex-wrap gap-1.5">
+                          {BLOCK_CATEGORIES.map(cat => (
+                            <button key={cat} onClick={() => setBlockCatFilter(cat)}
+                              className={`px-2.5 py-1 rounded-lg font-display text-[9px] tracking-wider transition-colors ${
+                                blockCatFilter === cat ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground hover:text-foreground"
+                              }`}>{cat.toUpperCase()}</button>
+                          ))}
+                        </div>
+                        <div className="grid grid-cols-2 gap-2">
+                          {filteredBlocks.map(block => {
+                            const bDur = block.module_durations?.reduce((s, d) => s + d, 0) || 0;
+                            const isInStaged = stagedItems.some(i => i.sourceBlockTitle === block.title);
+                            const isExpanded = expandedBlockDetail === block.id;
+                            return (
+                              <div key={block.id} className={`rounded-xl border overflow-hidden transition-colors ${isInStaged ? "border-primary bg-primary/10" : "border-border bg-secondary/40"}`}>
+                                <div className="p-3 space-y-2">
+                                  <div className="flex items-start gap-2">
+                                    <div className={`w-1 h-8 rounded-full shrink-0 mt-0.5 ${CATEGORY_DOT[block.category] || "bg-muted-foreground"}`} />
+                                    <p className="font-display text-[11px] text-foreground leading-tight line-clamp-2">{block.title}</p>
+                                  </div>
+                                  <div className="flex flex-wrap gap-1">
+                                    <span className={`px-1.5 py-0.5 rounded font-display text-[8px] tracking-wider ${DIFFICULTY_COLORS[block.difficulty] || "bg-secondary text-muted-foreground"}`}>
+                                      {block.difficulty?.toUpperCase() || "—"}
+                                    </span>
+                                    <span className="px-1.5 py-0.5 rounded bg-secondary font-display text-[8px] tracking-wider text-muted-foreground uppercase">
+                                      {block.sport}
+                                    </span>
+                                  </div>
+                                  <div className="flex items-center justify-between text-[9px] font-body text-muted-foreground">
+                                    <span className="flex items-center gap-0.5"><Clock size={9} /> {bDur}m</span>
+                                    <span>{block.module_ids.length} mod</span>
+                                  </div>
+                                  <div className="flex items-center justify-between pt-1 border-t border-border">
+                                    <button onClick={() => setExpandedBlockDetail(isExpanded ? null : block.id)}
+                                      className="p-1 rounded text-muted-foreground hover:text-foreground transition-colors">
+                                      <ChevronDown size={12} className={`transition-transform ${isExpanded ? "rotate-180" : ""}`} />
+                                    </button>
+                                    <button onClick={() => isInStaged ? removeBlockFromStaged(block.title) : addBlockToStaged(block)}
+                                      className={`w-6 h-6 rounded-full flex items-center justify-center transition-colors ${
+                                        isInStaged ? "bg-primary text-primary-foreground" : "bg-secondary border border-border text-muted-foreground hover:border-primary hover:text-primary"
+                                      }`}>
+                                      {isInStaged ? <Check size={12} /> : <Plus size={12} />}
+                                    </button>
+                                  </div>
+                                </div>
+                                <AnimatePresence>
+                                  {isExpanded && (
+                                    <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
+                                      <div className="px-3 pb-3 pt-1 border-t border-border space-y-1">
+                                        {block.description && <p className="text-[9px] font-body text-muted-foreground">{block.description}</p>}
+                                        <p className="text-[9px] font-body text-muted-foreground">Goal: {block.goal}</p>
+                                      </div>
+                                    </motion.div>
+                                  )}
+                                </AnimatePresence>
+                              </div>
+                            );
+                          })}
+                        </div>
+                        {filteredBlocks.length === 0 && (
+                          <p className="text-xs font-body text-muted-foreground text-center py-6">No blocks found</p>
+                        )}
+                      </div>
                     )}
-                  </AnimatePresence>
+                  </div>
                 </div>
               ) : (
                 /* Player empty state */
