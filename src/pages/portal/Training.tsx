@@ -172,8 +172,6 @@ const Training = () => {
   const [stagedItems, setStagedItems] = useState<StagedItem[]>([]);
   const [showStagedAddModule, setShowStagedAddModule] = useState(false);
   const [stagedModuleSearch, setStagedModuleSearch] = useState("");
-  const [showStagedAddModule, setShowStagedAddModule] = useState(false);
-  const [stagedModuleSearch, setStagedModuleSearch] = useState("");
 
   // Month calendar
   const [showMonthCal, setShowMonthCal] = useState(false);
