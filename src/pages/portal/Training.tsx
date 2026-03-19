@@ -1245,7 +1245,7 @@ const Training = () => {
                     {/* Module list */}
                     <div className="space-y-1.5">
                       {filteredModules.map(mod => (
-                        <button key={mod.id} onClick={() => handleAddModule(mod)}
+                        <button key={mod.id} onClick={() => addModuleToStaged(mod)}
                           className={`w-full text-left p-2.5 rounded-xl border border-border hover:border-primary/40 transition-colors flex items-center gap-3 border-l-4 ${CATEGORY_COLORS[mod.category] || "border-l-muted"}`}>
                           <div className="flex-1 min-w-0">
                             <p className="font-display text-xs text-foreground truncate">{mod.title}</p>
