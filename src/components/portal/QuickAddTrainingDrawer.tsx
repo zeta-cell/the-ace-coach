@@ -399,28 +399,28 @@ const SelectionStep = ({
       <div className="flex gap-1 bg-secondary rounded-lg p-0.5">
         {(["block", "modules"] as const).map(type => (
           <button key={type} onClick={() => setAssignType(type)}
-            className={`flex-1 py-2 rounded-md font-display text-[10px] tracking-wider transition-colors flex items-center justify-center gap-1.5 ${
+            className={`flex-1 py-1.5 rounded-md font-display text-[9px] tracking-wider transition-colors flex items-center justify-center gap-1 ${
               assignType === type ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
             }`}
           >
-            {type === "block" ? <><Layers size={12} /> ASSIGN BLOCK</> : <><BookOpen size={12} /> PICK MODULES</>}
+            {type === "block" ? <><Layers size={10} /> BLOCKS</> : <><BookOpen size={10} /> MODULES</>}
           </button>
         ))}
       </div>
 
       <div className="relative">
-        <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+        <Search size={12} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
         <input
           placeholder={assignType === "block" ? "Search blocks..." : "Search modules..."}
           value={search} onChange={e => setSearch(e.target.value)}
-          className="w-full pl-9 pr-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+          className="w-full pl-8 pr-3 py-1.5 rounded-lg bg-secondary border border-border text-foreground font-body text-xs focus:outline-none focus:ring-1 focus:ring-primary"
         />
       </div>
 
-      <div className="flex flex-wrap gap-1.5">
+      <div className="flex flex-wrap gap-1">
         {CATEGORY_FILTERS.map(category => (
           <button key={category} onClick={() => setCategoryFilter(category)}
-            className={`px-3 py-1.5 rounded-full font-display text-[9px] tracking-wider whitespace-nowrap transition-colors border ${
+            className={`px-2 py-1 rounded-full font-display text-[8px] tracking-wider whitespace-nowrap transition-colors border ${
               categoryFilter === category
                 ? "bg-primary text-primary-foreground border-primary"
                 : "bg-secondary text-muted-foreground border-border hover:text-foreground"
