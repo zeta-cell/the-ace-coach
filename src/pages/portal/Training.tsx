@@ -470,18 +470,65 @@ const Training = () => {
     navigate(`/coach/plan/${targetPlayerId}?date=${format(selectedDay, "yyyy-MM-dd")}`);
   };
 
-  const toggleBlockSelection = (blockId: string) => {
-    setSelectedBlockIds(prev => {
-      const next = new Set(prev);
-      if (next.has(blockId)) next.delete(blockId);
-      else next.add(blockId);
-      return next;
-    });
+  const addBlockToStaged = (block: TrainingBlock) => {
+    const moduleMap = new Map(allModules.map(m => [m.id, m]));
+    const newItems: StagedItem[] = block.module_ids.map((mId, idx) => {
+      const mod = moduleMap.get(mId);
+      if (!mod) return null;
+      return {
+        tempId: crypto.randomUUID(),
+        moduleId: mId,
+        module: mod,
+        coachNote: block.module_notes?.[idx] || "",
+        duration: block.module_durations?.[idx] || mod.duration_minutes || 15,
+        sourceBlockTitle: block.title,
+      };
+    }).filter(Boolean) as StagedItem[];
+    if (newItems.length === 0) { toast.error("Block references modules you don't have"); return; }
+    setStagedItems(prev => [...prev, ...newItems]);
+    toast.success(`Added "${block.title}" — ${newItems.length} modules`);
   };
 
-  const selectedBlocks = allBlocks.filter(b => selectedBlockIds.has(b.id));
-  const selectedBlocksTotalDur = selectedBlocks.reduce((s, b) => s + (b.module_durations?.reduce((a, d) => a + d, 0) || 0), 0);
+  const removeBlockFromStaged = (blockTitle: string) => {
+    setStagedItems(prev => prev.filter(i => i.sourceBlockTitle !== blockTitle));
+  };
 
+  const removeStagedItem = (tempId: string) => {
+    setStagedItems(prev => prev.filter(i => i.tempId !== tempId));
+  };
+
+  const addModuleToStaged = (mod: BlockModuleItem) => {
+    setStagedItems(prev => [...prev, {
+      tempId: crypto.randomUUID(),
+      moduleId: mod.id,
+      module: mod,
+      coachNote: "",
+      duration: mod.duration_minutes || 15,
+      sourceBlockTitle: "Custom",
+    }]);
+    toast.success(`Added "${mod.title}"`);
+  };
+
+  const moveStagedItem = (index: number, direction: "up" | "down") => {
+    const newIndex = direction === "up" ? index - 1 : index + 1;
+    if (newIndex < 0 || newIndex >= stagedItems.length) return;
+    const updated = [...stagedItems];
+    const [moved] = updated.splice(index, 1);
+    updated.splice(newIndex, 0, moved);
+    setStagedItems(updated);
+  };
+
+  const stagedTotalDur = stagedItems.reduce((s, i) => s + i.duration, 0);
+
+  const stagedBlockGroups = useMemo(() => {
+    const groups = new Map<string, StagedItem[]>();
+    stagedItems.forEach(item => {
+      const list = groups.get(item.sourceBlockTitle) || [];
+      list.push(item);
+      groups.set(item.sourceBlockTitle, list);
+    });
+    return groups;
+  }, [stagedItems]);
   const totalDuration = planItems.reduce((sum, i) => sum + (i.module.duration_minutes || 0), 0);
 
   // Filtered modules for add panel
