@@ -138,6 +138,7 @@ const Training = () => {
   const [planNotes, setPlanNotes] = useState("");
   const [expandedItem, setExpandedItem] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [planBlockNames, setPlanBlockNames] = useState<Map<string, string>>(new Map());
 
   // Coach info
   const [coachName, setCoachName] = useState<string | null>(null);
