@@ -1391,7 +1391,7 @@ const Training = () => {
                     <div className="grid grid-cols-2 gap-2">
                       {filteredBlocks.map(block => {
                         const bDur = block.module_durations?.reduce((s, d) => s + d, 0) || 0;
-                        const isSelected = selectedBlockIds.has(block.id);
+                        const isInStaged = stagedItems.some(i => i.sourceBlockTitle === block.title);
                         const isExpanded = expandedBlockDetail === block.id;
                         return (
                           <div key={block.id} className={`rounded-xl border overflow-hidden transition-colors ${isSelected ? "border-primary bg-primary/10" : "border-border bg-secondary/40"}`}>
