@@ -695,17 +695,17 @@ const Training = () => {
         </AnimatePresence>
 
         {/* Week strip */}
-        <div className="flex gap-1.5 mb-4">
+        <div className="flex gap-1 mb-3">
           {weekDays.map(day => {
             const isSelected = isSameDay(day, selectedDay);
             const hasPlan = planDates.has(format(day, "yyyy-MM-dd"));
             return (
               <button key={day.toISOString()} onClick={() => setSelectedDay(day)}
-                className={`flex-1 py-2 rounded-lg text-center transition-colors relative ${
+                className={`flex-1 py-1.5 rounded-lg text-center transition-colors relative ${
                   isSelected ? "bg-primary text-primary-foreground" : "bg-card text-muted-foreground hover:bg-secondary"
                 }`}>
-                <span className="font-display text-[10px] block">{format(day, "EEE")}</span>
-                <span className="font-body text-xs">{format(day, "d")}</span>
+                <span className="font-display text-[9px] block">{format(day, "EEE")}</span>
+                <span className="font-body text-[11px]">{format(day, "d")}</span>
                 {hasPlan && !isSelected && (
                   <div className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-primary" />
                 )}
