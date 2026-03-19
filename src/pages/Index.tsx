@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import PublicBottomNav from "@/components/PublicBottomNav";
+import PublicHeader from "@/components/PublicHeader";
 import { motion } from "framer-motion";
 import { Search, Calendar, Shield, Users, Trophy, Zap, MapPin, ArrowRight } from "lucide-react";
 import heroPadel from "@/assets/hero-padel.jpg";
