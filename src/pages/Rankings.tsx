@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import PublicBottomNav from "@/components/PublicBottomNav";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion } from "framer-motion";
@@ -185,6 +186,7 @@ const Rankings = () => {
           </div>
         )}
       </div>
+      <PublicBottomNav />
     </div>
   );
 };

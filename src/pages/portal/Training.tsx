@@ -99,6 +99,7 @@ interface PlanItem {
   is_completed: boolean;
   completed_at: string | null;
   coach_note: string | null;
+  block_id: string | null;
   module: {
     id: string; title: string; category: string; duration_minutes: number;
     description: string | null; instructions: string | null; video_url: string | null;
@@ -138,6 +139,7 @@ const Training = () => {
   const [planNotes, setPlanNotes] = useState("");
   const [expandedItem, setExpandedItem] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [planBlockNames, setPlanBlockNames] = useState<Map<string, string>>(new Map());
 
   // Coach info
   const [coachName, setCoachName] = useState<string | null>(null);
@@ -255,13 +257,23 @@ const Training = () => {
     }
 
     const { data: items } = await supabase.from("player_day_plan_items")
-      .select("id, order_index, is_completed, completed_at, coach_note, module_id")
+      .select("id, order_index, is_completed, completed_at, coach_note, module_id, block_id")
       .eq("plan_id", plan.id).order("order_index");
 
     const moduleIds = items?.map(i => i.module_id) || [];
     const { data: mods } = await supabase.from("modules")
       .select("id, title, category, duration_minutes, description, instructions, video_url, coach_video_url")
       .in("id", moduleIds.length > 0 ? moduleIds : ["00000000-0000-0000-0000-000000000000"]);
+
+    // Fetch block names for items that have a block_id
+    const blockIds = [...new Set((items || []).map(i => i.block_id).filter(Boolean))] as string[];
+    let blockNameMap = new Map<string, string>();
+    if (blockIds.length > 0) {
+      const { data: blocks } = await supabase.from("training_blocks")
+        .select("id, title").in("id", blockIds);
+      blockNameMap = new Map(blocks?.map(b => [b.id, b.title]) || []);
+    }
+    setPlanBlockNames(blockNameMap);
 
     const moduleMap = new Map(mods?.map((m: any) => [m.id, m]) || []);
     setPlanItems(
@@ -315,7 +327,7 @@ const Training = () => {
 
     const newItem: PlanItem = {
       id: "", order_index: 0, is_completed: false,
-      completed_at: null, coach_note: null,
+      completed_at: null, coach_note: null, block_id: null,
       module: { ...mod, description: null, instructions: null, video_url: null, coach_video_url: null, duration_minutes: mod.duration_minutes || 15 },
     };
 
@@ -871,7 +883,7 @@ const Training = () => {
                                 <div className={`w-2 h-2 rounded-full shrink-0 ${CATEGORY_DOT[item.module.category] || "bg-muted-foreground"}`} />
                                 <span className="font-display text-sm text-foreground truncate">{item.module.title}</span>
                               </div>
-                              <div className="flex items-center gap-2 mt-0.5 ml-4">
+                              <div className="flex items-center gap-2 mt-0.5 ml-4 flex-wrap">
                                 <span className="font-body text-[10px] text-muted-foreground uppercase">
                                   {item.module.category.replace("_", " ")}
                                 </span>
@@ -879,6 +891,14 @@ const Training = () => {
                                 <span className="flex items-center gap-0.5 text-muted-foreground text-[10px] font-body">
                                   <Clock size={9} /> {item.module.duration_minutes} min
                                 </span>
+                                {item.block_id && planBlockNames.get(item.block_id) && (
+                                  <>
+                                    <span className="text-muted-foreground text-[10px]">·</span>
+                                    <span className="px-1.5 py-0.5 rounded bg-primary/10 text-primary text-[9px] font-display tracking-wider truncate max-w-[120px]">
+                                      {planBlockNames.get(item.block_id)}
+                                    </span>
+                                  </>
+                                )}
                               </div>
                             </div>
 

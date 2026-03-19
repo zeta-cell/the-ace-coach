@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import PublicBottomNav from "@/components/PublicBottomNav";
 import { motion } from "framer-motion";
 import { Search, Calendar, Shield, Users, Trophy, Zap, MapPin, ArrowRight } from "lucide-react";
 import heroPadel from "@/assets/hero-padel.jpg";
@@ -236,6 +237,7 @@ const Index = () => {
           </p>
         </div>
       </footer>
+      <PublicBottomNav />
     </div>
   );
 };
