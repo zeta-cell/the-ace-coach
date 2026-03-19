@@ -532,7 +532,7 @@ const Dashboard = () => {
                         </div>
                         {prog.week_count > 1 && <div className="w-full h-1 bg-muted rounded-full mt-1.5"><div className="h-full bg-primary rounded-full transition-all" style={{ width: `${progress}%` }} /></div>}
                       </div>
-                      <Link to="/training" className="p-2 rounded-lg border border-border text-muted-foreground hover:text-foreground hover:border-primary/40 transition-colors shrink-0"><ChevronRight size={16} /></Link>
+                      <Link to={`/training?block=${prog.block_id}`} className="p-2 rounded-lg border border-border text-muted-foreground hover:text-foreground hover:border-primary/40 transition-colors shrink-0"><ChevronRight size={16} /></Link>
                     </div>
                     <div className="mt-3 pt-3 border-t border-border">
                       {prog.coach_status === "accepted" ? (
