@@ -374,26 +374,26 @@ const SelectionStep = ({
 
   return (
     <>
-      <div>
-        <label className="font-display text-[10px] tracking-wider text-muted-foreground block mb-1">DATE</label>
-        <input
-          type="date" value={date} onChange={e => setDate(e.target.value)}
-          className="w-full px-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary"
-        />
-      </div>
-
-      <div>
-        <label className="font-display text-[10px] tracking-wider text-muted-foreground block mb-1">PLAYER</label>
-        <select
-          value={playerId} onChange={e => setPlayerId(e.target.value)}
-          disabled={!!prefilledPlayerId}
-          className="w-full px-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary disabled:opacity-70"
-        >
-          <option value="">Select player...</option>
-          {players.map(player => (
-            <option key={player.player_id} value={player.player_id}>{player.full_name}</option>
-          ))}
-        </select>
+      {/* Date + Player in one row */}
+      <div className="flex gap-2">
+        <div className="flex-1">
+          <input
+            type="date" value={date} onChange={e => setDate(e.target.value)}
+            className="w-full px-2.5 py-1.5 rounded-lg bg-secondary border border-border text-foreground font-body text-xs focus:outline-none focus:ring-1 focus:ring-primary"
+          />
+        </div>
+        <div className="flex-1">
+          <select
+            value={playerId} onChange={e => setPlayerId(e.target.value)}
+            disabled={!!prefilledPlayerId}
+            className="w-full px-2.5 py-1.5 rounded-lg bg-secondary border border-border text-foreground font-body text-xs focus:outline-none focus:ring-1 focus:ring-primary disabled:opacity-70"
+          >
+            <option value="">Player...</option>
+            {players.map(player => (
+              <option key={player.player_id} value={player.player_id}>{player.full_name}</option>
+            ))}
+          </select>
+        </div>
       </div>
 
       <div className="flex gap-1 bg-secondary rounded-lg p-0.5">
