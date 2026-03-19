@@ -245,42 +245,57 @@ const Training = () => {
     if (!targetPlayerId) return;
     setLoading(true);
     const dayStr = format(selectedDay, "yyyy-MM-dd");
-    const { data: plan } = await supabase.from("player_day_plans")
-      .select("id, notes, start_time, end_time, location_name, coach_id")
-      .eq("player_id", targetPlayerId).eq("plan_date", dayStr).maybeSingle();
 
-    if (!plan) {
+    const { data: plans } = await supabase.from("player_day_plans")
+      .select("id, notes, start_time, end_time, location_name, coach_id, created_at")
+      .eq("player_id", targetPlayerId)
+      .eq("plan_date", dayStr)
+      .order("created_at", { ascending: false });
+
+    if (!plans || plans.length === 0) {
       setPlanItems([]); setPlanNotes(""); setCurrentPlanId(null);
       setEditStartTime(""); setEditEndTime(""); setEditLocation("");
       setCoachName(null); setCoachAvatar(null);
       setLoading(false); return;
     }
 
-    setCurrentPlanId(plan.id);
-    setPlanNotes(plan.notes || "");
-    setEditStartTime(plan.start_time || "");
-    setEditEndTime(plan.end_time || "");
-    setEditLocation((plan as any).location_name || "");
+    const planIds = plans.map(plan => plan.id);
+    const { data: allItems } = await supabase.from("player_day_plan_items")
+      .select("id, order_index, is_completed, completed_at, coach_note, module_id, block_id, plan_id")
+      .in("plan_id", planIds)
+      .order("order_index");
 
-    // Fetch coach info
-    if (plan.coach_id) {
+    const itemsByPlanId = new Map<string, any[]>();
+    (allItems || []).forEach((item) => {
+      const existing = itemsByPlanId.get(item.plan_id) || [];
+      existing.push(item);
+      itemsByPlanId.set(item.plan_id, existing);
+    });
+
+    const activePlan = plans.find(plan => (itemsByPlanId.get(plan.id)?.length || 0) > 0) || plans[0];
+    const items = itemsByPlanId.get(activePlan.id) || [];
+
+    setCurrentPlanId(activePlan.id);
+    setPlanNotes(activePlan.notes || "");
+    setEditStartTime(activePlan.start_time || "");
+    setEditEndTime(activePlan.end_time || "");
+    setEditLocation((activePlan as any).location_name || "");
+
+    if (activePlan.coach_id) {
       const { data: coachProfile } = await supabase.from("profiles")
-        .select("full_name, avatar_url").eq("user_id", plan.coach_id).maybeSingle();
+        .select("full_name, avatar_url").eq("user_id", activePlan.coach_id).maybeSingle();
       setCoachName(coachProfile?.full_name || null);
       setCoachAvatar(coachProfile?.avatar_url || null);
+    } else {
+      setCoachName(null); setCoachAvatar(null);
     }
 
-    const { data: items } = await supabase.from("player_day_plan_items")
-      .select("id, order_index, is_completed, completed_at, coach_note, module_id, block_id")
-      .eq("plan_id", plan.id).order("order_index");
-
-    const moduleIds = items?.map(i => i.module_id) || [];
+    const moduleIds = items.map(i => i.module_id);
     const { data: mods } = await supabase.from("modules")
       .select("id, title, category, duration_minutes, description, instructions, video_url, coach_video_url")
       .in("id", moduleIds.length > 0 ? moduleIds : ["00000000-0000-0000-0000-000000000000"]);
 
-    // Fetch block names for items that have a block_id
-    const blockIds = [...new Set((items || []).map(i => i.block_id).filter(Boolean))] as string[];
+    const blockIds = [...new Set(items.map(i => i.block_id).filter(Boolean))] as string[];
     let blockNameMap = new Map<string, string>();
     if (blockIds.length > 0) {
       const { data: blocks } = await supabase.from("training_blocks")
@@ -291,7 +306,7 @@ const Training = () => {
 
     const moduleMap = new Map(mods?.map((m: any) => [m.id, m]) || []);
     setPlanItems(
-      (items || []).map(item => ({
+      items.map(item => ({
         ...item,
         module: moduleMap.get(item.module_id) || {
           id: item.module_id, title: "Unknown", category: "", duration_minutes: 0,
