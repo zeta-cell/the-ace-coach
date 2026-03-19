@@ -280,18 +280,18 @@ const QuickAddTrainingDrawer = ({
             transition={{ type: "spring", damping: 25 }}
             className="fixed right-0 top-0 bottom-0 w-full max-w-md bg-card border-l border-border z-50 overflow-y-auto"
           >
-            <div className="p-5 space-y-4 pb-32">
+            <div className="px-4 pt-3 pb-32 space-y-2.5">
               <div className="flex items-center justify-between">
                 {step === "review" ? (
                   <button onClick={() => setStep("select")} className="flex items-center gap-1.5 text-muted-foreground hover:text-foreground transition-colors">
-                    <ArrowLeft size={16} />
-                    <span className="font-display text-[10px] tracking-wider">BACK</span>
+                    <ArrowLeft size={14} />
+                    <span className="font-display text-[9px] tracking-wider">BACK</span>
                   </button>
                 ) : (
-                  <h2 className="font-display text-lg tracking-wider text-foreground">CREATE TRAINING</h2>
+                  <h2 className="font-display text-sm tracking-wider text-foreground">CREATE TRAINING</h2>
                 )}
                 <button onClick={handleClose} className="p-1 rounded-lg hover:bg-secondary">
-                  <X size={18} className="text-muted-foreground" />
+                  <X size={16} className="text-muted-foreground" />
                 </button>
               </div>
 
