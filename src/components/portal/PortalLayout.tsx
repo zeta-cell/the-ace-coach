@@ -11,15 +11,15 @@ import NotificationBell from "@/components/portal/NotificationBell";
 import QuickAddTrainingDrawer from "@/components/portal/QuickAddTrainingDrawer";
 
 const playerNav = [
+  { label: "Home", icon: Home, href: "/dashboard" },
+  { label: "Training", icon: Calendar, href: "/training" },
+  { label: "Events", icon: CalendarDays, href: "/events" },
+  { label: "Community", icon: Users, href: "/community" },
+  { label: "Messages", icon: MessageSquare, href: "/messages" },
+  { label: "Videos", icon: Video, href: "/videos" },
+  { label: "Rewards", icon: CreditCard, href: "/rewards" },
   { label: "Find a Coach", icon: Search, href: "/find-a-coach" },
   { label: "Marketplace", icon: ShoppingBag, href: "/marketplace" },
-  { label: "Events", icon: CalendarDays, href: "/events" },
-  { label: "Home", icon: Home, href: "/dashboard" },
-  { label: "My Programs", icon: BookOpen, href: "/dashboard#programs" },
-  { label: "Training", icon: Calendar, href: "/training" },
-  { label: "Videos", icon: Video, href: "/videos" },
-  { label: "Messages", icon: MessageSquare, href: "/messages" },
-  { label: "Rewards", icon: CreditCard, href: "/rewards" },
 ];
 
 const coachNav = [
