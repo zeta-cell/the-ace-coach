@@ -1346,6 +1346,31 @@ const Training = () => {
       </AnimatePresence>
 
       <CoachVideoModal open={coachVideoOpen} onClose={() => setCoachVideoOpen(false)} videoUrl={coachVideoUrl} moduleTitle={coachVideoTitle} />
+
+      {/* Floating plan builder — visible across all tabs */}
+      <AnimatePresence>
+        {stagedItems.length > 0 && (
+          <FloatingPlanBuilder
+            stagedItems={stagedItems}
+            setStagedItems={setStagedItems}
+            allModules={allModules}
+            onApply={async () => {
+              const planId = await ensurePlan();
+              if (!planId) return;
+              const existingMax = planItems.length;
+              const inserts = stagedItems.map((item, idx) => ({
+                plan_id: planId, module_id: item.moduleId, order_index: existingMax + idx, coach_note: item.coachNote || null,
+              }));
+              await supabase.from("player_day_plan_items").insert(inserts);
+              toast.success(`Applied ${stagedItems.length} modules to plan`);
+              setStagedItems([]);
+              setShowAddPanel(false);
+              setShowInlineBlocks(false);
+              fetchDayPlan();
+            }}
+          />
+        )}
+      </AnimatePresence>
     </PortalLayout>
   );
 };
