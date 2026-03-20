@@ -254,6 +254,53 @@ const AssignBlockToPlayerDialog = ({ open, onClose, block }: AssignBlockToPlayer
                   />
                 </div>
               </div>
+
+              {/* Time selection */}
+              <div>
+                <label className="text-[10px] font-display tracking-wider text-muted-foreground mb-2 block">
+                  TIME
+                </label>
+                <div className="flex items-center gap-2">
+                  <div className="relative flex-1">
+                    <Clock size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                    <input
+                      type="time"
+                      value={startTime}
+                      onChange={(e) => setStartTime(e.target.value)}
+                      placeholder="Start"
+                      className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary [color-scheme:dark]"
+                    />
+                  </div>
+                  <span className="text-xs font-body text-muted-foreground">–</span>
+                  <div className="relative flex-1">
+                    <Clock size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                    <input
+                      type="time"
+                      value={endTime}
+                      onChange={(e) => setEndTime(e.target.value)}
+                      placeholder="End"
+                      className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary [color-scheme:dark]"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Location */}
+              <div>
+                <label className="text-[10px] font-display tracking-wider text-muted-foreground mb-2 block">
+                  LOCATION
+                </label>
+                <div className="relative">
+                  <MapPin size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                  <input
+                    type="text"
+                    value={location}
+                    onChange={(e) => setLocation(e.target.value)}
+                    placeholder="e.g. Club Deportivo"
+                    className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-muted-foreground"
+                  />
+                </div>
+              </div>
             </div>
 
             {/* Footer */}
