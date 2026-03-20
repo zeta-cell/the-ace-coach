@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, CalendarDays, User, Layers, Check, Loader2 } from "lucide-react";
+import { X, CalendarDays, User, Layers, Check, Loader2, Clock, MapPin } from "lucide-react";
 import { format } from "date-fns";
 import { toast } from "sonner";
 
