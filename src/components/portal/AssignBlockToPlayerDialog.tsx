@@ -44,6 +44,9 @@ const AssignBlockToPlayerDialog = ({ open, onClose, block }: AssignBlockToPlayer
     if (!open) {
       setSelectedPlayer(null);
       setSelectedDate(format(new Date(), "yyyy-MM-dd"));
+      setStartTime("");
+      setEndTime("");
+      setLocation("");
     }
   }, [open]);
 
