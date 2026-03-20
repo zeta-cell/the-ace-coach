@@ -88,6 +88,10 @@ export const TrainingBlocksContent = ({ embedded = false }: { embedded?: boolean
   const [allModules, setAllModules] = useState<ModuleOption[]>([]);
   const [modulesLoaded, setModulesLoaded] = useState(false);
 
+  // Assign block to player dialog
+  const [assignDialogOpen, setAssignDialogOpen] = useState(false);
+  const [assignBlock, setAssignBlock] = useState<TrainingBlock | null>(null);
+
   // Create block state
   const [showCreate, setShowCreate] = useState(false);
   const [newTitle, setNewTitle] = useState("");
