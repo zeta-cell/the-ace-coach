@@ -504,8 +504,19 @@ export const TrainingBlocksContent = ({ embedded = false }: { embedded?: boolean
       </div>
   );
 
-  if (embedded) return content;
-  return <PortalLayout>{content}</PortalLayout>;
+  const wrappedContent = (
+    <>
+      {content}
+      <AssignBlockToPlayerDialog
+        open={assignDialogOpen}
+        onClose={() => { setAssignDialogOpen(false); setAssignBlock(null); }}
+        block={assignBlock}
+      />
+    </>
+  );
+
+  if (embedded) return wrappedContent;
+  return <PortalLayout>{wrappedContent}</PortalLayout>;
 };
 
 const TrainingBlocksPage = () => <TrainingBlocksContent />;
