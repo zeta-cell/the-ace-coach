@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, CalendarDays, User, Layers, Check, Loader2 } from "lucide-react";
+import { X, CalendarDays, User, Layers, Check, Loader2, Clock, MapPin } from "lucide-react";
 import { format } from "date-fns";
 import { toast } from "sonner";
 
@@ -31,6 +31,9 @@ const AssignBlockToPlayerDialog = ({ open, onClose, block }: AssignBlockToPlayer
   const [loadingPlayers, setLoadingPlayers] = useState(false);
   const [selectedPlayer, setSelectedPlayer] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState(format(new Date(), "yyyy-MM-dd"));
+  const [startTime, setStartTime] = useState("");
+  const [endTime, setEndTime] = useState("");
+  const [location, setLocation] = useState("");
   const [assigning, setAssigning] = useState(false);
 
   useEffect(() => {
@@ -41,6 +44,9 @@ const AssignBlockToPlayerDialog = ({ open, onClose, block }: AssignBlockToPlayer
     if (!open) {
       setSelectedPlayer(null);
       setSelectedDate(format(new Date(), "yyyy-MM-dd"));
+      setStartTime("");
+      setEndTime("");
+      setLocation("");
     }
   }, [open]);
 
@@ -89,6 +95,14 @@ const AssignBlockToPlayerDialog = ({ open, onClose, block }: AssignBlockToPlayer
 
     if (existingPlans && existingPlans.length > 0) {
       planId = existingPlans[0].id;
+      // Update with time/location if provided
+      const updates: Record<string, any> = {};
+      if (startTime) updates.start_time = startTime;
+      if (endTime) updates.end_time = endTime;
+      if (location) updates.location_name = location;
+      if (Object.keys(updates).length > 0) {
+        await supabase.from("player_day_plans").update(updates).eq("id", planId);
+      }
     } else {
       const { data: newPlan, error } = await supabase
         .from("player_day_plans")
@@ -97,6 +111,9 @@ const AssignBlockToPlayerDialog = ({ open, onClose, block }: AssignBlockToPlayer
           coach_id: user.id,
           plan_date: selectedDate,
           notes: "",
+          start_time: startTime || null,
+          end_time: endTime || null,
+          location_name: location || null,
         })
         .select("id")
         .single();
@@ -234,6 +251,53 @@ const AssignBlockToPlayerDialog = ({ open, onClose, block }: AssignBlockToPlayer
                     value={selectedDate}
                     onChange={(e) => setSelectedDate(e.target.value)}
                     className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary [color-scheme:dark]"
+                  />
+                </div>
+              </div>
+
+              {/* Time selection */}
+              <div>
+                <label className="text-[10px] font-display tracking-wider text-muted-foreground mb-2 block">
+                  TIME
+                </label>
+                <div className="flex items-center gap-2">
+                  <div className="relative flex-1">
+                    <Clock size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                    <input
+                      type="time"
+                      value={startTime}
+                      onChange={(e) => setStartTime(e.target.value)}
+                      placeholder="Start"
+                      className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary [color-scheme:dark]"
+                    />
+                  </div>
+                  <span className="text-xs font-body text-muted-foreground">–</span>
+                  <div className="relative flex-1">
+                    <Clock size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                    <input
+                      type="time"
+                      value={endTime}
+                      onChange={(e) => setEndTime(e.target.value)}
+                      placeholder="End"
+                      className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary [color-scheme:dark]"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Location */}
+              <div>
+                <label className="text-[10px] font-display tracking-wider text-muted-foreground mb-2 block">
+                  LOCATION
+                </label>
+                <div className="relative">
+                  <MapPin size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                  <input
+                    type="text"
+                    value={location}
+                    onChange={(e) => setLocation(e.target.value)}
+                    placeholder="e.g. Club Deportivo"
+                    className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-muted-foreground"
                   />
                 </div>
               </div>
