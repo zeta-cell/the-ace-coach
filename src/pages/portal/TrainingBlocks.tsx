@@ -448,11 +448,21 @@ export const TrainingBlocksContent = ({ embedded = false }: { embedded?: boolean
                         <p className="font-body text-xs text-muted-foreground mt-2 line-clamp-2">{block.description}</p>
                       )}
 
-                      <button onClick={() => toggleExpand(block.id)}
-                        className="flex items-center gap-1 mt-3 text-xs font-display tracking-wider text-primary hover:text-primary/80 transition-colors">
-                        {expandedBlock === block.id ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
-                        {expandedBlock === block.id ? "HIDE MODULES" : "VIEW MODULES"}
-                      </button>
+                      <div className="flex items-center gap-3 mt-3">
+                        <button onClick={() => toggleExpand(block.id)}
+                          className="flex items-center gap-1 text-xs font-display tracking-wider text-primary hover:text-primary/80 transition-colors">
+                          {expandedBlock === block.id ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+                          {expandedBlock === block.id ? "HIDE MODULES" : "VIEW MODULES"}
+                        </button>
+                        {(role === "coach" || role === "admin") && (
+                          <button
+                            onClick={() => { setAssignBlock(block); setAssignDialogOpen(true); }}
+                            className="flex items-center gap-1 text-xs font-display tracking-wider text-foreground bg-primary/10 hover:bg-primary/20 px-2.5 py-1 rounded-lg transition-colors">
+                            <CalendarDays size={12} className="text-primary" />
+                            ASSIGN
+                          </button>
+                        )}
+                      </div>
                     </div>
 
                     {/* Expanded module list */}
