@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
-import { Blocks, ChevronDown, ChevronRight, Clock, Plus, Search, Trash2, X } from "lucide-react";
+import { Blocks, CalendarDays, ChevronDown, ChevronRight, Clock, Plus, Search, Trash2, X } from "lucide-react";
 import { toast } from "sonner";
 import PortalLayout from "@/components/portal/PortalLayout";
 import AssignBlockToPlayerDialog from "@/components/portal/AssignBlockToPlayerDialog";
