@@ -2,9 +2,10 @@ import { useEffect, useState, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
-import { Blocks, ChevronDown, ChevronRight, Clock, Plus, Search, Trash2, X } from "lucide-react";
+import { Blocks, CalendarDays, ChevronDown, ChevronRight, Clock, Plus, Search, Trash2, X } from "lucide-react";
 import { toast } from "sonner";
 import PortalLayout from "@/components/portal/PortalLayout";
+import AssignBlockToPlayerDialog from "@/components/portal/AssignBlockToPlayerDialog";
 
 interface TrainingBlock {
   id: string;
@@ -86,6 +87,10 @@ export const TrainingBlocksContent = ({ embedded = false }: { embedded?: boolean
   // Module lookup for expanded view
   const [allModules, setAllModules] = useState<ModuleOption[]>([]);
   const [modulesLoaded, setModulesLoaded] = useState(false);
+
+  // Assign block to player dialog
+  const [assignDialogOpen, setAssignDialogOpen] = useState(false);
+  const [assignBlock, setAssignBlock] = useState<TrainingBlock | null>(null);
 
   // Create block state
   const [showCreate, setShowCreate] = useState(false);
@@ -443,11 +448,21 @@ export const TrainingBlocksContent = ({ embedded = false }: { embedded?: boolean
                         <p className="font-body text-xs text-muted-foreground mt-2 line-clamp-2">{block.description}</p>
                       )}
 
-                      <button onClick={() => toggleExpand(block.id)}
-                        className="flex items-center gap-1 mt-3 text-xs font-display tracking-wider text-primary hover:text-primary/80 transition-colors">
-                        {expandedBlock === block.id ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
-                        {expandedBlock === block.id ? "HIDE MODULES" : "VIEW MODULES"}
-                      </button>
+                      <div className="flex items-center gap-3 mt-3">
+                        <button onClick={() => toggleExpand(block.id)}
+                          className="flex items-center gap-1 text-xs font-display tracking-wider text-primary hover:text-primary/80 transition-colors">
+                          {expandedBlock === block.id ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+                          {expandedBlock === block.id ? "HIDE MODULES" : "VIEW MODULES"}
+                        </button>
+                        {(role === "coach" || role === "admin") && (
+                          <button
+                            onClick={() => { setAssignBlock(block); setAssignDialogOpen(true); }}
+                            className="flex items-center gap-1 text-xs font-display tracking-wider text-foreground bg-primary/10 hover:bg-primary/20 px-2.5 py-1 rounded-lg transition-colors">
+                            <CalendarDays size={12} className="text-primary" />
+                            ASSIGN
+                          </button>
+                        )}
+                      </div>
                     </div>
 
                     {/* Expanded module list */}
@@ -489,8 +504,19 @@ export const TrainingBlocksContent = ({ embedded = false }: { embedded?: boolean
       </div>
   );
 
-  if (embedded) return content;
-  return <PortalLayout>{content}</PortalLayout>;
+  const wrappedContent = (
+    <>
+      {content}
+      <AssignBlockToPlayerDialog
+        open={assignDialogOpen}
+        onClose={() => { setAssignDialogOpen(false); setAssignBlock(null); }}
+        block={assignBlock}
+      />
+    </>
+  );
+
+  if (embedded) return wrappedContent;
+  return <PortalLayout>{wrappedContent}</PortalLayout>;
 };
 
 const TrainingBlocksPage = () => <TrainingBlocksContent />;
