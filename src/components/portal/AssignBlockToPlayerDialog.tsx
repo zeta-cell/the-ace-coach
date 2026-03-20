@@ -95,6 +95,14 @@ const AssignBlockToPlayerDialog = ({ open, onClose, block }: AssignBlockToPlayer
 
     if (existingPlans && existingPlans.length > 0) {
       planId = existingPlans[0].id;
+      // Update with time/location if provided
+      const updates: Record<string, any> = {};
+      if (startTime) updates.start_time = startTime;
+      if (endTime) updates.end_time = endTime;
+      if (location) updates.location_name = location;
+      if (Object.keys(updates).length > 0) {
+        await supabase.from("player_day_plans").update(updates).eq("id", planId);
+      }
     } else {
       const { data: newPlan, error } = await supabase
         .from("player_day_plans")
@@ -103,6 +111,9 @@ const AssignBlockToPlayerDialog = ({ open, onClose, block }: AssignBlockToPlayer
           coach_id: user.id,
           plan_date: selectedDate,
           notes: "",
+          start_time: startTime || null,
+          end_time: endTime || null,
+          location_name: location || null,
         })
         .select("id")
         .single();
