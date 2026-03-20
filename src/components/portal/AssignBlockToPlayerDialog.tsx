@@ -31,6 +31,9 @@ const AssignBlockToPlayerDialog = ({ open, onClose, block }: AssignBlockToPlayer
   const [loadingPlayers, setLoadingPlayers] = useState(false);
   const [selectedPlayer, setSelectedPlayer] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState(format(new Date(), "yyyy-MM-dd"));
+  const [startTime, setStartTime] = useState("");
+  const [endTime, setEndTime] = useState("");
+  const [location, setLocation] = useState("");
   const [assigning, setAssigning] = useState(false);
 
   useEffect(() => {
