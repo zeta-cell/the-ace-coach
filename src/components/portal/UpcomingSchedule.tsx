@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Link } from "react-router-dom";
-import { Calendar, Clock, ChevronRight, Dumbbell } from "lucide-react";
+import { Calendar, Clock, ChevronRight, Dumbbell, Hash } from "lucide-react";
 import { format, addDays } from "date-fns";
 
 interface PlanRow {
@@ -13,6 +13,7 @@ interface PlanRow {
   coach_id: string;
   coach_name?: string;
   module_count: number;
+  court_number?: string | null;
 }
 
 interface UpcomingScheduleProps {
@@ -39,7 +40,7 @@ const UpcomingSchedule = ({ playerId, linkPrefix = "training", daysAhead = 14, s
 
     const { data } = await supabase
       .from("player_day_plans")
-      .select("id, plan_date, start_time, end_time, notes, coach_id, player_day_plan_items(id)")
+      .select("id, plan_date, start_time, end_time, notes, coach_id, court_number, player_day_plan_items(id)")
       .eq("player_id", playerId)
       .gte("plan_date", today)
       .lte("plan_date", end)
@@ -71,6 +72,7 @@ const UpcomingSchedule = ({ playerId, linkPrefix = "training", daysAhead = 14, s
         coach_id: p.coach_id,
         coach_name: coachMap.get(p.coach_id) || "Coach",
         module_count: (p.player_day_plan_items as any[])?.length || 0,
+        court_number: (p as any).court_number || null,
       }))
     );
     setLoading(false);
@@ -131,10 +133,15 @@ const UpcomingSchedule = ({ playerId, linkPrefix = "training", daysAhead = 14, s
                       </span>
                     )}
                   </div>
-                  <div className="flex items-center gap-2 mt-0.5">
+                  <div className="flex items-center gap-2 mt-0.5 flex-wrap">
                     <span className="flex items-center gap-1 text-[10px] font-body text-muted-foreground">
                       <Dumbbell size={10} /> {plan.module_count} modules
                     </span>
+                    {plan.court_number && (
+                      <span className="flex items-center gap-0.5 text-[10px] font-display tracking-wider bg-primary/15 text-primary px-1.5 py-0.5 rounded-full">
+                        <Hash size={9} /> {plan.court_number}
+                      </span>
+                    )}
                     {showCoach && (
                       <span className="text-[10px] font-body text-muted-foreground">
                         · {plan.coach_name}

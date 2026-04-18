@@ -57,6 +57,8 @@ const CreateEventDrawer = ({ open, onClose, event, onSaved }: Props) => {
   const [skillLevel, setSkillLevel] = useState("all");
   const [coverUrl, setCoverUrl] = useState("");
   const [description, setDescription] = useState("");
+  const [courtNumber, setCourtNumber] = useState("");
+  const [arrivalInstructions, setArrivalInstructions] = useState("");
   const [isDraft, setIsDraft] = useState(false);
 
   useEffect(() => {
@@ -82,13 +84,16 @@ const CreateEventDrawer = ({ open, onClose, event, onSaved }: Props) => {
       setSkillLevel(event.skill_level || "all");
       setCoverUrl(event.cover_image_url || "");
       setDescription(event.description || "");
+      setCourtNumber(event.court_number || "");
+      setArrivalInstructions(event.arrival_instructions || "");
       setIsDraft(event.status === "draft");
     } else {
       setTitle(""); setEventType("clinic"); setSport("both");
       setStartDate(""); setStartTime(""); setEndDate(""); setEndTime("");
       setLocationName(""); setLocationAddress(""); setLocationCity(""); setLocationCountry("");
       setIsOnline(false); setMaxParticipants(""); setPrice("0"); setCurrency("EUR");
-      setAgeGroup("all"); setSkillLevel("all"); setCoverUrl(""); setDescription(""); setIsDraft(false);
+      setAgeGroup("all"); setSkillLevel("all"); setCoverUrl(""); setDescription("");
+      setCourtNumber(""); setArrivalInstructions(""); setIsDraft(false);
     }
   }, [event, open]);
 
@@ -122,6 +127,8 @@ const CreateEventDrawer = ({ open, onClose, event, onSaved }: Props) => {
       skill_level: skillLevel,
       cover_image_url: coverUrl || null,
       description: description || null,
+      court_number: courtNumber || null,
+      arrival_instructions: arrivalInstructions || null,
       status: isDraft ? "draft" : "published",
     };
 
@@ -222,6 +229,16 @@ const CreateEventDrawer = ({ open, onClose, event, onSaved }: Props) => {
                   <label className="font-display text-[10px] tracking-wider text-muted-foreground mb-1 block">COUNTRY</label>
                   <Input value={locationCountry} onChange={e => setLocationCountry(e.target.value)} placeholder="Country" />
                 </div>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="font-display text-[10px] tracking-wider text-muted-foreground mb-1 block">COURT #</label>
+                  <Input value={courtNumber} onChange={e => setCourtNumber(e.target.value)} placeholder="e.g. Court 4" />
+                </div>
+              </div>
+              <div>
+                <label className="font-display text-[10px] tracking-wider text-muted-foreground mb-1 block">ARRIVAL INSTRUCTIONS</label>
+                <Textarea value={arrivalInstructions} onChange={e => setArrivalInstructions(e.target.value)} rows={2} placeholder="e.g. Reception → Court 4. Say 'I'm here for the clinic'" />
               </div>
             </>
           )}

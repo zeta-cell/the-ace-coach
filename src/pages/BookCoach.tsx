@@ -91,6 +91,8 @@ const BookCoach = () => {
   const [notes, setNotes] = useState("");
   const [locationType, setLocationType] = useState<"in_person" | "online">("in_person");
   const [locationAddress, setLocationAddress] = useState("");
+  const [courtNumber, setCourtNumber] = useState("");
+  const [arrivalInstructions, setArrivalInstructions] = useState("");
   const [confirming, setConfirming] = useState(false);
 
   const isGroupPackage = selectedPackage?.session_type === "group" && (selectedPackage?.max_group_size || 0) > 1;
@@ -311,6 +313,9 @@ const BookCoach = () => {
       notes: notes.trim() || null,
       location_type: locationType,
       location_address: locationType === "in_person" ? locationAddress.trim() || null : null,
+      court_number: courtNumber.trim() || null,
+      arrival_instructions: arrivalInstructions.trim() || null,
+      coach_name_for_arrival: profile?.full_name?.split(" ").pop() || null,
     }).select("id").single();
 
     if (error || !booking) {
@@ -745,6 +750,29 @@ const BookCoach = () => {
                     className="w-full mt-2 px-3 py-2 rounded-lg bg-card border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-muted-foreground"
                   />
                 )}
+              </div>
+
+              {/* Court # + Arrival instructions */}
+              <div className="mb-4 grid grid-cols-1 gap-3">
+                <div>
+                  <label className="text-xs font-body text-muted-foreground mb-1 block">Court # (optional)</label>
+                  <input
+                    value={courtNumber}
+                    onChange={(e) => setCourtNumber(e.target.value)}
+                    placeholder="e.g. Court 4"
+                    className="w-full px-3 py-2 rounded-lg bg-card border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-muted-foreground"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-body text-muted-foreground mb-1 block">Arrival instructions (optional)</label>
+                  <textarea
+                    value={arrivalInstructions}
+                    onChange={(e) => setArrivalInstructions(e.target.value)}
+                    placeholder={`e.g. Reception → Court 4. Say "I'm here for ${profile?.full_name?.split(" ").pop() || "the coaching"}"`}
+                    rows={2}
+                    className="w-full px-3 py-2 rounded-lg bg-card border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-muted-foreground resize-none"
+                  />
+                </div>
               </div>
 
               <button

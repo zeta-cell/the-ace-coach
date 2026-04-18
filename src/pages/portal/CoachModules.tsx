@@ -50,6 +50,8 @@ interface Module {
   duration_minutes: number | null;
   description: string | null;
   instructions: string | null;
+  player_description: string | null;
+  coach_description: string | null;
   video_url: string | null;
   coach_video_url: string | null;
   tags: string[] | null;
@@ -65,6 +67,8 @@ const emptyForm = {
   duration_minutes: 15,
   description: "",
   instructions: "",
+  player_description: "",
+  coach_description: "",
   video_url: "",
   tags: "",
   equipment: "",
@@ -85,6 +89,7 @@ export const CoachModulesContent = ({ embedded = false }: { embedded?: boolean }
   const [videoModalOpen, setVideoModalOpen] = useState(false);
   const [videoModalUrl, setVideoModalUrl] = useState("");
   const [videoModalTitle, setVideoModalTitle] = useState("");
+  const [descView, setDescView] = useState<Record<string, "player" | "coach">>({});
   const videoFileRef = useRef<HTMLInputElement>(null);
   const [coachSport, setCoachSport] = useState<string | null>(null);
   useEffect(() => {
@@ -145,6 +150,8 @@ export const CoachModulesContent = ({ embedded = false }: { embedded?: boolean }
       duration_minutes: form.duration_minutes,
       description: form.description || null,
       instructions: form.instructions || null,
+      player_description: form.player_description || null,
+      coach_description: form.coach_description || null,
       video_url: form.video_url || null,
       tags: form.tags ? form.tags.split(",").map((t) => t.trim()).filter(Boolean) : [],
       equipment: form.equipment ? form.equipment.split(",").map((e) => e.trim()).filter(Boolean) : [],
@@ -171,6 +178,8 @@ export const CoachModulesContent = ({ embedded = false }: { embedded?: boolean }
       duration_minutes: mod.duration_minutes || 15,
       description: mod.description || "",
       instructions: mod.instructions || "",
+      player_description: mod.player_description || "",
+      coach_description: mod.coach_description || "",
       video_url: mod.video_url || "",
       tags: mod.tags?.join(", ") || "",
       equipment: mod.equipment?.join(", ") || "",
@@ -323,6 +332,29 @@ export const CoachModulesContent = ({ embedded = false }: { embedded?: boolean }
                       className="overflow-hidden"
                     >
                       <div className="mt-3 pt-3 border-t border-border space-y-2">
+                        {(mod.player_description || mod.coach_description) && (
+                          <div>
+                            <div className="flex gap-1 mb-2">
+                              <button
+                                onClick={() => setDescView({ ...descView, [mod.id]: "player" })}
+                                className={`flex-1 px-2 py-1 rounded-md font-display text-[9px] tracking-wider transition-colors ${(descView[mod.id] || "player") === "player" ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground"}`}
+                              >
+                                PLAYER VIEW
+                              </button>
+                              <button
+                                onClick={() => setDescView({ ...descView, [mod.id]: "coach" })}
+                                className={`flex-1 px-2 py-1 rounded-md font-display text-[9px] tracking-wider transition-colors ${descView[mod.id] === "coach" ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground"}`}
+                              >
+                                COACH VIEW
+                              </button>
+                            </div>
+                            <p className="text-xs font-body text-foreground whitespace-pre-line">
+                              {(descView[mod.id] || "player") === "player"
+                                ? (mod.player_description || "No player-facing description yet.")
+                                : (mod.coach_description || "No coach cues yet.")}
+                            </p>
+                          </div>
+                        )}
                         {mod.description && (
                           <p className="text-xs font-body text-muted-foreground">{mod.description}</p>
                         )}
@@ -421,14 +453,34 @@ export const CoachModulesContent = ({ embedded = false }: { embedded?: boolean }
                     className="w-full px-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-sm focus:outline-none"
                   />
                   <textarea
-                    placeholder="Description"
+                    placeholder="Description (internal)"
                     value={form.description}
                     onChange={(e) => setForm({ ...form, description: e.target.value })}
                     rows={2}
                     className="w-full px-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-sm focus:outline-none resize-none"
                   />
+                  <div>
+                    <label className="text-[10px] font-display tracking-wider text-muted-foreground mb-1 block">PLAYER DESCRIPTION (what the player sees)</label>
+                    <textarea
+                      placeholder="Plain-language brief: goals, what the drill feels like, how to know you're doing it right..."
+                      value={form.player_description}
+                      onChange={(e) => setForm({ ...form, player_description: e.target.value })}
+                      rows={3}
+                      className="w-full px-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-sm focus:outline-none resize-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[10px] font-display tracking-wider text-muted-foreground mb-1 block">COACH DESCRIPTION (cues, things to look for)</label>
+                    <textarea
+                      placeholder="Coaching cues, common mistakes, what to correct, progressions..."
+                      value={form.coach_description}
+                      onChange={(e) => setForm({ ...form, coach_description: e.target.value })}
+                      rows={3}
+                      className="w-full px-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-sm focus:outline-none resize-none"
+                    />
+                  </div>
                   <textarea
-                    placeholder="Instructions (step by step)"
+                    placeholder="Step-by-step instructions"
                     value={form.instructions}
                     onChange={(e) => setForm({ ...form, instructions: e.target.value })}
                     rows={3}
