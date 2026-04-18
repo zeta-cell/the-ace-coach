@@ -25,7 +25,7 @@ const PublicHeader = () => {
 
           {/* Desktop: ACE logo + nav links */}
           <Link to="/" className="hidden md:block font-display text-2xl tracking-wider text-foreground shrink-0">
-            ACE<span className="text-primary">.</span>
+            ACE<span className="text-primary"> Coach</span>
           </Link>
           <div className="hidden md:flex items-center gap-6">
             {NAV_LINKS.map(link => (
