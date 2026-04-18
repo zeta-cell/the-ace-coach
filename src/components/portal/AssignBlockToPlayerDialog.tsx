@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { CalendarDays, User, Layers, Check, Loader2, Clock, MapPin } from "lucide-react";
+import { CalendarDays, User, Layers, Check, Loader2, Clock, MapPin, Hash, Info } from "lucide-react";
 import { format } from "date-fns";
 import { toast } from "sonner";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -49,6 +49,8 @@ const AssignBlockToPlayerDialog = ({ open, onClose, block }: AssignBlockToPlayer
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [location, setLocation] = useState("");
+  const [courtNumber, setCourtNumber] = useState("");
+  const [arrivalInstructions, setArrivalInstructions] = useState("");
   const [assigning, setAssigning] = useState(false);
 
   useEffect(() => {
@@ -62,6 +64,8 @@ const AssignBlockToPlayerDialog = ({ open, onClose, block }: AssignBlockToPlayer
       setStartTime("");
       setEndTime("");
       setLocation("");
+      setCourtNumber("");
+      setArrivalInstructions("");
     }
   }, [open]);
 
@@ -113,6 +117,8 @@ const AssignBlockToPlayerDialog = ({ open, onClose, block }: AssignBlockToPlayer
       if (startTime) updates.start_time = startTime;
       if (endTime) updates.end_time = endTime;
       if (location) updates.location_name = location;
+      if (courtNumber) updates.court_number = courtNumber;
+      if (arrivalInstructions) updates.arrival_instructions = arrivalInstructions;
       if (Object.keys(updates).length > 0) {
         await supabase.from("player_day_plans").update(updates).eq("id", planId);
       }
@@ -127,6 +133,8 @@ const AssignBlockToPlayerDialog = ({ open, onClose, block }: AssignBlockToPlayer
           start_time: startTime || null,
           end_time: endTime || null,
           location_name: location || null,
+          court_number: courtNumber || null,
+          arrival_instructions: arrivalInstructions || null,
         })
         .select("id")
         .single();
@@ -264,6 +272,34 @@ const AssignBlockToPlayerDialog = ({ open, onClose, block }: AssignBlockToPlayer
             onChange={(e) => setLocation(e.target.value)}
             placeholder="e.g. Club Deportivo"
             className="w-full pl-9 pr-3 py-2 rounded-xl bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-muted-foreground"
+          />
+        </div>
+      </div>
+
+      <div>
+        <label className="text-[10px] font-display tracking-wider text-muted-foreground mb-1.5 block">COURT #</label>
+        <div className="relative">
+          <Hash size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+          <input
+            type="text"
+            value={courtNumber}
+            onChange={(e) => setCourtNumber(e.target.value)}
+            placeholder="e.g. Court 4"
+            className="w-full pl-9 pr-3 py-2 rounded-xl bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-muted-foreground"
+          />
+        </div>
+      </div>
+
+      <div>
+        <label className="text-[10px] font-display tracking-wider text-muted-foreground mb-1.5 block">ARRIVAL INSTRUCTIONS</label>
+        <div className="relative">
+          <Info size={14} className="absolute left-3 top-3 text-muted-foreground" />
+          <textarea
+            value={arrivalInstructions}
+            onChange={(e) => setArrivalInstructions(e.target.value)}
+            placeholder="e.g. Reception → Court 4. Say 'I'm here for Valdez coaching'"
+            rows={2}
+            className="w-full pl-9 pr-3 py-2 rounded-xl bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-muted-foreground resize-none"
           />
         </div>
       </div>
