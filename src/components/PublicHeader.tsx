@@ -12,8 +12,23 @@ const NAV_LINKS = [
 
 const PublicHeader = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [theme, setTheme] = useState<"dark" | "light">(
+    typeof window !== "undefined" && document.documentElement.classList.contains("light") ? "light" : "dark"
+  );
   const location = useLocation();
 
+  useEffect(() => {
+    const root = document.documentElement;
+    if (theme === "light") {
+      root.classList.add("light");
+      localStorage.setItem("theme", "light");
+    } else {
+      root.classList.remove("light");
+      localStorage.setItem("theme", "dark");
+    }
+  }, [theme]);
+
+  const toggleTheme = () => setTheme(t => (t === "dark" ? "light" : "dark"));
   return (
     <>
       <nav className="sticky top-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border">
