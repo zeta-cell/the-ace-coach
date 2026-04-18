@@ -212,12 +212,16 @@ export type Database = {
       }
       bookings: {
         Row: {
+          arrival_instructions: string | null
           booking_date: string
           cancellation_reason: string | null
           cancelled_at: string | null
           cancelled_by: string | null
+          check_in_code: string | null
           coach_id: string
+          coach_name_for_arrival: string | null
           coach_payout: number
+          court_number: string | null
           created_at: string | null
           currency: string
           end_time: string
@@ -236,12 +240,16 @@ export type Database = {
           updated_at: string | null
         }
         Insert: {
+          arrival_instructions?: string | null
           booking_date: string
           cancellation_reason?: string | null
           cancelled_at?: string | null
           cancelled_by?: string | null
+          check_in_code?: string | null
           coach_id: string
+          coach_name_for_arrival?: string | null
           coach_payout?: number
+          court_number?: string | null
           created_at?: string | null
           currency?: string
           end_time: string
@@ -260,12 +268,16 @@ export type Database = {
           updated_at?: string | null
         }
         Update: {
+          arrival_instructions?: string | null
           booking_date?: string
           cancellation_reason?: string | null
           cancelled_at?: string | null
           cancelled_by?: string | null
+          check_in_code?: string | null
           coach_id?: string
+          coach_name_for_arrival?: string | null
           coach_payout?: number
+          court_number?: string | null
           created_at?: string | null
           currency?: string
           end_time?: string
@@ -666,7 +678,9 @@ export type Database = {
       events: {
         Row: {
           age_group: string | null
+          arrival_instructions: string | null
           coach_id: string
+          court_number: string | null
           cover_image_url: string | null
           created_at: string | null
           currency: string | null
@@ -691,7 +705,9 @@ export type Database = {
         }
         Insert: {
           age_group?: string | null
+          arrival_instructions?: string | null
           coach_id: string
+          court_number?: string | null
           cover_image_url?: string | null
           created_at?: string | null
           currency?: string | null
@@ -716,7 +732,9 @@ export type Database = {
         }
         Update: {
           age_group?: string | null
+          arrival_instructions?: string | null
           coach_id?: string
+          court_number?: string | null
           cover_image_url?: string | null
           created_at?: string | null
           currency?: string | null
@@ -1010,6 +1028,7 @@ export type Database = {
       modules: {
         Row: {
           category: Database["public"]["Enums"]["module_category"]
+          coach_description: string | null
           coach_video_url: string | null
           created_at: string
           created_by: string
@@ -1020,6 +1039,7 @@ export type Database = {
           id: string
           instructions: string | null
           is_shared: boolean | null
+          player_description: string | null
           sport: string
           tags: string[] | null
           title: string
@@ -1027,6 +1047,7 @@ export type Database = {
         }
         Insert: {
           category: Database["public"]["Enums"]["module_category"]
+          coach_description?: string | null
           coach_video_url?: string | null
           created_at?: string
           created_by: string
@@ -1037,6 +1058,7 @@ export type Database = {
           id?: string
           instructions?: string | null
           is_shared?: boolean | null
+          player_description?: string | null
           sport?: string
           tags?: string[] | null
           title: string
@@ -1044,6 +1066,7 @@ export type Database = {
         }
         Update: {
           category?: Database["public"]["Enums"]["module_category"]
+          coach_description?: string | null
           coach_video_url?: string | null
           created_at?: string
           created_by?: string
@@ -1054,6 +1077,7 @@ export type Database = {
           id?: string
           instructions?: string | null
           is_shared?: boolean | null
+          player_description?: string | null
           sport?: string
           tags?: string[] | null
           title?: string
@@ -1205,7 +1229,9 @@ export type Database = {
       }
       player_day_plans: {
         Row: {
+          arrival_instructions: string | null
           coach_id: string
+          court_number: string | null
           created_at: string
           end_time: string | null
           id: string
@@ -1220,7 +1246,9 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          arrival_instructions?: string | null
           coach_id: string
+          court_number?: string | null
           created_at?: string
           end_time?: string | null
           id?: string
@@ -1235,7 +1263,9 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          arrival_instructions?: string | null
           coach_id?: string
+          court_number?: string | null
           created_at?: string
           end_time?: string | null
           id?: string
