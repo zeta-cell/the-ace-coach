@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion } from "framer-motion";
-import { Calendar, X, Users } from "lucide-react";
+import { Calendar, X, Users, Hash, Info, KeyRound, ChevronDown } from "lucide-react";
 import { format, differenceInHours } from "date-fns";
 import { toast } from "sonner";
 
@@ -24,11 +24,16 @@ interface BookingItem {
   package_id?: string | null;
   max_group_size?: number | null;
   group_participants?: { name: string; avatar: string | null }[];
+  court_number?: string | null;
+  arrival_instructions?: string | null;
+  check_in_code?: string | null;
+  coach_name_for_arrival?: string | null;
 }
 
 const UpcomingBookings = () => {
   const { user } = useAuth();
   const [bookings, setBookings] = useState<BookingItem[]>([]);
+  const [expanded, setExpanded] = useState<string | null>(null);
 
   useEffect(() => {
     if (user) fetchAll();
@@ -41,7 +46,7 @@ const UpcomingBookings = () => {
     // Fetch bookings
     const { data } = await supabase
       .from("bookings")
-      .select("id, booking_date, start_time, end_time, status, total_price, currency, coach_id, package_id")
+      .select("id, booking_date, start_time, end_time, status, total_price, currency, coach_id, package_id, court_number, arrival_instructions, check_in_code, coach_name_for_arrival")
       .eq("player_id", user.id)
       .in("status", ["pending", "confirmed"])
       .gte("booking_date", today)
@@ -114,6 +119,10 @@ const UpcomingBookings = () => {
           package_id: b.package_id,
           max_group_size: pkg?.max_group_size || null,
           group_participants: coParticipants,
+          court_number: (b as any).court_number || null,
+          arrival_instructions: (b as any).arrival_instructions || null,
+          check_in_code: (b as any).check_in_code || null,
+          coach_name_for_arrival: (b as any).coach_name_for_arrival || null,
         };
       });
     }
