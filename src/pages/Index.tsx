@@ -216,10 +216,10 @@ const Index = () => {
       <footer className="border-t border-border py-8 px-6">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <span className="font-display text-lg tracking-wider">
-            ACE<span className="text-primary">.</span>
+            ACE<span className="text-primary"> Coach</span>
           </span>
           <p className="font-body text-xs text-muted-foreground">
-            © {new Date().getFullYear()} ACE. The future of racket sports coaching.
+            © {new Date().getFullYear()} ACE Coach. The future of racket sports coaching.
           </p>
         </div>
       </footer>
