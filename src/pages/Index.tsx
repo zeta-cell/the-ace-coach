@@ -45,7 +45,7 @@ const Index = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7 }}
           >
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/20 text-primary font-body text-xs tracking-wider mb-6 backdrop-blur-sm">
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary text-primary-foreground font-body text-xs tracking-wider mb-6 shadow-lg">
               <MapPin size={14} /> TENNIS & PADEL COACHING PLATFORM
             </span>
             <h1 className="font-display text-5xl md:text-7xl lg:text-8xl leading-[0.9] mb-6">
