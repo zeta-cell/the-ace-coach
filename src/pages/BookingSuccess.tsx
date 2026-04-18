@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
-import { Check, Calendar, ArrowRight } from "lucide-react";
+import { Check, Calendar, ArrowRight, Hash, Info, KeyRound } from "lucide-react";
 import { format } from "date-fns";
 
 interface BookingInfo {
@@ -14,6 +14,10 @@ interface BookingInfo {
   currency: string;
   coach_name: string;
   package_title: string;
+  court_number: string | null;
+  arrival_instructions: string | null;
+  check_in_code: string | null;
+  coach_name_for_arrival: string | null;
 }
 
 const BookingSuccess = () => {
@@ -29,7 +33,7 @@ const BookingSuccess = () => {
   const fetchBooking = async () => {
     const { data } = await supabase
       .from("bookings")
-      .select("id, booking_date, start_time, end_time, total_price, currency, coach_id, package_id")
+      .select("id, booking_date, start_time, end_time, total_price, currency, coach_id, package_id, court_number, arrival_instructions, check_in_code, coach_name_for_arrival")
       .eq("id", bookingId!)
       .single();
 
@@ -45,6 +49,10 @@ const BookingSuccess = () => {
         ...data,
         coach_name: coachRes.data?.full_name || "Coach",
         package_title: pkgRes.data?.title || "Session",
+        court_number: (data as any).court_number || null,
+        arrival_instructions: (data as any).arrival_instructions || null,
+        check_in_code: (data as any).check_in_code || null,
+        coach_name_for_arrival: (data as any).coach_name_for_arrival || null,
       });
     }
     setLoading(false);
@@ -111,6 +119,41 @@ const BookingSuccess = () => {
               <span className="font-body text-sm text-muted-foreground">Paid</span>
               <span className="font-display text-xl text-foreground">{currencySymbol(booking.currency)}{Number(booking.total_price).toFixed(2)}</span>
             </div>
+          </motion.div>
+        )}
+
+        {booking && (booking.court_number || booking.arrival_instructions || booking.check_in_code) && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.65 }}
+            className="bg-primary/5 border border-primary/30 rounded-xl p-5 text-left space-y-2.5"
+          >
+            <p className="font-display text-xs tracking-wider text-primary mb-1">HOW TO FIND US</p>
+            {booking.court_number && (
+              <div className="flex items-center gap-2 text-sm font-body text-foreground">
+                <Hash size={14} className="text-primary shrink-0" />
+                <span>Court: <span className="font-semibold">{booking.court_number}</span></span>
+              </div>
+            )}
+            {booking.coach_name_for_arrival && (
+              <div className="flex items-start gap-2 text-sm font-body text-foreground">
+                <Info size={14} className="text-primary shrink-0 mt-0.5" />
+                <span>Say: <span className="italic">"I'm here for {booking.coach_name_for_arrival} coaching"</span></span>
+              </div>
+            )}
+            {booking.arrival_instructions && (
+              <div className="flex items-start gap-2 text-sm font-body text-foreground">
+                <Info size={14} className="text-primary shrink-0 mt-0.5" />
+                <span>{booking.arrival_instructions}</span>
+              </div>
+            )}
+            {booking.check_in_code && (
+              <div className="flex items-center gap-2 text-sm font-body text-foreground">
+                <KeyRound size={14} className="text-primary shrink-0" />
+                <span>Check-in code: <span className="font-mono font-semibold tracking-wider bg-primary/15 px-2 py-0.5 rounded">{booking.check_in_code}</span></span>
+              </div>
+            )}
           </motion.div>
         )}
 
