@@ -312,6 +312,46 @@ const UpcomingBookings = () => {
                   )}
                 </div>
               )}
+              {/* How to find us */}
+              {b.type === "booking" && (b.court_number || b.arrival_instructions || b.check_in_code) && (
+                <div className="mt-2 pt-2 border-t border-border">
+                  <button
+                    onClick={() => setExpanded(expanded === b.id ? null : b.id)}
+                    className="w-full flex items-center justify-between text-[10px] font-display tracking-wider text-primary hover:text-primary/80 transition-colors"
+                  >
+                    <span className="flex items-center gap-1.5"><Info size={11} /> HOW TO FIND US</span>
+                    <ChevronDown size={11} className={`transition-transform ${expanded === b.id ? "rotate-180" : ""}`} />
+                  </button>
+                  {expanded === b.id && (
+                    <div className="mt-2 space-y-1.5 text-xs font-body text-foreground">
+                      {b.court_number && (
+                        <div className="flex items-center gap-2">
+                          <Hash size={11} className="text-primary shrink-0" />
+                          <span>Court: <span className="font-semibold">{b.court_number}</span></span>
+                        </div>
+                      )}
+                      {b.coach_name_for_arrival && (
+                        <div className="flex items-start gap-2">
+                          <Info size={11} className="text-primary shrink-0 mt-0.5" />
+                          <span>Say: <span className="italic">"I'm here for {b.coach_name_for_arrival} coaching"</span></span>
+                        </div>
+                      )}
+                      {b.arrival_instructions && (
+                        <div className="flex items-start gap-2">
+                          <Info size={11} className="text-primary shrink-0 mt-0.5" />
+                          <span>{b.arrival_instructions}</span>
+                        </div>
+                      )}
+                      {b.check_in_code && (
+                        <div className="flex items-center gap-2">
+                          <KeyRound size={11} className="text-primary shrink-0" />
+                          <span>Check-in code: <span className="font-mono font-semibold tracking-wider bg-primary/10 px-2 py-0.5 rounded">{b.check_in_code}</span></span>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           );
         })}
