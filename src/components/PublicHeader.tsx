@@ -63,7 +63,7 @@ const PublicHeader = () => {
             <div className="relative w-64 h-full bg-card border-r border-border p-4 space-y-1">
               <div className="p-3 mb-4 border-b border-border">
                 <span className="font-display text-xl tracking-wider text-foreground">
-                  ACE<span className="text-primary">.</span>
+                  ACE<span className="text-primary"> Coach</span>
                 </span>
               </div>
               {NAV_LINKS.map(link => (
