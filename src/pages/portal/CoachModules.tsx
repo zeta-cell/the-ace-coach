@@ -50,6 +50,8 @@ interface Module {
   duration_minutes: number | null;
   description: string | null;
   instructions: string | null;
+  player_description: string | null;
+  coach_description: string | null;
   video_url: string | null;
   coach_video_url: string | null;
   tags: string[] | null;
@@ -65,6 +67,8 @@ const emptyForm = {
   duration_minutes: 15,
   description: "",
   instructions: "",
+  player_description: "",
+  coach_description: "",
   video_url: "",
   tags: "",
   equipment: "",
@@ -85,6 +89,7 @@ export const CoachModulesContent = ({ embedded = false }: { embedded?: boolean }
   const [videoModalOpen, setVideoModalOpen] = useState(false);
   const [videoModalUrl, setVideoModalUrl] = useState("");
   const [videoModalTitle, setVideoModalTitle] = useState("");
+  const [descView, setDescView] = useState<Record<string, "player" | "coach">>({});
   const videoFileRef = useRef<HTMLInputElement>(null);
   const [coachSport, setCoachSport] = useState<string | null>(null);
   useEffect(() => {
@@ -145,6 +150,8 @@ export const CoachModulesContent = ({ embedded = false }: { embedded?: boolean }
       duration_minutes: form.duration_minutes,
       description: form.description || null,
       instructions: form.instructions || null,
+      player_description: form.player_description || null,
+      coach_description: form.coach_description || null,
       video_url: form.video_url || null,
       tags: form.tags ? form.tags.split(",").map((t) => t.trim()).filter(Boolean) : [],
       equipment: form.equipment ? form.equipment.split(",").map((e) => e.trim()).filter(Boolean) : [],
@@ -171,6 +178,8 @@ export const CoachModulesContent = ({ embedded = false }: { embedded?: boolean }
       duration_minutes: mod.duration_minutes || 15,
       description: mod.description || "",
       instructions: mod.instructions || "",
+      player_description: mod.player_description || "",
+      coach_description: mod.coach_description || "",
       video_url: mod.video_url || "",
       tags: mod.tags?.join(", ") || "",
       equipment: mod.equipment?.join(", ") || "",
