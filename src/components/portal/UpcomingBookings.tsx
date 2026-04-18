@@ -257,6 +257,11 @@ const UpcomingBookings = () => {
                         <Users size={8} /> GROUP
                       </span>
                     )}
+                    {b.court_number && (
+                      <span className="text-[9px] font-display font-semibold bg-primary/15 text-primary px-2 py-0.5 rounded-full uppercase flex items-center gap-0.5">
+                        <Hash size={8} /> {b.court_number}
+                      </span>
+                    )}
                     <span className={`text-[9px] font-body font-semibold px-2 py-0.5 rounded-full uppercase ${b.status === "confirmed" ? "bg-green-500/10 text-green-400" : "bg-yellow-500/10 text-yellow-400"}`}>
                       {b.status === "confirmed" ? "CONFIRMED" : "PENDING PAYMENT"}
                     </span>
