@@ -13,7 +13,7 @@ const NAV_LINKS = [
 const PublicHeader = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [theme, setTheme] = useState<"dark" | "light">(
-    typeof window !== "undefined" && document.documentElement.classList.contains("light") ? "light" : "dark"
+    typeof window !== "undefined" && !document.documentElement.classList.contains("light") ? "dark" : "light"
   );
   const location = useLocation();
 
