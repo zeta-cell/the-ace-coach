@@ -25,7 +25,7 @@ const PublicHeader = () => {
 
           {/* Desktop: ACE logo + nav links */}
           <Link to="/" className="hidden md:block font-display text-2xl tracking-wider text-foreground shrink-0">
-            ACE<span className="text-primary">.</span>
+            ACE<span className="text-primary"> Coach</span>
           </Link>
           <div className="hidden md:flex items-center gap-6">
             {NAV_LINKS.map(link => (
@@ -63,7 +63,7 @@ const PublicHeader = () => {
             <div className="relative w-64 h-full bg-card border-r border-border p-4 space-y-1">
               <div className="p-3 mb-4 border-b border-border">
                 <span className="font-display text-xl tracking-wider text-foreground">
-                  ACE<span className="text-primary">.</span>
+                  ACE<span className="text-primary"> Coach</span>
                 </span>
               </div>
               {NAV_LINKS.map(link => (
