@@ -192,7 +192,12 @@ const PortalLayout = ({ children }: { children: React.ReactNode }) => {
           <div className="flex-1" />
           <div className="flex items-center gap-3">
             <NotificationBell />
-            <Link to={role === "coach" ? "/coach/profile" : "/profile"}>
+            <Link to={
+              role === "coach" ? "/coach/profile" :
+              role === "club_manager" ? "/club/settings" :
+              role === "admin" ? "/admin" :
+              "/profile"
+            }>
               <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-display text-sm">
                 {profile?.full_name?.charAt(0)?.toUpperCase() || "?"}
               </div>

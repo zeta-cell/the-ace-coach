@@ -71,7 +71,7 @@ const MyClubsCard = () => {
           {clubs.map((c) => (
             <Link
               key={c.id}
-              to="/events"
+              to={c.slug ? `/c/${c.slug}` : "/events"}
               className="shrink-0 w-36 bg-card border border-border rounded-xl p-3 text-center hover:border-primary/50 transition-colors"
             >
               <div className="w-10 h-10 rounded-lg mx-auto mb-1.5 overflow-hidden bg-secondary flex items-center justify-center">

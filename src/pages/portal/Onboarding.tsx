@@ -30,6 +30,11 @@ const Onboarding = () => {
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
 
+  // Hydrate referral code captured on /login?ref=CODE so the referrer gets credit.
+  const [storedReferral] = useState<string>(
+    () => (typeof window !== "undefined" ? localStorage.getItem("ace_referral_code") || "" : "")
+  );
+
   // Step 1
   const [dateOfBirth, setDateOfBirth] = useState("");
   const [nationality, setNationality] = useState("");
@@ -52,7 +57,7 @@ const Onboarding = () => {
   // Step 4
   const [playtomicUrl, setPlaytomicUrl] = useState("");
   const [playtomicLevel, setPlaytomicLevel] = useState("");
-  const [referralCode, setReferralCode] = useState("");
+  const [referralCode, setReferralCode] = useState(storedReferral);
   const [rackets, setRackets] = useState<Racket[]>([
     { brand: "", model: "", type: "mixed", is_favorite: true },
   ]);
@@ -109,11 +114,12 @@ const Onboarding = () => {
         avatarUrl = urlData.publicUrl;
       }
 
-      // Update profile
-      await supabase.from("profiles").update({
-        avatar_url: avatarUrl,
+      // Update profile (only set avatar if user uploaded one — never null an existing avatar)
+      const profileUpdate: { avatar_url?: string; onboarding_completed: boolean } = {
         onboarding_completed: true,
-      }).eq("user_id", user.id);
+      };
+      if (avatarUrl) profileUpdate.avatar_url = avatarUrl;
+      await supabase.from("profiles").update(profileUpdate).eq("user_id", user.id);
 
       // Compute best and weakest shots
       const shotMap = {
@@ -203,6 +209,8 @@ const Onboarding = () => {
             body: 'Someone signed up using your referral code. You earned €5 wallet credit!',
             link: '/dashboard',
           });
+          // Clear stored code so it can't be applied twice
+          localStorage.removeItem("ace_referral_code");
         }
       }
 
@@ -210,6 +218,8 @@ const Onboarding = () => {
       navigate("/dashboard");
     } catch (err) {
       console.error("Onboarding error:", err);
+      const { toast } = await import("sonner");
+      toast.error("Couldn't save your profile", { description: "Please try again — your details are still here." });
     } finally {
       setSaving(false);
     }
@@ -434,7 +444,15 @@ const Onboarding = () => {
                 className="w-full bg-card border border-border rounded-lg px-4 py-3 text-foreground font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-muted-foreground"
                 placeholder="Enter a friend's referral code"
               />
-              <p className="text-xs text-muted-foreground mt-1 font-body">Were you referred by a friend?</p>
+              {storedReferral ? (
+                <p className="text-xs text-primary mt-1 font-body">
+                  ✨ Referred by a friend — they'll earn €5 once you join.
+                </p>
+              ) : (
+                <p className="text-xs text-muted-foreground mt-1 font-body">
+                  Were you referred by a friend? They'll earn €5 wallet credit.
+                </p>
+              )}
             </div>
 
             <div>
