@@ -825,6 +825,131 @@ export type Database = {
           },
         ]
       }
+      crm_activities: {
+        Row: {
+          body: string | null
+          client_id: string
+          created_at: string
+          created_by: string
+          id: string
+          type: string
+        }
+        Insert: {
+          body?: string | null
+          client_id: string
+          created_at?: string
+          created_by: string
+          id?: string
+          type?: string
+        }
+        Update: {
+          body?: string | null
+          client_id?: string
+          created_at?: string
+          created_by?: string
+          id?: string
+          type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "crm_activities_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "crm_clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      crm_clients: {
+        Row: {
+          created_at: string
+          email: string | null
+          full_name: string
+          id: string
+          last_contact_at: string | null
+          lifetime_value: number
+          linked_user_id: string | null
+          notes: string | null
+          owner_id: string
+          owner_type: string
+          phone: string | null
+          pipeline_stage: string
+          source: string | null
+          status: string
+          tags: string[] | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          full_name: string
+          id?: string
+          last_contact_at?: string | null
+          lifetime_value?: number
+          linked_user_id?: string | null
+          notes?: string | null
+          owner_id: string
+          owner_type: string
+          phone?: string | null
+          pipeline_stage?: string
+          source?: string | null
+          status?: string
+          tags?: string[] | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          full_name?: string
+          id?: string
+          last_contact_at?: string | null
+          lifetime_value?: number
+          linked_user_id?: string | null
+          notes?: string | null
+          owner_id?: string
+          owner_type?: string
+          phone?: string | null
+          pipeline_stage?: string
+          source?: string | null
+          status?: string
+          tags?: string[] | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      crm_pipeline_stages: {
+        Row: {
+          color: string | null
+          created_at: string
+          id: string
+          name: string
+          order_index: number
+          owner_id: string
+          owner_type: string
+          stage_key: string
+        }
+        Insert: {
+          color?: string | null
+          created_at?: string
+          id?: string
+          name: string
+          order_index?: number
+          owner_id: string
+          owner_type: string
+          stage_key: string
+        }
+        Update: {
+          color?: string | null
+          created_at?: string
+          id?: string
+          name?: string
+          order_index?: number
+          owner_id?: string
+          owner_type?: string
+          stage_key?: string
+        }
+        Relationships: []
+      }
       event_registrations: {
         Row: {
           amount_paid: number | null
@@ -2214,6 +2339,10 @@ export type Database = {
         Returns: boolean
       }
       recalculate_rankings: { Args: never; Returns: undefined }
+      seed_default_crm_stages: {
+        Args: { _owner_id: string; _owner_type: string }
+        Returns: undefined
+      }
       update_block_rating_avg: {
         Args: { p_block_id: string }
         Returns: undefined
