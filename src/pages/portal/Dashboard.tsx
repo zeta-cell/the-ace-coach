@@ -4,10 +4,18 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion } from "framer-motion";
 import {
-  Play, Calendar, TrendingUp, Flame, CheckCircle, ShoppingBag,
+  Play, Calendar, TrendingUp, CheckCircle, ShoppingBag,
   ChevronRight, MessageCircle, UserPlus, User as UserIcon, X,
-  Zap, Wallet, Trophy, Lock, Award, Star, Activity, Heart
+  Trophy, Lock, Award, Star, Heart
 } from "lucide-react";
+import {
+  Lightning as PhLightning,
+  Fire as PhFire,
+  CheckCircle as PhCheck,
+  Wallet as PhWallet,
+  TrendUp as PhTrendUp,
+  Pulse as PhPulse,
+} from "@phosphor-icons/react";
 import { format, startOfWeek, addDays, isSameDay, subWeeks, subDays, subMonths, eachDayOfInterval } from "date-fns";
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip, Line, ComposedChart } from "recharts";
 import PortalLayout from "@/components/portal/PortalLayout";
@@ -268,7 +276,7 @@ const Dashboard = () => {
         {/* Hero Stats Bar — 6 metrics */}
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="grid grid-cols-3 md:grid-cols-6 gap-2 mb-6">
           <div className="bg-card border border-border rounded-xl p-3 text-center">
-            <Zap size={16} className="mx-auto mb-0.5" style={{ color: lvl.color }} />
+            <PhLightning size={20} weight="fill" className="mx-auto mb-0.5" style={{ color: lvl.color }} />
             <p className="font-display text-xl text-foreground"><AnimatedNumber value={userStats.total_xp} /></p>
             <div className="flex items-center justify-center gap-1">
               <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: lvl.color }} />
@@ -276,27 +284,27 @@ const Dashboard = () => {
             </div>
           </div>
           <div className="bg-card border border-border rounded-xl p-3 text-center">
-            <Flame size={16} className="text-orange-400 mx-auto mb-0.5" />
+            <PhFire size={20} weight="fill" className="text-orange-400 mx-auto mb-0.5" />
             <p className="font-display text-xl text-foreground"><AnimatedNumber value={userStats.current_streak_days} /></p>
             <p className="font-body text-[9px] text-muted-foreground uppercase">Streak</p>
           </div>
           <div className="bg-card border border-border rounded-xl p-3 text-center">
-            <CheckCircle size={16} className="text-green-400 mx-auto mb-0.5" />
+            <PhCheck size={20} weight="fill" className="text-green-400 mx-auto mb-0.5" />
             <p className="font-display text-xl text-foreground"><AnimatedNumber value={userStats.total_sessions} /></p>
             <p className="font-body text-[9px] text-muted-foreground uppercase">Sessions</p>
           </div>
           <div className="bg-card border border-border rounded-xl p-3 text-center">
-            <Wallet size={16} className="text-primary mx-auto mb-0.5" />
+            <PhWallet size={20} weight="fill" className="text-primary mx-auto mb-0.5" />
             <p className="font-display text-xl text-foreground">€<AnimatedNumber value={Math.round(Number(userStats.wallet_balance))} /></p>
             <p className="font-body text-[9px] text-muted-foreground uppercase">Wallet</p>
           </div>
           <div className="bg-card border border-border rounded-xl p-3 text-center">
-            <TrendingUp size={16} className="text-cyan-400 mx-auto mb-0.5" />
+            <PhTrendUp size={20} weight="fill" className="text-cyan-400 mx-auto mb-0.5" />
             <p className="font-display text-xl text-foreground"><AnimatedNumber value={improvementScore} /></p>
             <p className="font-body text-[9px] text-muted-foreground uppercase">Improvement</p>
           </div>
           <div className="bg-card border border-border rounded-xl p-3 text-center">
-            <Activity size={16} className="text-rose-400 mx-auto mb-0.5" />
+            <PhPulse size={20} weight="fill" className="text-rose-400 mx-auto mb-0.5" />
             <p className="font-display text-xl text-foreground">{estimatedCalories.toLocaleString()}</p>
             <p className="font-body text-[9px] text-muted-foreground uppercase">KCAL BURNED</p>
           </div>
