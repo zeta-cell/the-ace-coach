@@ -295,9 +295,9 @@ const Marketplace = () => {
                 const isSaved = savedIds.has(block.id);
                 return (
                   <motion.div key={block.id} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
-                    className="bg-card border border-border rounded-2xl overflow-hidden hover:border-primary/40 hover:-translate-y-0.5 transition-all group">
+                    className="bg-popover border border-border/80 rounded-2xl overflow-hidden hover:border-primary/60 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/10 transition-all group">
                     {/* Thumbnail */}
-                    <div className="relative h-28 bg-gradient-to-br from-primary/15 to-accent/5 p-3 flex flex-col justify-between cursor-pointer"
+                    <div className="relative h-28 bg-gradient-to-br from-primary/25 via-accent/10 to-background/40 border-b border-border/60 p-3 flex flex-col justify-between cursor-pointer"
                       onClick={() => setSelectedBlock(block)}>
                       <div className="flex items-start justify-between">
                         <span className={`px-2 py-0.5 rounded text-[9px] font-display tracking-wider ${typeConfig.color}`}>{typeConfig.label}</span>
