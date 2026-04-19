@@ -230,6 +230,36 @@ const Index = () => {
         </div>
       </section>
 
+      {/* SEO link cluster — internal links to programmatic landing pages */}
+      <section className="border-t border-border py-14 px-6 bg-card/20">
+        <div className="max-w-5xl mx-auto">
+          <h2 className="font-display text-2xl md:text-3xl mb-2">FIND COACHES BY <span className="text-primary">CITY</span></h2>
+          <p className="font-body text-sm text-muted-foreground mb-6">Padel and tennis coaches in your city — also available in Spanish.</p>
+          <div className="grid md:grid-cols-2 gap-8">
+            <div>
+              <p className="font-display text-xs tracking-widest text-muted-foreground mb-3">PADEL</p>
+              <div className="flex flex-wrap gap-2">
+                {["madrid","barcelona","valencia","malaga","marbella","sevilla","palma","lisbon","milan","dubai"].map((c) => (
+                  <Link key={c} to={`/padel-coach/${c}`} className="px-3 py-1.5 text-xs font-body border border-border rounded-full hover:border-primary/50 capitalize">
+                    {c}
+                  </Link>
+                ))}
+              </div>
+            </div>
+            <div>
+              <p className="font-display text-xs tracking-widest text-muted-foreground mb-3">TENNIS</p>
+              <div className="flex flex-wrap gap-2">
+                {["madrid","barcelona","paris","london","berlin","munich","milan","rome","miami","dubai"].map((c) => (
+                  <Link key={c} to={`/tennis-coach/${c}`} className="px-3 py-1.5 text-xs font-body border border-border rounded-full hover:border-primary/50 capitalize">
+                    {c}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Footer */}
       <footer className="border-t border-border py-8 px-6">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
