@@ -246,7 +246,6 @@
   .text-navy { color: hsl(var(--navy)); }
   .text-sky-brand { color: hsl(var(--sky)); }
   .text-mustard { color: hsl(var(--mustard)); }
-  .text-cream { color: hsl(var(--cream)); }
 
   .bg-coral { background: hsl(var(--coral)); }
   .bg-navy { background: hsl(var(--navy)); }
