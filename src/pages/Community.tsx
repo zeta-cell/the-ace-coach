@@ -59,6 +59,11 @@ const Community = () => {
   useEffect(() => {
     Promise.all([fetchLeaderboard(), fetchBadges(), fetchTrending(), fetchCoaches(), fetchEvents()])
       .then(() => setLoading(false));
+    import("@/lib/seo").then(({ setSeo }) => setSeo({
+      title: "Tennis & Padel Community, Rankings & Leaderboard – ACE Coach",
+      description: "See top tennis and padel players, trending coaches, and live event activity. Join the global ACE Coach community.",
+      path: "/community",
+    }));
   }, []);
 
   const fetchLeaderboard = async () => {

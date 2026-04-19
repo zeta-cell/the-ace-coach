@@ -364,6 +364,13 @@ const FindACoach = () => {
   };
 
   useEffect(() => { fetchCoaches(); }, []);
+  useEffect(() => {
+    import("@/lib/seo").then(({ setSeo }) => setSeo({
+      title: "Find a Tennis or Padel Coach Near You – ACE Coach",
+      description: "Browse verified tennis and padel coaches by city, language, level and price. Book a session in minutes.",
+      path: "/find-a-coach",
+    }));
+  }, []);
 
   const fetchCoaches = async () => {
     setLoading(true);

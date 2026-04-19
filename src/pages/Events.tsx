@@ -73,6 +73,13 @@ const Events = () => {
 
   useEffect(() => { fetchEvents(); }, []);
   useEffect(() => { if (user) fetchRegistrations(); }, [user]);
+  useEffect(() => {
+    import("@/lib/seo").then(({ setSeo }) => setSeo({
+      title: "Tennis & Padel Events, Clinics, Camps & Tournaments – ACE Coach",
+      description: "Join coach-led tennis and padel events: clinics, camps, masterclasses, tournaments and group sessions worldwide.",
+      path: "/events",
+    }));
+  }, []);
 
   const fetchEvents = async () => {
     setLoading(true);
