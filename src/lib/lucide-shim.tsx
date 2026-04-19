@@ -17,7 +17,6 @@
  */
 import * as React from "react";
 import {
-  Activity as PhActivity,
   AirplaneTilt,
   ArrowBendDownLeft,
   ArrowBendUpRight,
@@ -68,7 +67,7 @@ import {
   File,
   FileText as PhFileText,
   Fire as PhFire,
-  Footprints as FootprintsIcon,
+  Footprints as Footprints as PhFootprints,
   Funnel,
   Gauge,
   Gift as PhGift,
@@ -226,7 +225,7 @@ export const Eye = wrap(PhEye);
 export const EyeOff = wrap(EyeSlash);
 export const FileText = wrap(PhFileText);
 export const Flame = wrap(PhFire);
-export const Footprints = wrap(FootprintsIcon);
+export const Footprints = wrap(PhFootprints);
 export const Gift = wrap(PhGift);
 export const Globe = wrap(PhGlobe);
 export const Grip = wrap(DotsSixVertical, { weight: "bold" });
