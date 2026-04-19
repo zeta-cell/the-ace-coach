@@ -17,6 +17,7 @@ const PublicHeader = () => {
     { label: t("nav.marketplace"), href: "/marketplace" },
     { label: t("nav.events"), href: "/events" },
     { label: t("nav.community"), href: "/community" },
+    { label: "I OWN A CLUB OR ACADEMY", href: "/login" },
   ];
 
   useEffect(() => {
