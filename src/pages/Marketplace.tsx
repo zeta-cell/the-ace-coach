@@ -92,6 +92,7 @@ const Marketplace = () => {
   const [ownedIds, setOwnedIds] = useState<Set<string>>(new Set());
   const [savedIds, setSavedIds] = useState<Set<string>>(new Set());
   const [selectedBlock, setSelectedBlock] = useState<MarketplaceBlock | null>(null);
+  const [filterSheetOpen, setFilterSheetOpen] = useState(false);
 
   useEffect(() => { fetchBlocks(); }, []);
   useEffect(() => { if (user) fetchUserData(); }, [user]);
