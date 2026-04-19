@@ -214,7 +214,7 @@
     --overlay-hero: linear-gradient(180deg, hsla(213, 38%, 18%, 0.05) 0%, hsla(42, 55%, 88%, 0.55) 45%, hsla(42, 55%, 92%, 0.95) 100%);
 
     --font-display: 'Franie', sans-serif;
-    --font-body: 'Franie', sans-serif;
+    --font-body: 'Space Grotesk', sans-serif;
   }
 
   .dark {

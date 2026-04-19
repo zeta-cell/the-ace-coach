@@ -15,7 +15,7 @@ export default {
     extend: {
       fontFamily: {
         display: ["Franie", "sans-serif"],
-        body: ["Franie", "sans-serif"],
+        body: ["Space Grotesk", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",
