@@ -5,6 +5,7 @@ import { useClub } from "@/hooks/useClub";
 import { Card } from "@/components/ui/card";
 import { Building2, Users, Calendar, Euro, Square, Heart } from "lucide-react";
 import { Link } from "react-router-dom";
+import CourtUtilizationHeatmap from "@/components/portal/CourtUtilizationHeatmap";
 
 const ClubDashboard = () => {
   const { activeClub, activeClubId, loading: clubLoading } = useClub();
@@ -93,6 +94,8 @@ const ClubDashboard = () => {
             </Link>
           ))}
         </div>
+
+        <CourtUtilizationHeatmap clubId={activeClubId!} />
 
         <Card className="p-6">
           <h2 className="font-display text-sm uppercase tracking-wider text-foreground mb-4">Quick Actions</h2>
