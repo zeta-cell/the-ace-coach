@@ -3,7 +3,13 @@ import { useEffect } from "react";
 import PublicBottomNav from "@/components/PublicBottomNav";
 import PublicHeader from "@/components/PublicHeader";
 import { motion } from "framer-motion";
-import { MagnifyingGlass as Search, Calendar, ShieldCheck as Shield, Users, Trophy, Lightning as Zap, MapPin, ArrowRight } from "@phosphor-icons/react";
+import { MapPin, ArrowRight } from "@phosphor-icons/react";
+import { SearchIcon } from "@/components/ui/animated-icons/search";
+import { CalendarDaysIcon } from "@/components/ui/animated-icons/calendar-days";
+import { TrendingUpIcon } from "@/components/ui/animated-icons/trending-up";
+import { UsersIcon } from "@/components/ui/animated-icons/users";
+import { ShieldCheckIcon } from "@/components/ui/animated-icons/shield-check";
+import { ZapIcon } from "@/components/ui/animated-icons/zap";
 import heroPadel from "@/assets/hero-padel.jpg";
 import featuresTennis from "@/assets/features-tennis.jpg";
 import ctaCourt from "@/assets/cta-court.jpg";
@@ -14,12 +20,12 @@ const Index = () => {
   const { t, lang } = useI18n();
 
   const features = [
-    { icon: Search, titleKey: "feat.find.title", descKey: "feat.find.desc" },
-    { icon: Calendar, titleKey: "feat.book.title", descKey: "feat.book.desc" },
-    { icon: Trophy, titleKey: "feat.track.title", descKey: "feat.track.desc" },
-    { icon: Users, titleKey: "feat.community.title", descKey: "feat.community.desc" },
-    { icon: Shield, titleKey: "feat.verified.title", descKey: "feat.verified.desc" },
-    { icon: Zap, titleKey: "feat.ai.title", descKey: "feat.ai.desc" },
+    { icon: SearchIcon, titleKey: "feat.find.title", descKey: "feat.find.desc" },
+    { icon: CalendarDaysIcon, titleKey: "feat.book.title", descKey: "feat.book.desc" },
+    { icon: TrendingUpIcon, titleKey: "feat.track.title", descKey: "feat.track.desc" },
+    { icon: UsersIcon, titleKey: "feat.community.title", descKey: "feat.community.desc" },
+    { icon: ShieldCheckIcon, titleKey: "feat.verified.title", descKey: "feat.verified.desc" },
+    { icon: ZapIcon, titleKey: "feat.ai.title", descKey: "feat.ai.desc" },
   ] as const;
 
   const stats = [
@@ -160,8 +166,8 @@ const Index = () => {
                 transition={{ delay: i * 0.08 }}
                 className="group bg-card/70 backdrop-blur-sm border border-border rounded-xl p-6 hover:border-primary/30 transition-colors"
               >
-                <div className="w-12 h-12 rounded-xl bg-primary/15 flex items-center justify-center mb-4 group-hover:bg-primary/25 transition-colors">
-                  <f.icon size={28} weight="duotone" className="text-primary" />
+                <div className="w-12 h-12 rounded-xl bg-primary/15 flex items-center justify-center mb-4 group-hover:bg-primary/25 transition-colors text-primary">
+                  <f.icon size={28} />
                 </div>
                 <h3 className="font-display text-lg tracking-wider mb-2">{t(f.titleKey)}</h3>
                 <p className="font-body text-sm text-muted-foreground leading-relaxed">{t(f.descKey)}</p>
