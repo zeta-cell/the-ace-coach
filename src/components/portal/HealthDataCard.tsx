@@ -115,10 +115,19 @@ const HealthDataCard = () => {
         <Activity size={24} className="mx-auto text-muted-foreground mb-2" />
         <h3 className="font-display text-sm text-foreground mb-1">HEALTH & RECOVERY</h3>
         <p className="font-body text-xs text-muted-foreground mb-3">Connect your health devices to see recovery data</p>
-        <div className="flex justify-center gap-2">
-          {["W", "O", "P", "G"].map((initial, i) => (
-            <div key={i} className="w-8 h-8 rounded-full bg-muted flex items-center justify-center text-muted-foreground font-display text-xs">
-              {initial}
+        <div className="flex justify-center gap-1.5">
+          {[
+            { label: "WHOOP", color: "#00F19F" },
+            { label: "OURA", color: "#6B63F6" },
+            { label: "POLAR", color: "#D0112B" },
+            { label: "GARMIN", color: "#007CC3" },
+          ].map((b) => (
+            <div
+              key={b.label}
+              className="px-2 h-7 rounded-md flex items-center justify-center text-white font-display text-[9px] tracking-[0.14em] opacity-80"
+              style={{ backgroundColor: b.color }}
+            >
+              {b.label}
             </div>
           ))}
         </div>
