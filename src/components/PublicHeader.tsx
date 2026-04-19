@@ -61,26 +61,31 @@ const PublicHeader = () => {
               </Link>
             ))}
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 md:gap-2">
             <button
               onClick={toggleLang}
               aria-label="Switch language"
-              className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+              className="flex items-center gap-1 px-1.5 py-1 md:px-2 md:py-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
             >
-              <Globe size={16} />
-              <span className="font-display text-xs tracking-wider uppercase">{lang}</span>
+              <Globe size={14} className="md:hidden" />
+              <Globe size={16} className="hidden md:block" />
+              <span className="font-display text-[10px] md:text-xs tracking-wider uppercase">{lang}</span>
             </button>
             <button
               onClick={toggleTheme}
               aria-label="Toggle theme"
-              className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+              className="p-1.5 md:p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
             >
-              {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
+              {theme === "dark" ? <Sun size={16} className="md:hidden" /> : <Moon size={16} className="md:hidden" />}
+              {theme === "dark" ? <Sun size={18} className="hidden md:block" /> : <Moon size={18} className="hidden md:block" />}
             </button>
-            <Link to="/login" className="font-display text-sm tracking-wider text-muted-foreground hover:text-foreground transition-colors hidden md:block">{t("nav.login")}</Link>
-            <Link to="/login" className="font-display text-sm tracking-wider bg-primary text-primary-foreground px-5 py-2 rounded-lg hover:bg-primary/90 transition-colors">
+            <Link to="/login" className="font-display text-[10px] md:text-sm tracking-wider text-muted-foreground hover:text-foreground transition-colors px-1.5 md:px-0">
+              <span className="md:hidden">{t("home.cta.coach")}</span>
+              <span className="hidden md:inline">{t("nav.login")}</span>
+            </Link>
+            <Link to="/login" className="font-display text-xs md:text-sm tracking-wider bg-primary text-primary-foreground px-3 py-1.5 md:px-5 md:py-2 rounded-lg hover:bg-primary/90 transition-colors">
               <span className="hidden md:inline">{t("nav.getStarted")}</span>
-              <span className="md:hidden text-xs">{t("nav.login")}</span>
+              <span className="md:hidden">{t("nav.login")}</span>
             </Link>
           </div>
         </div>
