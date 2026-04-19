@@ -109,11 +109,12 @@ const Onboarding = () => {
         avatarUrl = urlData.publicUrl;
       }
 
-      // Update profile
-      await supabase.from("profiles").update({
-        avatar_url: avatarUrl,
+      // Update profile (only set avatar if user uploaded one — never null an existing avatar)
+      const profileUpdate: { avatar_url?: string; onboarding_completed: boolean } = {
         onboarding_completed: true,
-      }).eq("user_id", user.id);
+      };
+      if (avatarUrl) profileUpdate.avatar_url = avatarUrl;
+      await supabase.from("profiles").update(profileUpdate).eq("user_id", user.id);
 
       // Compute best and weakest shots
       const shotMap = {
