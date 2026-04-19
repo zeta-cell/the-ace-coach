@@ -67,7 +67,7 @@ import {
   File,
   FileText as PhFileText,
   Fire as PhFire,
-  Footprints as Footprints as PhFootprints,
+  Footprints as PhFootprints,
   Funnel,
   Gauge,
   Gift as PhGift,
