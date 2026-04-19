@@ -7,9 +7,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Plus, Users, TrendingUp, Euro, Search, LayoutGrid, List } from "lucide-react";
+import { Plus, Users, TrendingUp, Euro, Search, LayoutGrid, List, Upload } from "lucide-react";
 import NewClientDialog from "@/components/portal/crm/NewClientDialog";
 import ClientDetailDrawer from "@/components/portal/crm/ClientDetailDrawer";
+import CsvImportDialog from "@/components/portal/crm/CsvImportDialog";
 import { format } from "date-fns";
 
 interface Client {
@@ -26,6 +27,7 @@ const Crm = () => {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [showNew, setShowNew] = useState(false);
+  const [showImport, setShowImport] = useState(false);
   const [selectedClient, setSelectedClient] = useState<string | null>(null);
   const [view, setView] = useState<"kanban" | "list">("kanban");
 
@@ -81,7 +83,10 @@ const Crm = () => {
             <h1 className="font-display text-2xl tracking-wide text-foreground uppercase">CRM</h1>
             <p className="text-xs font-body text-muted-foreground uppercase tracking-wider mt-1">{ownerType === "club" ? "Club pipeline" : "Lead pipeline"}</p>
           </div>
-          <Button onClick={() => setShowNew(true)}><Plus size={14} className="mr-1" /> New Client</Button>
+          <div className="flex items-center gap-2">
+            <Button variant="outline" onClick={() => setShowImport(true)}><Upload size={14} className="mr-1" /> Import CSV</Button>
+            <Button onClick={() => setShowNew(true)}><Plus size={14} className="mr-1" /> New Client</Button>
+          </div>
         </div>
 
         {/* Stats */}
@@ -174,6 +179,7 @@ const Crm = () => {
       </div>
 
       <NewClientDialog open={showNew} onClose={() => setShowNew(false)} onCreated={refresh} stages={stages} />
+      <CsvImportDialog open={showImport} onClose={() => setShowImport(false)} onImported={refresh} />
       <ClientDetailDrawer clientId={selectedClient} open={!!selectedClient} onClose={() => setSelectedClient(null)} stages={stages} onUpdated={refresh} />
     </PortalLayout>
   );

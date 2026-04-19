@@ -12,6 +12,7 @@ import { lazy, Suspense } from "react";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 const PublicCoachProfile = lazy(() => import("./pages/PublicCoachProfile"));
+const PublicClubPage = lazy(() => import("./pages/PublicClubPage"));
 const FindACoach = lazy(() => import("./pages/FindACoach"));
 const Marketplace = lazy(() => import("./pages/Marketplace"));
 const BookCoach = lazy(() => import("./pages/BookCoach"));
@@ -88,6 +89,7 @@ const App = () => (
             {/* Public */}
             <Route path="/" element={<Index />} />
             <Route path="/coach/:slug" element={<Suspense fallback={<PortalLoader />}><PublicCoachProfile /></Suspense>} />
+            <Route path="/c/:slug" element={<Suspense fallback={<PortalLoader />}><PublicClubPage /></Suspense>} />
             <Route path="/find-a-coach" element={<Suspense fallback={<PortalLoader />}><FindACoach /></Suspense>} />
             <Route path="/marketplace" element={<Suspense fallback={<PortalLoader />}><Marketplace /></Suspense>} />
             <Route path="/booking-success" element={<Suspense fallback={<PortalLoader />}><BookingSuccess /></Suspense>} />
