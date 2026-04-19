@@ -15,7 +15,7 @@ export default {
     extend: {
       fontFamily: {
         display: ["Bebas Neue", "sans-serif"],
-        body: ["Space Grotesk", "sans-serif"],
+        body: ["Franie", "Space Grotesk", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",
