@@ -47,16 +47,26 @@ interface MarketplaceBlock {
   coach_id: string | null;
 }
 
-const BLOCK_TYPE_LABELS: Record<string, { label: string; color: string }> = {
+const BLOCK_TYPE_LABELS: Record<string, { label: string; color: string; description?: string }> = {
   session: { label: "SESSION", color: "bg-cyan-500/20 text-cyan-400" },
   week: { label: "WEEK PLAN", color: "bg-blue-500/20 text-blue-400" },
   program: { label: "PROGRAM", color: "bg-purple-500/20 text-purple-400" },
   nutrition: { label: "NUTRITION", color: "bg-lime-500/20 text-lime-400" },
   mental: { label: "MENTAL", color: "bg-pink-500/20 text-pink-400" },
+  online: {
+    label: "ONLINE MODULES",
+    color: "bg-indigo-500/20 text-indigo-400",
+    description: "Self-paced online training with video modules & explanations",
+  },
+  video_review: {
+    label: "VIDEO REVIEW",
+    color: "bg-rose-500/20 text-rose-400",
+    description: "Upload your videos — coach reviews, rates & gives improvements",
+  },
   template: { label: "TEMPLATE", color: "bg-muted text-muted-foreground" },
 };
 
-const BLOCK_TYPE_FILTERS = ["All", "program", "session", "nutrition", "mental", "template"];
+const BLOCK_TYPE_FILTERS = ["All", "program", "session", "online", "video_review", "nutrition", "mental", "template"];
 const SPORT_FILTERS = ["All", "Tennis", "Padel"];
 const LEVEL_FILTERS = ["All", "Beginner", "Intermediate", "Advanced", "Elite"];
 const SORT_OPTIONS = [
