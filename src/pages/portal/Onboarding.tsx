@@ -30,6 +30,11 @@ const Onboarding = () => {
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
 
+  // Hydrate referral code captured on /login?ref=CODE so the referrer gets credit.
+  const [storedReferral] = useState<string>(
+    () => (typeof window !== "undefined" ? localStorage.getItem("ace_referral_code") || "" : "")
+  );
+
   // Step 1
   const [dateOfBirth, setDateOfBirth] = useState("");
   const [nationality, setNationality] = useState("");
@@ -52,7 +57,7 @@ const Onboarding = () => {
   // Step 4
   const [playtomicUrl, setPlaytomicUrl] = useState("");
   const [playtomicLevel, setPlaytomicLevel] = useState("");
-  const [referralCode, setReferralCode] = useState("");
+  const [referralCode, setReferralCode] = useState(storedReferral);
   const [rackets, setRackets] = useState<Racket[]>([
     { brand: "", model: "", type: "mixed", is_favorite: true },
   ]);
