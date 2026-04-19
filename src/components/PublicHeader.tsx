@@ -1,14 +1,8 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Sun, Moon } from "lucide-react";
+import { Menu, X, Sun, Moon, Globe } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-
-const NAV_LINKS = [
-  { label: "FIND A COACH", href: "/find-a-coach" },
-  { label: "MARKETPLACE", href: "/marketplace" },
-  { label: "EVENTS", href: "/events" },
-  { label: "COMMUNITY", href: "/community" },
-];
+import { useI18n } from "@/lib/i18n";
 
 const PublicHeader = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -16,6 +10,14 @@ const PublicHeader = () => {
     typeof window !== "undefined" && !document.documentElement.classList.contains("light") ? "dark" : "light"
   );
   const location = useLocation();
+  const { t, lang, setLang } = useI18n();
+
+  const NAV_LINKS = [
+    { label: t("nav.find"), href: "/find-a-coach" },
+    { label: t("nav.marketplace"), href: "/marketplace" },
+    { label: t("nav.events"), href: "/events" },
+    { label: t("nav.community"), href: "/community" },
+  ];
 
   useEffect(() => {
     const root = document.documentElement;
@@ -29,16 +31,16 @@ const PublicHeader = () => {
   }, [theme]);
 
   const toggleTheme = () => setTheme(t => (t === "dark" ? "light" : "dark"));
+  const toggleLang = () => setLang(lang === "en" ? "es" : "en");
+
   return (
     <>
       <nav className="sticky top-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border">
         <div className="max-w-7xl mx-auto px-4 md:px-6 h-14 flex items-center justify-between">
-          {/* Mobile: burger menu */}
           <button className="md:hidden" onClick={() => setMenuOpen(!menuOpen)}>
             {menuOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
 
-          {/* Desktop: ACE logo + nav links */}
           <Link to="/" className="hidden md:block font-display text-2xl tracking-wider text-foreground shrink-0">
             ACE<span className="text-primary"> Coach</span>
           </Link>
@@ -55,7 +57,15 @@ const PublicHeader = () => {
               </Link>
             ))}
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            <button
+              onClick={toggleLang}
+              aria-label="Switch language"
+              className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+            >
+              <Globe size={16} />
+              <span className="font-display text-xs tracking-wider uppercase">{lang}</span>
+            </button>
             <button
               onClick={toggleTheme}
               aria-label="Toggle theme"
@@ -63,16 +73,15 @@ const PublicHeader = () => {
             >
               {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
             </button>
-            <Link to="/login" className="font-display text-sm tracking-wider text-muted-foreground hover:text-foreground transition-colors hidden md:block">LOG IN</Link>
+            <Link to="/login" className="font-display text-sm tracking-wider text-muted-foreground hover:text-foreground transition-colors hidden md:block">{t("nav.login")}</Link>
             <Link to="/login" className="font-display text-sm tracking-wider bg-primary text-primary-foreground px-5 py-2 rounded-lg hover:bg-primary/90 transition-colors">
-              <span className="hidden md:inline">GET STARTED</span>
-              <span className="md:hidden text-xs">LOG IN</span>
+              <span className="hidden md:inline">{t("nav.getStarted")}</span>
+              <span className="md:hidden text-xs">{t("nav.login")}</span>
             </Link>
           </div>
         </div>
       </nav>
 
-      {/* Mobile slide-out menu */}
       <AnimatePresence>
         {menuOpen && (
           <motion.div
@@ -102,20 +111,26 @@ const PublicHeader = () => {
                   {link.label}
                 </Link>
               ))}
+              <button
+                onClick={() => { toggleLang(); setMenuOpen(false); }}
+                className="w-full text-left flex items-center gap-2 px-3 py-2.5 rounded-lg font-display text-sm tracking-wider text-muted-foreground hover:text-foreground hover:bg-secondary"
+              >
+                <Globe size={16} /> {lang === "en" ? "ESPAÑOL" : "ENGLISH"}
+              </button>
               <div className="pt-4 border-t border-border mt-4">
                 <Link
                   to="/login"
                   onClick={() => setMenuOpen(false)}
                   className="block px-3 py-2.5 rounded-lg font-display text-sm tracking-wider text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
                 >
-                  LOG IN
+                  {t("nav.login")}
                 </Link>
                 <Link
                   to="/login"
                   onClick={() => setMenuOpen(false)}
                   className="block px-3 py-2.5 mt-1 rounded-lg bg-primary text-primary-foreground font-display text-sm tracking-wider text-center"
                 >
-                  GET STARTED
+                  {t("nav.getStarted")}
                 </Link>
               </div>
             </div>
