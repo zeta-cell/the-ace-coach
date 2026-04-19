@@ -76,25 +76,25 @@ const Index = () => {
 
         <div className="relative z-10 w-full max-w-5xl mx-auto px-6 pb-16 pt-32">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary text-primary-foreground font-body text-xs tracking-wider mb-6 shadow-lg">
-              <MapPin size={14} /> {t("home.badge")}
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/90 backdrop-blur-sm text-primary-foreground font-body font-light text-[11px] tracking-[0.2em] uppercase mb-8 shadow-lg">
+              <MapPin size={12} /> {t("home.badge")}
             </span>
-            <h1 className="font-display text-5xl md:text-7xl lg:text-8xl leading-[0.9] mb-6 [text-shadow:0_2px_20px_hsl(var(--navy)/0.35)]">
+            <h1 className="font-display font-light text-6xl md:text-8xl lg:text-9xl leading-[0.95] tracking-[-0.03em] mb-8 [text-shadow:0_2px_30px_hsl(var(--navy)/0.4)]">
               {t("home.h1.line1")}
               <br />
-              <span className="text-primary">{t("home.h1.line2")}</span>
+              <span className="italic font-extralight text-primary">{t("home.h1.line2")}</span>
               <br />
               {t("home.h1.line3")}
             </h1>
-            <p className="font-body font-light text-lg md:text-xl text-foreground/90 max-w-2xl mb-10 [text-shadow:0_1px_10px_hsl(var(--navy)/0.3)]">
+            <p className="font-body font-light text-base md:text-lg text-foreground/85 max-w-xl mb-12 leading-relaxed [text-shadow:0_1px_10px_hsl(var(--navy)/0.25)]">
               {t("home.lead")}
             </p>
-            <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex flex-col sm:flex-row gap-3">
               <Link
                 to="/find-a-coach"
-                className="inline-flex items-center justify-center gap-2 font-display text-sm tracking-widest bg-primary text-primary-foreground px-8 py-3.5 rounded-xl hover:bg-primary/90 transition-colors"
+                className="inline-flex items-center justify-center gap-2 font-body font-medium text-sm tracking-wide bg-primary text-primary-foreground px-8 py-3.5 rounded-full hover:bg-primary/90 transition-colors"
               >
-                {t("home.cta.find")} <ArrowRight size={18} />
+                {t("home.cta.find")} <ArrowRight size={16} />
               </Link>
               <Link
                 to="/login"
