@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useEffect } from "react";
 import PublicBottomNav from "@/components/PublicBottomNav";
 import PublicHeader from "@/components/PublicHeader";
 import { motion } from "framer-motion";
@@ -6,6 +7,7 @@ import { Search, Calendar, Shield, Users, Trophy, Zap, MapPin, ArrowRight } from
 import heroPadel from "@/assets/hero-padel.jpg";
 import featuresTennis from "@/assets/features-tennis.jpg";
 import ctaCourt from "@/assets/cta-court.jpg";
+import { setSeo } from "@/lib/seo";
 
 const features = [
   { icon: Search, title: "FIND YOUR COACH", desc: "Search by sport, location, language, availability & price. Tennis or Padel — your perfect match awaits." },
@@ -24,6 +26,22 @@ const stats = [
 ];
 
 const Index = () => {
+  useEffect(() => {
+    setSeo({
+      title: "ACE Coach – Tennis & Padel Coaching, Booking & Training",
+      description: "Find verified tennis & padel coaches, book sessions instantly, follow training programs and track your progress. Players, coaches and clubs in one platform.",
+      path: "/",
+      jsonLd: {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        name: "ACE Coach",
+        applicationCategory: "SportsApplication",
+        operatingSystem: "Web",
+        offers: { "@type": "Offer", price: "0", priceCurrency: "EUR" },
+        description: "Tennis and padel coaching platform: find coaches, book sessions, follow training plans, join events.",
+      },
+    });
+  }, []);
   return (
     <div className="min-h-screen bg-background text-foreground overflow-hidden">
       <PublicHeader />

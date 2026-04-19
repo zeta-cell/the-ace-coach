@@ -40,14 +40,32 @@ const PublicClubPage = () => {
       if (!clubData) { setNotFound(true); setLoading(false); return; }
       setClub(clubData as Club);
 
-      // SEO: title + meta + JSON-LD
-      document.title = `${clubData.name} – Club Profile`;
-      const setMeta = (name: string, content: string) => {
-        let el = document.querySelector(`meta[name="${name}"]`);
-        if (!el) { el = document.createElement("meta"); el.setAttribute("name", name); document.head.appendChild(el); }
-        el.setAttribute("content", content);
-      };
-      setMeta("description", clubData.description?.slice(0, 155) || `${clubData.name} – racket sports club in ${clubData.city || ""}.`);
+      // SEO + JSON-LD (LocalBusiness / SportsClub)
+      const { setSeo } = await import("@/lib/seo");
+      const loc = [clubData.city, clubData.country].filter(Boolean).join(", ");
+      setSeo({
+        title: `${clubData.name}${loc ? ` – ${loc}` : ""} | Tennis & Padel Club`,
+        description: clubData.description?.slice(0, 155) || `${clubData.name} – tennis & padel club${loc ? ` in ${loc}` : ""}. Coaches, courts, events and bookings on ACE Coach.`,
+        path: `/c/${slug}`,
+        image: clubData.logo_url || undefined,
+        jsonLd: {
+          "@context": "https://schema.org",
+          "@type": "SportsClub",
+          name: clubData.name,
+          description: clubData.description || undefined,
+          image: clubData.logo_url || undefined,
+          url: `https://ace-whisperer-guide.lovable.app/c/${slug}`,
+          email: clubData.contact_email || undefined,
+          telephone: clubData.contact_phone || undefined,
+          address: clubData.address || loc ? {
+            "@type": "PostalAddress",
+            streetAddress: clubData.address || undefined,
+            addressLocality: clubData.city || undefined,
+            addressCountry: clubData.country || undefined,
+          } : undefined,
+          sport: ["Tennis", "Padel"],
+        },
+      });
 
       const [coachesRes, eventsRes, followersRes, courtsRes] = await Promise.all([
         supabase.from("club_coaches").select("coach_id").eq("club_id", clubData.id),

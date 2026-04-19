@@ -84,6 +84,13 @@ const Marketplace = () => {
 
   useEffect(() => { fetchBlocks(); }, []);
   useEffect(() => { if (user) fetchUserData(); }, [user]);
+  useEffect(() => {
+    import("@/lib/seo").then(({ setSeo }) => setSeo({
+      title: "Tennis & Padel Training Programs Marketplace – ACE Coach",
+      description: "Buy structured tennis & padel training programs from verified coaches. Multi-week plans for technique, fitness and mental game.",
+      path: "/marketplace",
+    }));
+  }, []);
 
   const fetchBlocks = async () => {
     setLoading(true);
