@@ -220,15 +220,20 @@ export const TrainingBlocksContent = ({ embedded = false }: { embedded?: boolean
 
   const moduleCats = ["all", ...new Set(allModules.map(m => m.category))];
 
-  // Categories from blocks for filter chips
-  const categories = useMemo(() => {
-    const cats = new Set(blocks.map(b => b.category?.toLowerCase()));
-    return ["all", ...Array.from(cats).sort()];
+  // Map every block onto one of the 6 main categories and count them
+  const categoryCounts = useMemo(() => {
+    const counts: Record<string, number> = { all: blocks.length };
+    MAIN_CATEGORIES.forEach((c) => (counts[c] = 0));
+    blocks.forEach((b) => {
+      const main = toMainCategory(b.category);
+      counts[main] = (counts[main] || 0) + 1;
+    });
+    return counts;
   }, [blocks]);
 
   const filtered = blocks.filter(b => {
     const matchesSearch = !search || b.title.toLowerCase().includes(search.toLowerCase()) || b.goal?.toLowerCase().includes(search.toLowerCase());
-    const matchesCat = filterCategory === "all" || b.category?.toLowerCase() === filterCategory;
+    const matchesCat = filterCategory === "all" || toMainCategory(b.category) === filterCategory;
     return matchesSearch && matchesCat;
   });
 
