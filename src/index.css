@@ -27,26 +27,26 @@
 
 @layer base {
   :root {
-    /* LIGHT THEME (default for Hi Volley) — warm cream, navy text, coral CTA */
-    --background: 36 38% 96%;          /* warm cream */
-    --foreground: 213 38% 22%;         /* deep navy text */
+    /* LIGHT THEME (default for Hi Volley) — soft mustard cream, navy text, coral CTA */
+    --background: 42 55% 92%;          /* soft mustard cream — never pure white */
+    --foreground: 213 38% 18%;         /* deep navy text */
 
-    --card: 0 0% 100%;
-    --card-foreground: 213 38% 22%;
+    --card: 42 50% 95%;
+    --card-foreground: 213 38% 18%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 213 38% 22%;
+    --popover: 42 50% 95%;
+    --popover-foreground: 213 38% 18%;
 
     /* Coral 062R — primary CTA */
     --primary: 4 48% 56%;
     --primary-foreground: 36 38% 98%;
 
     /* Sky 069B — secondary surfaces */
-    --secondary: 209 53% 92%;
+    --secondary: 209 45% 86%;
     --secondary-foreground: 213 38% 22%;
 
-    --muted: 36 25% 92%;
-    --muted-foreground: 213 18% 42%;
+    --muted: 42 35% 86%;
+    --muted-foreground: 213 22% 38%;
 
     /* Mustard 003Y — accent / gamification */
     --accent: 47 45% 60%;
@@ -55,19 +55,19 @@
     --destructive: 4 60% 50%;
     --destructive-foreground: 36 38% 98%;
 
-    --border: 36 22% 86%;
-    --input: 36 22% 86%;
+    --border: 42 30% 80%;
+    --input: 42 30% 80%;
     --ring: 4 48% 56%;
 
     --radius: 0.875rem;
 
-    --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 213 38% 22%;
+    --sidebar-background: 42 50% 95%;
+    --sidebar-foreground: 213 38% 18%;
     --sidebar-primary: 4 48% 56%;
-    --sidebar-primary-foreground: 36 38% 98%;
-    --sidebar-accent: 209 53% 92%;
-    --sidebar-accent-foreground: 213 38% 22%;
-    --sidebar-border: 36 22% 86%;
+    --sidebar-primary-foreground: 42 55% 95%;
+    --sidebar-accent: 209 45% 86%;
+    --sidebar-accent-foreground: 213 38% 18%;
+    --sidebar-border: 42 30% 80%;
     --sidebar-ring: 4 48% 56%;
 
     /* Hi Volley brand tokens */
@@ -79,20 +79,20 @@
     --sky-soft: 209 53% 92%;
     --mustard: 47 45% 60%;             /* 003Y */
     --mustard-soft: 47 60% 88%;
-    --cream: 36 38% 96%;
-    --cream-deep: 36 30% 90%;
+    --cream: 42 55% 92%;
+    --cream-deep: 42 40% 84%;
 
     /* Legacy tokens kept for backward compatibility (mapped to new palette) */
     --maroon: 213 38% 22%;
     --maroon-light: 213 38% 35%;
-    --cream-dark: 36 30% 90%;
-    --surface-elevated: 0 0% 100%;
+    --cream-dark: 42 40% 84%;
+    --surface-elevated: 42 50% 95%;
     --gold: 47 45% 60%;
 
-    --hero-gradient: linear-gradient(135deg, hsl(36, 38%, 96%) 0%, hsl(209, 53%, 92%) 100%);
+    --hero-gradient: linear-gradient(135deg, hsl(42, 55%, 92%) 0%, hsl(209, 45%, 86%) 100%);
     --text-gradient: linear-gradient(135deg, hsl(4, 48%, 56%), hsl(47, 55%, 58%));
-    --overlay-dark: linear-gradient(180deg, hsla(213, 38%, 22%, 0.05) 0%, hsla(213, 38%, 22%, 0.55) 100%);
-    --overlay-hero: linear-gradient(180deg, hsla(36, 38%, 96%, 0) 0%, hsla(36, 38%, 96%, 0.6) 55%, hsla(36, 38%, 96%, 0.95) 100%);
+    --overlay-dark: linear-gradient(180deg, hsla(213, 38%, 18%, 0.15) 0%, hsla(213, 38%, 18%, 0.75) 100%);
+    --overlay-hero: linear-gradient(180deg, hsla(213, 38%, 18%, 0.05) 0%, hsla(42, 55%, 88%, 0.55) 45%, hsla(42, 55%, 92%, 0.95) 100%);
 
     --font-display: 'Bebas Neue', sans-serif;
     --font-body: 'Space Grotesk', sans-serif;
@@ -162,42 +162,42 @@
 
   /* Backward compat: .light still works (now the same as :root default) */
   .light {
-    --background: 36 38% 96%;
-    --foreground: 213 38% 22%;
-    --card: 0 0% 100%;
-    --card-foreground: 213 38% 22%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 213 38% 22%;
+    --background: 42 55% 92%;
+    --foreground: 213 38% 18%;
+    --card: 42 50% 95%;
+    --card-foreground: 213 38% 18%;
+    --popover: 42 50% 95%;
+    --popover-foreground: 213 38% 18%;
     --primary: 4 48% 56%;
-    --primary-foreground: 36 38% 98%;
-    --secondary: 209 53% 92%;
-    --secondary-foreground: 213 38% 22%;
-    --muted: 36 25% 92%;
-    --muted-foreground: 213 18% 42%;
+    --primary-foreground: 42 55% 95%;
+    --secondary: 209 45% 86%;
+    --secondary-foreground: 213 38% 18%;
+    --muted: 42 35% 86%;
+    --muted-foreground: 213 22% 38%;
     --accent: 47 45% 60%;
-    --accent-foreground: 213 38% 22%;
+    --accent-foreground: 213 38% 18%;
     --destructive: 4 60% 50%;
-    --destructive-foreground: 36 38% 98%;
-    --border: 36 22% 86%;
-    --input: 36 22% 86%;
+    --destructive-foreground: 42 55% 95%;
+    --border: 42 30% 80%;
+    --input: 42 30% 80%;
     --ring: 4 48% 56%;
-    --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 213 38% 22%;
+    --sidebar-background: 42 50% 95%;
+    --sidebar-foreground: 213 38% 18%;
     --sidebar-primary: 4 48% 56%;
-    --sidebar-primary-foreground: 36 38% 98%;
-    --sidebar-accent: 209 53% 92%;
-    --sidebar-accent-foreground: 213 38% 22%;
-    --sidebar-border: 36 22% 86%;
+    --sidebar-primary-foreground: 42 55% 95%;
+    --sidebar-accent: 209 45% 86%;
+    --sidebar-accent-foreground: 213 38% 18%;
+    --sidebar-border: 42 30% 80%;
     --sidebar-ring: 4 48% 56%;
-    --maroon: 213 38% 22%;
-    --maroon-light: 213 38% 35%;
-    --cream-dark: 36 30% 90%;
-    --surface-elevated: 0 0% 100%;
+    --maroon: 213 38% 18%;
+    --maroon-light: 213 38% 32%;
+    --cream-dark: 42 40% 84%;
+    --surface-elevated: 42 50% 95%;
     --gold: 47 45% 60%;
-    --hero-gradient: linear-gradient(135deg, hsl(36, 38%, 96%) 0%, hsl(209, 53%, 92%) 100%);
+    --hero-gradient: linear-gradient(135deg, hsl(42, 55%, 92%) 0%, hsl(209, 45%, 86%) 100%);
     --text-gradient: linear-gradient(135deg, hsl(4, 48%, 56%), hsl(47, 55%, 58%));
-    --overlay-dark: linear-gradient(180deg, hsla(213, 38%, 22%, 0.05) 0%, hsla(213, 38%, 22%, 0.55) 100%);
-    --overlay-hero: linear-gradient(180deg, hsla(36, 38%, 96%, 0) 0%, hsla(36, 38%, 96%, 0.6) 55%, hsla(36, 38%, 96%, 0.95) 100%);
+    --overlay-dark: linear-gradient(180deg, hsla(213, 38%, 18%, 0.15) 0%, hsla(213, 38%, 18%, 0.75) 100%);
+    --overlay-hero: linear-gradient(180deg, hsla(213, 38%, 18%, 0.05) 0%, hsla(42, 55%, 88%, 0.55) 45%, hsla(42, 55%, 92%, 0.95) 100%);
   }
 }
 
