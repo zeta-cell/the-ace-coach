@@ -86,7 +86,7 @@ const Index = () => {
               <br />
               {t("home.h1.line3")}
             </h1>
-            <p className="font-body text-lg md:text-xl text-foreground/90 max-w-2xl mb-10 [text-shadow:0_1px_10px_hsl(var(--navy)/0.3)]">
+            <p className="font-body font-light text-lg md:text-xl text-foreground/90 max-w-2xl mb-10 [text-shadow:0_1px_10px_hsl(var(--navy)/0.3)]">
               {t("home.lead")}
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
