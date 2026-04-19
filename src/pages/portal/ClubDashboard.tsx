@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import PortalLayout from "@/components/portal/PortalLayout";
 import { useClub } from "@/hooks/useClub";
 import { Card } from "@/components/ui/card";
-import { Building2, Users, Calendar, Euro, Square } from "lucide-react";
+import { Building2, Users, Calendar, Euro, Square, Heart } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const ClubDashboard = () => {
@@ -13,6 +13,7 @@ const ClubDashboard = () => {
     courts: 0,
     bookingsThisWeek: 0,
     revenueThisMonth: 0,
+    followers: 0,
   });
 
   useEffect(() => {
@@ -23,11 +24,12 @@ const ClubDashboard = () => {
       const startOfMonth = new Date();
       startOfMonth.setDate(1);
 
-      const [coachesRes, courtsRes, bookingsRes, revenueRes] = await Promise.all([
+      const [coachesRes, courtsRes, bookingsRes, revenueRes, followersRes] = await Promise.all([
         supabase.from("club_coaches").select("id", { count: "exact", head: true }).eq("club_id", activeClubId),
         supabase.from("club_courts").select("id", { count: "exact", head: true }).eq("club_id", activeClubId).eq("is_active", true),
         supabase.from("bookings").select("id", { count: "exact", head: true }).eq("club_id", activeClubId).gte("booking_date", startOfWeek.toISOString().split("T")[0]),
         supabase.from("bookings").select("total_price").eq("club_id", activeClubId).eq("status", "confirmed").gte("booking_date", startOfMonth.toISOString().split("T")[0]),
+        supabase.from("club_followers").select("id", { count: "exact", head: true }).eq("club_id", activeClubId),
       ]);
 
       setStats({
@@ -35,6 +37,7 @@ const ClubDashboard = () => {
         courts: courtsRes.count || 0,
         bookingsThisWeek: bookingsRes.count || 0,
         revenueThisMonth: (revenueRes.data || []).reduce((sum, b: any) => sum + Number(b.total_price || 0), 0),
+        followers: followersRes.count || 0,
       });
     })();
   }, [activeClubId]);
@@ -65,6 +68,7 @@ const ClubDashboard = () => {
     { label: "Courts", value: stats.courts, icon: Square, href: "/club/courts", color: "text-accent" },
     { label: "Bookings This Week", value: stats.bookingsThisWeek, icon: Calendar, href: "/club/bookings", color: "text-foreground" },
     { label: "Revenue (Month)", value: `€${stats.revenueThisMonth.toFixed(0)}`, icon: Euro, href: "/club/bookings", color: "text-foreground" },
+    { label: "Followers", value: stats.followers, icon: Heart, href: "/club/coaches", color: "text-rose-400" },
   ];
 
   return (
@@ -78,7 +82,7 @@ const ClubDashboard = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
           {cards.map((c) => (
             <Link key={c.label} to={c.href}>
               <Card className="p-5 hover:border-primary transition-colors">

@@ -398,6 +398,35 @@ export type Database = {
           },
         ]
       }
+      club_followers: {
+        Row: {
+          club_id: string
+          followed_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          club_id: string
+          followed_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          club_id?: string
+          followed_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "club_followers_club_id_fkey"
+            columns: ["club_id"]
+            isOneToOne: false
+            referencedRelation: "clubs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       club_invites: {
         Row: {
           accepted_at: string | null

@@ -17,6 +17,7 @@ import WalletCard from "@/components/portal/WalletCard";
 import RaffleCard from "@/components/portal/RaffleCard";
 import HealthDataCard from "@/components/portal/HealthDataCard";
 import HealthConnections from "@/components/portal/HealthConnections";
+import MyClubsCard from "@/components/portal/MyClubsCard";
 import { Progress } from "@/components/ui/progress";
 import { LEVEL_CONFIG, BADGE_DEFINITIONS, getNextLevel } from "@/lib/gamification";
 import { toast } from "sonner";
@@ -440,6 +441,9 @@ const Dashboard = () => {
             </div>
           </motion.div>
         )}
+
+        {/* My Clubs */}
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.275 }}><MyClubsCard /></motion.div>
 
         {/* Wallet & Referrals */}
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.28 }} className="mb-6"><WalletCard /></motion.div>
