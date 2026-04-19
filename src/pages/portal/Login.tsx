@@ -66,6 +66,7 @@ const Login = () => {
           .single();
         if (roleData?.role === "coach") navigate("/coach");
         else if (roleData?.role === "admin") navigate("/admin");
+        else if (roleData?.role === "club_manager") navigate("/club");
         else navigate("/dashboard");
       } else {
         navigate("/dashboard");

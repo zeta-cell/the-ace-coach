@@ -3,7 +3,7 @@ import { useAuth } from "@/contexts/AuthContext";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
-  requiredRole?: "coach" | "admin";
+  requiredRole?: "coach" | "admin" | "club_manager";
 }
 
 const ProtectedRoute = ({ children, requiredRole }: ProtectedRouteProps) => {
@@ -27,6 +27,10 @@ const ProtectedRoute = ({ children, requiredRole }: ProtectedRouteProps) => {
   }
 
   if (requiredRole === "admin" && role !== "admin") {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  if (requiredRole === "club_manager" && role !== "club_manager" && role !== "admin") {
     return <Navigate to="/dashboard" replace />;
   }
 
