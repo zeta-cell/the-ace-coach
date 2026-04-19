@@ -72,21 +72,21 @@ const Index = () => {
           className="absolute inset-0 w-full h-full object-cover"
           loading="eager"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/85 to-background/30" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
 
         <div className="relative z-10 w-full max-w-5xl mx-auto px-6 pb-16 pt-32">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
             <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary text-primary-foreground font-body text-xs tracking-wider mb-6 shadow-lg">
               <MapPin size={14} /> {t("home.badge")}
             </span>
-            <h1 className="font-display text-5xl md:text-7xl lg:text-8xl leading-[0.9] mb-6">
+            <h1 className="font-display text-5xl md:text-7xl lg:text-8xl leading-[0.9] mb-6 [text-shadow:0_2px_20px_hsl(var(--navy)/0.35)]">
               {t("home.h1.line1")}
               <br />
               <span className="text-primary">{t("home.h1.line2")}</span>
               <br />
               {t("home.h1.line3")}
             </h1>
-            <p className="font-body text-lg md:text-xl text-muted-foreground max-w-2xl mb-10">
+            <p className="font-body text-lg md:text-xl text-foreground/90 max-w-2xl mb-10 [text-shadow:0_1px_10px_hsl(var(--navy)/0.3)]">
               {t("home.lead")}
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
