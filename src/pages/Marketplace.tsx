@@ -8,7 +8,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   MapPin, Search, Star, CheckCircle, Shield, Zap, Crown,
   ShoppingBag, Heart, BookOpen, Brain, Dumbbell, Play,
-  Clock, Users, ChevronRight, X, Award, Target,
+  Clock, Users, ChevronRight, X, Award, Target, SlidersHorizontal,
+  Video, Camera,
 } from "lucide-react";
 import PublicBottomNav from "@/components/PublicBottomNav";
 import BlockDetailDrawer from "@/components/portal/BlockDetailDrawer";
