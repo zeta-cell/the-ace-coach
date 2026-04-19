@@ -20,7 +20,8 @@ import NotificationBell from "@/components/portal/NotificationBell";
 import QuickAddTrainingDrawer from "@/components/portal/QuickAddTrainingDrawer";
 
 // Phosphor icon overrides for the mobile bottom nav (filled glyph look)
-const BOTTOM_NAV_ICON: Record<string, React.ComponentType<{ size?: number; weight?: "regular" | "fill"; className?: string }>> = {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const BOTTOM_NAV_ICON: Record<string, any> = {
   "/dashboard": PhHouse,
   "/training": PhBarbell,
   "/events": PhCalendarDots,
