@@ -185,6 +185,11 @@ const Marketplace = () => {
 
   const featured = useMemo(() => blocks.filter((b) => (b.rating_avg || 0) >= 4.5 && (b.times_used || 0) >= 5), [blocks]);
 
+  const activeFilterCount =
+    (typeFilter !== "All" ? 1 : 0) +
+    (sportFilter !== "All" ? 1 : 0) +
+    (levelFilter !== "All" ? 1 : 0);
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* Nav */}
