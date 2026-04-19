@@ -65,6 +65,7 @@ const ClubCourts = lazy(() => import("./pages/portal/ClubCourts"));
 const ClubBookings = lazy(() => import("./pages/portal/ClubBookings"));
 const ClubSettings = lazy(() => import("./pages/portal/ClubSettings"));
 const ClubInvite = lazy(() => import("./pages/ClubInvite"));
+const Crm = lazy(() => import("./pages/portal/Crm"));
 
 const queryClient = new QueryClient();
 
@@ -291,6 +292,18 @@ const App = () => (
             <Route path="/club/settings" element={
               <Suspense fallback={<PortalLoader />}>
                 <ProtectedRoute requiredRole="club_manager"><ClubSettings /></ProtectedRoute>
+              </Suspense>
+            } />
+            <Route path="/club/crm" element={
+              <Suspense fallback={<PortalLoader />}>
+                <ProtectedRoute requiredRole="club_manager"><Crm /></ProtectedRoute>
+              </Suspense>
+            } />
+
+            {/* Coach CRM */}
+            <Route path="/coach/crm" element={
+              <Suspense fallback={<PortalLoader />}>
+                <ProtectedRoute requiredRole="coach"><Crm /></ProtectedRoute>
               </Suspense>
             } />
 
