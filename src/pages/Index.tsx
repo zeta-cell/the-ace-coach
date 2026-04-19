@@ -10,6 +10,7 @@ import { TrendingUpIcon } from "@/components/ui/animated-icons/trending-up";
 import { UsersIcon } from "@/components/ui/animated-icons/users";
 import { ShieldCheckIcon } from "@/components/ui/animated-icons/shield-check";
 import { ZapIcon } from "@/components/ui/animated-icons/zap";
+import { FeatureIconCard } from "@/components/ui/animated-icons/FeatureIconCard";
 import heroPadel from "@/assets/hero-padel.jpg";
 import featuresTennis from "@/assets/features-tennis.jpg";
 import ctaCourt from "@/assets/cta-court.jpg";
@@ -158,20 +159,13 @@ const Index = () => {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
             {features.map((f, i) => (
-              <motion.div
+              <FeatureIconCard
                 key={f.titleKey}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.08 }}
-                className="group bg-card/70 backdrop-blur-sm border border-border rounded-xl p-6 hover:border-primary/30 transition-colors"
-              >
-                <div className="w-12 h-12 rounded-xl bg-primary/15 flex items-center justify-center mb-4 group-hover:bg-primary/25 transition-colors text-primary">
-                  <f.icon size={28} />
-                </div>
-                <h3 className="font-display text-lg tracking-wider mb-2">{t(f.titleKey)}</h3>
-                <p className="font-body text-sm text-muted-foreground leading-relaxed">{t(f.descKey)}</p>
-              </motion.div>
+                Icon={f.icon}
+                title={t(f.titleKey)}
+                description={t(f.descKey)}
+                index={i}
+              />
             ))}
           </div>
         </div>
