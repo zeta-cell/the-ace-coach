@@ -160,8 +160,8 @@ const Index = () => {
                 transition={{ delay: i * 0.08 }}
                 className="group bg-card/70 backdrop-blur-sm border border-border rounded-xl p-6 hover:border-primary/30 transition-colors"
               >
-                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
-                  <f.icon size={20} className="text-primary" />
+                <div className="w-12 h-12 rounded-xl bg-primary/15 flex items-center justify-center mb-4 group-hover:bg-primary/25 transition-colors">
+                  <f.icon size={28} weight="duotone" className="text-primary" />
                 </div>
                 <h3 className="font-display text-lg tracking-wider mb-2">{t(f.titleKey)}</h3>
                 <p className="font-body text-sm text-muted-foreground leading-relaxed">{t(f.descKey)}</p>

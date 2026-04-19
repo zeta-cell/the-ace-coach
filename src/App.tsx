@@ -82,7 +82,7 @@ const PortalLoader = () => (
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
-      <IconContext.Provider value={{ weight: "duotone", size: 20 }}>
+      <IconContext.Provider value={{ weight: "duotone", size: 20, mirrored: false }}>
         <TooltipProvider>
           <Toaster />
           <Sonner />
