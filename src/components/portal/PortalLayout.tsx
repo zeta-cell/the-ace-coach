@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   LayoutDashboard, Calendar, BookOpen, Video,
   MessageSquare, User, LogOut, Menu, X, ChevronLeft, ChevronRight,
-  Users, Settings, Home, CreditCard, Link2, CalendarDays, UserCheck, Search, ShoppingBag, Eye, Dumbbell
+  Users, Settings, Home, CreditCard, Link2, CalendarDays, UserCheck, Search, ShoppingBag, Eye, Dumbbell, Building2, Square
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import NotificationBell from "@/components/portal/NotificationBell";
@@ -47,6 +47,14 @@ const adminNav = [
   { label: "Founders", icon: Eye, href: "/founders" },
 ];
 
+const clubNav = [
+  { label: "Dashboard", icon: LayoutDashboard, href: "/club" },
+  { label: "Bookings", icon: CalendarDays, href: "/club/bookings" },
+  { label: "Coaches", icon: UserCheck, href: "/club/coaches" },
+  { label: "Courts", icon: Square, href: "/club/courts" },
+  { label: "Settings", icon: Settings, href: "/club/settings" },
+];
+
 const PortalLayout = ({ children }: { children: React.ReactNode }) => {
   const { role, profile, signOut } = useAuth();
   const location = useLocation();
@@ -54,7 +62,7 @@ const PortalLayout = ({ children }: { children: React.ReactNode }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [fabDrawerOpen, setFabDrawerOpen] = useState(false);
 
-  const navItems = role === "admin" ? adminNav : role === "coach" ? coachNav : playerNav;
+  const navItems = role === "admin" ? adminNav : role === "club_manager" ? clubNav : role === "coach" ? coachNav : playerNav;
 
   const NavContent = () => (
     <div className="flex flex-col h-full">
