@@ -7,10 +7,18 @@ import PortalLayout from "@/components/portal/PortalLayout";
 import CoachVideoModal from "@/components/portal/CoachVideoModal";
 import type { Database } from "@/integrations/supabase/types";
 import { toast } from "sonner";
+import {
+  MAIN_CATEGORIES,
+  MAIN_CATEGORY_LABEL,
+  MAIN_CATEGORY_COLORS,
+  toMainCategory,
+  type MainCategory,
+} from "@/lib/moduleCategories";
 
 type ModuleCategory = Database["public"]["Enums"]["module_category"];
 type ModuleDifficulty = Database["public"]["Enums"]["module_difficulty"];
 
+// Legacy DB enum values kept for the create/edit form only.
 const BASE_CATEGORIES: ModuleCategory[] = [
   "warm_up", "footwork", "fitness", "strength",
   "mental", "recovery", "cool_down", "nutrition", "video",
@@ -27,20 +35,6 @@ const getAllCategories = (sport: string | null): ModuleCategory[] => {
 };
 
 const DIFFICULTIES: ModuleDifficulty[] = ["beginner", "intermediate", "advanced", "elite"];
-
-const CATEGORY_COLORS: Record<string, string> = {
-  warm_up: "bg-yellow-500/20 text-yellow-400",
-  padel_drill: "bg-cyan-500/20 text-cyan-400",
-  footwork: "bg-blue-500/20 text-blue-400",
-  fitness: "bg-orange-500/20 text-orange-400",
-  strength: "bg-orange-600/20 text-orange-300",
-  mental: "bg-purple-500/20 text-purple-400",
-  recovery: "bg-green-500/20 text-green-400",
-  cool_down: "bg-teal-500/20 text-teal-400",
-  nutrition: "bg-lime-500/20 text-lime-400",
-  video: "bg-pink-500/20 text-pink-400",
-  tennis_drill: "bg-emerald-500/20 text-emerald-400",
-};
 
 interface Module {
   id: string;
@@ -79,7 +73,7 @@ export const CoachModulesContent = ({ embedded = false }: { embedded?: boolean }
   const { user, role } = useAuth();
   const [modules, setModules] = useState<Module[]>([]);
   const [search, setSearch] = useState("");
-  const [filterCat, setFilterCat] = useState<ModuleCategory | "all">("all");
+  const [filterCat, setFilterCat] = useState<MainCategory | "all">("all");
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -219,9 +213,17 @@ export const CoachModulesContent = ({ embedded = false }: { embedded?: boolean }
 
   const filtered = modules.filter((m) => {
     const matchSearch = m.title.toLowerCase().includes(search.toLowerCase());
-    const matchCat = filterCat === "all" || m.category === filterCat;
+    const matchCat = filterCat === "all" || toMainCategory(m.category) === filterCat;
     return matchSearch && matchCat;
   });
+
+  // Count modules per main category (for the segmented control)
+  const counts = modules.reduce<Record<string, number>>((acc, m) => {
+    const k = toMainCategory(m.category);
+    acc[k] = (acc[k] || 0) + 1;
+    acc.all = (acc.all || 0) + 1;
+    return acc;
+  }, {});
 
   const content = (
       <div className="max-w-4xl mx-auto">
@@ -235,22 +237,31 @@ export const CoachModulesContent = ({ embedded = false }: { embedded?: boolean }
           </button>
         </div>
 
-        {/* Search & filter */}
-        {/* Category filter strip */}
-        <div className="flex gap-1.5 overflow-x-auto pb-2 mb-3 scrollbar-none">
-          {(["all", ...getAllCategories(role === "admin" ? null : coachSport)] as const).map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setFilterCat(cat)}
-              className={`shrink-0 px-3 py-1.5 rounded-lg font-display text-xs tracking-wider transition-colors ${
-                filterCat === cat
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-card border border-border text-muted-foreground hover:bg-secondary"
-              }`}
-            >
-              {cat === "all" ? "ALL" : cat.replace("_", " ").toUpperCase()}
-            </button>
-          ))}
+        {/* Segmented control — main categories only, consistent Title-Case */}
+        <div className="flex p-1 bg-card border border-border rounded-xl mb-4 overflow-x-auto scrollbar-none">
+          {(["all", ...MAIN_CATEGORIES] as const).map((cat) => {
+            const isActive = filterCat === cat;
+            const label = cat === "all" ? "All" : MAIN_CATEGORY_LABEL[cat];
+            const count = counts[cat] || 0;
+            return (
+              <button
+                key={cat}
+                onClick={() => setFilterCat(cat)}
+                className={`shrink-0 px-3 py-2 rounded-lg font-display text-[11px] tracking-wider whitespace-nowrap transition-colors ${
+                  isActive
+                    ? "bg-primary text-primary-foreground"
+                    : "text-muted-foreground hover:text-foreground hover:bg-secondary"
+                }`}
+              >
+                {label.toUpperCase()}
+                {count > 0 && (
+                  <span className={`ml-1 text-[9px] ${isActive ? "opacity-80" : "opacity-60"}`}>
+                    {count}
+                  </span>
+                )}
+              </button>
+            );
+          })}
         </div>
 
         {/* Search */}
@@ -286,9 +297,15 @@ export const CoachModulesContent = ({ embedded = false }: { embedded?: boolean }
               >
                 <div className="flex items-start justify-between mb-2">
                   <div>
-                    <span className={`text-[10px] font-body font-semibold px-2 py-0.5 rounded-full uppercase ${CATEGORY_COLORS[mod.category] || "bg-muted text-muted-foreground"}`}>
-                      {mod.category.replace("_", " ")}
-                    </span>
+                    {(() => {
+                      const main = toMainCategory(mod.category);
+                      const c = MAIN_CATEGORY_COLORS[main];
+                      return (
+                        <span className={`text-[10px] font-body font-semibold px-2 py-0.5 rounded-full ${c.bg} ${c.text}`}>
+                          {MAIN_CATEGORY_LABEL[main]}
+                        </span>
+                      );
+                    })()}
                     <h3 className="font-display text-lg text-foreground mt-1">{mod.title}</h3>
                   </div>
                   <div className="flex gap-1 items-center">
