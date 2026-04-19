@@ -48,6 +48,7 @@ const Rewards = lazy(() => import("./pages/Rewards"));
 // Events & Community (lazy-loaded)
 const Events = lazy(() => import("./pages/Events"));
 const Community = lazy(() => import("./pages/Community"));
+const CitySportLanding = lazy(() => import("./pages/seo/CitySportLanding"));
 
 // Coach Events (lazy-loaded)
 const CoachEvents = lazy(() => import("./pages/portal/CoachEvents"));
@@ -97,6 +98,12 @@ const App = () => (
             <Route path="/events" element={<Suspense fallback={<PortalLoader />}><Events /></Suspense>} />
             <Route path="/community" element={<Suspense fallback={<PortalLoader />}><Community /></Suspense>} />
             <Route path="/club-invite/:token" element={<Suspense fallback={<PortalLoader />}><ClubInvite /></Suspense>} />
+
+            {/* SEO city × sport landing pages (EN + ES) */}
+            <Route path="/padel-coach/:city" element={<Suspense fallback={<PortalLoader />}><CitySportLanding locale="en" sport="padel" /></Suspense>} />
+            <Route path="/tennis-coach/:city" element={<Suspense fallback={<PortalLoader />}><CitySportLanding locale="en" sport="tennis" /></Suspense>} />
+            <Route path="/es/profesor-de-padel/:city" element={<Suspense fallback={<PortalLoader />}><CitySportLanding locale="es" sport="padel" /></Suspense>} />
+            <Route path="/es/profesor-de-tenis/:city" element={<Suspense fallback={<PortalLoader />}><CitySportLanding locale="es" sport="tennis" /></Suspense>} />
 
             {/* Auth */}
             <Route path="/login" element={<Suspense fallback={<PortalLoader />}><Login /></Suspense>} />
