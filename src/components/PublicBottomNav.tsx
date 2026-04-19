@@ -3,19 +3,21 @@ import {
   Home, Calendar, CalendarDays, Users, MessageSquare,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
-
-const NAV_ITEMS = [
-  { to: "/", icon: Home, label: "Home", playerTo: "/dashboard" },
-  { to: "/training", icon: Calendar, label: "Training", playerTo: "/training" },
-  { to: "/events", icon: CalendarDays, label: "Events", playerTo: "/events" },
-  { to: "/community", icon: Users, label: "Community", playerTo: "/community" },
-  { to: "/messages", icon: MessageSquare, label: "Messages", playerTo: "/messages" },
-];
+import { useI18n } from "@/lib/i18n";
 
 const PublicBottomNav = () => {
   const { pathname } = useLocation();
   const { user, role } = useAuth();
+  const { t } = useI18n();
   const isPlayer = !!user && role === "player";
+
+  const NAV_ITEMS = [
+    { to: "/", icon: Home, label: t("bn.home"), playerTo: "/dashboard" },
+    { to: "/training", icon: Calendar, label: t("bn.training"), playerTo: "/training" },
+    { to: "/events", icon: CalendarDays, label: t("bn.events"), playerTo: "/events" },
+    { to: "/community", icon: Users, label: t("bn.community"), playerTo: "/community" },
+    { to: "/messages", icon: MessageSquare, label: t("bn.messages"), playerTo: "/messages" },
+  ];
 
   return (
     <>
