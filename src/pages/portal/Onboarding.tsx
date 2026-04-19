@@ -208,6 +208,7 @@ const Onboarding = () => {
             title: 'A friend joined ACE!',
             body: 'Someone signed up using your referral code. You earned €5 wallet credit!',
             link: '/dashboard',
+          });
           // Clear stored code so it can't be applied twice
           localStorage.removeItem("ace_referral_code");
         }
