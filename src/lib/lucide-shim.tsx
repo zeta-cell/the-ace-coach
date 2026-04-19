@@ -106,7 +106,7 @@ import {
   Pulse,
   Rows,
   ShareNetwork,
-  ShieldCheck,
+  ShieldCheck as PhShieldCheck,
   ShoppingBag as PhShoppingBag,
   SlidersHorizontal as PhSlidersHorizontal,
   SignOut,
@@ -280,8 +280,8 @@ export const Search = wrap(Funnel);
 export const Send = wrap(PaperPlaneTilt);
 export const Share = wrap(ShareNetwork);
 export const Share2 = wrap(ShareNetwork);
-export const Shield = wrap(ShieldCheck);
-export const ShieldCheck = wrap(ShieldCheck);
+export const Shield = wrap(PhShieldCheck);
+export const ShieldCheck = wrap(PhShieldCheck);
 export const ShoppingBag = wrap(PhShoppingBag);
 export const Settings = wrap(Gear);
 export const SlidersHorizontal = wrap(PhSlidersHorizontal);
