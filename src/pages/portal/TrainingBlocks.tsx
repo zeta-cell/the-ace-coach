@@ -437,19 +437,20 @@ export const TrainingBlocksContent = ({ embedded = false }: { embedded?: boolean
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {filtered.map(block => {
-              const catColors = BLOCK_CATEGORY_COLORS[block.category] || BLOCK_CATEGORY_COLORS.general;
+              const main = toMainCategory(block.category);
+              const mainColors = MAIN_CATEGORY_COLORS[main];
               return (
                 <motion.div key={block.id}
                   initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-                  className={`bg-card border rounded-xl overflow-hidden hover:border-opacity-60 transition-colors ${catColors.border}`}>
+                  className="bg-card border border-border rounded-xl overflow-hidden hover:border-foreground/20 transition-colors">
                   <div className="flex">
-                    <div className={`w-1 ${BLOCK_ACCENT_COLORS[block.category] || "bg-muted"}`} />
+                    <div className={`w-1 ${mainColors.dot}`} />
                     <div className="flex-1 p-4">
                       <div className="flex items-start justify-between gap-2">
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-1 flex-wrap">
-                            <span className={`font-body text-[10px] font-semibold px-2 py-0.5 rounded-full uppercase ${catColors.bg} ${catColors.text}`}>
-                              {CATEGORY_LABELS[block.category] || block.category}
+                            <span className={`font-body text-[10px] font-semibold px-2 py-0.5 rounded-full ${mainColors.bg} ${mainColors.text}`}>
+                              {MAIN_CATEGORY_LABEL[main]}
                             </span>
                             {block.is_system && (
                               <span className="text-[10px] font-body text-muted-foreground bg-secondary px-1.5 py-0.5 rounded">SYSTEM</span>
