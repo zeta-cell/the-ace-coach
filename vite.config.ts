@@ -16,6 +16,9 @@ export default defineConfig(({ mode }) => ({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      // Force every `lucide-react` import to resolve to our Phosphor-filled shim
+      // so the whole app uses one consistent icon style.
+      "lucide-react": path.resolve(__dirname, "./src/lib/lucide-shim.tsx"),
     },
   },
 }));
