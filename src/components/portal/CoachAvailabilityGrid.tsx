@@ -317,13 +317,31 @@ const CoachAvailabilityGrid = ({ coachId }: AvailabilityGridProps) => {
             ))}
           </div>
           {viewMode === "week" && (
-            <button
-              onClick={handleSave}
-              disabled={saving}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-primary text-primary-foreground font-display text-xs tracking-wider hover:bg-primary/90 disabled:opacity-50 transition-colors"
-            >
-              <Save size={14} /> {saving ? "SAVING..." : "SAVE"}
-            </button>
+            <>
+              <div className="hidden md:flex gap-1">
+                {[
+                  { label: "9–5 WD", apply: () => setGrid(DAYS.map((_, d) => HOURS.map((h) => d < 5 && h >= 9 && h < 17))) },
+                  { label: "EVES", apply: () => setGrid(DAYS.map((_, d) => HOURS.map((h) => d < 5 && h >= 17 && h < 21))) },
+                  { label: "WKND", apply: () => setGrid(DAYS.map((_, d) => HOURS.map((h) => d >= 5 && h >= 9 && h < 18))) },
+                  { label: "CLEAR", apply: () => setGrid(DAYS.map(() => HOURS.map(() => false))) },
+                ].map((p) => (
+                  <button
+                    key={p.label}
+                    onClick={p.apply}
+                    className="px-2 py-1.5 rounded-md bg-secondary text-muted-foreground hover:text-foreground hover:bg-secondary/70 font-display text-[10px] tracking-wider transition-colors"
+                  >
+                    {p.label}
+                  </button>
+                ))}
+              </div>
+              <button
+                onClick={handleSave}
+                disabled={saving}
+                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-primary text-primary-foreground font-display text-xs tracking-wider hover:bg-primary/90 disabled:opacity-50 transition-colors"
+              >
+                <Save size={14} /> {saving ? "SAVING..." : "SAVE"}
+              </button>
+            </>
           )}
         </div>
       </div>
