@@ -120,17 +120,17 @@ const App = () => (
             {/* Player */}
             <Route path="/dashboard" element={
               <Suspense fallback={<PortalLoader />}>
-                <ProtectedRoute><Dashboard /></ProtectedRoute>
+                <ProtectedRoute playerOnly><Dashboard /></ProtectedRoute>
               </Suspense>
             } />
             <Route path="/training" element={
               <Suspense fallback={<PortalLoader />}>
-                <ProtectedRoute><Training /></ProtectedRoute>
+                <ProtectedRoute playerOnly><Training /></ProtectedRoute>
               </Suspense>
             } />
             <Route path="/profile" element={
               <Suspense fallback={<PortalLoader />}>
-                <ProtectedRoute><PlayerProfile /></ProtectedRoute>
+                <ProtectedRoute playerOnly><PlayerProfile /></ProtectedRoute>
               </Suspense>
             } />
             <Route path="/messages" element={
@@ -140,12 +140,12 @@ const App = () => (
             } />
             <Route path="/videos" element={
               <Suspense fallback={<PortalLoader />}>
-                <ProtectedRoute><PlayerVideos /></ProtectedRoute>
+                <ProtectedRoute playerOnly><PlayerVideos /></ProtectedRoute>
               </Suspense>
             } />
             <Route path="/rewards" element={
               <Suspense fallback={<PortalLoader />}>
-                <ProtectedRoute><Rewards /></ProtectedRoute>
+                <ProtectedRoute playerOnly><Rewards /></ProtectedRoute>
               </Suspense>
             } />
 

@@ -4,9 +4,19 @@ import { useAuth } from "@/contexts/AuthContext";
 interface ProtectedRouteProps {
   children: React.ReactNode;
   requiredRole?: "coach" | "admin" | "club_manager";
+  /** If true, only the "player" role can access this route. Other roles are
+   *  redirected to their own home so coaches/clubs/admins don't land in player UI. */
+  playerOnly?: boolean;
 }
 
-const ProtectedRoute = ({ children, requiredRole }: ProtectedRouteProps) => {
+const ROLE_HOME: Record<string, string> = {
+  coach: "/coach",
+  admin: "/admin",
+  club_manager: "/club",
+  player: "/dashboard",
+};
+
+const ProtectedRoute = ({ children, requiredRole, playerOnly }: ProtectedRouteProps) => {
   const { user, role, loading, profile } = useAuth();
   const location = useLocation();
 
@@ -23,18 +33,23 @@ const ProtectedRoute = ({ children, requiredRole }: ProtectedRouteProps) => {
   }
 
   if (requiredRole === "coach" && role !== "coach" && role !== "admin") {
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to={ROLE_HOME[role || "player"] || "/dashboard"} replace />;
   }
 
   if (requiredRole === "admin" && role !== "admin") {
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to={ROLE_HOME[role || "player"] || "/dashboard"} replace />;
   }
 
   if (requiredRole === "club_manager" && role !== "club_manager" && role !== "admin") {
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to={ROLE_HOME[role || "player"] || "/dashboard"} replace />;
   }
 
-  // Send to onboarding if not completed
+  // Bounce non-players away from player-only screens so coaches/clubs see their own home.
+  if (playerOnly && role && role !== "player") {
+    return <Navigate to={ROLE_HOME[role]} replace />;
+  }
+
+  // Send to onboarding if not completed (players only).
   if (
     role === "player" &&
     profile &&
@@ -48,3 +63,4 @@ const ProtectedRoute = ({ children, requiredRole }: ProtectedRouteProps) => {
 };
 
 export default ProtectedRoute;
+

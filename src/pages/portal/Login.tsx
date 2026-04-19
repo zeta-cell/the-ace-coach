@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -39,52 +39,48 @@ const Login = () => {
   const loginForm = useForm<LoginForm>({ resolver: zodResolver(loginSchema) });
   const registerForm = useForm<RegisterForm>({ resolver: zodResolver(registerSchema) });
 
-  // Redirect if already logged in
-  if (user) {
-    navigate("/dashboard", { replace: true });
-    return null;
-  }
-
-  const redirectByRole = async (userId: string, fallback: string) => {
-    const { data: roleData } = await supabase
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", userId)
-      .maybeSingle();
-    if (roleData?.role === "coach") navigate("/coach");
-    else if (roleData?.role === "admin") navigate("/admin");
-    else if (roleData?.role === "club_manager") navigate("/club");
-    else navigate(fallback);
-  };
+  // Role-based auto-redirect once a session exists.
+  // This handles both quick-login and the case when an authenticated user lands on /login.
+  useEffect(() => {
+    if (!user) return;
+    let cancelled = false;
+    (async () => {
+      const { data: roleData } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", user.id)
+        .maybeSingle();
+      if (cancelled) return;
+      if (roleData?.role === "coach") navigate("/coach", { replace: true });
+      else if (roleData?.role === "admin") navigate("/admin", { replace: true });
+      else if (roleData?.role === "club_manager") navigate("/club", { replace: true });
+      else navigate("/dashboard", { replace: true });
+    })();
+    return () => { cancelled = true; };
+  }, [user, navigate]);
 
   const handleLogin = async (data: LoginForm) => {
     setError("");
     setLoading(true);
-    const { data: signInData, error } = await supabase.auth.signInWithPassword({
+    const { error } = await supabase.auth.signInWithPassword({
       email: data.email,
       password: data.password,
     });
     setLoading(false);
-    if (error) {
-      setError(error.message);
-    } else if (signInData.user) {
-      await redirectByRole(signInData.user.id, "/dashboard");
-    }
+    if (error) setError(error.message);
+    // Redirect handled by useEffect when AuthContext picks up the new session.
   };
 
-  const handleQuickLogin = async (email: string, fallback: string) => {
+  const handleQuickLogin = async (email: string, _redirect?: string) => {
     setError("");
     setLoading(true);
-    const { data: signInData, error } = await supabase.auth.signInWithPassword({
+    const { error } = await supabase.auth.signInWithPassword({
       email,
       password: "AceAcademy2026!",
     });
     setLoading(false);
-    if (error) {
-      setError(error.message);
-    } else if (signInData.user) {
-      await redirectByRole(signInData.user.id, fallback);
-    }
+    if (error) setError(error.message);
+    // Redirect handled by useEffect when AuthContext picks up the new session.
   };
 
   const handleRegister = async (data: RegisterForm) => {
