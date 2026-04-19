@@ -211,6 +211,8 @@ const Onboarding = () => {
       navigate("/dashboard");
     } catch (err) {
       console.error("Onboarding error:", err);
+      const { toast } = await import("sonner");
+      toast.error("Couldn't save your profile", { description: "Please try again — your details are still here." });
     } finally {
       setSaving(false);
     }
