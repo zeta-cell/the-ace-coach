@@ -1,7 +1,11 @@
 import { Link, useLocation } from "react-router-dom";
 import {
-  Home, Calendar, CalendarDays, Users, MessageSquare,
-} from "lucide-react";
+  House as Home,
+  Calendar,
+  CalendarDots as CalendarDays,
+  UsersThree as Users,
+  ChatsCircle as MessageSquare,
+} from "@phosphor-icons/react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useI18n } from "@/lib/i18n";
 
