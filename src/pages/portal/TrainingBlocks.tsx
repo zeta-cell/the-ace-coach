@@ -381,16 +381,39 @@ export const TrainingBlocksContent = ({ embedded = false }: { embedded?: boolean
           )}
         </AnimatePresence>
 
-        {/* Category filter chips */}
-        <div className="flex flex-wrap gap-2 mb-4">
-          {categories.map(cat => (
-            <button key={cat} onClick={() => setFilterCategory(cat)}
-              className={`px-3 py-1.5 rounded-full font-display text-xs tracking-wider transition-colors ${
-                filterCategory === cat ? "bg-primary text-primary-foreground" : "bg-card border border-border text-muted-foreground hover:text-foreground"
-              }`}>
-              {cat === "all" ? "ALL" : (CATEGORY_LABELS[cat] || cat.toUpperCase())}
+        {/* Segmented category filter (matches Modules tab) */}
+        <div className="-mx-1 mb-4 overflow-x-auto">
+          <div className="flex items-center gap-1 px-1 min-w-max">
+            <button
+              onClick={() => setFilterCategory("all")}
+              className={`whitespace-nowrap px-3 py-1.5 rounded-lg font-display text-[11px] tracking-wider transition-colors ${
+                filterCategory === "all"
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-card border border-border text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              ALL <span className="opacity-70">{categoryCounts.all}</span>
             </button>
-          ))}
+            {MAIN_CATEGORIES.map((cat) => {
+              const colors = MAIN_CATEGORY_COLORS[cat];
+              const active = filterCategory === cat;
+              return (
+                <button
+                  key={cat}
+                  onClick={() => setFilterCategory(cat)}
+                  className={`whitespace-nowrap px-3 py-1.5 rounded-lg font-display text-[11px] tracking-wider transition-colors flex items-center gap-1.5 ${
+                    active
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-card border border-border text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  <span className={`w-1.5 h-1.5 rounded-full ${active ? "bg-primary-foreground" : colors.dot}`} />
+                  {MAIN_CATEGORY_LABEL[cat as MainCategory].toUpperCase()}
+                  <span className="opacity-70">{categoryCounts[cat] ?? 0}</span>
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         {/* Search */}
