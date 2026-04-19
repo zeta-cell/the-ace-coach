@@ -1,10 +1,650 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemap.org/schemas/sitemap/0.9">
-  <url><loc>https://ace-whisperer-guide.lovable.app/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+<urlset xmlns="http://www.sitemap.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url><loc>https://ace-whisperer-guide.lovable.app/</loc><changefreq>weekly</changefreq><priority>1</priority></url>
   <url><loc>https://ace-whisperer-guide.lovable.app/find-a-coach</loc><changefreq>daily</changefreq><priority>0.9</priority></url>
   <url><loc>https://ace-whisperer-guide.lovable.app/marketplace</loc><changefreq>daily</changefreq><priority>0.9</priority></url>
   <url><loc>https://ace-whisperer-guide.lovable.app/events</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
   <url><loc>https://ace-whisperer-guide.lovable.app/community</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
   <url><loc>https://ace-whisperer-guide.lovable.app/rankings</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://ace-whisperer-guide.lovable.app/login</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://ace-whisperer-guide.lovable.app/login</loc><changefreq>monthly</changefreq><priority>0.4</priority></url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/padel-coach/madrid</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/padel-coach/madrid"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-padel/madrid"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/padel-coach/madrid"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/es/profesor-de-padel/madrid</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/padel-coach/madrid"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-padel/madrid"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/padel-coach/madrid"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/padel-coach/barcelona</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/padel-coach/barcelona"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-padel/barcelona"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/padel-coach/barcelona"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/es/profesor-de-padel/barcelona</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/padel-coach/barcelona"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-padel/barcelona"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/padel-coach/barcelona"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/padel-coach/valencia</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/padel-coach/valencia"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-padel/valencia"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/padel-coach/valencia"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/es/profesor-de-padel/valencia</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/padel-coach/valencia"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-padel/valencia"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/padel-coach/valencia"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/padel-coach/sevilla</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/padel-coach/sevilla"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-padel/sevilla"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/padel-coach/sevilla"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/es/profesor-de-padel/sevilla</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/padel-coach/sevilla"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-padel/sevilla"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/padel-coach/sevilla"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/padel-coach/malaga</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/padel-coach/malaga"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-padel/malaga"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/padel-coach/malaga"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/es/profesor-de-padel/malaga</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/padel-coach/malaga"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-padel/malaga"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/padel-coach/malaga"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/padel-coach/marbella</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/padel-coach/marbella"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-padel/marbella"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/padel-coach/marbella"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/es/profesor-de-padel/marbella</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/padel-coach/marbella"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-padel/marbella"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/padel-coach/marbella"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/padel-coach/bilbao</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/padel-coach/bilbao"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-padel/bilbao"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/padel-coach/bilbao"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/es/profesor-de-padel/bilbao</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/padel-coach/bilbao"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-padel/bilbao"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/padel-coach/bilbao"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/padel-coach/zaragoza</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/padel-coach/zaragoza"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-padel/zaragoza"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/padel-coach/zaragoza"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/es/profesor-de-padel/zaragoza</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/padel-coach/zaragoza"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-padel/zaragoza"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/padel-coach/zaragoza"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/padel-coach/palma</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/padel-coach/palma"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-padel/palma"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/padel-coach/palma"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/es/profesor-de-padel/palma</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/padel-coach/palma"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-padel/palma"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/padel-coach/palma"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/padel-coach/alicante</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/padel-coach/alicante"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-padel/alicante"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/padel-coach/alicante"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/es/profesor-de-padel/alicante</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/padel-coach/alicante"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-padel/alicante"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/padel-coach/alicante"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/padel-coach/lisbon</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/padel-coach/lisbon"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-padel/lisbon"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/padel-coach/lisbon"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/es/profesor-de-padel/lisbon</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/padel-coach/lisbon"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-padel/lisbon"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/padel-coach/lisbon"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/padel-coach/porto</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/padel-coach/porto"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-padel/porto"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/padel-coach/porto"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/es/profesor-de-padel/porto</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/padel-coach/porto"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-padel/porto"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/padel-coach/porto"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/padel-coach/milan</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/padel-coach/milan"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-padel/milan"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/padel-coach/milan"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/es/profesor-de-padel/milan</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/padel-coach/milan"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-padel/milan"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/padel-coach/milan"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/padel-coach/rome</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/padel-coach/rome"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-padel/rome"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/padel-coach/rome"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/es/profesor-de-padel/rome</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/padel-coach/rome"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-padel/rome"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/padel-coach/rome"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/padel-coach/paris</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/padel-coach/paris"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-padel/paris"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/padel-coach/paris"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/es/profesor-de-padel/paris</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/padel-coach/paris"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-padel/paris"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/padel-coach/paris"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/padel-coach/london</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/padel-coach/london"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-padel/london"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/padel-coach/london"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/es/profesor-de-padel/london</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/padel-coach/london"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-padel/london"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/padel-coach/london"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/padel-coach/berlin</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/padel-coach/berlin"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-padel/berlin"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/padel-coach/berlin"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/es/profesor-de-padel/berlin</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/padel-coach/berlin"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-padel/berlin"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/padel-coach/berlin"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/padel-coach/munich</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/padel-coach/munich"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-padel/munich"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/padel-coach/munich"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/es/profesor-de-padel/munich</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/padel-coach/munich"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-padel/munich"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/padel-coach/munich"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/padel-coach/dubai</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/padel-coach/dubai"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-padel/dubai"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/padel-coach/dubai"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/es/profesor-de-padel/dubai</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/padel-coach/dubai"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-padel/dubai"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/padel-coach/dubai"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/padel-coach/miami</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/padel-coach/miami"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-padel/miami"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/padel-coach/miami"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/es/profesor-de-padel/miami</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/padel-coach/miami"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-padel/miami"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/padel-coach/miami"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/tennis-coach/madrid</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/tennis-coach/madrid"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-tenis/madrid"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/tennis-coach/madrid"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/es/profesor-de-tenis/madrid</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/tennis-coach/madrid"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-tenis/madrid"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/tennis-coach/madrid"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/tennis-coach/barcelona</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/tennis-coach/barcelona"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-tenis/barcelona"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/tennis-coach/barcelona"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/es/profesor-de-tenis/barcelona</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/tennis-coach/barcelona"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-tenis/barcelona"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/tennis-coach/barcelona"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/tennis-coach/valencia</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/tennis-coach/valencia"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-tenis/valencia"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/tennis-coach/valencia"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/es/profesor-de-tenis/valencia</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/tennis-coach/valencia"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-tenis/valencia"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/tennis-coach/valencia"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/tennis-coach/sevilla</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/tennis-coach/sevilla"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-tenis/sevilla"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/tennis-coach/sevilla"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/es/profesor-de-tenis/sevilla</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/tennis-coach/sevilla"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-tenis/sevilla"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/tennis-coach/sevilla"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/tennis-coach/malaga</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/tennis-coach/malaga"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-tenis/malaga"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/tennis-coach/malaga"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/es/profesor-de-tenis/malaga</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/tennis-coach/malaga"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-tenis/malaga"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/tennis-coach/malaga"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/tennis-coach/marbella</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/tennis-coach/marbella"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-tenis/marbella"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/tennis-coach/marbella"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/es/profesor-de-tenis/marbella</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/tennis-coach/marbella"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-tenis/marbella"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/tennis-coach/marbella"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/tennis-coach/bilbao</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/tennis-coach/bilbao"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-tenis/bilbao"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/tennis-coach/bilbao"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/es/profesor-de-tenis/bilbao</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/tennis-coach/bilbao"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-tenis/bilbao"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/tennis-coach/bilbao"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/tennis-coach/zaragoza</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/tennis-coach/zaragoza"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-tenis/zaragoza"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/tennis-coach/zaragoza"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/es/profesor-de-tenis/zaragoza</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/tennis-coach/zaragoza"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-tenis/zaragoza"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/tennis-coach/zaragoza"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/tennis-coach/palma</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/tennis-coach/palma"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-tenis/palma"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/tennis-coach/palma"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/es/profesor-de-tenis/palma</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/tennis-coach/palma"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-tenis/palma"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/tennis-coach/palma"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/tennis-coach/alicante</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/tennis-coach/alicante"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-tenis/alicante"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/tennis-coach/alicante"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/es/profesor-de-tenis/alicante</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/tennis-coach/alicante"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-tenis/alicante"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/tennis-coach/alicante"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/tennis-coach/lisbon</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/tennis-coach/lisbon"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-tenis/lisbon"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/tennis-coach/lisbon"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/es/profesor-de-tenis/lisbon</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/tennis-coach/lisbon"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-tenis/lisbon"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/tennis-coach/lisbon"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/tennis-coach/porto</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/tennis-coach/porto"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-tenis/porto"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/tennis-coach/porto"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/es/profesor-de-tenis/porto</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/tennis-coach/porto"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-tenis/porto"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/tennis-coach/porto"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/tennis-coach/milan</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/tennis-coach/milan"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-tenis/milan"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/tennis-coach/milan"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/es/profesor-de-tenis/milan</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/tennis-coach/milan"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-tenis/milan"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/tennis-coach/milan"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/tennis-coach/rome</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/tennis-coach/rome"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-tenis/rome"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/tennis-coach/rome"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/es/profesor-de-tenis/rome</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/tennis-coach/rome"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-tenis/rome"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/tennis-coach/rome"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/tennis-coach/paris</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/tennis-coach/paris"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-tenis/paris"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/tennis-coach/paris"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/es/profesor-de-tenis/paris</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/tennis-coach/paris"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-tenis/paris"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/tennis-coach/paris"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/tennis-coach/london</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/tennis-coach/london"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-tenis/london"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/tennis-coach/london"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/es/profesor-de-tenis/london</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/tennis-coach/london"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-tenis/london"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/tennis-coach/london"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/tennis-coach/berlin</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/tennis-coach/berlin"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-tenis/berlin"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/tennis-coach/berlin"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/es/profesor-de-tenis/berlin</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/tennis-coach/berlin"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-tenis/berlin"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/tennis-coach/berlin"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/tennis-coach/munich</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/tennis-coach/munich"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-tenis/munich"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/tennis-coach/munich"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/es/profesor-de-tenis/munich</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/tennis-coach/munich"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-tenis/munich"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/tennis-coach/munich"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/tennis-coach/dubai</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/tennis-coach/dubai"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-tenis/dubai"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/tennis-coach/dubai"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/es/profesor-de-tenis/dubai</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/tennis-coach/dubai"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-tenis/dubai"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/tennis-coach/dubai"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/tennis-coach/miami</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/tennis-coach/miami"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-tenis/miami"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/tennis-coach/miami"/>
+  </url>
+  <url>
+    <loc>https://ace-whisperer-guide.lovable.app/es/profesor-de-tenis/miami</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ace-whisperer-guide.lovable.app/tennis-coach/miami"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ace-whisperer-guide.lovable.app/es/profesor-de-tenis/miami"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ace-whisperer-guide.lovable.app/tennis-coach/miami"/>
+  </url>
 </urlset>
