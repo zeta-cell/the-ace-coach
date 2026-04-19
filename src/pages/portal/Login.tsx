@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { motion } from "framer-motion";
-import { Eye, EyeOff, ArrowLeft, Circle, Dumbbell, Crown } from "lucide-react";
+import { Eye, EyeOff, ArrowLeft, Circle, Dumbbell, Crown, Building2 } from "lucide-react";
 import { toast } from "sonner";
 // Logo removed during cleanup
 
@@ -45,47 +45,45 @@ const Login = () => {
     return null;
   }
 
+  const redirectByRole = async (userId: string, fallback: string) => {
+    const { data: roleData } = await supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", userId)
+      .maybeSingle();
+    if (roleData?.role === "coach") navigate("/coach");
+    else if (roleData?.role === "admin") navigate("/admin");
+    else if (roleData?.role === "club_manager") navigate("/club");
+    else navigate(fallback);
+  };
+
   const handleLogin = async (data: LoginForm) => {
     setError("");
     setLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({
+    const { data: signInData, error } = await supabase.auth.signInWithPassword({
       email: data.email,
       password: data.password,
     });
     setLoading(false);
     if (error) {
       setError(error.message);
-    } else {
-      // Fetch role to redirect appropriately
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session) {
-        const { data: roleData } = await supabase
-          .from("user_roles")
-          .select("role")
-          .eq("user_id", session.user.id)
-          .single();
-        if (roleData?.role === "coach") navigate("/coach");
-        else if (roleData?.role === "admin") navigate("/admin");
-        else if (roleData?.role === "club_manager") navigate("/club");
-        else navigate("/dashboard");
-      } else {
-        navigate("/dashboard");
-      }
+    } else if (signInData.user) {
+      await redirectByRole(signInData.user.id, "/dashboard");
     }
   };
 
-  const handleQuickLogin = async (email: string, redirectTo: string) => {
+  const handleQuickLogin = async (email: string, fallback: string) => {
     setError("");
     setLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({
+    const { data: signInData, error } = await supabase.auth.signInWithPassword({
       email,
       password: "AceAcademy2026!",
     });
     setLoading(false);
     if (error) {
       setError(error.message);
-    } else {
-      navigate(redirectTo);
+    } else if (signInData.user) {
+      await redirectByRole(signInData.user.id, fallback);
     }
   };
 
@@ -276,7 +274,7 @@ const Login = () => {
         {/* Quick Login Cards */}
         <div className="mt-8 pt-6 border-t border-border">
           <p className="text-muted-foreground text-xs font-body mb-3 text-center uppercase tracking-wider">Quick Access — Demo Accounts</p>
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
             <button
               type="button"
               onClick={() => handleQuickLogin("player.anna@the-ace.academy", "/dashboard")}
@@ -300,6 +298,18 @@ const Login = () => {
               </div>
               <span className="font-display text-[10px] tracking-wider text-foreground">COACH</span>
               <span className="text-[9px] font-body text-muted-foreground">Francisco López</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => handleQuickLogin("club.manager@the-ace.academy", "/club")}
+              disabled={loading}
+              className="flex flex-col items-center gap-1.5 p-3 rounded-xl border border-border bg-card hover:border-primary/50 hover:bg-primary/5 transition-all disabled:opacity-50"
+            >
+              <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center">
+                <Building2 size={18} className="text-blue-400" />
+              </div>
+              <span className="font-display text-[10px] tracking-wider text-foreground">CLUB</span>
+              <span className="text-[9px] font-body text-muted-foreground">Club Manager</span>
             </button>
             <button
               type="button"
