@@ -9,7 +9,8 @@ type IconHandle = {
 type AnyIconProps = { size?: number; className?: string };
 
 interface FeatureIconCardProps {
-  Icon: ComponentType<AnyIconProps & { ref?: React.Ref<IconHandle> }>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  Icon: any;
   title: string;
   description: ReactNode;
   index: number;
