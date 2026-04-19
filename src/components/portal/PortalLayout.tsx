@@ -6,9 +6,31 @@ import {
   MessageSquare, User, LogOut, Menu, X, ChevronLeft, ChevronRight,
   Users, Settings, Home, CreditCard, Link2, CalendarDays, UserCheck, Search, ShoppingBag, Eye, Dumbbell, Building2, Square, Contact, DollarSign
 } from "lucide-react";
+import {
+  House as PhHouse,
+  CalendarBlank as PhCalendar,
+  CalendarDots as PhCalendarDots,
+  UsersThree as PhUsers,
+  ChatsCircle as PhChats,
+  BookOpen as PhBook,
+  Barbell as PhBarbell,
+} from "@phosphor-icons/react";
 import { useAuth } from "@/contexts/AuthContext";
 import NotificationBell from "@/components/portal/NotificationBell";
 import QuickAddTrainingDrawer from "@/components/portal/QuickAddTrainingDrawer";
+
+// Phosphor icon overrides for the mobile bottom nav (filled glyph look)
+const BOTTOM_NAV_ICON: Record<string, React.ComponentType<{ size?: number; weight?: "regular" | "fill"; className?: string }>> = {
+  "/dashboard": PhHouse,
+  "/training": PhBarbell,
+  "/events": PhCalendarDots,
+  "/community": PhUsers,
+  "/messages": PhChats,
+  "/coach/players": PhUsers,
+  "/coach/calendar": PhCalendar,
+  "/coach/library": PhBook,
+  "/coach/messages": PhChats,
+};
 
 const playerNav = [
   { label: "Home", icon: Home, href: "/dashboard" },
