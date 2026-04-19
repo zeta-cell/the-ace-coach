@@ -20,111 +20,184 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================================
+   HI VOLLEY — Brand palette
+   Coral 062R · Navy 121B · Sky 069B · Mustard 003Y · Cream
+   ============================================================ */
+
 @layer base {
   :root {
-    /* Dark maroon background — matching the-ace.academy */
-    --background: 0 60% 8%;
-    --foreground: 0 10% 95%;
+    /* LIGHT THEME (default for Hi Volley) — warm cream, navy text, coral CTA */
+    --background: 36 38% 96%;          /* warm cream */
+    --foreground: 213 38% 22%;         /* deep navy text */
 
-    --card: 0 50% 12%;
-    --card-foreground: 0 10% 95%;
+    --card: 0 0% 100%;
+    --card-foreground: 213 38% 22%;
 
-    --popover: 0 50% 12%;
-    --popover-foreground: 0 10% 95%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 213 38% 22%;
 
-    /* Bright red — the-ace.academy primary accent */
-    --primary: 0 90% 45%;
-    --primary-foreground: 0 10% 95%;
+    /* Coral 062R — primary CTA */
+    --primary: 4 48% 56%;
+    --primary-foreground: 36 38% 98%;
 
-    --secondary: 0 40% 15%;
-    --secondary-foreground: 0 10% 90%;
+    /* Sky 069B — secondary surfaces */
+    --secondary: 209 53% 92%;
+    --secondary-foreground: 213 38% 22%;
 
-    --muted: 0 30% 15%;
-    --muted-foreground: 0 10% 60%;
+    --muted: 36 25% 92%;
+    --muted-foreground: 213 18% 42%;
 
-    --accent: 0 90% 45%;
-    --accent-foreground: 0 10% 95%;
+    /* Mustard 003Y — accent / gamification */
+    --accent: 47 45% 60%;
+    --accent-foreground: 213 38% 22%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 4 60% 50%;
+    --destructive-foreground: 36 38% 98%;
 
-    --border: 0 40% 20%;
-    --input: 0 40% 20%;
-    --ring: 0 90% 45%;
+    --border: 36 22% 86%;
+    --input: 36 22% 86%;
+    --ring: 4 48% 56%;
 
-    --radius: 0.75rem;
+    --radius: 0.875rem;
 
-    --sidebar-background: 0 50% 12%;
-    --sidebar-foreground: 0 10% 95%;
-    --sidebar-primary: 0 90% 45%;
-    --sidebar-primary-foreground: 0 10% 95%;
-    --sidebar-accent: 0 40% 15%;
-    --sidebar-accent-foreground: 0 10% 90%;
-    --sidebar-border: 0 40% 20%;
-    --sidebar-ring: 0 90% 45%;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 213 38% 22%;
+    --sidebar-primary: 4 48% 56%;
+    --sidebar-primary-foreground: 36 38% 98%;
+    --sidebar-accent: 209 53% 92%;
+    --sidebar-accent-foreground: 213 38% 22%;
+    --sidebar-border: 36 22% 86%;
+    --sidebar-ring: 4 48% 56%;
 
-    /* Custom tokens */
-    --maroon: 0 60% 8%;
-    --maroon-light: 0 50% 18%;
-    --cream: 0 10% 95%;
-    --cream-dark: 0 15% 85%;
-    --surface-elevated: 0 45% 14%;
-    --hero-gradient: linear-gradient(135deg, hsl(0, 60%, 8%) 0%, hsl(0, 50%, 15%) 100%);
-    --text-gradient: linear-gradient(135deg, hsl(0, 90%, 45%), hsl(0, 85%, 55%));
-    --overlay-dark: linear-gradient(180deg, hsla(0, 60%, 8%, 0.2) 0%, hsla(0, 60%, 8%, 0.85) 100%);
-    --overlay-hero: linear-gradient(180deg, hsla(0, 60%, 8%, 0.1) 0%, hsla(0, 60%, 8%, 0.85) 70%, hsla(0, 60%, 8%, 1) 100%);
+    /* Hi Volley brand tokens */
+    --coral: 4 48% 56%;                /* 062R */
+    --coral-soft: 4 60% 88%;
+    --navy: 213 38% 22%;               /* 121B */
+    --navy-soft: 213 38% 35%;
+    --sky: 209 53% 67%;                /* 069B */
+    --sky-soft: 209 53% 92%;
+    --mustard: 47 45% 60%;             /* 003Y */
+    --mustard-soft: 47 60% 88%;
+    --cream: 36 38% 96%;
+    --cream-deep: 36 30% 90%;
+
+    /* Legacy tokens kept for backward compatibility (mapped to new palette) */
+    --maroon: 213 38% 22%;
+    --maroon-light: 213 38% 35%;
+    --cream-dark: 36 30% 90%;
+    --surface-elevated: 0 0% 100%;
+    --gold: 47 45% 60%;
+
+    --hero-gradient: linear-gradient(135deg, hsl(36, 38%, 96%) 0%, hsl(209, 53%, 92%) 100%);
+    --text-gradient: linear-gradient(135deg, hsl(4, 48%, 56%), hsl(47, 55%, 58%));
+    --overlay-dark: linear-gradient(180deg, hsla(213, 38%, 22%, 0.05) 0%, hsla(213, 38%, 22%, 0.55) 100%);
+    --overlay-hero: linear-gradient(180deg, hsla(36, 38%, 96%, 0) 0%, hsla(36, 38%, 96%, 0.6) 55%, hsla(36, 38%, 96%, 0.95) 100%);
 
     --font-display: 'Bebas Neue', sans-serif;
     --font-body: 'Space Grotesk', sans-serif;
   }
 
+  .dark {
+    /* DARK THEME — deep navy ground, coral pop */
+    --background: 213 42% 12%;
+    --foreground: 36 38% 96%;
+
+    --card: 213 38% 16%;
+    --card-foreground: 36 38% 96%;
+
+    --popover: 213 38% 16%;
+    --popover-foreground: 36 38% 96%;
+
+    --primary: 4 60% 62%;
+    --primary-foreground: 213 42% 12%;
+
+    --secondary: 213 30% 22%;
+    --secondary-foreground: 36 38% 96%;
+
+    --muted: 213 25% 20%;
+    --muted-foreground: 36 18% 70%;
+
+    --accent: 47 55% 62%;
+    --accent-foreground: 213 42% 12%;
+
+    --destructive: 4 65% 55%;
+    --destructive-foreground: 36 38% 96%;
+
+    --border: 213 25% 24%;
+    --input: 213 25% 24%;
+    --ring: 4 60% 62%;
+
+    --sidebar-background: 213 38% 16%;
+    --sidebar-foreground: 36 38% 96%;
+    --sidebar-primary: 4 60% 62%;
+    --sidebar-primary-foreground: 213 42% 12%;
+    --sidebar-accent: 213 30% 22%;
+    --sidebar-accent-foreground: 36 38% 96%;
+    --sidebar-border: 213 25% 24%;
+    --sidebar-ring: 4 60% 62%;
+
+    --coral: 4 60% 62%;
+    --coral-soft: 4 40% 28%;
+    --navy: 213 38% 22%;
+    --navy-soft: 213 30% 35%;
+    --sky: 209 53% 67%;
+    --sky-soft: 209 30% 28%;
+    --mustard: 47 55% 62%;
+    --mustard-soft: 47 30% 28%;
+    --cream: 36 38% 96%;
+    --cream-deep: 36 30% 88%;
+
+    --maroon: 213 42% 12%;
+    --maroon-light: 213 38% 18%;
+    --cream-dark: 213 30% 22%;
+    --surface-elevated: 213 38% 18%;
+    --gold: 47 55% 62%;
+
+    --hero-gradient: linear-gradient(135deg, hsl(213, 42%, 12%) 0%, hsl(213, 38%, 18%) 100%);
+    --text-gradient: linear-gradient(135deg, hsl(4, 60%, 62%), hsl(47, 55%, 62%));
+    --overlay-dark: linear-gradient(180deg, hsla(213, 42%, 12%, 0.2) 0%, hsla(213, 42%, 12%, 0.85) 100%);
+    --overlay-hero: linear-gradient(180deg, hsla(213, 42%, 12%, 0.1) 0%, hsla(213, 42%, 12%, 0.85) 70%, hsla(213, 42%, 12%, 1) 100%);
+  }
+
+  /* Backward compat: .light still works (now the same as :root default) */
   .light {
-    --background: 10 100% 98%;
-    --foreground: 0 0% 10%;
-
+    --background: 36 38% 96%;
+    --foreground: 213 38% 22%;
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 10%;
-
+    --card-foreground: 213 38% 22%;
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 10%;
-
-    --primary: 1 100% 44%;
-    --primary-foreground: 0 0% 100%;
-
-    --secondary: 10 100% 96%;
-    --secondary-foreground: 0 0% 10%;
-
-    --muted: 20 18% 92%;
-    --muted-foreground: 0 0% 32%;
-
-    --accent: 14 100% 62%;
-    --accent-foreground: 0 0% 100%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 100%;
-
-    --border: 20 15% 85%;
-    --input: 20 15% 85%;
-    --ring: 1 100% 44%;
-
+    --popover-foreground: 213 38% 22%;
+    --primary: 4 48% 56%;
+    --primary-foreground: 36 38% 98%;
+    --secondary: 209 53% 92%;
+    --secondary-foreground: 213 38% 22%;
+    --muted: 36 25% 92%;
+    --muted-foreground: 213 18% 42%;
+    --accent: 47 45% 60%;
+    --accent-foreground: 213 38% 22%;
+    --destructive: 4 60% 50%;
+    --destructive-foreground: 36 38% 98%;
+    --border: 36 22% 86%;
+    --input: 36 22% 86%;
+    --ring: 4 48% 56%;
     --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 0 0% 10%;
-    --sidebar-primary: 1 100% 44%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 10 100% 96%;
-    --sidebar-accent-foreground: 0 0% 10%;
-    --sidebar-border: 20 18% 92%;
-    --sidebar-ring: 1 100% 44%;
-
-    --maroon: 10 100% 98%;
-    --maroon-light: 20 18% 92%;
-    --cream: 0 0% 10%;
-    --cream-dark: 20 20% 94%;
-    --surface-elevated: 0 0% 98%;
-    --hero-gradient: linear-gradient(135deg, hsla(0, 0%, 100%, 0.85) 0%, hsla(0, 0%, 100%, 0.7) 100%);
-    --text-gradient: linear-gradient(135deg, hsl(1, 100%, 44%), hsl(14, 100%, 62%));
-    --overlay-dark: linear-gradient(180deg, hsla(0, 0%, 100%, 0.02) 0%, hsla(10, 100%, 98%, 0.25) 100%);
-    --overlay-hero: linear-gradient(180deg, hsla(10, 100%, 98%, 0) 0%, hsla(10, 100%, 98%, 0.6) 50%, hsla(10, 100%, 98%, 0.95) 100%);
+    --sidebar-foreground: 213 38% 22%;
+    --sidebar-primary: 4 48% 56%;
+    --sidebar-primary-foreground: 36 38% 98%;
+    --sidebar-accent: 209 53% 92%;
+    --sidebar-accent-foreground: 213 38% 22%;
+    --sidebar-border: 36 22% 86%;
+    --sidebar-ring: 4 48% 56%;
+    --maroon: 213 38% 22%;
+    --maroon-light: 213 38% 35%;
+    --cream-dark: 36 30% 90%;
+    --surface-elevated: 0 0% 100%;
+    --gold: 47 45% 60%;
+    --hero-gradient: linear-gradient(135deg, hsl(36, 38%, 96%) 0%, hsl(209, 53%, 92%) 100%);
+    --text-gradient: linear-gradient(135deg, hsl(4, 48%, 56%), hsl(47, 55%, 58%));
+    --overlay-dark: linear-gradient(180deg, hsla(213, 38%, 22%, 0.05) 0%, hsla(213, 38%, 22%, 0.55) 100%);
+    --overlay-hero: linear-gradient(180deg, hsla(36, 38%, 96%, 0) 0%, hsla(36, 38%, 96%, 0.6) 55%, hsla(36, 38%, 96%, 0.95) 100%);
   }
 }
 
@@ -162,56 +235,47 @@
     padding-right: 0.15em;
   }
 
-  .bg-hero-gradient {
-    background: var(--hero-gradient);
-  }
+  .bg-hero-gradient { background: var(--hero-gradient); }
+  .bg-overlay-dark { background: var(--overlay-dark); }
+  .bg-overlay-hero { background: var(--overlay-hero); }
+  .bg-surface-elevated { background: hsl(var(--surface-elevated)); }
+  .bg-cream-dark { background: hsl(var(--cream-dark)); }
 
-  .bg-overlay-dark {
-    background: var(--overlay-dark);
-  }
+  .text-coral { color: hsl(var(--coral)); }
+  .text-navy { color: hsl(var(--navy)); }
+  .text-sky-brand { color: hsl(var(--sky)); }
+  .text-mustard { color: hsl(var(--mustard)); }
 
-  .bg-overlay-hero {
-    background: var(--overlay-hero);
-  }
+  .bg-coral { background: hsl(var(--coral)); }
+  .bg-navy { background: hsl(var(--navy)); }
+  .bg-sky-brand { background: hsl(var(--sky)); }
+  .bg-mustard { background: hsl(var(--mustard)); }
+  .bg-coral-soft { background: hsl(var(--coral-soft)); }
+  .bg-sky-soft { background: hsl(var(--sky-soft)); }
+  .bg-mustard-soft { background: hsl(var(--mustard-soft)); }
 
-  .bg-surface-elevated {
-    background: hsl(var(--surface-elevated));
-  }
-
-  .bg-cream-dark {
-    background: hsl(var(--cream-dark));
-  }
-
-  .text-maroon {
-    color: hsl(var(--maroon));
-  }
-
-  .text-maroon-light {
-    color: hsl(var(--maroon-light));
-  }
+  .text-maroon { color: hsl(var(--navy)); }
+  .text-maroon-light { color: hsl(var(--navy-soft)); }
 }
 
-/* Dark mode (default): invert black logo to white */
-img[alt="The Ace Academy"] {
-  filter: invert(1);
-}
-
-/* Light mode: keep logo black */
-.light img[alt="The Ace Academy"] {
+/* Logo handling */
+img[alt="The Ace Academy"],
+img[alt="Hi Volley"] {
   filter: none;
 }
 
-/* Light mode: make navbar fully opaque to prevent bleed-through */
-.light nav.fixed {
-  background: hsl(var(--background)) !important;
+.dark img[alt="The Ace Academy"] {
+  filter: invert(1);
 }
 
-/* Light mode: cards need clear separation from background */
-.light .group[class*="bg-card"] {
-  box-shadow: 0 2px 12px -2px hsla(0, 0%, 0%, 0.08);
+/* Light mode: cards need clear separation */
+.light .group[class*="bg-card"],
+:root .group[class*="bg-card"] {
+  box-shadow: 0 2px 12px -2px hsla(213, 38%, 22%, 0.08);
 }
 
-/* Light mode: make card bg images more visible */
-.light .group img[class*="opacity-"] {
+/* Light mode: bg images in cards stay subtle */
+.light .group img[class*="opacity-"],
+:root .group img[class*="opacity-"] {
   opacity: 0.4 !important;
 }

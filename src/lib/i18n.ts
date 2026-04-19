@@ -75,12 +75,12 @@ const dict = {
   "how.4.desc": { en: "Track your improvement with stats, earn badges, climb the community rankings, and unlock new achievements.", es: "Sigue tu mejora con estadísticas, gana insignias, escala el ranking y desbloquea nuevos logros." },
 
   // CTA
-  "cta.h2.a": { en: "READY TO", es: "¿LISTO PARA" },
-  "cta.h2.b": { en: "ACE", es: "ACE" },
-  "cta.h2.c": { en: "IT?", es: "ARRASAR?" },
+  "cta.h2.a": { en: "READY TO SAY", es: "¿LISTO PARA DECIR" },
+  "cta.h2.b": { en: "HI VOLLEY", es: "HI VOLLEY" },
+  "cta.h2.c": { en: "?", es: "?" },
   "cta.lead": {
-    en: "Join thousands of players and coaches on the most complete racket sports platform ever built.",
-    es: "Únete a miles de jugadores y profesores en la plataforma más completa de deportes de raqueta jamás creada.",
+    en: "Join thousands of players and coaches on the friendliest racket sports platform ever built.",
+    es: "Únete a miles de jugadores y profesores en la plataforma de deportes de raqueta más amigable jamás creada.",
   },
   "cta.btn": { en: "GET STARTED FREE", es: "EMPIEZA GRATIS" },
 
