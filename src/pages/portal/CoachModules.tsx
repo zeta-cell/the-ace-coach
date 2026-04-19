@@ -247,7 +247,7 @@ export const CoachModulesContent = ({ embedded = false }: { embedded?: boolean }
               <button
                 key={cat}
                 onClick={() => setFilterCat(cat)}
-                className={`shrink-0 flex-1 min-w-[80px] px-2 py-2 rounded-lg font-display text-[11px] tracking-wider transition-colors ${
+                className={`shrink-0 px-3 py-2 rounded-lg font-display text-[11px] tracking-wider whitespace-nowrap transition-colors ${
                   isActive
                     ? "bg-primary text-primary-foreground"
                     : "text-muted-foreground hover:text-foreground hover:bg-secondary"
