@@ -1,0 +1,33 @@
+# ACE Coach — Tennis & Padel Coaching Platform
+
+> ACE Coach is the all-in-one platform connecting tennis and padel players with verified coaches.
+> Players discover coaches, book sessions, follow structured training programs, track progress with
+> health-data integration, and join a global community. Coaches manage bookings, sell packages,
+> publish events, and grow their professional brand. Clubs centralize coaches, courts, members,
+> bookings, and a built-in CRM.
+
+## Core links
+- [Home](https://ace-whisperer-guide.lovable.app/)
+- [Find a Coach](https://ace-whisperer-guide.lovable.app/find-a-coach)
+- [Marketplace (Training Programs)](https://ace-whisperer-guide.lovable.app/marketplace)
+- [Events](https://ace-whisperer-guide.lovable.app/events)
+- [Community & Rankings](https://ace-whisperer-guide.lovable.app/community)
+- [Sign up / Log in](https://ace-whisperer-guide.lovable.app/login)
+
+## What ACE Coach offers
+- **Players**: search coaches by sport, city, language, price; instant booking; structured weekly
+  training plans; progress dashboards; health & recovery integration (Whoop, Oura, Polar, Garmin);
+  XP, streaks, leaderboards, rewards wallet, referral program.
+- **Coaches**: profile + portfolio, package & event creation, calendar + availability management,
+  CRM for leads and clients, training-program marketplace, earnings dashboard.
+- **Clubs**: branded public club page, coach roster, court management, bookings overview,
+  member CRM, follower & event distribution.
+
+## Sports covered
+Tennis, Padel.
+
+## Geography
+Global platform, primary launch markets: Spain, Portugal, Italy, France, Germany, UK, USA, UAE.
+
+## Contact
+hello@ace-whisperer-guide.lovable.app

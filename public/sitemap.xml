@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemap.org/schemas/sitemap/0.9">
+  <url><loc>https://ace-whisperer-guide.lovable.app/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://ace-whisperer-guide.lovable.app/find-a-coach</loc><changefreq>daily</changefreq><priority>0.9</priority></url>
+  <url><loc>https://ace-whisperer-guide.lovable.app/marketplace</loc><changefreq>daily</changefreq><priority>0.9</priority></url>
+  <url><loc>https://ace-whisperer-guide.lovable.app/events</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://ace-whisperer-guide.lovable.app/community</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://ace-whisperer-guide.lovable.app/rankings</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://ace-whisperer-guide.lovable.app/login</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+</urlset>
