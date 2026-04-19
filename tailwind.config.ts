@@ -14,8 +14,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        display: ["Bebas Neue", "sans-serif"],
-        body: ["Franie", "Space Grotesk", "sans-serif"],
+        display: ["Franie", "sans-serif"],
+        body: ["Franie", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",
