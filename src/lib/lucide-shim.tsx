@@ -27,6 +27,8 @@ import {
   ArrowSquareOut,
   Barbell as PhBarbell,
   Bell as PhBell,
+  BellSlash,
+  Briefcase as PhBriefcase,
   BookOpen as PhBookOpen,
   Brain as PhBrain,
   Buildings,
@@ -45,6 +47,7 @@ import {
   CheckCircle as PhCheckCircle,
   Circle as PhCircle,
   ClipboardText,
+  Confetti,
   Clock as PhClock,
   Cloud as PhCloud,
   CloudLightning as PhCloudLightning,
@@ -58,6 +61,8 @@ import {
   Crown as PhCrown,
   CurrencyDollar,
   CurrencyEur,
+  Database as PhDatabase,
+  DownloadSimple,
   Drop,
   DotsThree,
   DotsSixVertical,
@@ -70,6 +75,8 @@ import {
   Footprints as PhFootprints,
   Funnel,
   Gauge,
+  Gear,
+  IdentificationCard,
   Gift as PhGift,
   Globe as PhGlobe,
   Hash as PhHash,
@@ -86,6 +93,7 @@ import {
   List as PhList,
   Lock as PhLock,
   MapPin as PhMapPin,
+  Minus as PhMinus,
   Medal as PhMedal,
   Moon as PhMoon,
   PaperPlaneTilt,
@@ -98,8 +106,9 @@ import {
   Pulse,
   Rows,
   ShareNetwork,
-  ShieldCheck,
+  ShieldCheck as PhShieldCheck,
   ShoppingBag as PhShoppingBag,
+  SlidersHorizontal as PhSlidersHorizontal,
   SignOut,
   Smiley,
   SoccerBall,
@@ -185,7 +194,9 @@ export const Award = wrap(PhMedal);
 export const BarChart3 = wrap(ChartBar);
 export const Battery = wrap(Gauge);
 export const Bell = wrap(PhBell);
+export const BellOff = wrap(BellSlash);
 export const Blocks = wrap(Stack);
+export const Briefcase = wrap(PhBriefcase);
 export const BookOpen = wrap(PhBookOpen);
 export const Brain = wrap(PhBrain);
 export const Building2 = wrap(Buildings);
@@ -201,6 +212,7 @@ export const ChevronRight = wrap(CaretRight, { weight: "bold" });
 export const ChevronUp = wrap(CaretUp, { weight: "bold" });
 export const Circle = wrap(PhCircle);
 export const ClipboardList = wrap(ClipboardText);
+export const Contact = wrap(IdentificationCard);
 export const Clock = wrap(PhClock);
 export const Cloud = wrap(PhCloud);
 export const CloudDrizzle = wrap(PhCloudRain);
@@ -213,7 +225,9 @@ export const Copy = wrap(PhCopy);
 export const CreditCard = wrap(PhCreditCard);
 export const Crown = wrap(PhCrown);
 export const DollarSign = wrap(CurrencyDollar, { weight: "bold" });
+export const Database = wrap(PhDatabase);
 export const Dot = wrap(PhCircle);
+export const Download = wrap(DownloadSimple, { weight: "bold" });
 export const Droplets = wrap(Drop);
 export const Dumbbell = wrap(PhBarbell);
 export const Edit = wrap(PencilSimple);
@@ -234,6 +248,7 @@ export const Hash = wrap(PhHash, { weight: "bold" });
 export const Heart = wrap(PhHeart);
 export const HeartOff = wrap(HeartBreak);
 export const Home = wrap(House);
+export const LayoutDashboard = wrap(SquaresFour);
 export const Info = wrap(PhInfo);
 export const KeyRound = wrap(Key);
 export const Layers = wrap(Stack);
@@ -245,13 +260,17 @@ export const Loader2 = wrap(Sparkle); // spinner — used with animate-spin in c
 export const Lock = wrap(PhLock);
 export const Mail = wrap(Envelope);
 export const MapPin = wrap(PhMapPin);
+export const Menu = wrap(PhList, { weight: "bold" });
+export const Minus = wrap(PhMinus, { weight: "bold" });
 export const Medal = wrap(PhMedal);
 export const MessageCircle = wrap(ChatCircle);
 export const MessageSquare = wrap(ChatCircleDots);
 export const Moon = wrap(PhMoon);
 export const MoreHorizontal = wrap(DotsThree, { weight: "bold" });
+export const LogOut = wrap(SignOut, { weight: "bold" });
 export const PanelLeft = wrap(Rows);
 export const Pencil = wrap(PencilSimple);
+export const PartyPopper = wrap(Confetti);
 export const Phone = wrap(PhPhone);
 export const Play = wrap(PhPlay);
 export const Plus = wrap(PhPlus, { weight: "bold" });
@@ -261,8 +280,11 @@ export const Search = wrap(Funnel);
 export const Send = wrap(PaperPlaneTilt);
 export const Share = wrap(ShareNetwork);
 export const Share2 = wrap(ShareNetwork);
-export const Shield = wrap(ShieldCheck);
+export const Shield = wrap(PhShieldCheck);
+export const ShieldCheck = wrap(PhShieldCheck);
 export const ShoppingBag = wrap(PhShoppingBag);
+export const Settings = wrap(Gear);
+export const SlidersHorizontal = wrap(PhSlidersHorizontal);
 export const Square = wrap(PhSquare);
 export const Star = wrap(PhStar);
 export const Sun = wrap(PhSun);

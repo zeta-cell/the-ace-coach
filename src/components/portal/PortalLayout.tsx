@@ -231,18 +231,75 @@ const PortalLayout = ({ children }: { children: React.ReactNode }) => {
           </div>
         </header>
 
-        {/* Mobile slide-out menu */}
+        {/* Mobile full-screen menu (slides up from the bottom) */}
         <AnimatePresence>
           {mobileOpen && (
             <motion.div
-              initial={{ x: -300 }}
-              animate={{ x: 0 }}
-              exit={{ x: -300 }}
-              className="fixed inset-0 top-14 z-50 md:hidden"
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "100%" }}
+              transition={{ type: "tween", duration: 0.28, ease: [0.32, 0.72, 0, 1] }}
+              className="fixed inset-0 z-50 md:hidden bg-card flex flex-col"
             >
-              <div className="absolute inset-0 bg-background/80" onClick={() => setMobileOpen(false)} />
-              <div className="relative w-64 h-full bg-card border-r border-border">
-                <NavContent />
+              {/* Header bar with close */}
+              <div className="flex items-center justify-between px-4 h-14 border-b border-border shrink-0">
+                <span className="font-display text-lg text-foreground tracking-wider">MENU</span>
+                <button
+                  onClick={() => setMobileOpen(false)}
+                  className="p-2 -mr-2 text-muted-foreground hover:text-foreground"
+                  aria-label="Close menu"
+                >
+                  <X size={22} />
+                </button>
+              </div>
+
+              {/* Scrollable nav grid */}
+              <div className="flex-1 overflow-y-auto p-4 pb-[calc(env(safe-area-inset-bottom)+1rem)]">
+                <div className="grid grid-cols-2 gap-3">
+                  {navItems.map((item) => {
+                    const [itemPath, itemSearch] = item.href.split("?");
+                    const isActive = itemSearch
+                      ? location.pathname === itemPath && location.search === `?${itemSearch}`
+                      : location.pathname === item.href;
+                    return (
+                      <Link
+                        key={item.href}
+                        to={item.href}
+                        onClick={() => setMobileOpen(false)}
+                        className={`flex flex-col items-start gap-2 p-4 rounded-2xl border transition-colors ${
+                          isActive
+                            ? "bg-primary text-primary-foreground border-primary"
+                            : "bg-secondary/40 border-border text-foreground hover:bg-secondary"
+                        }`}
+                      >
+                        <item.icon size={22} />
+                        <span className="font-display text-xs tracking-wider uppercase">
+                          {item.label}
+                        </span>
+                      </Link>
+                    );
+                  })}
+                </div>
+
+                {profile && (
+                  <div className="mt-6 px-1">
+                    <p className="text-xs font-body text-muted-foreground uppercase tracking-wide">
+                      {profile.full_name}
+                    </p>
+                    <p className="text-xs text-muted-foreground">{role}</p>
+                  </div>
+                )}
+
+                <button
+                  onClick={() => {
+                    setMobileOpen(false);
+                    signOut();
+                  }}
+                  className="mt-4 w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-border text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors font-display text-xs tracking-wider uppercase"
+                >
+                  <LogOut size={18} />
+                  Logout
+                </button>
               </div>
             </motion.div>
           )}
