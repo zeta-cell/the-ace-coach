@@ -92,6 +92,48 @@
   font-display: swap;
   src: url('/fonts/Franie-SemiBoldItalic.woff2') format('woff2');
 }
+@font-face {
+  font-family: 'Franie';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/Franie-Bold.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Franie';
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/Franie-BoldItalic.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Franie';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url('/fonts/Franie-ExtraBold.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Franie';
+  font-style: italic;
+  font-weight: 800;
+  font-display: swap;
+  src: url('/fonts/Franie-ExtraBoldItalic.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Franie';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url('/fonts/Franie-Black.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Franie';
+  font-style: italic;
+  font-weight: 900;
+  font-display: swap;
+  src: url('/fonts/Franie-BlackItalic.woff2') format('woff2');
+}
 
 @tailwind base;
 @tailwind components;
