@@ -39,6 +39,17 @@ const Login = () => {
   const loginForm = useForm<LoginForm>({ resolver: zodResolver(loginSchema) });
   const registerForm = useForm<RegisterForm>({ resolver: zodResolver(registerSchema) });
 
+  // Capture referral code from ?ref=CODE so onboarding can credit the referrer.
+  // Default landing into REGISTER when arriving via a referral link.
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const ref = params.get("ref");
+    if (ref) {
+      localStorage.setItem("ace_referral_code", ref.trim().toLowerCase());
+      setMode("register");
+    }
+  }, []);
+
   // Role-based auto-redirect once a session exists.
   // This handles both quick-login and the case when an authenticated user lands on /login.
   useEffect(() => {
