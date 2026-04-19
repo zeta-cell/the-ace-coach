@@ -6,6 +6,13 @@ import { Blocks, CalendarDays, ChevronDown, ChevronRight, Clock, Plus, Search, T
 import { toast } from "sonner";
 import PortalLayout from "@/components/portal/PortalLayout";
 import AssignBlockToPlayerDialog from "@/components/portal/AssignBlockToPlayerDialog";
+import {
+  MAIN_CATEGORIES,
+  MAIN_CATEGORY_LABEL,
+  MAIN_CATEGORY_COLORS,
+  toMainCategory,
+  type MainCategory,
+} from "@/lib/moduleCategories";
 
 interface TrainingBlock {
   id: string;
@@ -213,15 +220,20 @@ export const TrainingBlocksContent = ({ embedded = false }: { embedded?: boolean
 
   const moduleCats = ["all", ...new Set(allModules.map(m => m.category))];
 
-  // Categories from blocks for filter chips
-  const categories = useMemo(() => {
-    const cats = new Set(blocks.map(b => b.category?.toLowerCase()));
-    return ["all", ...Array.from(cats).sort()];
+  // Map every block onto one of the 6 main categories and count them
+  const categoryCounts = useMemo(() => {
+    const counts: Record<string, number> = { all: blocks.length };
+    MAIN_CATEGORIES.forEach((c) => (counts[c] = 0));
+    blocks.forEach((b) => {
+      const main = toMainCategory(b.category);
+      counts[main] = (counts[main] || 0) + 1;
+    });
+    return counts;
   }, [blocks]);
 
   const filtered = blocks.filter(b => {
     const matchesSearch = !search || b.title.toLowerCase().includes(search.toLowerCase()) || b.goal?.toLowerCase().includes(search.toLowerCase());
-    const matchesCat = filterCategory === "all" || b.category?.toLowerCase() === filterCategory;
+    const matchesCat = filterCategory === "all" || toMainCategory(b.category) === filterCategory;
     return matchesSearch && matchesCat;
   });
 
@@ -369,16 +381,39 @@ export const TrainingBlocksContent = ({ embedded = false }: { embedded?: boolean
           )}
         </AnimatePresence>
 
-        {/* Category filter chips */}
-        <div className="flex flex-wrap gap-2 mb-4">
-          {categories.map(cat => (
-            <button key={cat} onClick={() => setFilterCategory(cat)}
-              className={`px-3 py-1.5 rounded-full font-display text-xs tracking-wider transition-colors ${
-                filterCategory === cat ? "bg-primary text-primary-foreground" : "bg-card border border-border text-muted-foreground hover:text-foreground"
-              }`}>
-              {cat === "all" ? "ALL" : (CATEGORY_LABELS[cat] || cat.toUpperCase())}
+        {/* Segmented category filter (matches Modules tab) */}
+        <div className="-mx-1 mb-4 overflow-x-auto">
+          <div className="flex items-center gap-1 px-1 min-w-max">
+            <button
+              onClick={() => setFilterCategory("all")}
+              className={`whitespace-nowrap px-3 py-1.5 rounded-lg font-display text-[11px] tracking-wider transition-colors ${
+                filterCategory === "all"
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-card border border-border text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              ALL <span className="opacity-70">{categoryCounts.all}</span>
             </button>
-          ))}
+            {MAIN_CATEGORIES.map((cat) => {
+              const colors = MAIN_CATEGORY_COLORS[cat];
+              const active = filterCategory === cat;
+              return (
+                <button
+                  key={cat}
+                  onClick={() => setFilterCategory(cat)}
+                  className={`whitespace-nowrap px-3 py-1.5 rounded-lg font-display text-[11px] tracking-wider transition-colors flex items-center gap-1.5 ${
+                    active
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-card border border-border text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  <span className={`w-1.5 h-1.5 rounded-full ${active ? "bg-primary-foreground" : colors.dot}`} />
+                  {MAIN_CATEGORY_LABEL[cat as MainCategory].toUpperCase()}
+                  <span className="opacity-70">{categoryCounts[cat] ?? 0}</span>
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         {/* Search */}
@@ -402,19 +437,20 @@ export const TrainingBlocksContent = ({ embedded = false }: { embedded?: boolean
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {filtered.map(block => {
-              const catColors = BLOCK_CATEGORY_COLORS[block.category] || BLOCK_CATEGORY_COLORS.general;
+              const main = toMainCategory(block.category);
+              const mainColors = MAIN_CATEGORY_COLORS[main];
               return (
                 <motion.div key={block.id}
                   initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-                  className={`bg-card border rounded-xl overflow-hidden hover:border-opacity-60 transition-colors ${catColors.border}`}>
+                  className="bg-card border border-border rounded-xl overflow-hidden hover:border-foreground/20 transition-colors">
                   <div className="flex">
-                    <div className={`w-1 ${BLOCK_ACCENT_COLORS[block.category] || "bg-muted"}`} />
+                    <div className={`w-1 ${mainColors.dot}`} />
                     <div className="flex-1 p-4">
                       <div className="flex items-start justify-between gap-2">
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-1 flex-wrap">
-                            <span className={`font-body text-[10px] font-semibold px-2 py-0.5 rounded-full uppercase ${catColors.bg} ${catColors.text}`}>
-                              {CATEGORY_LABELS[block.category] || block.category}
+                            <span className={`font-body text-[10px] font-semibold px-2 py-0.5 rounded-full ${mainColors.bg} ${mainColors.text}`}>
+                              {MAIN_CATEGORY_LABEL[main]}
                             </span>
                             {block.is_system && (
                               <span className="text-[10px] font-body text-muted-foreground bg-secondary px-1.5 py-0.5 rounded">SYSTEM</span>
