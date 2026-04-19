@@ -444,7 +444,15 @@ const Onboarding = () => {
                 className="w-full bg-card border border-border rounded-lg px-4 py-3 text-foreground font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-muted-foreground"
                 placeholder="Enter a friend's referral code"
               />
-              <p className="text-xs text-muted-foreground mt-1 font-body">Were you referred by a friend?</p>
+              {storedReferral ? (
+                <p className="text-xs text-primary mt-1 font-body">
+                  ✨ Referred by a friend — they'll earn €5 once you join.
+                </p>
+              ) : (
+                <p className="text-xs text-muted-foreground mt-1 font-body">
+                  Were you referred by a friend? They'll earn €5 wallet credit.
+                </p>
+              )}
             </div>
 
             <div>
