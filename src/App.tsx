@@ -7,6 +7,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import ScrollToTop from "@/components/ScrollToTop";
 import ProtectedRoute from "@/components/portal/ProtectedRoute";
 import { lazy, Suspense } from "react";
+import { IconContext } from "@phosphor-icons/react";
 
 // Public
 import Index from "./pages/Index";
@@ -81,9 +82,10 @@ const PortalLoader = () => (
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
+      <IconContext.Provider value={{ weight: "duotone", size: 20 }}>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
         <BrowserRouter>
           <ScrollToTop />
           <Routes>
@@ -327,7 +329,8 @@ const App = () => (
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
-      </TooltipProvider>
+        </TooltipProvider>
+      </IconContext.Provider>
     </AuthProvider>
   </QueryClientProvider>
 );

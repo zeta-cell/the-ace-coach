@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import PublicBottomNav from "@/components/PublicBottomNav";
 import PublicHeader from "@/components/PublicHeader";
 import { motion } from "framer-motion";
-import { Search, Calendar, Shield, Users, Trophy, Zap, MapPin, ArrowRight } from "lucide-react";
+import { MagnifyingGlass as Search, Calendar, ShieldCheck as Shield, Users, Trophy, Lightning as Zap, MapPin, ArrowRight } from "@phosphor-icons/react";
 import heroPadel from "@/assets/hero-padel.jpg";
 import featuresTennis from "@/assets/features-tennis.jpg";
 import ctaCourt from "@/assets/cta-court.jpg";
