@@ -11,7 +11,7 @@ import {
 import { format } from "date-fns";
 import { toast } from "sonner";
 
-type AppRole = "player" | "coach" | "admin";
+type AppRole = "player" | "coach" | "admin" | "club_manager";
 
 interface UserRow {
   user_id: string;
