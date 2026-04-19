@@ -93,13 +93,13 @@ const Index = () => {
             <div className="flex flex-row gap-3 sm:gap-4">
               <Link
                 to="/find-a-coach"
-                className="inline-flex items-center justify-center gap-2 font-display text-sm tracking-widest bg-primary text-primary-foreground px-8 py-4 rounded-xl hover:bg-primary/90 transition-colors"
+                className="inline-flex items-center justify-center gap-2 font-display text-sm tracking-widest bg-primary text-primary-foreground px-8 py-4 rounded-xl hover:bg-primary/90 transition-colors w-full sm:w-auto"
               >
                 {t("home.cta.find")} <ArrowRight size={18} />
               </Link>
               <Link
                 to="/login"
-                className="inline-flex items-center justify-center gap-2 font-display text-sm tracking-widest bg-foreground/10 text-foreground px-8 py-4 rounded-xl hover:bg-foreground/20 transition-colors backdrop-blur-sm"
+                className="hidden sm:inline-flex items-center justify-center gap-2 font-display text-sm tracking-widest bg-foreground/10 text-foreground px-8 py-4 rounded-xl hover:bg-foreground/20 transition-colors backdrop-blur-sm"
               >
                 {t("home.cta.coach")}
               </Link>
