@@ -1,7 +1,7 @@
 // Lightweight, dependency-free SEO helpers.
 // Sets <title>, meta description, canonical, Open Graph, Twitter, and JSON-LD.
 
-const SITE_NAME = "ACE Coach";
+const SITE_NAME = "Hi Volley";
 const SITE_URL = "https://ace-whisperer-guide.lovable.app";
 const DEFAULT_IMAGE = `${SITE_URL}/images/social-media.png`;
 
@@ -51,7 +51,7 @@ const upsertJsonLd = (id: string, data: Record<string, unknown> | Record<string,
 
 export const setSeo = (input: SeoInput) => {
   const title = input.title.length > 60 ? input.title.slice(0, 57) + "…" : input.title;
-  const description = (input.description || `${SITE_NAME} – tennis & padel coaching platform.`).slice(0, 160);
+  const description = (input.description || `${SITE_NAME} — tennis & padel coaching platform.`).slice(0, 160);
   const url = `${SITE_URL}${input.path || ""}`;
   const image = input.image || DEFAULT_IMAGE;
   const type = input.type || "website";

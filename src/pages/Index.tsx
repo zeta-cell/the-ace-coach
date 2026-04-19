@@ -40,22 +40,22 @@ const Index = () => {
     const isEs = lang === "es";
     setSeo({
       title: isEs
-        ? "ACE Coach – Profesores de Tenis y Pádel, Reservas y Entrenamiento"
-        : "ACE Coach – Tennis & Padel Coaching, Booking & Training",
+        ? "Hi Volley – Profesores de Tenis y Pádel, Reservas y Entrenos"
+        : "Hi Volley – Tennis & Padel Coaches, Booking & Training",
       description: isEs
-        ? "Encuentra profesores de tenis y pádel verificados, reserva clases al instante, sigue programas de entrenamiento y monitoriza tu progreso. Jugadores, profesores y clubes en una sola plataforma."
-        : "Find verified tennis & padel coaches, book sessions instantly, follow training programs and track your progress. Players, coaches and clubs in one platform.",
+        ? "Encuentra profesores de tenis y pádel verificados, reserva clases al instante, sigue programas de entrenamiento y monitoriza tu progreso. Jugadores, profesores y clubes en Hi Volley."
+        : "Find verified tennis & padel coaches, book sessions instantly, follow training programs and track your progress. Players, coaches and clubs on Hi Volley.",
       path: "/",
       jsonLd: {
         "@context": "https://schema.org",
         "@type": "WebApplication",
-        name: "ACE Coach",
+        name: "Hi Volley",
         applicationCategory: "SportsApplication",
         operatingSystem: "Web",
         offers: { "@type": "Offer", price: "0", priceCurrency: "EUR" },
         description: isEs
-          ? "Plataforma de coaching de tenis y pádel: encuentra profesores, reserva clases, sigue planes de entrenamiento y participa en eventos."
-          : "Tennis and padel coaching platform: find coaches, book sessions, follow training plans, join events.",
+          ? "Hi Volley: la plataforma de coaching de tenis y pádel. Encuentra profesores, reserva clases, sigue planes de entrenamiento y participa en eventos."
+          : "Hi Volley: tennis and padel coaching platform. Find coaches, book sessions, follow training plans, join events.",
       },
     });
   }, [lang]);
@@ -270,11 +270,13 @@ const Index = () => {
       {/* Footer */}
       <footer className="border-t border-border py-8 px-6">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-          <span className="font-display text-lg tracking-wider">
-            ACE<span className="text-primary"> Coach</span>
+          <span className="font-display text-lg tracking-wider inline-flex items-center gap-1.5">
+            <span className="text-primary">Hi</span>
+            <span>Volley</span>
+            <span className="inline-block w-1.5 h-1.5 rounded-full bg-mustard" aria-hidden />
           </span>
           <p className="font-body text-xs text-muted-foreground">
-            © {new Date().getFullYear()} ACE Coach. {t("footer.tagline")}
+            © {new Date().getFullYear()} Hi Volley. {t("footer.tagline")}
           </p>
         </div>
       </footer>

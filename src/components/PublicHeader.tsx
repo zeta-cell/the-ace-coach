@@ -7,7 +7,7 @@ import { useI18n } from "@/lib/i18n";
 const PublicHeader = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [theme, setTheme] = useState<"dark" | "light">(
-    typeof window !== "undefined" && !document.documentElement.classList.contains("light") ? "dark" : "light"
+    typeof window !== "undefined" && document.documentElement.classList.contains("dark") ? "dark" : "light"
   );
   const location = useLocation();
   const { t, lang, setLang } = useI18n();
@@ -21,12 +21,14 @@ const PublicHeader = () => {
 
   useEffect(() => {
     const root = document.documentElement;
-    if (theme === "light") {
-      root.classList.add("light");
-      localStorage.setItem("theme", "light");
-    } else {
+    if (theme === "dark") {
+      root.classList.add("dark");
       root.classList.remove("light");
       localStorage.setItem("theme", "dark");
+    } else {
+      root.classList.remove("dark");
+      root.classList.add("light");
+      localStorage.setItem("theme", "light");
     }
   }, [theme]);
 
@@ -41,8 +43,10 @@ const PublicHeader = () => {
             {menuOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
 
-          <Link to="/" className="hidden md:block font-display text-2xl tracking-wider text-foreground shrink-0">
-            ACE<span className="text-primary"> Coach</span>
+          <Link to="/" className="hidden md:flex items-center gap-1.5 font-display text-2xl tracking-wider text-foreground shrink-0">
+            <span className="text-primary">Hi</span>
+            <span>Volley</span>
+            <span className="inline-block w-2 h-2 rounded-full bg-mustard" aria-hidden />
           </Link>
           <div className="hidden md:flex items-center gap-6">
             {NAV_LINKS.map(link => (
@@ -93,8 +97,10 @@ const PublicHeader = () => {
             <div className="absolute inset-0 bg-background/80" onClick={() => setMenuOpen(false)} />
             <div className="relative w-64 h-full bg-card border-r border-border p-4 space-y-1">
               <div className="p-3 mb-4 border-b border-border">
-                <span className="font-display text-xl tracking-wider text-foreground">
-                  ACE<span className="text-primary"> Coach</span>
+                <span className="font-display text-xl tracking-wider text-foreground inline-flex items-center gap-1.5">
+                  <span className="text-primary">Hi</span>
+                  <span>Volley</span>
+                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-mustard" aria-hidden />
                 </span>
               </div>
               {NAV_LINKS.map(link => (
