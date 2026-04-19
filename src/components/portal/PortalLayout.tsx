@@ -6,9 +6,32 @@ import {
   MessageSquare, User, LogOut, Menu, X, ChevronLeft, ChevronRight,
   Users, Settings, Home, CreditCard, Link2, CalendarDays, UserCheck, Search, ShoppingBag, Eye, Dumbbell, Building2, Square, Contact, DollarSign
 } from "lucide-react";
+import {
+  House as PhHouse,
+  CalendarBlank as PhCalendar,
+  CalendarDots as PhCalendarDots,
+  UsersThree as PhUsers,
+  ChatsCircle as PhChats,
+  BookOpen as PhBook,
+  Barbell as PhBarbell,
+} from "@phosphor-icons/react";
 import { useAuth } from "@/contexts/AuthContext";
 import NotificationBell from "@/components/portal/NotificationBell";
 import QuickAddTrainingDrawer from "@/components/portal/QuickAddTrainingDrawer";
+
+// Phosphor icon overrides for the mobile bottom nav (filled glyph look)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const BOTTOM_NAV_ICON: Record<string, any> = {
+  "/dashboard": PhHouse,
+  "/training": PhBarbell,
+  "/events": PhCalendarDots,
+  "/community": PhUsers,
+  "/messages": PhChats,
+  "/coach/players": PhUsers,
+  "/coach/calendar": PhCalendar,
+  "/coach/library": PhBook,
+  "/coach/messages": PhChats,
+};
 
 const playerNav = [
   { label: "Home", icon: Home, href: "/dashboard" },
@@ -140,9 +163,10 @@ const PortalLayout = ({ children }: { children: React.ReactNode }) => {
                 { label: "Calendar", icon: CalendarDays, href: "/coach/calendar" },
               ].map((item) => {
                 const isActive = location.pathname === item.href;
+                const PhIcon = BOTTOM_NAV_ICON[item.href];
                 return (
                   <Link key={item.href} to={item.href} className={`flex flex-col items-center gap-0.5 ${isActive ? "text-primary" : "text-muted-foreground"}`}>
-                    <item.icon size={20} />
+                    {PhIcon ? <PhIcon size={22} weight={isActive ? "fill" : "regular"} /> : <item.icon size={20} />}
                     <span className="font-display text-[9px] tracking-wider">{item.label.toUpperCase()}</span>
                   </Link>
                 );
@@ -150,7 +174,7 @@ const PortalLayout = ({ children }: { children: React.ReactNode }) => {
               {/* Center — Create Plan */}
               <button onClick={() => setFabDrawerOpen(true)} className="flex flex-col items-center -mt-5">
                 <div className="w-14 h-14 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg">
-                  <Dumbbell size={22} />
+                  <PhBarbell size={24} weight="fill" />
                 </div>
                 <span className="text-[9px] font-display tracking-wider text-primary mt-1">CREATE</span>
               </button>
@@ -160,9 +184,10 @@ const PortalLayout = ({ children }: { children: React.ReactNode }) => {
                 { label: "Messages", icon: MessageSquare, href: "/coach/messages" },
               ].map((item) => {
                 const isActive = location.pathname === item.href;
+                const PhIcon = BOTTOM_NAV_ICON[item.href];
                 return (
                   <Link key={item.href} to={item.href} className={`flex flex-col items-center gap-0.5 ${isActive ? "text-primary" : "text-muted-foreground"}`}>
-                    <item.icon size={20} />
+                    {PhIcon ? <PhIcon size={22} weight={isActive ? "fill" : "regular"} /> : <item.icon size={20} />}
                     <span className="font-display text-[9px] tracking-wider">{item.label.toUpperCase()}</span>
                   </Link>
                 );
@@ -171,9 +196,10 @@ const PortalLayout = ({ children }: { children: React.ReactNode }) => {
           ) : (
             (role === "player" ? playerNav.slice(0, 5) : navItems.slice(0, 5)).map((item) => {
               const isActive = location.pathname === item.href || (item.href === "/dashboard" && location.pathname === "/dashboard");
+              const PhIcon = BOTTOM_NAV_ICON[item.href];
               return (
                 <Link key={item.href} to={item.href} className={`flex flex-col items-center gap-0.5 ${isActive ? "text-primary" : "text-muted-foreground"}`}>
-                  <item.icon size={20} />
+                  {PhIcon ? <PhIcon size={22} weight={isActive ? "fill" : "regular"} /> : <item.icon size={20} />}
                   <span className="font-display text-[9px] tracking-wider">{item.label.toUpperCase()}</span>
                 </Link>
               );

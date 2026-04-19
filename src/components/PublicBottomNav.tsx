@@ -36,7 +36,7 @@ const PublicBottomNav = () => {
                 to={href}
                 className={`flex flex-col items-center gap-0.5 ${active ? "text-primary" : "text-muted-foreground"}`}
               >
-                <Icon size={20} />
+                <Icon size={22} weight={active ? "fill" : "regular"} />
                 <span className="font-display text-[9px] tracking-wider">{label.toUpperCase()}</span>
               </Link>
             );
