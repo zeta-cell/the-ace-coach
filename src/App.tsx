@@ -100,6 +100,8 @@ const App = () => (
 
             {/* Auth */}
             <Route path="/login" element={<Suspense fallback={<PortalLoader />}><Login /></Suspense>} />
+            <Route path="/portal/login" element={<Suspense fallback={<PortalLoader />}><Login /></Suspense>} />
+            <Route path="/portal" element={<Suspense fallback={<PortalLoader />}><Login /></Suspense>} />
 
             {/* Onboarding */}
             <Route path="/onboarding" element={

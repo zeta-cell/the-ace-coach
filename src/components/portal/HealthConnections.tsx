@@ -11,12 +11,13 @@ interface HealthConnection {
   last_synced_at: string | null;
 }
 
+// Recognizable wordmark-style labels for each provider (rendered in brand color)
 const PROVIDERS = [
-  { key: "whoop", name: "WHOOP", color: "#00F19F", initials: "W", metrics: ["Recovery", "Strain", "HRV"], fn: "whoop-oauth" },
-  { key: "oura", name: "Oura Ring", color: "#6B63F6", initials: "O", metrics: ["Readiness", "Sleep", "HRV"], fn: "oura-oauth" },
-  { key: "polar", name: "Polar", color: "#D0112B", initials: "P", metrics: ["Training", "Calories", "HR"], fn: "polar-oauth" },
-  { key: "garmin", name: "Garmin", color: "#007CC3", initials: "G", metrics: ["Body Battery", "Steps", "HR"], fn: "garmin-oauth" },
-  { key: "apple_health", name: "Apple Health", color: "#FF2D55", initials: "AH", metrics: ["Steps", "Calories", "Sleep"], fn: null },
+  { key: "whoop", name: "WHOOP", color: "#00F19F", wordmark: "WHOOP", metrics: ["Recovery", "Strain", "HRV"], fn: "whoop-oauth" },
+  { key: "oura", name: "Oura Ring", color: "#6B63F6", wordmark: "OURA", metrics: ["Readiness", "Sleep", "HRV"], fn: "oura-oauth" },
+  { key: "polar", name: "Polar", color: "#D0112B", wordmark: "POLAR", metrics: ["Training", "Calories", "HR"], fn: "polar-oauth" },
+  { key: "garmin", name: "Garmin", color: "#007CC3", wordmark: "GARMIN", metrics: ["Body Battery", "Steps", "HR"], fn: "garmin-oauth" },
+  { key: "apple_health", name: "Apple Health", color: "#FF2D55", wordmark: "Apple", metrics: ["Steps", "Calories", "Sleep"], fn: null },
 ];
 
 const HealthConnections = () => {
@@ -92,8 +93,11 @@ const HealthConnections = () => {
 
           return (
             <div key={p.key} className="border border-border rounded-xl p-3 text-center space-y-2">
-              <div className="w-10 h-10 rounded-full mx-auto flex items-center justify-center text-white font-display text-xs" style={{ backgroundColor: p.color }}>
-                {p.initials}
+              <div
+                className="h-10 rounded-lg mx-auto flex items-center justify-center font-display text-[11px] tracking-[0.18em] text-white px-2"
+                style={{ backgroundColor: p.color }}
+              >
+                {p.wordmark}
               </div>
               <p className="font-display text-xs text-foreground">{p.name}</p>
               <div className="flex flex-wrap gap-1 justify-center">
