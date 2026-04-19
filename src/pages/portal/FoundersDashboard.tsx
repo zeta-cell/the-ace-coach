@@ -1188,9 +1188,24 @@ const FoundersDashboard = () => {
             </p>
           )}
         </div>
-        <Button onClick={fetchAll} variant="outline" size="sm">
-          <RefreshCw className={`w-3 h-3 mr-1 ${loading ? "animate-spin" : ""}`} /> REFRESH ALL
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            onClick={async () => {
+              const t = toast.loading("Syncing module library…");
+              const { data, error } = await supabase.functions.invoke("seed-from-ace-academy");
+              toast.dismiss(t);
+              if (error) { toast.error(error.message); return; }
+              toast.success(`+${data.modules_added} modules · +${data.blocks_added} blocks`);
+            }}
+            variant="outline"
+            size="sm"
+          >
+            <Download className="w-3 h-3 mr-1" /> SYNC LIBRARY
+          </Button>
+          <Button onClick={fetchAll} variant="outline" size="sm">
+            <RefreshCw className={`w-3 h-3 mr-1 ${loading ? "animate-spin" : ""}`} /> REFRESH ALL
+          </Button>
+        </div>
       </div>
 
       {/* ══════ SECTION 1 — BUSINESS HEALTH ══════ */}
