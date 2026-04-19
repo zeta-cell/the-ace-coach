@@ -65,7 +65,7 @@ const Index = () => {
       <PublicHeader />
 
       {/* Hero */}
-      <section className="relative min-h-[100svh] flex items-end">
+      <section className="relative min-h-[88svh] md:min-h-[100svh] flex items-end">
         <img
           src={heroPadel}
           alt="Padel player mid-swing on clay court"
@@ -75,7 +75,7 @@ const Index = () => {
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-background/20" />
         <div className="absolute inset-0 bg-gradient-to-br from-background/30 via-transparent to-background/40" />
 
-        <div className="relative z-10 w-full max-w-5xl mx-auto px-6 pb-10 pt-28 md:pb-[6.18rem] md:pt-40">
+        <div className="relative z-10 w-full max-w-5xl mx-auto px-6 pb-6 pt-20 md:pb-[6.18rem] md:pt-40">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
             <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary text-primary-foreground font-body text-xs tracking-wider mb-10 shadow-lg">
               <MapPin size={14} /> {t("home.badge")}
