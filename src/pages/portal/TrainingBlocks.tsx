@@ -6,6 +6,13 @@ import { Blocks, CalendarDays, ChevronDown, ChevronRight, Clock, Plus, Search, T
 import { toast } from "sonner";
 import PortalLayout from "@/components/portal/PortalLayout";
 import AssignBlockToPlayerDialog from "@/components/portal/AssignBlockToPlayerDialog";
+import {
+  MAIN_CATEGORIES,
+  MAIN_CATEGORY_LABEL,
+  MAIN_CATEGORY_COLORS,
+  toMainCategory,
+  type MainCategory,
+} from "@/lib/moduleCategories";
 
 interface TrainingBlock {
   id: string;
