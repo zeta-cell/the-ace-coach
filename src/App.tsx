@@ -58,6 +58,14 @@ const AdminAssignments = lazy(() => import("./pages/portal/AdminAssignments"));
 const AdminPayments = lazy(() => import("./pages/portal/AdminPayments"));
 const AdminSchedule = lazy(() => import("./pages/portal/AdminSchedule"));
 
+// Club pages (lazy-loaded)
+const ClubDashboard = lazy(() => import("./pages/portal/ClubDashboard"));
+const ClubCoaches = lazy(() => import("./pages/portal/ClubCoaches"));
+const ClubCourts = lazy(() => import("./pages/portal/ClubCourts"));
+const ClubBookings = lazy(() => import("./pages/portal/ClubBookings"));
+const ClubSettings = lazy(() => import("./pages/portal/ClubSettings"));
+const ClubInvite = lazy(() => import("./pages/ClubInvite"));
+
 const queryClient = new QueryClient();
 
 const PortalLoader = () => (
@@ -84,6 +92,7 @@ const App = () => (
             <Route path="/rankings" element={<Suspense fallback={<PortalLoader />}><Rankings /></Suspense>} />
             <Route path="/events" element={<Suspense fallback={<PortalLoader />}><Events /></Suspense>} />
             <Route path="/community" element={<Suspense fallback={<PortalLoader />}><Community /></Suspense>} />
+            <Route path="/club-invite/:token" element={<Suspense fallback={<PortalLoader />}><ClubInvite /></Suspense>} />
 
             {/* Auth */}
             <Route path="/login" element={<Suspense fallback={<PortalLoader />}><Login /></Suspense>} />
@@ -255,6 +264,33 @@ const App = () => (
             <Route path="/founders" element={
               <Suspense fallback={<PortalLoader />}>
                 <FoundersDashboard />
+              </Suspense>
+            } />
+
+            {/* Club */}
+            <Route path="/club" element={
+              <Suspense fallback={<PortalLoader />}>
+                <ProtectedRoute requiredRole="club_manager"><ClubDashboard /></ProtectedRoute>
+              </Suspense>
+            } />
+            <Route path="/club/coaches" element={
+              <Suspense fallback={<PortalLoader />}>
+                <ProtectedRoute requiredRole="club_manager"><ClubCoaches /></ProtectedRoute>
+              </Suspense>
+            } />
+            <Route path="/club/courts" element={
+              <Suspense fallback={<PortalLoader />}>
+                <ProtectedRoute requiredRole="club_manager"><ClubCourts /></ProtectedRoute>
+              </Suspense>
+            } />
+            <Route path="/club/bookings" element={
+              <Suspense fallback={<PortalLoader />}>
+                <ProtectedRoute requiredRole="club_manager"><ClubBookings /></ProtectedRoute>
+              </Suspense>
+            } />
+            <Route path="/club/settings" element={
+              <Suspense fallback={<PortalLoader />}>
+                <ProtectedRoute requiredRole="club_manager"><ClubSettings /></ProtectedRoute>
               </Suspense>
             } />
 

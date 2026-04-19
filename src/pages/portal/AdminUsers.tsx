@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import PortalLayout from "@/components/portal/PortalLayout";
 import UserDetailDrawer from "@/components/portal/UserDetailDrawer";
 
-type AppRole = "player" | "coach" | "admin";
+type AppRole = "player" | "coach" | "admin" | "club_manager";
 type BadgeLevel = "starter" | "pro" | "elite" | "legend";
 
 interface UserRow {
@@ -27,6 +27,7 @@ const ROLE_COLORS: Record<AppRole, string> = {
   player: "bg-blue-500/10 text-blue-400",
   coach: "bg-purple-500/10 text-purple-400",
   admin: "bg-primary/10 text-primary",
+  club_manager: "bg-accent/20 text-accent",
 };
 
 const BADGE_COLORS: Record<BadgeLevel, string> = {
@@ -258,6 +259,7 @@ const AdminUsers = () => {
                   >
                     <option value="player">Player</option>
                     <option value="coach">Coach</option>
+                    <option value="club_manager">Club Manager</option>
                     <option value="admin">Admin</option>
                   </select>
 

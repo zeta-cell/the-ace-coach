@@ -218,9 +218,11 @@ export type Database = {
           cancelled_at: string | null
           cancelled_by: string | null
           check_in_code: string | null
+          club_id: string | null
           coach_id: string
           coach_name_for_arrival: string | null
           coach_payout: number
+          court_id: string | null
           court_number: string | null
           created_at: string | null
           currency: string
@@ -246,9 +248,11 @@ export type Database = {
           cancelled_at?: string | null
           cancelled_by?: string | null
           check_in_code?: string | null
+          club_id?: string | null
           coach_id: string
           coach_name_for_arrival?: string | null
           coach_payout?: number
+          court_id?: string | null
           court_number?: string | null
           created_at?: string | null
           currency?: string
@@ -274,9 +278,11 @@ export type Database = {
           cancelled_at?: string | null
           cancelled_by?: string | null
           check_in_code?: string | null
+          club_id?: string | null
           coach_id?: string
           coach_name_for_arrival?: string | null
           coach_payout?: number
+          court_id?: string | null
           court_number?: string | null
           created_at?: string | null
           currency?: string
@@ -297,6 +303,20 @@ export type Database = {
         }
         Relationships: [
           {
+            foreignKeyName: "bookings_club_id_fkey"
+            columns: ["club_id"]
+            isOneToOne: false
+            referencedRelation: "clubs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_court_id_fkey"
+            columns: ["court_id"]
+            isOneToOne: false
+            referencedRelation: "club_courts"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "bookings_package_id_fkey"
             columns: ["package_id"]
             isOneToOne: false
@@ -304,6 +324,174 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      club_coaches: {
+        Row: {
+          club_id: string
+          club_role: string
+          coach_id: string
+          id: string
+          joined_at: string
+        }
+        Insert: {
+          club_id: string
+          club_role?: string
+          coach_id: string
+          id?: string
+          joined_at?: string
+        }
+        Update: {
+          club_id?: string
+          club_role?: string
+          coach_id?: string
+          id?: string
+          joined_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "club_coaches_club_id_fkey"
+            columns: ["club_id"]
+            isOneToOne: false
+            referencedRelation: "clubs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      club_courts: {
+        Row: {
+          club_id: string
+          court_number: string
+          created_at: string
+          id: string
+          is_active: boolean
+          is_indoor: boolean
+          notes: string | null
+          surface: string | null
+        }
+        Insert: {
+          club_id: string
+          court_number: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          is_indoor?: boolean
+          notes?: string | null
+          surface?: string | null
+        }
+        Update: {
+          club_id?: string
+          court_number?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          is_indoor?: boolean
+          notes?: string | null
+          surface?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "club_courts_club_id_fkey"
+            columns: ["club_id"]
+            isOneToOne: false
+            referencedRelation: "clubs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      club_invites: {
+        Row: {
+          accepted_at: string | null
+          club_id: string
+          club_role: string
+          created_at: string
+          email: string
+          expires_at: string
+          id: string
+          invited_by: string
+          token: string
+        }
+        Insert: {
+          accepted_at?: string | null
+          club_id: string
+          club_role?: string
+          created_at?: string
+          email: string
+          expires_at?: string
+          id?: string
+          invited_by: string
+          token?: string
+        }
+        Update: {
+          accepted_at?: string | null
+          club_id?: string
+          club_role?: string
+          created_at?: string
+          email?: string
+          expires_at?: string
+          id?: string
+          invited_by?: string
+          token?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "club_invites_club_id_fkey"
+            columns: ["club_id"]
+            isOneToOne: false
+            referencedRelation: "clubs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clubs: {
+        Row: {
+          address: string | null
+          city: string | null
+          contact_email: string | null
+          contact_phone: string | null
+          country: string | null
+          created_at: string
+          description: string | null
+          id: string
+          is_active: boolean
+          logo_url: string | null
+          name: string
+          owner_id: string
+          slug: string | null
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          city?: string | null
+          contact_email?: string | null
+          contact_phone?: string | null
+          country?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          logo_url?: string | null
+          name: string
+          owner_id: string
+          slug?: string | null
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          city?: string | null
+          contact_email?: string | null
+          contact_phone?: string | null
+          country?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          logo_url?: string | null
+          name?: string
+          owner_id?: string
+          slug?: string | null
+          updated_at?: string
+        }
+        Relationships: []
       }
       coach_availability_slots: {
         Row: {
@@ -679,7 +867,9 @@ export type Database = {
         Row: {
           age_group: string | null
           arrival_instructions: string | null
+          club_id: string | null
           coach_id: string
+          court_id: string | null
           court_number: string | null
           cover_image_url: string | null
           created_at: string | null
@@ -706,7 +896,9 @@ export type Database = {
         Insert: {
           age_group?: string | null
           arrival_instructions?: string | null
+          club_id?: string | null
           coach_id: string
+          court_id?: string | null
           court_number?: string | null
           cover_image_url?: string | null
           created_at?: string | null
@@ -733,7 +925,9 @@ export type Database = {
         Update: {
           age_group?: string | null
           arrival_instructions?: string | null
+          club_id?: string | null
           coach_id?: string
+          court_id?: string | null
           court_number?: string | null
           cover_image_url?: string | null
           created_at?: string | null
@@ -757,7 +951,22 @@ export type Database = {
           title?: string
           updated_at?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "events_club_id_fkey"
+            columns: ["club_id"]
+            isOneToOne: false
+            referencedRelation: "clubs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "events_court_id_fkey"
+            columns: ["court_id"]
+            isOneToOne: false
+            referencedRelation: "club_courts"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       founder_share_tokens: {
         Row: {
@@ -1972,6 +2181,7 @@ export type Database = {
         }
         Returns: undefined
       }
+      get_user_clubs: { Args: { _user_id: string }; Returns: string[] }
       get_user_role: {
         Args: { _user_id: string }
         Returns: Database["public"]["Enums"]["app_role"]
@@ -1995,6 +2205,14 @@ export type Database = {
         Args: { p_minutes?: number; p_user_id: string }
         Returns: undefined
       }
+      is_club_manager: {
+        Args: { _club_id: string; _user_id: string }
+        Returns: boolean
+      }
+      is_club_member: {
+        Args: { _club_id: string; _user_id: string }
+        Returns: boolean
+      }
       recalculate_rankings: { Args: never; Returns: undefined }
       update_block_rating_avg: {
         Args: { p_block_id: string }
@@ -2003,7 +2221,7 @@ export type Database = {
       update_streak: { Args: { p_user_id: string }; Returns: undefined }
     }
     Enums: {
-      app_role: "player" | "coach" | "admin"
+      app_role: "player" | "coach" | "admin" | "club_manager"
       badge_level: "starter" | "pro" | "elite" | "legend"
       dominant_hand: "left" | "right"
       fitness_level: "beginner" | "intermediate" | "advanced" | "elite"
@@ -2155,7 +2373,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["player", "coach", "admin"],
+      app_role: ["player", "coach", "admin", "club_manager"],
       badge_level: ["starter", "pro", "elite", "legend"],
       dominant_hand: ["left", "right"],
       fitness_level: ["beginner", "intermediate", "advanced", "elite"],

@@ -11,7 +11,7 @@ import {
 import { format } from "date-fns";
 import { toast } from "sonner";
 
-type AppRole = "player" | "coach" | "admin";
+type AppRole = "player" | "coach" | "admin" | "club_manager";
 
 interface UserRow {
   user_id: string;
@@ -85,6 +85,7 @@ const ROLE_COLORS: Record<AppRole, string> = {
   player: "bg-blue-500/10 text-blue-400",
   coach: "bg-purple-500/10 text-purple-400",
   admin: "bg-primary/10 text-primary",
+  club_manager: "bg-accent/20 text-accent",
 };
 
 const ShotBars = ({ shots }: { shots: { name: string; pct: number }[] }) => (
