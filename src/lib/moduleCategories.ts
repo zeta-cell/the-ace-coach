@@ -51,6 +51,7 @@ export const MAIN_CATEGORY_COLORS: Record<MainCategory, { bg: string; text: stri
 // Maps legacy DB enum values onto the 6 main categories.
 // Anything unknown falls back to "technique".
 const LEGACY_TO_MAIN: Record<string, MainCategory> = {
+  // module-level
   warm_up: "warm_up",
   padel_drill: "technique",
   tennis_drill: "technique",
@@ -62,9 +63,20 @@ const LEGACY_TO_MAIN: Record<string, MainCategory> = {
   recovery: "recovery",
   cool_down: "recovery",
   nutrition: "recovery",
-  // already-clean values:
+  // block-level (training_blocks.category)
+  beginner: "technique",
   technique: "technique",
   tactics: "tactics",
+  defense: "tactics",
+  net_play: "tactics",
+  match_prep: "tactics",
+  competition: "tactics",
+  analysis: "tactics",
+  power: "fitness",
+  speed: "fitness",
+  endurance: "fitness",
+  express: "fitness",
+  general: "technique",
 };
 
 export const toMainCategory = (raw?: string | null): MainCategory => {
