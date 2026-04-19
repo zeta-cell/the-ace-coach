@@ -167,6 +167,47 @@ const PublicCoachProfile = () => {
     }
     setPackages(pkgsWithSpots);
 
+    // SEO + JSON-LD for the coach profile
+    const fullName = profileRes.data?.full_name || "Coach";
+    const loc = [coachData.location_city, coachData.location_country].filter(Boolean).join(", ");
+    const sport = ((coachData as any).primary_sport || "tennis").toLowerCase();
+    const ratingValue = (reviewsRes.data && reviewsRes.data.length > 0)
+      ? (reviewsRes.data as any[]).reduce((s: number, r: any) => s + (r.rating || 0), 0) / (reviewsRes.data as any[]).length
+      : null;
+    const cheapest = pkgsWithSpots.length > 0 ? Math.min(...pkgsWithSpots.map(p => p.price_per_session)) : coachData.hourly_rate_from || null;
+    const { setSeo } = await import("@/lib/seo");
+    setSeo({
+      title: `${fullName} – ${sport === "padel" ? "Padel" : "Tennis"} Coach${loc ? ` in ${loc}` : ""}`,
+      description: (coachData.bio || `Book ${sport} sessions with ${fullName}${loc ? ` in ${loc}` : ""}. Verified coach on ACE Coach.`).slice(0, 160),
+      path: `/coach/${slug}`,
+      type: "profile",
+      image: profileRes.data?.avatar_url || undefined,
+      jsonLd: {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        name: fullName,
+        jobTitle: `${sport === "padel" ? "Padel" : "Tennis"} Coach`,
+        image: profileRes.data?.avatar_url || undefined,
+        address: loc ? { "@type": "PostalAddress", addressLocality: coachData.location_city, addressCountry: coachData.location_country } : undefined,
+        knowsLanguage: coachData.languages || undefined,
+        ...(ratingValue && (reviewsRes.data?.length || 0) > 0 ? {
+          aggregateRating: {
+            "@type": "AggregateRating",
+            ratingValue: ratingValue.toFixed(1),
+            reviewCount: reviewsRes.data!.length,
+          },
+        } : {}),
+        ...(cheapest ? {
+          makesOffer: {
+            "@type": "Offer",
+            priceCurrency: "EUR",
+            price: cheapest,
+            description: `Coaching session from €${cheapest}`,
+          },
+        } : {}),
+      },
+    });
+
     // Track page view for founder analytics
     supabase.from('page_views').insert({
       page_type: 'coach_profile',
