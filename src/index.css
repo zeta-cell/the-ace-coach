@@ -94,7 +94,7 @@
     --overlay-dark: linear-gradient(180deg, hsla(213, 38%, 18%, 0.15) 0%, hsla(213, 38%, 18%, 0.75) 100%);
     --overlay-hero: linear-gradient(180deg, hsla(213, 38%, 18%, 0.05) 0%, hsla(42, 55%, 88%, 0.55) 45%, hsla(42, 55%, 92%, 0.95) 100%);
 
-    --font-display: 'Bebas Neue', sans-serif;
+    --font-display: 'Unbounded', 'Bebas Neue', sans-serif;
     --font-body: 'Space Grotesk', sans-serif;
   }
 
@@ -218,7 +218,8 @@
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
-    letter-spacing: 0.02em;
+    letter-spacing: -0.02em;
+    font-weight: 800;
   }
 }
 
