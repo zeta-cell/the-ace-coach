@@ -199,51 +199,149 @@ const Marketplace = () => {
         </p>
       </div>
 
-      {/* Filter bar */}
+      {/* Filter bar — search + filter trigger */}
       <div className="sticky top-16 z-40 bg-background/90 backdrop-blur-xl border-b border-border px-4 py-3">
-        <div className="max-w-7xl mx-auto space-y-3">
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2 flex-1 bg-card border border-border rounded-xl px-3 py-2 max-w-md">
-              <Search size={16} className="text-muted-foreground shrink-0" />
-              <input type="text" value={search} onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search programs, coaches, methods..."
-                className="flex-1 bg-transparent font-body text-sm text-foreground placeholder:text-muted-foreground focus:outline-none" />
-            </div>
-            <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}
-              className="bg-card border border-border rounded-xl px-3 py-2 font-body text-sm text-foreground focus:outline-none hidden md:block">
-              {SORT_OPTIONS.map((s) => <option key={s.key} value={s.key}>{s.label}</option>)}
-            </select>
+        <div className="max-w-7xl mx-auto flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-1 bg-card border border-border rounded-xl px-3 py-2">
+            <Search size={16} className="text-muted-foreground shrink-0" />
+            <input type="text" value={search} onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search programs, coaches, methods..."
+              className="flex-1 bg-transparent font-body text-sm text-foreground placeholder:text-muted-foreground focus:outline-none" />
           </div>
-          <div className="flex items-center gap-4 overflow-x-auto scrollbar-none">
-            <div className="flex items-center gap-1 shrink-0">
-              {BLOCK_TYPE_FILTERS.map((t) => (
-                <button key={t} onClick={() => setTypeFilter(t)}
-                  className={`px-3 py-1.5 rounded-lg font-display text-[10px] tracking-wider whitespace-nowrap transition-colors ${
-                    typeFilter === t ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground hover:text-foreground"
-                  }`}>{t === "All" ? "ALL" : t.toUpperCase()}</button>
-              ))}
-            </div>
-            <div className="w-px h-5 bg-border shrink-0" />
-            <div className="flex items-center gap-1 shrink-0">
-              {SPORT_FILTERS.map((s) => (
-                <button key={s} onClick={() => setSportFilter(s)}
-                  className={`px-3 py-1.5 rounded-lg font-display text-[10px] tracking-wider transition-colors ${
-                    sportFilter === s ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground hover:text-foreground"
-                  }`}>{s.toUpperCase()}</button>
-              ))}
-            </div>
-            <div className="w-px h-5 bg-border shrink-0" />
-            <div className="flex items-center gap-1 shrink-0">
-              {LEVEL_FILTERS.map((l) => (
-                <button key={l} onClick={() => setLevelFilter(l)}
-                  className={`px-3 py-1.5 rounded-lg font-display text-[10px] tracking-wider transition-colors ${
-                    levelFilter === l ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground hover:text-foreground"
-                  }`}>{l.toUpperCase()}</button>
-              ))}
-            </div>
-          </div>
+          <button
+            onClick={() => setFilterSheetOpen(true)}
+            className="relative shrink-0 flex items-center gap-2 bg-card border border-border rounded-xl px-3 py-2 font-display text-[10px] tracking-wider text-foreground hover:border-primary/60 transition-colors"
+          >
+            <SlidersHorizontal size={16} />
+            <span className="hidden sm:inline">FILTERS</span>
+            {activeFilterCount > 0 && (
+              <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-primary text-primary-foreground text-[9px] font-display flex items-center justify-center">
+                {activeFilterCount}
+              </span>
+            )}
+          </button>
+          <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}
+            className="bg-card border border-border rounded-xl px-3 py-2 font-body text-sm text-foreground focus:outline-none hidden md:block">
+            {SORT_OPTIONS.map((s) => <option key={s.key} value={s.key}>{s.label}</option>)}
+          </select>
         </div>
       </div>
+
+      {/* Bottom-sheet filter drawer */}
+      <AnimatePresence>
+        {filterSheetOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              onClick={() => setFilterSheetOpen(false)}
+              className="fixed inset-0 z-50 bg-background/70 backdrop-blur-sm"
+            />
+            <motion.div
+              initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }}
+              transition={{ type: "tween", duration: 0.28, ease: [0.32, 0.72, 0, 1] }}
+              className="fixed inset-x-0 bottom-0 z-50 bg-card border-t border-border rounded-t-3xl max-h-[85vh] overflow-y-auto"
+            >
+              <div className="sticky top-0 bg-card border-b border-border px-5 py-4 flex items-center justify-between">
+                <h2 className="font-display text-sm tracking-wider text-foreground">FILTERS</h2>
+                <button onClick={() => setFilterSheetOpen(false)} className="text-muted-foreground hover:text-foreground">
+                  <X size={20} />
+                </button>
+              </div>
+
+              <div className="p-5 space-y-6 pb-10">
+                {/* Type */}
+                <div>
+                  <h3 className="font-display text-[11px] tracking-wider text-muted-foreground mb-3">PROGRAM TYPE</h3>
+                  <div className="grid grid-cols-2 gap-2">
+                    {BLOCK_TYPE_FILTERS.map((t) => {
+                      const cfg = t !== "All" ? BLOCK_TYPE_LABELS[t] : null;
+                      const active = typeFilter === t;
+                      return (
+                        <button
+                          key={t}
+                          onClick={() => setTypeFilter(t)}
+                          className={`text-left p-3 rounded-xl border transition-all ${
+                            active
+                              ? "border-primary bg-primary/10"
+                              : "border-border bg-secondary/40 hover:border-primary/40"
+                          }`}
+                        >
+                          <div className="flex items-center gap-2 mb-1">
+                            {t === "online" && <Play size={12} className="text-indigo-400" />}
+                            {t === "video_review" && <Video size={12} className="text-rose-400" />}
+                            <span className={`font-display text-[10px] tracking-wider ${active ? "text-primary" : "text-foreground"}`}>
+                              {t === "All" ? "ALL" : (cfg?.label || t.toUpperCase())}
+                            </span>
+                          </div>
+                          {cfg?.description && (
+                            <p className="font-body text-[10px] text-muted-foreground leading-snug">
+                              {cfg.description}
+                            </p>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Sport */}
+                <div>
+                  <h3 className="font-display text-[11px] tracking-wider text-muted-foreground mb-3">SPORT</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {SPORT_FILTERS.map((s) => (
+                      <button key={s} onClick={() => setSportFilter(s)}
+                        className={`px-4 py-2 rounded-xl font-display text-[10px] tracking-wider transition-colors ${
+                          sportFilter === s ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground hover:text-foreground"
+                        }`}>{s.toUpperCase()}</button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Level */}
+                <div>
+                  <h3 className="font-display text-[11px] tracking-wider text-muted-foreground mb-3">LEVEL</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {LEVEL_FILTERS.map((l) => (
+                      <button key={l} onClick={() => setLevelFilter(l)}
+                        className={`px-4 py-2 rounded-xl font-display text-[10px] tracking-wider transition-colors ${
+                          levelFilter === l ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground hover:text-foreground"
+                        }`}>{l.toUpperCase()}</button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Sort (mobile) */}
+                <div className="md:hidden">
+                  <h3 className="font-display text-[11px] tracking-wider text-muted-foreground mb-3">SORT BY</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {SORT_OPTIONS.map((s) => (
+                      <button key={s.key} onClick={() => setSortBy(s.key)}
+                        className={`px-4 py-2 rounded-xl font-display text-[10px] tracking-wider transition-colors ${
+                          sortBy === s.key ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground hover:text-foreground"
+                        }`}>{s.label.toUpperCase()}</button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="flex gap-2 pt-2">
+                  <button
+                    onClick={() => { setTypeFilter("All"); setSportFilter("All"); setLevelFilter("All"); setSortBy("popular"); }}
+                    className="flex-1 py-3 rounded-xl border border-border font-display text-[11px] tracking-wider text-muted-foreground hover:text-foreground"
+                  >
+                    RESET
+                  </button>
+                  <button
+                    onClick={() => setFilterSheetOpen(false)}
+                    className="flex-1 py-3 rounded-xl bg-primary text-primary-foreground font-display text-[11px] tracking-wider"
+                  >
+                    SHOW {filtered.length} RESULTS
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
 
       <div className="max-w-7xl mx-auto px-4 md:px-6 py-8">
         {/* Featured section */}
