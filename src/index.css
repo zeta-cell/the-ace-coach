@@ -25,6 +25,20 @@
 @font-face {
   font-family: 'Franie';
   font-style: normal;
+  font-weight: 200;
+  font-display: swap;
+  src: url('/fonts/Franie-ExtraLight.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Franie';
+  font-style: italic;
+  font-weight: 200;
+  font-display: swap;
+  src: url('/fonts/Franie-ExtraLightItalic.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Franie';
+  font-style: normal;
   font-weight: 300;
   font-display: swap;
   src: url('/fonts/Franie-Light.woff2') format('woff2');
