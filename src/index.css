@@ -38,7 +38,7 @@
     --popover-foreground: 213 38% 18%;
 
     /* Yellow primary (preview) */
-    --primary: 49 97% 58%;
+    --primary: 25 95% 58%;
     --primary-foreground: 213 38% 18%;
 
     /* Sky 069B — secondary surfaces */
@@ -57,22 +57,22 @@
 
     --border: 8 45% 85%;
     --input: 8 45% 85%;
-    --ring: 49 97% 58%;
+    --ring: 25 95% 58%;
 
     --radius: 0.875rem;
 
     --sidebar-background: 8 65% 97%;
     --sidebar-foreground: 213 38% 18%;
-    --sidebar-primary: 49 97% 58%;
+    --sidebar-primary: 25 95% 58%;
     --sidebar-primary-foreground: 213 38% 18%;
     --sidebar-accent: 209 45% 86%;
     --sidebar-accent-foreground: 213 38% 18%;
     --sidebar-border: 8 45% 85%;
-    --sidebar-ring: 49 97% 58%;
+    --sidebar-ring: 25 95% 58%;
 
     /* Yellow tokens (Coral remapped to yellow for now) */
-    --coral: 49 97% 58%;
-    --coral-soft: 49 97% 88%;
+    --coral: 25 95% 58%;
+    --coral-soft: 25 95% 90%;
     --navy: 213 38% 22%;               /* 121B */
     --navy-soft: 213 38% 35%;
     --sky: 209 53% 67%;                /* 069B */
@@ -90,7 +90,7 @@
     --gold: 47 45% 60%;
 
     --hero-gradient: linear-gradient(135deg, hsl(8, 70%, 95%) 0%, hsl(209, 45%, 88%) 100%);
-    --text-gradient: linear-gradient(135deg, hsl(49, 97%, 58%), hsl(47, 55%, 58%));
+    --text-gradient: linear-gradient(135deg, hsl(25, 95%, 58%), hsl(20, 85%, 50%));
     --overlay-dark: linear-gradient(180deg, hsla(213, 38%, 18%, 0.15) 0%, hsla(213, 38%, 18%, 0.75) 100%);
     --overlay-hero: linear-gradient(180deg, hsla(213, 38%, 18%, 0.05) 0%, hsla(8, 70%, 92%, 0.55) 45%, hsla(8, 70%, 95%, 0.95) 100%);
 
@@ -109,7 +109,7 @@
     --popover: 213 38% 16%;
     --popover-foreground: 36 38% 96%;
 
-    --primary: 49 97% 58%;
+    --primary: 25 95% 58%;
     --primary-foreground: 213 42% 12%;
 
     --secondary: 213 30% 22%;
@@ -126,18 +126,18 @@
 
     --border: 213 25% 24%;
     --input: 213 25% 24%;
-    --ring: 49 97% 58%;
+    --ring: 25 95% 58%;
 
     --sidebar-background: 213 38% 16%;
     --sidebar-foreground: 36 38% 96%;
-    --sidebar-primary: 49 97% 58%;
+    --sidebar-primary: 25 95% 58%;
     --sidebar-primary-foreground: 213 42% 12%;
     --sidebar-accent: 213 30% 22%;
     --sidebar-accent-foreground: 36 38% 96%;
     --sidebar-border: 213 25% 24%;
-    --sidebar-ring: 49 97% 58%;
+    --sidebar-ring: 25 95% 58%;
 
-    --coral: 49 97% 58%;
+    --coral: 25 95% 58%;
     --coral-soft: 49 60% 28%;
     --navy: 213 38% 22%;
     --navy-soft: 213 30% 35%;
@@ -155,7 +155,7 @@
     --gold: 47 55% 62%;
 
     --hero-gradient: linear-gradient(135deg, hsl(213, 42%, 12%) 0%, hsl(213, 38%, 18%) 100%);
-    --text-gradient: linear-gradient(135deg, hsl(49, 97%, 58%), hsl(47, 55%, 62%));
+    --text-gradient: linear-gradient(135deg, hsl(25, 95%, 58%), hsl(20, 85%, 55%));
     --overlay-dark: linear-gradient(180deg, hsla(213, 42%, 12%, 0.2) 0%, hsla(213, 42%, 12%, 0.85) 100%);
     --overlay-hero: linear-gradient(180deg, hsla(213, 42%, 12%, 0.1) 0%, hsla(213, 42%, 12%, 0.85) 70%, hsla(213, 42%, 12%, 1) 100%);
   }
@@ -168,7 +168,7 @@
     --card-foreground: 213 38% 18%;
     --popover: 8 65% 97%;
     --popover-foreground: 213 38% 18%;
-    --primary: 49 97% 58%;
+    --primary: 25 95% 58%;
     --primary-foreground: 213 38% 18%;
     --secondary: 209 45% 86%;
     --secondary-foreground: 213 38% 18%;
@@ -180,24 +180,24 @@
     --destructive-foreground: 8 70% 97%;
     --border: 8 45% 85%;
     --input: 8 45% 85%;
-    --ring: 49 97% 58%;
+    --ring: 25 95% 58%;
     --sidebar-background: 8 65% 97%;
     --sidebar-foreground: 213 38% 18%;
-    --sidebar-primary: 49 97% 58%;
+    --sidebar-primary: 25 95% 58%;
     --sidebar-primary-foreground: 213 38% 18%;
     --sidebar-accent: 209 45% 86%;
     --sidebar-accent-foreground: 213 38% 18%;
     --sidebar-border: 8 45% 85%;
-    --sidebar-ring: 49 97% 58%;
-    --coral: 49 97% 58%;
-    --coral-soft: 49 97% 88%;
+    --sidebar-ring: 25 95% 58%;
+    --coral: 25 95% 58%;
+    --coral-soft: 25 95% 90%;
     --maroon: 213 38% 18%;
     --maroon-light: 213 38% 32%;
     --cream-dark: 8 55% 88%;
     --surface-elevated: 8 65% 97%;
     --gold: 47 45% 60%;
     --hero-gradient: linear-gradient(135deg, hsl(8, 70%, 95%) 0%, hsl(209, 45%, 88%) 100%);
-    --text-gradient: linear-gradient(135deg, hsl(49, 97%, 58%), hsl(47, 55%, 58%));
+    --text-gradient: linear-gradient(135deg, hsl(25, 95%, 58%), hsl(20, 85%, 50%));
     --overlay-dark: linear-gradient(180deg, hsla(213, 38%, 18%, 0.15) 0%, hsla(213, 38%, 18%, 0.75) 100%);
     --overlay-hero: linear-gradient(180deg, hsla(213, 38%, 18%, 0.05) 0%, hsla(8, 70%, 92%, 0.55) 45%, hsla(8, 70%, 95%, 0.95) 100%);
   }
