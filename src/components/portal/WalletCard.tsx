@@ -89,14 +89,14 @@ const WalletCard = () => {
               <div key={tx.id} className="flex items-center justify-between text-xs font-body">
                 <div className="flex items-center gap-2">
                   {Number(tx.amount) >= 0 ? (
-                    <ArrowDownLeft size={12} className="text-green-400" />
+                    <ArrowDownLeft size={12} className="text-orange-400" />
                   ) : (
                     <ArrowUpRight size={12} className="text-red-400" />
                   )}
                   <span className="text-muted-foreground truncate max-w-[140px]">{tx.description || tx.type}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className={Number(tx.amount) >= 0 ? "text-green-400" : "text-red-400"}>
+                  <span className={Number(tx.amount) >= 0 ? "text-orange-400" : "text-red-400"}>
                     {Number(tx.amount) >= 0 ? '+' : ''}€{Number(tx.amount).toFixed(2)}
                   </span>
                   <span className="text-muted-foreground/50 text-[10px]">{format(new Date(tx.created_at), "d MMM")}</span>
@@ -120,7 +120,7 @@ const WalletCard = () => {
           </div>
 
           <div className="flex gap-2 mb-3">
-            <button onClick={shareWhatsApp} className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-green-600/20 text-green-400 font-display text-[10px] tracking-wider hover:bg-green-600/30 transition-colors">
+            <button onClick={shareWhatsApp} className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-orange-500/20 text-orange-400 font-display text-[10px] tracking-wider hover:bg-orange-500/30 transition-colors">
               <MessageCircle size={12} /> WHATSAPP
             </button>
             <button onClick={copyReferralLink} className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-secondary text-muted-foreground font-display text-[10px] tracking-wider hover:text-foreground transition-colors">
