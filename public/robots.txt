@@ -35,4 +35,4 @@ Allow: /
 User-agent: CCBot
 Allow: /
 
-Sitemap: https://ace-whisperer-guide.lovable.app/sitemap.xml
+Sitemap: https://hivolley.com/sitemap.xml
