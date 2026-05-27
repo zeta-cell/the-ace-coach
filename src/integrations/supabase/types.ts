@@ -2355,6 +2355,7 @@ export type Database = {
         Returns: undefined
       }
       can_notify: { Args: { _target: string }; Returns: boolean }
+      claim_referral: { Args: { _code: string }; Returns: string }
       credit_wallet: {
         Args: {
           p_amount: number
