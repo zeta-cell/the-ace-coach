@@ -60,7 +60,7 @@ const COPY = {
       benefit3: "Detailed dashboards with shot stats, weekly streaks and gamified ranking.",
       faq: (city: string) => [
         { q: `How much does a padel lesson cost in ${city}?`, a: `Private padel lessons in ${city} typically range from €25 to €60 per hour depending on the coach's experience and certifications. Group clinics start as low as €15 per person.` },
-        { q: `Can I book a single lesson or do I need a package?`, a: `Both. ACE coaches offer single sessions, multi-week packages and recurring group programs. You only pay for what you book.` },
+        { q: `Can I book a single lesson or do I need a package?`, a: `Both. Hi Volley coaches offer single sessions, multi-week packages and recurring group programs. You only pay for what you book.` },
         { q: `How do I find the right padel coach for my level?`, a: `Filter by sport, language, level (beginner to advanced), price and availability. Each coach profile shows certifications, reviews and the typical player level they coach.` },
         { q: `Can I take padel lessons in English in ${city}?`, a: `Yes. Many ${city} coaches speak English, Spanish and other languages. Use the language filter on the coach search.` },
       ],
