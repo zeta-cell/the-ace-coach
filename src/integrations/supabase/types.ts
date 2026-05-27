@@ -2300,7 +2300,36 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      block_save_counts: {
+        Row: {
+          block_id: string | null
+          saves_count: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "block_saves_block_id_fkey"
+            columns: ["block_id"]
+            isOneToOne: false
+            referencedRelation: "training_blocks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      club_follower_counts: {
+        Row: {
+          club_id: string | null
+          followers_count: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "club_followers_club_id_fkey"
+            columns: ["club_id"]
+            isOneToOne: false
+            referencedRelation: "clubs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       admin_get_stats: { Args: never; Returns: Json }
@@ -2325,6 +2354,7 @@ export type Database = {
         }
         Returns: undefined
       }
+      can_notify: { Args: { _target: string }; Returns: boolean }
       credit_wallet: {
         Args: {
           p_amount: number
