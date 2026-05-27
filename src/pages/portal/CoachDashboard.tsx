@@ -184,12 +184,12 @@ const CoachDashboard = () => {
         />
       )}
       <div className="max-w-5xl mx-auto">
-        <motion.h1 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="font-display text-3xl md:text-4xl text-foreground mb-6">
+        <motion.h1 initial={false} className="font-display text-3xl md:text-4xl text-foreground mb-6">
           WELCOME, {firstName}
         </motion.h1>
 
         {/* SECTION A — Hero Stats */}
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+        <motion.div initial={false}} className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
           <div className="bg-card border border-border rounded-xl p-4 text-center">
             <Users size={18} className="text-primary mx-auto mb-1" />
             <p className="font-display text-2xl text-foreground"><AnimatedNumber value={stats.players} /></p>
@@ -220,7 +220,7 @@ const CoachDashboard = () => {
 
         {/* SECTION B — Revenue Chart */}
         {revenueData.length > 0 && (
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="bg-card border border-border rounded-xl p-5 mb-6">
+          <motion.div initial={false}} className="bg-card border border-border rounded-xl p-5 mb-6">
             <h3 className="font-display text-sm tracking-wider text-muted-foreground mb-3 flex items-center gap-2">
               <DollarSign size={14} className="text-primary" /> EARNINGS (6 MONTHS)
             </h3>
@@ -242,7 +242,7 @@ const CoachDashboard = () => {
 
         {/* SECTION C — Player Progress Strip */}
         {playerCards.length > 0 && (
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="mb-6">
+          <motion.div initial={false}} className="mb-6">
             <div className="flex items-center justify-between mb-3">
               <h3 className="font-display text-sm tracking-wider text-muted-foreground">PLAYER PROGRESS</h3>
               <Link to="/coach/players" className="text-xs font-display text-primary tracking-wider hover:underline">VIEW ALL →</Link>
@@ -267,7 +267,7 @@ const CoachDashboard = () => {
         )}
 
         {/* SECTION D — Marketplace Stats */}
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="mb-6">
+        <motion.div initial={false}} className="mb-6">
           <div className="flex items-center justify-between mb-3">
             <h3 className="font-display text-sm tracking-wider text-muted-foreground flex items-center gap-2">
               <ShoppingBag size={14} className="text-primary" /> MARKETPLACE
@@ -291,7 +291,7 @@ const CoachDashboard = () => {
         </motion.div>
 
         {/* SECTION E — Week Strip */}
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }} className="mb-6">
+        <motion.div initial={false}} className="mb-6">
           <div className="flex items-center justify-between mb-3">
             <h3 className="font-display text-sm tracking-wider text-muted-foreground">UPCOMING WEEK</h3>
             <div className="flex items-center gap-1">
@@ -324,7 +324,7 @@ const CoachDashboard = () => {
             let cur = cs;
             while (cur <= me || days.length % 7 !== 0) { days.push(cur); cur = addDays(cur, 1); }
             return (
-              <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} className="mb-3 bg-card border border-border rounded-xl p-3 overflow-hidden">
+              <motion.div initial={false} className="mb-3 bg-card border border-border rounded-xl p-3 overflow-hidden">
                 <div className="flex items-center justify-between mb-2">
                   <button onClick={() => setCalMonth(subMonths(calMonth, 1))} className="p-1 rounded-lg hover:bg-secondary text-muted-foreground"><ChevronLeft size={14} /></button>
                   <p className="font-display text-xs tracking-wider text-foreground">{format(calMonth, "MMMM yyyy").toUpperCase()}</p>
@@ -388,7 +388,7 @@ const CoachDashboard = () => {
 
         {/* Coaching Requests */}
         {requests.length > 0 && (
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="mb-6">
+          <motion.div initial={false}} className="mb-6">
             <div className="flex items-center justify-between mb-3">
               <h2 className="font-display text-sm tracking-wider text-foreground flex items-center gap-2">
                 <Mail size={16} className="text-primary" /> COACHING REQUESTS

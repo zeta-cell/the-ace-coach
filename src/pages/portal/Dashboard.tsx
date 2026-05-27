@@ -269,12 +269,12 @@ const Dashboard = () => {
   return (
     <PortalLayout>
       <div className="max-w-3xl mx-auto">
-        <motion.h1 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="font-display text-3xl md:text-4xl text-foreground mb-6">
+        <motion.h1 initial={false} className="font-display text-3xl md:text-4xl text-foreground mb-6">
           WELCOME BACK, {firstName}
         </motion.h1>
 
         {/* Hero Stats Bar — 6 metrics */}
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="grid grid-cols-3 md:grid-cols-6 gap-2 mb-6">
+        <motion.div initial={false}} className="grid grid-cols-3 md:grid-cols-6 gap-2 mb-6">
           <div className="bg-card border border-border rounded-xl p-3 text-center">
             <PhLightning size={20} weight="fill" className="mx-auto mb-0.5" style={{ color: lvl.color }} />
             <p className="font-display text-xl text-foreground"><AnimatedNumber value={userStats.total_xp} /></p>
@@ -311,7 +311,7 @@ const Dashboard = () => {
         </motion.div>
 
         {/* Level Progress */}
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="bg-card border border-border rounded-xl p-5 mb-6">
+        <motion.div initial={false}} className="bg-card border border-border rounded-xl p-5 mb-6">
           <div className="flex items-center gap-3 mb-3">
             <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: lvl.color + '20' }}>
               <Trophy size={18} style={{ color: lvl.color }} />
@@ -329,7 +329,7 @@ const Dashboard = () => {
 
         {/* Activity Chart */}
         {activityData.length > 0 && (
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="bg-card border border-border rounded-xl p-5 mb-6">
+          <motion.div initial={false}} className="bg-card border border-border rounded-xl p-5 mb-6">
             <h3 className="font-display text-sm tracking-wider text-muted-foreground mb-3 flex items-center gap-2">
               <TrendingUp size={14} className="text-primary" /> TRAINING ACTIVITY
             </h3>
@@ -348,7 +348,7 @@ const Dashboard = () => {
         )}
 
         {/* Training Heatmap */}
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.17 }} className="bg-card border border-border rounded-xl p-5 mb-6">
+        <motion.div initial={false}} className="bg-card border border-border rounded-xl p-5 mb-6">
           <h3 className="font-display text-sm tracking-wider text-muted-foreground mb-3">TRAINING HEATMAP</h3>
           <div className="flex flex-wrap gap-[2px]">
             {heatmapDays.map(d => {
@@ -368,12 +368,12 @@ const Dashboard = () => {
         </motion.div>
 
         {/* Health Data Card */}
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.19 }} className="mb-6">
+        <motion.div initial={false}} className="mb-6">
           <HealthDataCard />
         </motion.div>
 
         {/* Badges */}
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="mb-6">
+        <motion.div initial={false}} className="mb-6">
           <div className="flex items-center justify-between mb-3">
             <h3 className="font-display text-sm tracking-wider text-muted-foreground flex items-center gap-2"><Award size={14} className="text-primary" /> BADGES</h3>
           </div>
@@ -408,7 +408,7 @@ const Dashboard = () => {
         </motion.div>
 
         {/* Leaderboard Preview */}
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }} className="bg-card border border-border rounded-xl p-5 mb-6">
+        <motion.div initial={false}} className="bg-card border border-border rounded-xl p-5 mb-6">
           <div className="flex items-center justify-between mb-3">
             <h3 className="font-display text-sm tracking-wider text-muted-foreground flex items-center gap-2"><Trophy size={14} className="text-primary" /> LEADERBOARD</h3>
             <Link to="/rankings" className="text-xs font-display text-primary tracking-wider hover:underline">VIEW ALL →</Link>
@@ -434,7 +434,7 @@ const Dashboard = () => {
 
         {/* My Coaches */}
         {myCoaches.length > 0 && (
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.27 }} className="mb-6">
+          <motion.div initial={false}} className="mb-6">
             <h3 className="font-display text-sm tracking-wider text-muted-foreground mb-3">MY COACHES</h3>
             <div className="flex gap-2">
               {myCoaches.map(c => (
@@ -451,19 +451,19 @@ const Dashboard = () => {
         )}
 
         {/* My Clubs */}
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.275 }}><MyClubsCard /></motion.div>
+        <motion.div initial={false}}><MyClubsCard /></motion.div>
 
         {/* Wallet & Referrals */}
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.28 }} className="mb-6"><WalletCard /></motion.div>
+        <motion.div initial={false}} className="mb-6"><WalletCard /></motion.div>
 
         {/* Health Connections */}
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.29 }} className="mb-6"><HealthConnections /></motion.div>
+        <motion.div initial={false}} className="mb-6"><HealthConnections /></motion.div>
 
         {/* Raffle */}
-        {isGoldPlus && <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="mb-6"><RaffleCard /></motion.div>}
+        {isGoldPlus && <motion.div initial={false}} className="mb-6"><RaffleCard /></motion.div>}
 
         {/* Today's plan */}
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.32 }} className="bg-card border border-border rounded-xl overflow-hidden mb-6">
+        <motion.div initial={false}} className="bg-card border border-border rounded-xl overflow-hidden mb-6">
           <div className="flex">
             <div className="w-1 bg-primary" />
             <div className="flex-1 p-5">
@@ -492,7 +492,7 @@ const Dashboard = () => {
 
         {/* Upcoming Events */}
         {upcomingEvents.length > 0 && (
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.32 }} className="mb-6">
+          <motion.div initial={false}} className="mb-6">
             <div className="flex items-center justify-between mb-3">
               <h3 className="font-display text-sm tracking-wider text-foreground flex items-center gap-2"><Calendar size={16} className="text-primary" /> UPCOMING EVENTS</h3>
               <Link to="/events" className="text-xs font-body text-primary hover:underline">View all</Link>
@@ -521,10 +521,10 @@ const Dashboard = () => {
         )}
 
         {/* Programs moved to Training page */}
-        {user && <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.38 }} className="mb-6"><TrainingDayInfo playerId={user.id} date={format(today, "yyyy-MM-dd")} /></motion.div>}
+        {user && <motion.div initial={false}} className="mb-6"><TrainingDayInfo playerId={user.id} date={format(today, "yyyy-MM-dd")} /></motion.div>}
 
         {/* Week strip */}
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="mb-6">
+        <motion.div initial={false}} className="mb-6">
           <h3 className="font-display text-sm tracking-wider text-muted-foreground mb-3">THIS WEEK</h3>
           <div className="flex gap-2">
             {weekDays.map(day => {
