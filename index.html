@@ -67,7 +67,7 @@
 
   <body>
     <script>
-      (function(){var t=localStorage.getItem('theme');if(t==='dark'){document.documentElement.classList.add('dark')}else{document.documentElement.classList.add('light')}})();
+      (function(){var t=localStorage.getItem('theme');if(t==='light'){document.documentElement.classList.add('light')}else{document.documentElement.classList.add('dark');if(!t)localStorage.setItem('theme','dark')}})();
     </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
