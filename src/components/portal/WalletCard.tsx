@@ -69,7 +69,7 @@ const WalletCard = () => {
 
   const shareWhatsApp = () => {
     const link = `${window.location.origin}/login?ref=${referralCode}`;
-    window.open(`https://wa.me/?text=${encodeURIComponent(`Join me on ACE Coach! Sign up here: ${link}`)}`, '_blank');
+    window.open(`https://wa.me/?text=${encodeURIComponent(`Join me on Hi Volley — the tennis & padel coaching platform. Sign up here: ${link}`)}`, '_blank');
   };
 
   return (
