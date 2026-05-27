@@ -189,7 +189,7 @@ const CoachDashboard = () => {
         </motion.h1>
 
         {/* SECTION A — Hero Stats */}
-        <motion.div initial={false}} className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+        <motion.div initial={false} className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
           <div className="bg-card border border-border rounded-xl p-4 text-center">
             <Users size={18} className="text-primary mx-auto mb-1" />
             <p className="font-display text-2xl text-foreground"><AnimatedNumber value={stats.players} /></p>
@@ -220,7 +220,7 @@ const CoachDashboard = () => {
 
         {/* SECTION B — Revenue Chart */}
         {revenueData.length > 0 && (
-          <motion.div initial={false}} className="bg-card border border-border rounded-xl p-5 mb-6">
+          <motion.div initial={false} className="bg-card border border-border rounded-xl p-5 mb-6">
             <h3 className="font-display text-sm tracking-wider text-muted-foreground mb-3 flex items-center gap-2">
               <DollarSign size={14} className="text-primary" /> EARNINGS (6 MONTHS)
             </h3>
@@ -242,7 +242,7 @@ const CoachDashboard = () => {
 
         {/* SECTION C — Player Progress Strip */}
         {playerCards.length > 0 && (
-          <motion.div initial={false}} className="mb-6">
+          <motion.div initial={false} className="mb-6">
             <div className="flex items-center justify-between mb-3">
               <h3 className="font-display text-sm tracking-wider text-muted-foreground">PLAYER PROGRESS</h3>
               <Link to="/coach/players" className="text-xs font-display text-primary tracking-wider hover:underline">VIEW ALL →</Link>
@@ -267,7 +267,7 @@ const CoachDashboard = () => {
         )}
 
         {/* SECTION D — Marketplace Stats */}
-        <motion.div initial={false}} className="mb-6">
+        <motion.div initial={false} className="mb-6">
           <div className="flex items-center justify-between mb-3">
             <h3 className="font-display text-sm tracking-wider text-muted-foreground flex items-center gap-2">
               <ShoppingBag size={14} className="text-primary" /> MARKETPLACE
@@ -291,7 +291,7 @@ const CoachDashboard = () => {
         </motion.div>
 
         {/* SECTION E — Week Strip */}
-        <motion.div initial={false}} className="mb-6">
+        <motion.div initial={false} className="mb-6">
           <div className="flex items-center justify-between mb-3">
             <h3 className="font-display text-sm tracking-wider text-muted-foreground">UPCOMING WEEK</h3>
             <div className="flex items-center gap-1">
@@ -388,7 +388,7 @@ const CoachDashboard = () => {
 
         {/* Coaching Requests */}
         {requests.length > 0 && (
-          <motion.div initial={false}} className="mb-6">
+          <motion.div initial={false} className="mb-6">
             <div className="flex items-center justify-between mb-3">
               <h2 className="font-display text-sm tracking-wider text-foreground flex items-center gap-2">
                 <Mail size={16} className="text-primary" /> COACHING REQUESTS
