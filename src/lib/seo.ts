@@ -2,7 +2,7 @@
 // Sets <title>, meta description, canonical, Open Graph, Twitter, and JSON-LD.
 
 const SITE_NAME = "Hi Volley";
-const SITE_URL = "https://ace-whisperer-guide.lovable.app";
+const SITE_URL = "https://hivolley.com";
 const DEFAULT_IMAGE = `${SITE_URL}/images/social-media.png`;
 
 type SeoInput = {
