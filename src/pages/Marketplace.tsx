@@ -237,7 +237,7 @@ const Marketplace = () => {
         {filterSheetOpen && (
           <>
             <motion.div
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              initial={false} exit={{ opacity: 0 }}
               onClick={() => setFilterSheetOpen(false)}
               className="fixed inset-0 z-50 bg-background/70 backdrop-blur-sm"
             />
@@ -409,7 +409,7 @@ const Marketplace = () => {
                 const isOwned = ownedIds.has(block.id);
                 const isSaved = savedIds.has(block.id);
                 return (
-                  <motion.div key={block.id} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
+                  <motion.div key={block.id} initial={false}
                     className="bg-popover border border-border/80 rounded-2xl overflow-hidden hover:border-primary/60 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/10 transition-all group">
                     {/* Thumbnail */}
                     <div className="relative h-28 bg-gradient-to-br from-primary/25 via-accent/10 to-background/40 border-b border-border/60 p-3 flex flex-col justify-between cursor-pointer"

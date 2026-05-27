@@ -83,7 +83,7 @@ const Index = () => {
         <div className="absolute inset-0 bg-gradient-to-br from-background/30 via-transparent to-background/40" />
 
         <div className="relative z-10 w-full max-w-5xl mx-auto px-6 pb-6 pt-20 md:pb-[6.18rem] md:pt-40">
-          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
+          <motion.div initial={false}}>
             <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary text-primary-foreground font-body text-xs tracking-wider mb-5 md:mb-10 shadow-lg">
               <MapPin size={14} /> {t("home.badge")}
             </span>
@@ -121,9 +121,7 @@ const Index = () => {
           {stats.map((s, i) => (
             <motion.div
               key={s.labelKey}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+              initial={false}}
               transition={{ delay: i * 0.1 }}
               className="text-center"
             >
@@ -146,9 +144,7 @@ const Index = () => {
 
         <div className="relative z-10 max-w-6xl mx-auto">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            initial={false}}
             className="text-center mb-16"
           >
             <h2 className="font-display text-4xl md:text-5xl mb-4">
@@ -175,9 +171,7 @@ const Index = () => {
       <section className="py-20 px-6 bg-card/30 border-y border-border">
         <div className="max-w-4xl mx-auto">
           <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            initial={false}}
             className="font-display text-4xl md:text-5xl text-center mb-16"
           >
             {t("how.h2.a")} <span className="text-primary">{t("how.h2.b")}</span>
@@ -187,9 +181,7 @@ const Index = () => {
             {steps.map((item, i) => (
               <motion.div
                 key={item.step}
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
+                initial={false}}
                 transition={{ delay: i * 0.1 }}
                 className="flex gap-6 py-8 border-b border-border last:border-0"
               >
@@ -215,7 +207,7 @@ const Index = () => {
         <div className="absolute inset-0 bg-background/70 backdrop-blur-[2px]" />
 
         <div className="relative z-10 max-w-3xl mx-auto text-center">
-          <motion.div initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}>
+          <motion.div initial={false}}>
             <h2 className="font-display text-4xl md:text-6xl mb-4">
               {t("cta.h2.a")} <span className="text-primary">{t("cta.h2.b")}</span> {t("cta.h2.c")}
             </h2>
