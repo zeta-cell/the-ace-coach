@@ -142,18 +142,18 @@ const PublicHeader = () => {
               </button>
               <div className="pt-4 border-t border-border mt-4">
                 <Link
-                  to="/login"
+                  to={portalHref}
                   onClick={() => setMenuOpen(false)}
                   className="block px-3 py-2.5 rounded-lg font-display text-sm tracking-wider text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
                 >
-                  {t("nav.login")}
+                  {isLoggedIn ? t("nav.account") : t("nav.login")}
                 </Link>
                 <Link
-                  to="/login"
+                  to={portalHref}
                   onClick={() => setMenuOpen(false)}
                   className="block px-3 py-2.5 mt-1 rounded-lg bg-primary text-primary-foreground font-display text-sm tracking-wider text-center"
                 >
-                  {t("nav.getStarted")}
+                  {isLoggedIn ? t("nav.account") : t("nav.getStarted")}
                 </Link>
               </div>
             </div>
