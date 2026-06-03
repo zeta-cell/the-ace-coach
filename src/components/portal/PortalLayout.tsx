@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   LayoutDashboard, Calendar, BookOpen, Video,
   MessageSquare, User, LogOut, Menu, X, ChevronLeft, ChevronRight,
-  Users, Settings, Home, CreditCard, Link2, CalendarDays, UserCheck, Search, ShoppingBag, Eye, Dumbbell, Building2, Square, Contact, DollarSign
+  Users, Settings, Home, CreditCard, Link2, CalendarDays, UserCheck, Search, ShoppingBag, Eye, Square, Contact, DollarSign
 } from "lucide-react";
 import {
   House as PhHouse,
@@ -74,9 +74,11 @@ const adminNav = [
 
 const clubNav = [
   { label: "Dashboard", icon: LayoutDashboard, href: "/club" },
-  { label: "Bookings", icon: CalendarDays, href: "/club/bookings" },
-  { label: "Coaches", icon: UserCheck, href: "/club/coaches" },
   { label: "Courts", icon: Square, href: "/club/courts" },
+  { label: "Coaches", icon: UserCheck, href: "/club/coaches" },
+  { label: "Members", icon: Users, href: "/club/members" },
+  { label: "Coach Calendar", icon: CalendarDays, href: "/club/calendar" },
+  { label: "Bookings", icon: Calendar, href: "/club/bookings" },
   { label: "CRM", icon: Contact, href: "/club/crm" },
   { label: "Settings", icon: Settings, href: "/club/settings" },
 ];
