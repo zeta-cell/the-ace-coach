@@ -10,27 +10,43 @@ import { lazy as reactLazy, Suspense } from "react";
 import { IconContext } from "@phosphor-icons/react";
 
 // Auto-reload on stale chunk imports after a redeploy.
+const isChunkError = (msg: string) =>
+  /Importing a module script failed|Failed to fetch dynamically imported module|ChunkLoadError|Loading chunk \d+ failed|error loading dynamically imported module/i.test(
+    msg
+  );
+
+const tryReload = () => {
+  const key = "__chunk_reload_at";
+  const last = Number(sessionStorage.getItem(key) || 0);
+  if (Date.now() - last > 10000) {
+    sessionStorage.setItem(key, String(Date.now()));
+    window.location.reload();
+    return true;
+  }
+  return false;
+};
+
 const lazy: typeof reactLazy = (factory) =>
   reactLazy(async () => {
     try {
       return await factory();
     } catch (err: any) {
-      const msg = String(err?.message || "");
-      if (
-        /Importing a module script failed|Failed to fetch dynamically imported module|ChunkLoadError|Loading chunk \d+ failed/i.test(
-          msg
-        )
-      ) {
-        const key = "__chunk_reload_at";
-        const last = Number(sessionStorage.getItem(key) || 0);
-        if (Date.now() - last > 10000) {
-          sessionStorage.setItem(key, String(Date.now()));
-          window.location.reload();
-        }
+      if (isChunkError(String(err?.message || "")) && tryReload()) {
+        return { default: () => null } as any;
       }
       throw err;
     }
   });
+
+if (typeof window !== "undefined") {
+  window.addEventListener("error", (e) => {
+    if (isChunkError(String(e?.message || ""))) tryReload();
+  });
+  window.addEventListener("unhandledrejection", (e: any) => {
+    const msg = String(e?.reason?.message || e?.reason || "");
+    if (isChunkError(msg)) tryReload();
+  });
+}
 
 // Public
 import Index from "./pages/Index";
