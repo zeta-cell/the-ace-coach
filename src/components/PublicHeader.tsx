@@ -5,6 +5,13 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useI18n } from "@/lib/i18n";
 import { useAuth } from "@/contexts/AuthContext";
 
+const roleHome: Record<string, string> = {
+  player: "/dashboard",
+  coach: "/coach",
+  club_manager: "/club",
+  admin: "/founders",
+};
+
 const PublicHeader = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [theme, setTheme] = useState<"dark" | "light">(
@@ -12,6 +19,9 @@ const PublicHeader = () => {
   );
   const location = useLocation();
   const { t, lang, setLang } = useI18n();
+  const { user, role } = useAuth();
+  const isLoggedIn = !!user;
+  const portalHref = role ? roleHome[role] || "/dashboard" : "/login";
 
   const NAV_LINKS = [
     { label: t("nav.find"), href: "/find-a-coach" },
