@@ -3,6 +3,14 @@ import { Link, useLocation } from "react-router-dom";
 import { List as Menu, X, Sun, Moon, Globe } from "@phosphor-icons/react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useI18n } from "@/lib/i18n";
+import { useAuth } from "@/contexts/AuthContext";
+
+const roleHome: Record<string, string> = {
+  player: "/dashboard",
+  coach: "/coach",
+  club_manager: "/club",
+  admin: "/founders",
+};
 
 const PublicHeader = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -11,6 +19,9 @@ const PublicHeader = () => {
   );
   const location = useLocation();
   const { t, lang, setLang } = useI18n();
+  const { user, role } = useAuth();
+  const isLoggedIn = !!user;
+  const portalHref = role ? roleHome[role] || "/dashboard" : "/login";
 
   const NAV_LINKS = [
     { label: t("nav.find"), href: "/find-a-coach" },
@@ -80,13 +91,13 @@ const PublicHeader = () => {
               {theme === "dark" ? <Sun size={16} className="md:hidden" /> : <Moon size={16} className="md:hidden" />}
               {theme === "dark" ? <Sun size={18} className="hidden md:block" /> : <Moon size={18} className="hidden md:block" />}
             </button>
-            <Link to="/login" className="font-display text-[10px] md:text-sm tracking-wider text-muted-foreground hover:text-foreground transition-colors px-1.5 md:px-0">
-              <span className="md:hidden">{t("home.cta.coach")}</span>
-              <span className="hidden md:inline">{t("nav.login")}</span>
+            <Link to={portalHref} className="font-display text-[10px] md:text-sm tracking-wider text-muted-foreground hover:text-foreground transition-colors px-1.5 md:px-0">
+              <span className="md:hidden">{isLoggedIn ? t("nav.account") : t("home.cta.coach")}</span>
+              <span className="hidden md:inline">{isLoggedIn ? t("nav.account") : t("nav.login")}</span>
             </Link>
-            <Link to="/login" className="font-display text-xs md:text-sm tracking-wider bg-primary text-primary-foreground px-3 py-1.5 md:px-5 md:py-2 rounded-lg hover:bg-primary/90 transition-colors">
-              <span className="hidden md:inline">{t("nav.getStarted")}</span>
-              <span className="md:hidden">{t("nav.login")}</span>
+            <Link to={portalHref} className="font-display text-xs md:text-sm tracking-wider bg-primary text-primary-foreground px-3 py-1.5 md:px-5 md:py-2 rounded-lg hover:bg-primary/90 transition-colors">
+              <span className="hidden md:inline">{isLoggedIn ? t("nav.account") : t("nav.getStarted")}</span>
+              <span className="md:hidden">{isLoggedIn ? t("nav.account") : t("nav.login")}</span>
             </Link>
           </div>
         </div>
@@ -131,18 +142,18 @@ const PublicHeader = () => {
               </button>
               <div className="pt-4 border-t border-border mt-4">
                 <Link
-                  to="/login"
+                  to={portalHref}
                   onClick={() => setMenuOpen(false)}
                   className="block px-3 py-2.5 rounded-lg font-display text-sm tracking-wider text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
                 >
-                  {t("nav.login")}
+                  {isLoggedIn ? t("nav.account") : t("nav.login")}
                 </Link>
                 <Link
-                  to="/login"
+                  to={portalHref}
                   onClick={() => setMenuOpen(false)}
                   className="block px-3 py-2.5 mt-1 rounded-lg bg-primary text-primary-foreground font-display text-sm tracking-wider text-center"
                 >
-                  {t("nav.getStarted")}
+                  {isLoggedIn ? t("nav.account") : t("nav.getStarted")}
                 </Link>
               </div>
             </div>

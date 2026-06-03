@@ -16,6 +16,7 @@ const dict = {
   "nav.community": { en: "COMMUNITY", es: "COMUNIDAD" },
   "nav.login": { en: "LOG IN", es: "ENTRAR" },
   "nav.getStarted": { en: "GET STARTED", es: "EMPEZAR" },
+  "nav.account": { en: "ACCOUNT", es: "CUENTA" },
 
   // Bottom nav
   "bn.home": { en: "Home", es: "Inicio" },
