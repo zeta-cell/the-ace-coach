@@ -105,6 +105,8 @@ const AdminSchedule = lazy(() => import("./pages/portal/AdminSchedule"));
 const ClubDashboard = lazy(() => import("./pages/portal/ClubDashboard"));
 const ClubCoaches = lazy(() => import("./pages/portal/ClubCoaches"));
 const ClubCourts = lazy(() => import("./pages/portal/ClubCourts"));
+const ClubMembers = lazy(() => import("./pages/portal/ClubMembers"));
+const ClubCalendar = lazy(() => import("./pages/portal/ClubCalendar"));
 const ClubBookings = lazy(() => import("./pages/portal/ClubBookings"));
 const ClubSettings = lazy(() => import("./pages/portal/ClubSettings"));
 const ClubInvite = lazy(() => import("./pages/ClubInvite"));
@@ -340,6 +342,16 @@ const App = () => (
             <Route path="/club/courts" element={
               <Suspense fallback={<PortalLoader />}>
                 <ProtectedRoute requiredRole="club_manager"><ClubCourts /></ProtectedRoute>
+              </Suspense>
+            } />
+            <Route path="/club/members" element={
+              <Suspense fallback={<PortalLoader />}>
+                <ProtectedRoute requiredRole="club_manager"><ClubMembers /></ProtectedRoute>
+              </Suspense>
+            } />
+            <Route path="/club/calendar" element={
+              <Suspense fallback={<PortalLoader />}>
+                <ProtectedRoute requiredRole="club_manager"><ClubCalendar /></ProtectedRoute>
               </Suspense>
             } />
             <Route path="/club/bookings" element={
