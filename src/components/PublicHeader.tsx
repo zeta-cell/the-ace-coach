@@ -91,13 +91,13 @@ const PublicHeader = () => {
               {theme === "dark" ? <Sun size={16} className="md:hidden" /> : <Moon size={16} className="md:hidden" />}
               {theme === "dark" ? <Sun size={18} className="hidden md:block" /> : <Moon size={18} className="hidden md:block" />}
             </button>
-            <Link to="/login" className="font-display text-[10px] md:text-sm tracking-wider text-muted-foreground hover:text-foreground transition-colors px-1.5 md:px-0">
-              <span className="md:hidden">{t("home.cta.coach")}</span>
-              <span className="hidden md:inline">{t("nav.login")}</span>
+            <Link to={portalHref} className="font-display text-[10px] md:text-sm tracking-wider text-muted-foreground hover:text-foreground transition-colors px-1.5 md:px-0">
+              <span className="md:hidden">{isLoggedIn ? t("nav.account") : t("home.cta.coach")}</span>
+              <span className="hidden md:inline">{isLoggedIn ? t("nav.account") : t("nav.login")}</span>
             </Link>
-            <Link to="/login" className="font-display text-xs md:text-sm tracking-wider bg-primary text-primary-foreground px-3 py-1.5 md:px-5 md:py-2 rounded-lg hover:bg-primary/90 transition-colors">
-              <span className="hidden md:inline">{t("nav.getStarted")}</span>
-              <span className="md:hidden">{t("nav.login")}</span>
+            <Link to={portalHref} className="font-display text-xs md:text-sm tracking-wider bg-primary text-primary-foreground px-3 py-1.5 md:px-5 md:py-2 rounded-lg hover:bg-primary/90 transition-colors">
+              <span className="hidden md:inline">{isLoggedIn ? t("nav.account") : t("nav.getStarted")}</span>
+              <span className="md:hidden">{isLoggedIn ? t("nav.account") : t("nav.login")}</span>
             </Link>
           </div>
         </div>
