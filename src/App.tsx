@@ -6,8 +6,31 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import ScrollToTop from "@/components/ScrollToTop";
 import ProtectedRoute from "@/components/portal/ProtectedRoute";
-import { lazy, Suspense } from "react";
+import { lazy as reactLazy, Suspense } from "react";
 import { IconContext } from "@phosphor-icons/react";
+
+// Auto-reload on stale chunk imports after a redeploy.
+const lazy: typeof reactLazy = (factory) =>
+  reactLazy(async () => {
+    try {
+      return await factory();
+    } catch (err: any) {
+      const msg = String(err?.message || "");
+      if (
+        /Importing a module script failed|Failed to fetch dynamically imported module|ChunkLoadError|Loading chunk \d+ failed/i.test(
+          msg
+        )
+      ) {
+        const key = "__chunk_reload_at";
+        const last = Number(sessionStorage.getItem(key) || 0);
+        if (Date.now() - last > 10000) {
+          sessionStorage.setItem(key, String(Date.now()));
+          window.location.reload();
+        }
+      }
+      throw err;
+    }
+  });
 
 // Public
 import Index from "./pages/Index";
