@@ -195,6 +195,22 @@ const PortalLayout = ({ children }: { children: React.ReactNode }) => {
                 );
               })}
             </>
+          ) : role === "club_manager" ? (
+            [
+              { label: "Courts", icon: Square, href: "/club/courts" },
+              { label: "Coaches", icon: UserCheck, href: "/club/coaches" },
+              { label: "Calendar", icon: CalendarDays, href: "/club/calendar" },
+              { label: "CRM", icon: Contact, href: "/club/crm" },
+              { label: "Members", icon: Users, href: "/club/members" },
+            ].map((item) => {
+              const isActive = location.pathname === item.href;
+              return (
+                <Link key={item.href} to={item.href} className={`flex flex-col items-center gap-0.5 ${isActive ? "text-primary" : "text-muted-foreground"}`}>
+                  <item.icon size={20} />
+                  <span className="font-display text-[9px] tracking-wider">{item.label.toUpperCase()}</span>
+                </Link>
+              );
+            })
           ) : (
             (role === "player" ? playerNav.slice(0, 5) : navItems.slice(0, 5)).map((item) => {
               const isActive = location.pathname === item.href || (item.href === "/dashboard" && location.pathname === "/dashboard");
