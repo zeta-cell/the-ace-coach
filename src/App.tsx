@@ -15,12 +15,21 @@ const isChunkError = (msg: string) =>
     msg
   );
 
+const chunkErrorMessage = (err: unknown) =>
+  [
+    err instanceof Error ? err.message : "",
+    typeof err === "object" && err && "message" in err ? String((err as { message?: unknown }).message || "") : "",
+    String(err || ""),
+  ].join(" ");
+
 const tryReload = () => {
   const key = "__chunk_reload_at";
   const last = Number(sessionStorage.getItem(key) || 0);
   if (Date.now() - last > 10000) {
     sessionStorage.setItem(key, String(Date.now()));
-    window.location.reload();
+    const url = new URL(window.location.href);
+    url.searchParams.set("__fresh", String(Date.now()));
+    window.location.replace(url.toString());
     return true;
   }
   return false;
@@ -31,7 +40,7 @@ const lazy: typeof reactLazy = (factory) =>
     try {
       return await factory();
     } catch (err: any) {
-      if (isChunkError(String(err?.message || "")) && tryReload()) {
+      if (isChunkError(chunkErrorMessage(err)) && tryReload()) {
         return { default: () => null } as any;
       }
       throw err;
@@ -40,10 +49,10 @@ const lazy: typeof reactLazy = (factory) =>
 
 if (typeof window !== "undefined") {
   window.addEventListener("error", (e) => {
-    if (isChunkError(String(e?.message || ""))) tryReload();
+    if (isChunkError([e?.message, (e as ErrorEvent)?.error?.message, (e as ErrorEvent)?.filename].join(" "))) tryReload();
   });
   window.addEventListener("unhandledrejection", (e: any) => {
-    const msg = String(e?.reason?.message || e?.reason || "");
+    const msg = chunkErrorMessage(e?.reason);
     if (isChunkError(msg)) tryReload();
   });
 }
