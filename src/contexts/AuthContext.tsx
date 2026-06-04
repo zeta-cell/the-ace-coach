@@ -3,6 +3,12 @@ import { supabase } from "@/integrations/supabase/client";
 import type { User, Session } from "@supabase/supabase-js";
 
 type AppRole = "player" | "coach" | "admin" | "club_manager";
+const ROLE_PRIORITY: AppRole[] = ["admin", "club_manager", "coach", "player"];
+
+const pickPrimaryRole = (rows: Array<{ role: string | null }> | null): AppRole => {
+  const matchedRole = ROLE_PRIORITY.find((candidate) => rows?.some((row) => row.role === candidate));
+  return matchedRole || "player";
+};
 
 interface Profile {
   id: string;
@@ -90,9 +96,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const { data } = await supabase
       .from("user_roles")
       .select("role")
-      .eq("user_id", userId)
-      .single();
-    if (data) setRole(data.role as AppRole);
+      .eq("user_id", userId);
+
+    setRole(pickPrimaryRole((data || []) as Array<{ role: string | null }>));
   };
 
   const refreshProfile = async () => {
