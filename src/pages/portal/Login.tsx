@@ -27,6 +27,13 @@ const registerSchema = z.object({
 
 type LoginForm = z.infer<typeof loginSchema>;
 type RegisterForm = z.infer<typeof registerSchema>;
+const roleHome: Record<string, string> = {
+  admin: "/admin",
+  club_manager: "/club",
+  coach: "/coach",
+  player: "/dashboard",
+};
+const rolePriority = ["admin", "club_manager", "coach", "player"];
 
 const Login = () => {
   const [mode, setMode] = useState<"login" | "register">("login");
@@ -59,13 +66,10 @@ const Login = () => {
       const { data: roleData } = await supabase
         .from("user_roles")
         .select("role")
-        .eq("user_id", user.id)
-        .maybeSingle();
+        .eq("user_id", user.id);
       if (cancelled) return;
-      if (roleData?.role === "coach") navigate("/coach", { replace: true });
-      else if (roleData?.role === "admin") navigate("/admin", { replace: true });
-      else if (roleData?.role === "club_manager") navigate("/club", { replace: true });
-      else navigate("/dashboard", { replace: true });
+      const primaryRole = rolePriority.find((role) => roleData?.some((row) => row.role === role)) || "player";
+      navigate(roleHome[primaryRole], { replace: true });
     })();
     return () => { cancelled = true; };
   }, [user, navigate]);
