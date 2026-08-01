@@ -17,7 +17,9 @@ Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
 
   const url = new URL(req.url);
-  const action = url.searchParams.get('action');
+  let body: any = {};
+  if (req.method === 'POST') { try { body = await req.json(); } catch { body = {}; } }
+  const action = url.searchParams.get('action') || body.action;
   const supabase = createClient(
     Deno.env.get('SUPABASE_URL')!,
     Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!

@@ -59,7 +59,9 @@ Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
 
   const url = new URL(req.url);
-  const action = url.searchParams.get('action');
+  let body: any = {};
+  if (req.method === 'POST') { try { body = await req.json(); } catch { body = {}; } }
+  const action = url.searchParams.get('action') || body.action;
   const consumerKey = Deno.env.get('GARMIN_CONSUMER_KEY')!;
   const consumerSecret = Deno.env.get('GARMIN_CONSUMER_SECRET')!;
   const supabase = createClient(

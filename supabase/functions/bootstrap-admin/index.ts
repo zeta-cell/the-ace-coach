@@ -62,7 +62,7 @@ Deno.serve(async (req) => {
     return new Response(
       JSON.stringify({
         success: true,
-        message: `Admin account ready. Email: ${EMAIL} / Password: ${PASSWORD}`,
+        message: `Admin account ready. Email: ${EMAIL}`,
         user_id: userId,
       }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
