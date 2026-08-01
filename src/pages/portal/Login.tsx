@@ -118,20 +118,6 @@ const Login = () => {
     }
   };
 
-  const handleBootstrap = async () => {
-    setBootstrapping(true);
-    try {
-      const { data, error } = await supabase.functions.invoke('bootstrap-admin');
-      if (error) throw error;
-      toast.success('Admin account created!', {
-        description: data.message,
-        duration: 10000,
-      });
-    } catch (err: any) {
-      toast.error('Bootstrap failed', { description: err.message });
-    }
-    setBootstrapping(false);
-  };
 
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center px-4">
