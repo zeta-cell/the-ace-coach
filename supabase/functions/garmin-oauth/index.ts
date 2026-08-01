@@ -6,6 +6,8 @@
 // Apply at: https://developer.garmin.com/gc-developer-program/overview/
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { requireUserId, signState, verifyState, HttpError } from '../_shared/auth.ts';
+
 
 const GARMIN_REQUEST_TOKEN_URL = 'https://connectapi.garmin.com/oauth-service/oauth/request_token';
 const GARMIN_AUTH_URL = 'https://connect.garmin.com/oauthConfirm';
@@ -68,7 +70,7 @@ Deno.serve(async (req) => {
 
   try {
     if (action === 'connect') {
-      const userId = url.searchParams.get('user_id') || '';
+      const userId = await requireUserId(req);
       const authHeader = await buildOAuthHeader('POST', GARMIN_REQUEST_TOKEN_URL,
         { oauth_callback: callbackUrl }, consumerKey, consumerSecret);
       const tokenRes = await fetch(GARMIN_REQUEST_TOKEN_URL, {
@@ -83,7 +85,7 @@ Deno.serve(async (req) => {
         refresh_token: params.oauth_token_secret,
         is_connected: false,
       }, { onConflict: 'user_id,provider' });
-      const garminAuthUrl = `${GARMIN_AUTH_URL}?oauth_token=${params.oauth_token}&userId=${userId}`;
+      const garminAuthUrl = `${GARMIN_AUTH_URL}?oauth_token=${params.oauth_token}&userId=${encodeURIComponent(await signState(userId))}`;
       return new Response(JSON.stringify({ url: garminAuthUrl }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       });
@@ -92,7 +94,7 @@ Deno.serve(async (req) => {
     if (action === 'callback') {
       const oauthToken = url.searchParams.get('oauth_token') || '';
       const oauthVerifier = url.searchParams.get('oauth_verifier') || '';
-      const userId = url.searchParams.get('userId') || '';
+      const userId = await verifyState(url.searchParams.get('userId'));
       const { data: conn } = await supabase.from('health_connections')
         .select('refresh_token').eq('provider', 'garmin')
         .eq('access_token', oauthToken).maybeSingle();
@@ -118,8 +120,7 @@ Deno.serve(async (req) => {
     }
 
     if (action === 'sync') {
-      const body = await req.json();
-      const { user_id } = body;
+      const user_id = await requireUserId(req);
       const { data: conn } = await supabase.from('health_connections')
         .select('access_token, refresh_token')
         .eq('user_id', user_id).eq('provider', 'garmin').single();
@@ -163,7 +164,7 @@ Deno.serve(async (req) => {
   } catch (error) {
     console.error('Garmin OAuth error:', error);
     return new Response(JSON.stringify({ error: error.message }), {
-      status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      status: (error as any)?.status || 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
     });
   }
 });

@@ -5,6 +5,8 @@
 // [SUPABASE_URL]/functions/v1/whoop-oauth?action=callback
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { requireUserId, signState, verifyState, HttpError } from '../_shared/auth.ts';
+
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -28,7 +30,7 @@ Deno.serve(async (req) => {
       authUrl.searchParams.set('redirect_uri', `${Deno.env.get('SUPABASE_URL')}/functions/v1/whoop-oauth?action=callback`);
       authUrl.searchParams.set('response_type', 'code');
       authUrl.searchParams.set('scope', 'read:recovery read:sleep read:workout read:body_measurement offline');
-      authUrl.searchParams.set('state', url.searchParams.get('user_id') || '');
+      authUrl.searchParams.set('state', await signState(await requireUserId(req)));
       return new Response(JSON.stringify({ url: authUrl.toString() }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       });
@@ -36,7 +38,7 @@ Deno.serve(async (req) => {
 
     if (action === 'callback') {
       const code = url.searchParams.get('code');
-      const userId = url.searchParams.get('state');
+      const userId = await verifyState(url.searchParams.get('state'));
       const tokenRes = await fetch('https://api.prod.whoop.com/oauth/oauth2/token', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -62,8 +64,7 @@ Deno.serve(async (req) => {
     }
 
     if (action === 'sync') {
-      const body = await req.json();
-      const { user_id } = body;
+      const user_id = await requireUserId(req);
       const { data: conn } = await supabase.from('health_connections')
         .select('access_token').eq('user_id', user_id).eq('provider', 'whoop').single();
       if (!conn) return new Response(JSON.stringify({ error: 'Not connected' }), { status: 400, headers: corsHeaders });
@@ -99,7 +100,7 @@ Deno.serve(async (req) => {
   } catch (error) {
     console.error('Whoop OAuth error:', error);
     return new Response(JSON.stringify({ error: error.message }), {
-      status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      status: (error as any)?.status || 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
     });
   }
 });

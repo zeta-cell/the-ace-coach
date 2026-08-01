@@ -5,6 +5,8 @@
 // [SUPABASE_URL]/functions/v1/polar-oauth?action=callback
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { requireUserId, signState, verifyState, HttpError } from '../_shared/auth.ts';
+
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -28,7 +30,7 @@ Deno.serve(async (req) => {
       authUrl.searchParams.set('redirect_uri', `${Deno.env.get('SUPABASE_URL')}/functions/v1/polar-oauth?action=callback`);
       authUrl.searchParams.set('response_type', 'code');
       authUrl.searchParams.set('scope', 'accesslink.read_all');
-      authUrl.searchParams.set('state', url.searchParams.get('user_id') || '');
+      authUrl.searchParams.set('state', await signState(await requireUserId(req)));
       return new Response(JSON.stringify({ url: authUrl.toString() }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       });
@@ -36,7 +38,7 @@ Deno.serve(async (req) => {
 
     if (action === 'callback') {
       const code = url.searchParams.get('code');
-      const userId = url.searchParams.get('state');
+      const userId = await verifyState(url.searchParams.get('state'));
       const tokenRes = await fetch('https://polarremote.com/v2/oauth2/token', {
         method: 'POST',
         headers: {
@@ -64,8 +66,7 @@ Deno.serve(async (req) => {
     }
 
     if (action === 'sync') {
-      const body = await req.json();
-      const { user_id } = body;
+      const user_id = await requireUserId(req);
       const { data: conn } = await supabase.from('health_connections')
         .select('access_token, provider_user_id').eq('user_id', user_id).eq('provider', 'polar').single();
       if (!conn) return new Response(JSON.stringify({ error: 'Not connected' }), { status: 400, headers: corsHeaders });
@@ -101,7 +102,7 @@ Deno.serve(async (req) => {
   } catch (error) {
     console.error('Polar OAuth error:', error);
     return new Response(JSON.stringify({ error: error.message }), {
-      status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      status: (error as any)?.status || 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
     });
   }
 });
