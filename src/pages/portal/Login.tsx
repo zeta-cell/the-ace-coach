@@ -7,7 +7,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { motion } from "framer-motion";
 import { Eye, EyeOff, ArrowLeft, Circle, Dumbbell, Crown, Building2 } from "lucide-react";
-import { toast } from "sonner";
 // Logo removed during cleanup
 
 const loginSchema = z.object({
@@ -40,7 +39,6 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [bootstrapping, setBootstrapping] = useState(false);
   const navigate = useNavigate();
   const { user } = useAuth();
   const loginForm = useForm<LoginForm>({ resolver: zodResolver(loginSchema) });
@@ -118,20 +116,6 @@ const Login = () => {
     }
   };
 
-  const handleBootstrap = async () => {
-    setBootstrapping(true);
-    try {
-      const { data, error } = await supabase.functions.invoke('bootstrap-admin');
-      if (error) throw error;
-      toast.success('Admin account created!', {
-        description: data.message,
-        duration: 10000,
-      });
-    } catch (err: any) {
-      toast.error('Bootstrap failed', { description: err.message });
-    }
-    setBootstrapping(false);
-  };
 
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center px-4">
