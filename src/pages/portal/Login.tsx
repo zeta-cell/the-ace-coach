@@ -7,7 +7,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { motion } from "framer-motion";
 import { Eye, EyeOff, ArrowLeft, Circle, Dumbbell, Crown, Building2 } from "lucide-react";
-import { toast } from "sonner";
 // Logo removed during cleanup
 
 const loginSchema = z.object({
@@ -40,7 +39,6 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [bootstrapping, setBootstrapping] = useState(false);
   const navigate = useNavigate();
   const { user } = useAuth();
   const loginForm = useForm<LoginForm>({ resolver: zodResolver(loginSchema) });
