@@ -203,12 +203,14 @@ const UpcomingBookings = () => {
       <div className="bg-card border border-border rounded-xl p-6 text-center space-y-3 mb-6">
         <p className="font-display text-sm tracking-wider text-muted-foreground">UPCOMING SESSIONS</p>
         <p className="font-body text-sm text-muted-foreground">No upcoming sessions booked yet.</p>
+        {discoveryEnabled && (
         <Link
           to="/find-a-coach"
           className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground font-display text-xs tracking-wider hover:bg-primary/90 transition-colors"
         >
           FIND A COACH →
         </Link>
+        )}
       </div>
     );
   }
