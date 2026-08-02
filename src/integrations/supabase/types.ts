@@ -2515,6 +2515,10 @@ export type Database = {
         }
         Returns: undefined
       }
+      ensure_user_bootstrap: {
+        Args: { _full_name?: string }
+        Returns: undefined
+      }
       get_coach_invite: {
         Args: { _token: string }
         Returns: {
