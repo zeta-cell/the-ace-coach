@@ -147,12 +147,12 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/coach/:slug" element={<Suspense fallback={<PortalLoader />}><PublicCoachProfile /></Suspense>} />
             <Route path="/c/:slug" element={<Suspense fallback={<PortalLoader />}><PublicClubPage /></Suspense>} />
-            <Route path="/find-a-coach" element={<Suspense fallback={<PortalLoader />}><FindACoach /></Suspense>} />
-            <Route path="/marketplace" element={<Suspense fallback={<PortalLoader />}><Marketplace /></Suspense>} />
+            <Route path="/find-a-coach" element={<Suspense fallback={<PortalLoader />}><FeatureRoute feature="coach_discovery" fallback="/"><FindACoach /></FeatureRoute></Suspense>} />
+            <Route path="/marketplace" element={<Suspense fallback={<PortalLoader />}><FeatureRoute feature="marketplace" fallback="/"><Marketplace /></FeatureRoute></Suspense>} />
             <Route path="/booking-success" element={<Suspense fallback={<PortalLoader />}><BookingSuccess /></Suspense>} />
-            <Route path="/rankings" element={<Suspense fallback={<PortalLoader />}><Rankings /></Suspense>} />
-            <Route path="/events" element={<Suspense fallback={<PortalLoader />}><Events /></Suspense>} />
-            <Route path="/community" element={<Suspense fallback={<PortalLoader />}><Community /></Suspense>} />
+            <Route path="/rankings" element={<Suspense fallback={<PortalLoader />}><FeatureRoute feature="community" fallback="/"><Rankings /></FeatureRoute></Suspense>} />
+            <Route path="/events" element={<Suspense fallback={<PortalLoader />}><FeatureRoute feature="events" fallback="/"><Events /></FeatureRoute></Suspense>} />
+            <Route path="/community" element={<Suspense fallback={<PortalLoader />}><FeatureRoute feature="community" fallback="/"><Community /></FeatureRoute></Suspense>} />
             <Route path="/club-invite/:token" element={<Suspense fallback={<PortalLoader />}><ClubInvite /></Suspense>} />
 
             {/* SEO city × sport landing pages (EN + ES) */}
