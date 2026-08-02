@@ -7,6 +7,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { motion } from "framer-motion";
 import { Eye, EyeOff, ArrowLeft, Circle, Dumbbell, Crown, Building2 } from "lucide-react";
+import SocialAuthButtons from "@/components/auth/SocialAuthButtons";
+import { lovable } from "@/integrations/lovable/index";
+import { claimPendingInvite, getPendingInvite } from "@/lib/coachInvite";
 // Logo removed during cleanup
 
 const loginSchema = z.object({
