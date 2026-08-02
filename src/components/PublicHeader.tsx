@@ -140,18 +140,30 @@ const PublicHeader = () => {
                 </span>
               </div>
               {NAV_LINKS.map(link => (
-                <Link
-                  key={link.href}
-                  to={link.href}
-                  onClick={() => setMenuOpen(false)}
-                  className={`block px-3 py-2.5 rounded-lg font-display text-sm tracking-wider transition-colors ${
-                    location.pathname === link.href
-                      ? "bg-primary text-primary-foreground"
-                      : "text-muted-foreground hover:text-foreground hover:bg-secondary"
-                  }`}
-                >
-                  {link.label}
-                </Link>
+                link.active ? (
+                  <Link
+                    key={link.href}
+                    to={link.href}
+                    onClick={() => setMenuOpen(false)}
+                    className={`block px-3 py-2.5 rounded-lg font-display text-sm tracking-wider transition-colors ${
+                      location.pathname === link.href
+                        ? "bg-primary text-primary-foreground"
+                        : "text-muted-foreground hover:text-foreground hover:bg-secondary"
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                ) : (
+                  <div
+                    key={link.href}
+                    className="flex items-center justify-between px-3 py-2.5 rounded-lg font-display text-sm tracking-wider text-muted-foreground/40"
+                  >
+                    {link.label}
+                    <span className="inline-flex items-center rounded-full bg-primary/15 px-1.5 py-0.5 font-display text-[8px] tracking-wider text-primary">
+                      SOON
+                    </span>
+                  </div>
+                )
               ))}
               <button
                 onClick={() => { toggleLang(); setMenuOpen(false); }}
