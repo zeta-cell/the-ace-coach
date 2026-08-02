@@ -9,6 +9,9 @@ import { format, addDays, subDays, isToday } from "date-fns";
 import PortalLayout from "@/components/portal/PortalLayout";
 import { toast } from "sonner";
 import QuickAddTrainingDrawer from "@/components/portal/QuickAddTrainingDrawer";
+import AssessmentDrawer from "@/components/portal/AssessmentDrawer";
+import AssessmentHistory from "@/components/portal/AssessmentHistory";
+import type { Assessment } from "@/lib/assessments";
 
 interface ActiveProgram {
   request_id: string;
