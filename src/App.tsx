@@ -6,6 +6,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import ScrollToTop from "@/components/ScrollToTop";
 import ProtectedRoute from "@/components/portal/ProtectedRoute";
+import { FeatureFlagsProvider } from "@/hooks/useFeatureFlags";
+import { FeatureRoute } from "@/components/portal/FeatureGate";
 import { lazy as reactLazy, Suspense } from "react";
 import { IconContext } from "@phosphor-icons/react";
 
