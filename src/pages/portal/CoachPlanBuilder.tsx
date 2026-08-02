@@ -648,7 +648,7 @@ const CoachPlanBuilder = () => {
 
       {browseCategory && (
         <motion.div
-          initial={{ opacity: 0, height: 0 }}
+          initial={false}
           animate={{ opacity: 1, height: "auto" }}
           className="mt-2 bg-card border border-border rounded-xl overflow-hidden"
         >
@@ -766,7 +766,7 @@ const CoachPlanBuilder = () => {
               }
               return (
                 <motion.div
-                  initial={{ opacity: 0, height: 0 }}
+                  initial={false}
                   animate={{ opacity: 1, height: "auto" }}
                   className="mb-4 overflow-hidden"
                 >
@@ -899,7 +899,7 @@ const CoachPlanBuilder = () => {
 
             {showLocationSection && (
               <motion.div
-                initial={{ opacity: 0, height: 0 }}
+                initial={false}
                 animate={{ opacity: 1, height: "auto" }}
                 className="space-y-2 overflow-hidden"
               >
@@ -959,7 +959,7 @@ const CoachPlanBuilder = () => {
                     {planItems.map((item, idx) => (
                       <motion.div
                         key={item.tempId}
-                        initial={{ opacity: 0, x: -10 }}
+                        initial={false}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: idx * 0.03 }}
                       >
@@ -1004,7 +1004,7 @@ const CoachPlanBuilder = () => {
           {/* ─── Save Bar ─── */}
           {planItems.length > 0 && (
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={false}
               animate={{ opacity: 1, y: 0 }}
               className="fixed bottom-20 md:bottom-6 left-0 right-0 z-30 px-4 md:px-0 md:static"
             >
@@ -1031,13 +1031,13 @@ const CoachPlanBuilder = () => {
           {/* Module picker modal (search) */}
           {showModulePicker && (
             <motion.div
-              initial={{ opacity: 0 }}
+              initial={false}
               animate={{ opacity: 1 }}
               className="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-background/80 backdrop-blur-sm"
               onClick={() => { setShowModulePicker(false); setModuleSearch(""); setModuleCategory("all"); }}
             >
               <motion.div
-                initial={{ y: 50, opacity: 0 }}
+                initial={false}
                 animate={{ y: 0, opacity: 1 }}
                 onClick={(e) => e.stopPropagation()}
                 className="w-full max-w-lg max-h-[75vh] bg-card border border-border rounded-t-2xl md:rounded-2xl overflow-hidden flex flex-col"
@@ -1117,13 +1117,13 @@ const CoachPlanBuilder = () => {
         {/* Save as block modal */}
         {showSaveBlock && (
           <motion.div
-            initial={{ opacity: 0 }}
+            initial={false}
             animate={{ opacity: 1 }}
             className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm p-4"
             onClick={() => setShowSaveBlock(false)}
           >
             <motion.div
-              initial={{ scale: 0.95, opacity: 0 }}
+              initial={false}
               animate={{ scale: 1, opacity: 1 }}
               onClick={(e) => e.stopPropagation()}
               className="w-full max-w-md bg-card border border-border rounded-2xl p-6 space-y-4"

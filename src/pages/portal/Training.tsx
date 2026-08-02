@@ -811,7 +811,7 @@ const Training = () => {
                   <>
                     {planItems.map((item, index) => (
                       <motion.div key={item.id}
-                        initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+                        initial={false} animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: index * 0.03 }}
                         className={`bg-card border border-border rounded-xl overflow-hidden border-l-4 ${CATEGORY_COLORS[item.module.category] || "border-l-muted"}`}>
                         <div className="p-3 space-y-2">
@@ -996,7 +996,7 @@ const Training = () => {
                   <>
                     {planItems.map((item, index) => (
                       <motion.div key={item.id}
-                        initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+                        initial={false} animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: index * 0.03 }}
                         className={`bg-card border border-border rounded-xl overflow-hidden border-l-4 ${CATEGORY_COLORS[item.module.category] || "border-l-muted"}`}>
                         <div className="p-3">

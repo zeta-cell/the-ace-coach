@@ -193,7 +193,7 @@ const Events = () => {
 
     return (
       <motion.div
-        initial={{ opacity: 0, y: 12 }}
+        initial={false}
         animate={{ opacity: 1, y: 0 }}
         className={`bg-card border border-border rounded-2xl overflow-hidden hover:border-primary/40 transition-all ${large ? "min-w-[300px] shrink-0" : ""}`}
       >

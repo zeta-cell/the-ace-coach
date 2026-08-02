@@ -140,7 +140,7 @@ const CitySportLanding = ({ locale, sport }: Props) => {
             <MapPin size={14} /> {city.name.toUpperCase()}, {city.country.toUpperCase()}
           </span>
           <motion.h1
-            initial={{ opacity: 0, y: 16 }}
+            initial={false}
             animate={{ opacity: 1, y: 0 }}
             className="font-display text-4xl md:text-6xl leading-tight mb-4"
           >

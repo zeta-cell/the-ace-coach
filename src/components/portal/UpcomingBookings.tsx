@@ -218,7 +218,7 @@ const UpcomingBookings = () => {
   }
 
   return (
-    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
+    <motion.div initial={false} animate={{ opacity: 1, y: 0 }} className="mb-6">
       <div className="flex items-center justify-between mb-3">
         <h3 className="font-display text-sm tracking-wider text-foreground flex items-center gap-2">
           <Calendar size={16} className="text-primary" /> UPCOMING SESSIONS

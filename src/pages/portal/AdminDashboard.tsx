@@ -286,7 +286,7 @@ const AdminDashboard = () => {
                   { label: "Coaches", value: stats.activeCoaches, icon: UserCheck },
                   { label: "Players", value: stats.activePlayers, icon: Activity },
                 ].map((s, i) => (
-                  <motion.div key={s.label} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
+                  <motion.div key={s.label} initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
                     className="bg-card border border-border rounded-xl p-4 flex items-start gap-3">
                     <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
                       <s.icon size={18} className="text-primary" />
@@ -301,7 +301,7 @@ const AdminDashboard = () => {
 
               {/* SECTION B — Revenue Charts */}
               <div className="grid md:grid-cols-2 gap-4 mb-6">
-                <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="bg-card border border-border rounded-xl p-5">
+                <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="bg-card border border-border rounded-xl p-5">
                   <h2 className="font-display text-xs tracking-wider text-muted-foreground mb-3">MONTHLY GMV</h2>
                   <div className="h-48">
                     <ResponsiveContainer width="100%" height="100%">
@@ -318,7 +318,7 @@ const AdminDashboard = () => {
                   </div>
                 </motion.div>
 
-                <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }} className="bg-card border border-border rounded-xl p-5">
+                <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }} className="bg-card border border-border rounded-xl p-5">
                   <h2 className="font-display text-xs tracking-wider text-muted-foreground mb-3">USER GROWTH</h2>
                   <div className="h-48">
                     <ResponsiveContainer width="100%" height="100%">
@@ -337,7 +337,7 @@ const AdminDashboard = () => {
 
               {/* SECTION C — Top Performers */}
               <div className="grid md:grid-cols-2 gap-4 mb-6">
-                <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="bg-card border border-border rounded-xl p-5">
+                <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="bg-card border border-border rounded-xl p-5">
                   <h2 className="font-display text-xs tracking-wider text-muted-foreground mb-3">TOP COACHES BY REVENUE</h2>
                   <div className="space-y-2">
                     {topCoaches.length === 0 ? <p className="font-body text-xs text-muted-foreground text-center py-4">No data yet</p> :
@@ -351,7 +351,7 @@ const AdminDashboard = () => {
                   </div>
                 </motion.div>
 
-                <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45 }} className="bg-card border border-border rounded-xl p-5">
+                <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45 }} className="bg-card border border-border rounded-xl p-5">
                   <h2 className="font-display text-xs tracking-wider text-muted-foreground mb-3">TOP PLAYERS BY SESSIONS</h2>
                   <div className="space-y-2">
                     {topPlayers.length === 0 ? <p className="font-body text-xs text-muted-foreground text-center py-4">No data yet</p> :
@@ -368,7 +368,7 @@ const AdminDashboard = () => {
 
               {/* SECTION E — Coach Verification Queue */}
               {unverifiedCoaches.length > 0 && (
-                <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="bg-card border border-border rounded-xl p-5 mb-6">
+                <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="bg-card border border-border rounded-xl p-5 mb-6">
                   <h2 className="font-display text-xs tracking-wider text-muted-foreground mb-3 flex items-center gap-2">
                     <ShieldCheck size={14} className="text-primary" /> VERIFICATION QUEUE
                   </h2>
@@ -390,7 +390,7 @@ const AdminDashboard = () => {
               )}
 
               {/* SECTION — Events Overview */}
-              <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.52 }} className="bg-card border border-border rounded-xl p-5 mb-6">
+              <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.52 }} className="bg-card border border-border rounded-xl p-5 mb-6">
                 <h2 className="font-display text-xs tracking-wider text-muted-foreground mb-3 flex items-center gap-2">
                   <Calendar size={14} className="text-primary" /> EVENTS
                 </h2>
@@ -430,7 +430,7 @@ const AdminDashboard = () => {
               </motion.div>
 
               {/* SECTION F — Platform Health */}
-              <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55 }} className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+              <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55 }} className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
                 {[
                   { label: "Avg Booking", value: `€${Math.round(stats.avgBookingValue)}` },
                   { label: "Coach Retention", value: `${stats.coachRetention}%` },
@@ -446,7 +446,7 @@ const AdminDashboard = () => {
             </div>
 
             {/* SECTION D — Live Activity Feed (sidebar) */}
-            <motion.div initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.4 }}
+            <motion.div initial={false} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.4 }}
               className="hidden lg:block w-72 shrink-0">
               <div className="bg-card border border-border rounded-xl p-4 sticky top-20">
                 <div className="flex items-center justify-between mb-3">

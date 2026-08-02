@@ -199,7 +199,7 @@ const PlayerVideos = () => {
             {videos.map((v, i) => (
               <motion.div
                 key={v.id}
-                initial={{ opacity: 0, y: 8 }}
+                initial={false}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.03 }}
                 onClick={() => handleSelectVideo(v)}

@@ -57,12 +57,12 @@ const Rewards = () => {
   return (
     <PortalLayout>
       <div className="max-w-3xl mx-auto">
-        <motion.h1 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="font-display text-3xl text-foreground mb-6">
+        <motion.h1 initial={false} animate={{ opacity: 1, y: 0 }} className="font-display text-3xl text-foreground mb-6">
           REWARDS
         </motion.h1>
 
         {/* Level Perks */}
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="bg-card border border-border rounded-xl p-5 mb-6">
+        <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="bg-card border border-border rounded-xl p-5 mb-6">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ backgroundColor: lvl.color + '20' }}>
               <span className="font-display text-lg" style={{ color: lvl.color }}>{lvl.label.charAt(0)}</span>
@@ -110,7 +110,7 @@ const Rewards = () => {
 
         {/* Partner Discounts — gated */}
         {discountsEnabled ? (
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="mb-6">
+          <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="mb-6">
             <h2 className="font-display text-sm tracking-wider text-muted-foreground mb-3">PARTNER DISCOUNTS</h2>
             <div className="grid grid-cols-2 gap-3">
               {PARTNERS.map(partner => {
@@ -154,7 +154,7 @@ const Rewards = () => {
         )}
 
         {/* Wallet + Refer & Earn */}
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
+        <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
           <WalletCard />
         </motion.div>
       </div>

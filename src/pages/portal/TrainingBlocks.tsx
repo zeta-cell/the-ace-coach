@@ -441,7 +441,7 @@ export const TrainingBlocksContent = ({ embedded = false }: { embedded?: boolean
               const mainColors = MAIN_CATEGORY_COLORS[main];
               return (
                 <motion.div key={block.id}
-                  initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                  initial={false} animate={{ opacity: 1, y: 0 }}
                   className="bg-card border border-border rounded-xl overflow-hidden hover:border-foreground/20 transition-colors">
                   <div className="flex">
                     <div className={`w-1 ${mainColors.dot}`} />

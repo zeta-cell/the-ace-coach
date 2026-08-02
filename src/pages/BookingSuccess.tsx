@@ -73,13 +73,13 @@ const BookingSuccess = () => {
       <div className="max-w-md w-full text-center space-y-6">
         {/* Animated checkmark */}
         <motion.div
-          initial={{ scale: 0 }}
+          initial={false}
           animate={{ scale: 1 }}
           transition={{ type: "spring", stiffness: 200, damping: 12, delay: 0.2 }}
           className="w-20 h-20 rounded-full bg-green-500/20 flex items-center justify-center mx-auto"
         >
           <motion.div
-            initial={{ scale: 0 }}
+            initial={false}
             animate={{ scale: 1 }}
             transition={{ type: "spring", stiffness: 200, damping: 12, delay: 0.4 }}
           >
@@ -87,14 +87,14 @@ const BookingSuccess = () => {
           </motion.div>
         </motion.div>
 
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
+        <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
           <h1 className="font-display text-3xl text-foreground">BOOKING CONFIRMED!</h1>
           <p className="font-body text-sm text-muted-foreground mt-2">Your session has been booked successfully.</p>
         </motion.div>
 
         {booking && (
           <motion.div
-            initial={{ opacity: 0, y: 10 }}
+            initial={false}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6 }}
             className="bg-card border border-border rounded-xl p-5 text-left space-y-2"
@@ -124,7 +124,7 @@ const BookingSuccess = () => {
 
         {booking && (booking.court_number || booking.arrival_instructions || booking.check_in_code) && (
           <motion.div
-            initial={{ opacity: 0, y: 10 }}
+            initial={false}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.65 }}
             className="bg-primary/5 border border-primary/30 rounded-xl p-5 text-left space-y-2.5"
@@ -158,7 +158,7 @@ const BookingSuccess = () => {
         )}
 
         <motion.div
-          initial={{ opacity: 0, y: 10 }}
+          initial={false}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.7 }}
           className="flex flex-col gap-3"

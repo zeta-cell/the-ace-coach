@@ -76,7 +76,7 @@ const Rankings = () => {
       <div className="max-w-3xl mx-auto px-4 py-6">
         {/* Podium */}
         {top3.length >= 3 && (
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
+          <motion.div initial={false} animate={{ opacity: 1, y: 0 }} className="mb-8">
             <div className="flex items-end justify-center gap-3">
               {podiumOrder.map((entry, i) => {
                 const lvl = LEVEL_CONFIG[entry.current_level] || LEVEL_CONFIG.bronze;
@@ -126,7 +126,7 @@ const Rankings = () => {
               const lvl = LEVEL_CONFIG[entry.current_level] || LEVEL_CONFIG.bronze;
               return (
                 <motion.div key={entry.user_id}
-                  initial={{ opacity: 0, x: -10 }}
+                  initial={false}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.02 }}
                   className={`flex items-center gap-3 p-3 rounded-xl transition-colors ${isMe ? "bg-primary/10 border border-primary/30" : "bg-card border border-border"}`}>

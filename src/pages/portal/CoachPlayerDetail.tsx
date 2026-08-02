@@ -193,7 +193,7 @@ const CoachPlayerDetail = () => {
           <ArrowLeft size={16} /> Back to Players
         </Link>
 
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+        <motion.div initial={false} animate={{ opacity: 1, y: 0 }}>
           {/* Header */}
           <div className="flex items-center gap-4 mb-4">
             <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center text-primary font-display text-2xl">
@@ -421,14 +421,14 @@ const CoachPlayerDetail = () => {
               </button>
               {upcomingOpen && (
                 <motion.div
-                  initial={{ opacity: 0, height: 0 }}
+                  initial={false}
                   animate={{ opacity: 1, height: "auto" }}
                   className="mt-2 space-y-1.5 overflow-hidden"
                 >
                   {upcomingPlans.map((plan, idx) => (
                     <Link key={plan.id} to={`/training?player=${playerId}&date=${plan.plan_date}`}>
                       <motion.div
-                        initial={{ opacity: 0, x: -8 }}
+                        initial={false}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: idx * 0.05 }}
                         className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-card border border-border hover:border-primary/30 transition-colors"
