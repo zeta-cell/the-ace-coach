@@ -78,6 +78,8 @@ const PlayerProfile = () => {
   const [editOpen, setEditOpen] = useState(false);
   const devicesEnabled = useFeature("connected_devices");
   const [userStats, setUserStats] = useState<{ total_xp: number; current_level: string } | null>(null);
+  // Latest coach assessment supplies the two padel-specific shots (bandeja / víbora).
+  const [latestShots, setLatestShots] = useState<{ bandeja_pct: number; vibora_pct: number } | null>(null);
   const [notifPrefs, setNotifPrefs] = useState({
     new_message: true,
     coach_feedback: true,
@@ -91,15 +93,23 @@ const PlayerProfile = () => {
 
   const fetchData = async () => {
     if (!user) return;
-    const [{ data: player }, { data: racketsData }, { data: prof }, { data: stats }] = await Promise.all([
+    const [{ data: player }, { data: racketsData }, { data: prof }, { data: stats }, { data: latestAssessment }] = await Promise.all([
       supabase.from("player_profiles").select("*").eq("user_id", user.id).single(),
       supabase.from("player_rackets").select("*").eq("player_id", user.id),
       supabase.from("profiles").select("notification_preferences, phone").eq("user_id", user.id).single(),
       supabase.from("user_stats").select("total_xp, current_level").eq("user_id", user.id).maybeSingle(),
+      supabase
+        .from("player_assessments")
+        .select("bandeja_pct, vibora_pct")
+        .eq("player_id", user.id)
+        .order("assessment_date", { ascending: false })
+        .limit(1)
+        .maybeSingle(),
     ]);
     if (player) setPlayerData(player as unknown as PlayerData);
     if (racketsData) setRackets(racketsData as unknown as RacketData[]);
     if (stats) setUserStats(stats as { total_xp: number; current_level: string });
+    if (latestAssessment) setLatestShots(latestAssessment as { bandeja_pct: number; vibora_pct: number });
     if (prof) {
       if (prof.phone) setPlayerPhone(prof.phone as string);
       if (prof.notification_preferences) {
@@ -328,6 +338,9 @@ const PlayerProfile = () => {
                 smash_pct: playerData.smash_pct,
                 backhand_pct: playerData.backhand_pct,
                 lob_pct: playerData.lob_pct,
+                ...(latestShots
+                  ? { bandeja_pct: latestShots.bandeja_pct, vibora_pct: latestShots.vibora_pct }
+                  : {}),
               }}
             />
           </motion.div>

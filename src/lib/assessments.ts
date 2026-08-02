@@ -5,6 +5,8 @@ export const SHOT_KEYS = [
   { key: "smash_pct", label: "Smash" },
   { key: "backhand_pct", label: "Backhand" },
   { key: "lob_pct", label: "Lob" },
+  { key: "bandeja_pct", label: "Bandeja" },
+  { key: "vibora_pct", label: "Víbora" },
 ] as const;
 
 export type ShotKey = (typeof SHOT_KEYS)[number]["key"];
@@ -21,6 +23,8 @@ export interface Assessment {
   smash_pct: number;
   backhand_pct: number;
   lob_pct: number;
+  bandeja_pct: number;
+  vibora_pct: number;
   overall_level: number | null;
   level_system: string | null;
   summary: string | null;
@@ -30,7 +34,7 @@ export interface Assessment {
   created_at: string;
 }
 
-/** Average of the six shot ratings. */
+/** Average of the eight shot ratings. */
 export const assessmentAverage = (a: Assessment) =>
   Math.round(SHOT_KEYS.reduce((sum, s) => sum + (Number(a[s.key]) || 0), 0) / SHOT_KEYS.length);
 
