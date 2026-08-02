@@ -34,7 +34,7 @@ const PublicHeader = () => {
     { label: t("nav.marketplace"), href: "/marketplace", flag: "marketplace", visible: showDiscovery },
     { label: t("nav.events"), href: "/events", flag: "events", visible: showDiscovery },
     { label: t("nav.community"), href: "/community", flag: "community", visible: showDiscovery },
-    { label: "I OWN A CLUB OR ACADEMY", href: "/login", flag: "club_signup", visible: true },
+    { label: "FOR CLUBS", href: "/login", flag: "club_signup", visible: true },
   ].map((l) => ({ ...l, active: isEnabled(l.flag), soon: isComingSoon(l.flag) })).filter((l) => l.visible);
 
 
@@ -82,7 +82,7 @@ const PublicHeader = () => {
               ) : (
                 <span
                   key={link.href}
-                  className="inline-flex items-center gap-1.5 font-display text-xs tracking-wider text-muted-foreground/40 cursor-not-allowed"
+                  className="inline-flex items-center gap-1.5 whitespace-nowrap font-display text-xs tracking-wider text-muted-foreground/40 cursor-not-allowed"
                 >
                   {link.label}
                   <span className="inline-flex items-center rounded-full bg-primary/15 px-1.5 py-0.5 font-display text-[8px] tracking-wider text-primary">
@@ -156,7 +156,7 @@ const PublicHeader = () => {
                 ) : (
                   <div
                     key={link.href}
-                    className="flex items-center justify-between px-3 py-2.5 rounded-lg font-display text-sm tracking-wider text-muted-foreground/40"
+                    className="flex items-center justify-between gap-2 px-3 py-2.5 rounded-lg font-display text-xs tracking-wider text-muted-foreground/40 whitespace-nowrap"
                   >
                     {link.label}
                     <span className="inline-flex items-center rounded-full bg-primary/15 px-1.5 py-0.5 font-display text-[8px] tracking-wider text-primary">
