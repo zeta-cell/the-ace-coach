@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { format, parseISO } from "date-fns";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
-import { TrendingUp, UserRound } from "lucide-react";
+import { TrendingUp, User } from "lucide-react";
 import { SHOT_KEYS, Assessment, assessmentAverage, deltaColor, formatDelta } from "@/lib/assessments";
 
 const SHOT_COLORS: Record<string, string> = {
@@ -118,7 +118,7 @@ const DevelopmentChart = ({ playerId, refreshKey = 0 }: Props) => {
         <p className="font-display text-xs text-foreground">{label}</p>
         {row?.coach && (
           <p className="mb-1 flex items-center gap-1 font-body text-[10px] text-muted-foreground">
-            <UserRound size={10} className="text-primary" /> {row.coach}
+            <User size={10} className="text-primary" /> {row.coach}
           </p>
         )}
         {payload.map((p) => (
