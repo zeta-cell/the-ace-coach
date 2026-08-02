@@ -32,6 +32,7 @@ interface BookingItem {
 
 const UpcomingBookings = () => {
   const { user } = useAuth();
+  const discoveryEnabled = useFeature("coach_discovery");
   const [bookings, setBookings] = useState<BookingItem[]>([]);
   const [expanded, setExpanded] = useState<string | null>(null);
 
