@@ -16,8 +16,25 @@ import {
   Barbell as PhBarbell,
 } from "@phosphor-icons/react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useFeatureFlags } from "@/hooks/useFeatureFlags";
 import NotificationBell from "@/components/portal/NotificationBell";
 import QuickAddTrainingDrawer from "@/components/portal/QuickAddTrainingDrawer";
+
+/** Nav entries only render when their feature flag is on (admins always see everything). */
+const NAV_FEATURE: Record<string, string> = {
+  "/events": "events",
+  "/community": "community",
+  "/messages": "messaging",
+  "/videos": "player_videos",
+  "/find-a-coach": "coach_discovery",
+  "/marketplace": "marketplace",
+  "/coach/videos": "player_videos",
+  "/coach/events": "events",
+  "/coach/crm": "coach_crm",
+  "/coach/earnings": "coach_earnings",
+  "/coach/marketplace": "coach_marketplace",
+  "/coach/messages": "messaging",
+};
 
 // Phosphor icon overrides for the mobile bottom nav (filled glyph look)
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
