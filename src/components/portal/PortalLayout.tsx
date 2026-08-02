@@ -237,7 +237,7 @@ const PortalLayout = ({ children }: { children: React.ReactNode }) => {
               );
             })
           ) : (
-            (role === "player" ? playerNav.slice(0, 5) : navItems.slice(0, 5)).map((item) => {
+            navItems.slice(0, 5).map((item) => {
               const isActive = location.pathname === item.href || (item.href === "/dashboard" && location.pathname === "/dashboard");
               const PhIcon = BOTTOM_NAV_ICON[item.href];
               return (
