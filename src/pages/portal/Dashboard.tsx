@@ -72,6 +72,7 @@ const AnimatedNumber = ({ value }: { value: number }) => {
 
 const Dashboard = () => {
   const { user, profile } = useAuth();
+  const devicesEnabled = useFeature("health_devices");
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [todayPlan, setTodayPlan] = useState<DayPlan | null>(null);
