@@ -3,9 +3,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion } from "framer-motion";
-import { ChevronRight, Search, Users, BookOpen, Calendar, MessageSquare } from "lucide-react";
+import { ChevronRight, Search, Users, BookOpen, Calendar, MessageSquare, UserPlus } from "lucide-react";
 import PortalLayout from "@/components/portal/PortalLayout";
 import QuickAddTrainingDrawer from "@/components/portal/QuickAddTrainingDrawer";
+import InvitePlayerDrawer from "@/components/portal/InvitePlayerDrawer";
 
 interface PlayerRow {
   player_id: string;
@@ -26,6 +27,7 @@ const CoachPlayers = () => {
   const [loading, setLoading] = useState(true);
   const [trainDrawerOpen, setTrainDrawerOpen] = useState(false);
   const [trainPlayerId, setTrainPlayerId] = useState<string | undefined>();
+  const [inviteOpen, setInviteOpen] = useState(false);
 
   useEffect(() => {
     if (user) fetchPlayers();
