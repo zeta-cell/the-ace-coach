@@ -19,6 +19,7 @@ import {
 import { format, startOfWeek, addDays, isSameDay, subWeeks, subDays, subMonths, eachDayOfInterval } from "date-fns";
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip, Line, ComposedChart } from "recharts";
 import PortalLayout from "@/components/portal/PortalLayout";
+import AssignCoachPrompt from "@/components/portal/AssignCoachPrompt";
 import TrainingDayInfo from "@/components/portal/TrainingDayInfo";
 import UpcomingBookings from "@/components/portal/UpcomingBookings";
 import WalletCard from "@/components/portal/WalletCard";
