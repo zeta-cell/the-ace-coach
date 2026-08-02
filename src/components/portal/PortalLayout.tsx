@@ -86,6 +86,7 @@ const adminNav = [
   { label: "Events", icon: Calendar, href: "/admin/events" },
   { label: "Payments", icon: CreditCard, href: "/admin/payments" },
   { label: "Schedule", icon: CalendarDays, href: "/admin/schedule" },
+  { label: "Features", icon: ToggleLeft, href: "/admin/features" },
   { label: "Founders", icon: Eye, href: "/founders" },
 ];
 
@@ -102,12 +103,19 @@ const clubNav = [
 
 const PortalLayout = ({ children }: { children: React.ReactNode }) => {
   const { role, profile, signOut } = useAuth();
+  const { isEnabled } = useFeatureFlags();
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [fabDrawerOpen, setFabDrawerOpen] = useState(false);
 
-  const navItems = role === "admin" ? adminNav : role === "club_manager" ? clubNav : role === "coach" ? coachNav : playerNav;
+  const baseNav = role === "admin" ? adminNav : role === "club_manager" ? clubNav : role === "coach" ? coachNav : playerNav;
+  const navItems = role === "admin"
+    ? baseNav
+    : baseNav.filter((item) => {
+        const feature = NAV_FEATURE[item.href];
+        return !feature || isEnabled(feature);
+      });
 
   const NavContent = () => (
     <div className="flex flex-col h-full">
