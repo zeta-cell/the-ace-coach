@@ -48,6 +48,7 @@ const CosmicPlayerCard = ({
 }: Props) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const [busy, setBusy] = useState(false);
+  const [imgFailed, setImgFailed] = useState(false);
   const stars = useStars(name || "player", 70);
   const lvl = LEVEL_CONFIG[level] || LEVEL_CONFIG.bronze;
 
@@ -157,11 +158,12 @@ const CosmicPlayerCard = ({
                 className="absolute h-40 w-40 rounded-full blur-2xl opacity-50"
                 style={{ background: `radial-gradient(circle, ${lvl.color}, transparent 70%)` }}
               />
-              {avatarUrl ? (
+              {avatarUrl && !imgFailed ? (
                 <img
                   src={avatarUrl}
                   alt={`${name} player card portrait`}
                   crossOrigin="anonymous"
+                  onError={() => setImgFailed(true)}
                   className="relative h-36 w-36 rounded-full object-cover"
                   style={{ border: `2px solid ${lvl.color}` }}
                 />
