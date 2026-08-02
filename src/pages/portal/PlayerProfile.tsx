@@ -78,8 +78,8 @@ const PlayerProfile = () => {
   const [editOpen, setEditOpen] = useState(false);
   const devicesEnabled = useFeature("connected_devices");
   const [userStats, setUserStats] = useState<{ total_xp: number; current_level: string } | null>(null);
-  // Latest coach assessment supplies the two padel-specific shots (bandeja / víbora).
-  const [latestShots, setLatestShots] = useState<{ bandeja_pct: number; vibora_pct: number } | null>(null);
+  // Latest coach assessment is the source of truth for the player card shots.
+  const [latestShots, setLatestShots] = useState<Record<string, number> | null>(null);
   const [notifPrefs, setNotifPrefs] = useState({
     new_message: true,
     coach_feedback: true,
@@ -100,7 +100,7 @@ const PlayerProfile = () => {
       supabase.from("user_stats").select("total_xp, current_level").eq("user_id", user.id).maybeSingle(),
       supabase
         .from("player_assessments")
-        .select("bandeja_pct, vibora_pct")
+        .select("volley_pct, forehand_pct, serve_pct, smash_pct, backhand_pct, lob_pct, bandeja_pct, vibora_pct")
         .eq("player_id", user.id)
         .order("assessment_date", { ascending: false })
         .limit(1)
@@ -109,7 +109,7 @@ const PlayerProfile = () => {
     if (player) setPlayerData(player as unknown as PlayerData);
     if (racketsData) setRackets(racketsData as unknown as RacketData[]);
     if (stats) setUserStats(stats as { total_xp: number; current_level: string });
-    if (latestAssessment) setLatestShots(latestAssessment as { bandeja_pct: number; vibora_pct: number });
+    if (latestAssessment) setLatestShots(latestAssessment as Record<string, number>);
     if (prof) {
       if (prof.phone) setPlayerPhone(prof.phone as string);
       if (prof.notification_preferences) {
@@ -332,12 +332,12 @@ const PlayerProfile = () => {
               city={playerData.club_location || null}
               cardNumber={profile.user_id.slice(0, 4).toUpperCase()}
               shots={{
-                volley_pct: playerData.volley_pct,
-                forehand_pct: playerData.forehand_pct,
-                serve_pct: playerData.serve_pct,
-                smash_pct: playerData.smash_pct,
-                backhand_pct: playerData.backhand_pct,
-                lob_pct: playerData.lob_pct,
+                volley_pct: latestShots?.volley_pct ?? playerData.volley_pct,
+                forehand_pct: latestShots?.forehand_pct ?? playerData.forehand_pct,
+                serve_pct: latestShots?.serve_pct ?? playerData.serve_pct,
+                smash_pct: latestShots?.smash_pct ?? playerData.smash_pct,
+                backhand_pct: latestShots?.backhand_pct ?? playerData.backhand_pct,
+                lob_pct: latestShots?.lob_pct ?? playerData.lob_pct,
                 ...(latestShots
                   ? { bandeja_pct: latestShots.bandeja_pct, vibora_pct: latestShots.vibora_pct }
                   : {}),

@@ -51,11 +51,23 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   const fetchProfile = async (userId: string) => {
-    const { data } = await supabase
+    let { data } = await supabase
       .from("profiles")
       .select("*")
       .eq("user_id", userId)
-      .single();
+      .maybeSingle();
+
+    // New accounts (email, Google or Apple) may not have their records yet.
+    if (!data) {
+      await supabase.rpc("ensure_user_bootstrap" as any, { _full_name: null } as any);
+      const retry = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("user_id", userId)
+        .maybeSingle();
+      data = retry.data;
+    }
+
     if (data) {
       setProfile(data as Profile);
       // Initialize gamification records if needed
@@ -103,7 +115,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const refreshProfile = async () => {
     if (user) {
-      await Promise.all([fetchProfile(user.id), fetchRole(user.id)]);
+      await fetchProfile(user.id);
+      await fetchRole(user.id);
     }
   };
 
@@ -115,10 +128,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         if (session?.user) {
           // Use setTimeout to avoid potential deadlock with Supabase auth
           setTimeout(async () => {
-            await Promise.all([
-              fetchProfile(session.user.id),
-              fetchRole(session.user.id),
-            ]);
+            // Profile first: it bootstraps missing records for brand-new accounts.
+            await fetchProfile(session.user.id);
+            await fetchRole(session.user.id);
             setLoading(false);
           }, 0);
         } else {
@@ -133,10 +145,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setSession(session);
       setUser(session?.user ?? null);
       if (session?.user) {
-        Promise.all([
-          fetchProfile(session.user.id),
-          fetchRole(session.user.id),
-        ]).then(() => setLoading(false));
+        fetchProfile(session.user.id)
+          .then(() => fetchRole(session.user.id))
+          .then(() => setLoading(false));
       } else {
         setLoading(false);
       }

@@ -19,6 +19,7 @@ import {
 import { format, startOfWeek, addDays, isSameDay, subWeeks, subDays, subMonths, eachDayOfInterval } from "date-fns";
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip, Line, ComposedChart } from "recharts";
 import PortalLayout from "@/components/portal/PortalLayout";
+import AssignCoachPrompt from "@/components/portal/AssignCoachPrompt";
 import TrainingDayInfo from "@/components/portal/TrainingDayInfo";
 import UpcomingBookings from "@/components/portal/UpcomingBookings";
 import WalletCard from "@/components/portal/WalletCard";
@@ -74,6 +75,7 @@ const Dashboard = () => {
   const { user, profile } = useAuth();
   const devicesEnabled = useFeature("connected_devices");
   const rewardsEnabled = useFeature("rewards_discounts");
+  const communityEnabled = useFeature("community");
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [todayPlan, setTodayPlan] = useState<DayPlan | null>(null);
@@ -277,6 +279,8 @@ const Dashboard = () => {
           WELCOME BACK, {firstName}
         </motion.h1>
 
+        <AssignCoachPrompt />
+
         {/* Hero Stats Bar — 6 metrics */}
         <motion.div initial={false} className="grid grid-cols-3 md:grid-cols-6 gap-2 mb-6">
           <div className="bg-card border border-border rounded-xl p-3 text-center">
@@ -414,6 +418,7 @@ const Dashboard = () => {
         </motion.div>
 
         {/* Leaderboard Preview */}
+        {communityEnabled && (
         <motion.div initial={false} className="bg-card border border-border rounded-xl p-5 mb-6">
           <div className="flex items-center justify-between mb-3">
             <h3 className="font-display text-sm tracking-wider text-muted-foreground flex items-center gap-2"><Trophy size={14} className="text-primary" /> LEADERBOARD</h3>
@@ -437,6 +442,7 @@ const Dashboard = () => {
             })}
           </div>
         </motion.div>
+        )}
 
         {/* My Coaches */}
         {myCoaches.length > 0 && (

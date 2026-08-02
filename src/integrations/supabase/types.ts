@@ -588,6 +588,48 @@ export type Database = {
         }
         Relationships: []
       }
+      coach_invites: {
+        Row: {
+          accepted_at: string | null
+          accepted_by: string | null
+          coach_id: string
+          created_at: string
+          email: string | null
+          expires_at: string
+          full_name: string | null
+          id: string
+          note: string | null
+          token: string
+          updated_at: string
+        }
+        Insert: {
+          accepted_at?: string | null
+          accepted_by?: string | null
+          coach_id: string
+          created_at?: string
+          email?: string | null
+          expires_at?: string
+          full_name?: string | null
+          id?: string
+          note?: string | null
+          token?: string
+          updated_at?: string
+        }
+        Update: {
+          accepted_at?: string | null
+          accepted_by?: string | null
+          coach_id?: string
+          created_at?: string
+          email?: string | null
+          expires_at?: string
+          full_name?: string | null
+          id?: string
+          note?: string | null
+          token?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       coach_packages: {
         Row: {
           auto_confirm: boolean | null
@@ -2449,6 +2491,7 @@ export type Database = {
           user_id: string
         }[]
       }
+      assign_self_to_coach: { Args: { _coach_id: string }; Returns: string }
       award_xp: {
         Args: {
           p_amount: number
@@ -2460,6 +2503,7 @@ export type Database = {
         Returns: undefined
       }
       can_notify: { Args: { _target: string }; Returns: boolean }
+      claim_coach_invite: { Args: { _token: string }; Returns: string }
       claim_referral: { Args: { _code: string }; Returns: string }
       credit_wallet: {
         Args: {
@@ -2470,6 +2514,21 @@ export type Database = {
           p_user_id: string
         }
         Returns: undefined
+      }
+      ensure_user_bootstrap: {
+        Args: { _full_name?: string }
+        Returns: undefined
+      }
+      get_coach_invite: {
+        Args: { _token: string }
+        Returns: {
+          coach_avatar: string
+          coach_id: string
+          coach_name: string
+          email: string
+          full_name: string
+          is_valid: boolean
+        }[]
       }
       get_user_clubs: { Args: { _user_id: string }; Returns: string[] }
       get_user_role: {

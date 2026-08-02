@@ -7,6 +7,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { motion } from "framer-motion";
 import { Eye, EyeOff, ArrowLeft, Circle, Dumbbell, Crown, Building2 } from "lucide-react";
+import SocialAuthButtons from "@/components/auth/SocialAuthButtons";
+import { lovable } from "@/integrations/lovable/index";
+import { claimPendingInvite, getPendingInvite } from "@/lib/coachInvite";
 // Logo removed during cleanup
 
 const loginSchema = z.object({
@@ -61,6 +64,8 @@ const Login = () => {
     if (!user) return;
     let cancelled = false;
     (async () => {
+      // If the user arrived via a coach invite link, link them to that coach.
+      if (getPendingInvite()) await claimPendingInvite();
       const { data: roleData } = await supabase
         .from("user_roles")
         .select("role")
@@ -265,6 +270,18 @@ const Login = () => {
             </button>
           </form>
         )}
+
+        <SocialAuthButtons
+          className="mt-6"
+          onSelect={async (provider) => {
+            setError("");
+            const result = await lovable.auth.signInWithOAuth(provider, {
+              redirect_uri: window.location.origin + "/login",
+            });
+            if (result.error) setError(result.error.message || "Sign-in failed");
+          }}
+        />
+
 
         {/* Quick Login Cards */}
         <div className="mt-8 pt-6 border-t border-border">

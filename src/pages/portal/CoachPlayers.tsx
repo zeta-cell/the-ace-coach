@@ -3,9 +3,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion } from "framer-motion";
-import { ChevronRight, Search, Users, BookOpen, Calendar, MessageSquare } from "lucide-react";
+import { ChevronRight, Search, Users, BookOpen, Calendar, MessageSquare, UserPlus } from "lucide-react";
 import PortalLayout from "@/components/portal/PortalLayout";
 import QuickAddTrainingDrawer from "@/components/portal/QuickAddTrainingDrawer";
+import InvitePlayerDrawer from "@/components/portal/InvitePlayerDrawer";
 
 interface PlayerRow {
   player_id: string;
@@ -26,6 +27,7 @@ const CoachPlayers = () => {
   const [loading, setLoading] = useState(true);
   const [trainDrawerOpen, setTrainDrawerOpen] = useState(false);
   const [trainPlayerId, setTrainPlayerId] = useState<string | undefined>();
+  const [inviteOpen, setInviteOpen] = useState(false);
 
   useEffect(() => {
     if (user) fetchPlayers();
@@ -88,7 +90,15 @@ const CoachPlayers = () => {
   return (
     <PortalLayout>
       <div className="max-w-4xl mx-auto">
-        <h1 className="font-display text-3xl text-foreground mb-4">PLAYERS</h1>
+        <div className="flex items-center justify-between gap-3 mb-4">
+          <h1 className="font-display text-3xl text-foreground">PLAYERS</h1>
+          <button
+            onClick={() => setInviteOpen(true)}
+            className="inline-flex items-center gap-2 bg-primary text-primary-foreground font-display text-xs tracking-wider px-4 py-2.5 rounded-lg hover:bg-primary/90 transition-colors"
+          >
+            <UserPlus size={15} /> INVITE PLAYER
+          </button>
+        </div>
 
         <div className="relative mb-6">
           <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
@@ -184,6 +194,7 @@ const CoachPlayers = () => {
           onClose={() => { setTrainDrawerOpen(false); setTrainPlayerId(undefined); }}
           prefilledPlayerId={trainPlayerId}
         />
+        <InvitePlayerDrawer open={inviteOpen} onClose={() => { setInviteOpen(false); fetchPlayers(); }} />
       </div>
     </PortalLayout>
   );
