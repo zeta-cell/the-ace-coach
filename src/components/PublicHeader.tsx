@@ -21,20 +21,21 @@ const PublicHeader = () => {
   const location = useLocation();
   const { t, lang, setLang } = useI18n();
   const { user, role } = useAuth();
-  const { isEnabled } = useFeatureFlags();
+  const { isEnabled, isComingSoon } = useFeatureFlags();
   const isLoggedIn = !!user;
   const portalHref = role ? roleHome[role] || "/dashboard" : "/login";
 
   // Every public nav entry is controlled from /admin/features.
   // `public_nav` is the master switch for the discovery links.
+  // Disabled links stay visible with a "SOON" badge so the menu never looks empty.
   const showDiscovery = isEnabled("public_nav");
   const NAV_LINKS = [
-    { label: t("nav.find"), href: "/find-a-coach", show: showDiscovery && isEnabled("coach_discovery") },
-    { label: t("nav.marketplace"), href: "/marketplace", show: showDiscovery && isEnabled("marketplace") },
-    { label: t("nav.events"), href: "/events", show: showDiscovery && isEnabled("events") },
-    { label: t("nav.community"), href: "/community", show: showDiscovery && isEnabled("community") },
-    { label: "I OWN A CLUB OR ACADEMY", href: "/login", show: isEnabled("club_signup") },
-  ].filter(l => l.show);
+    { label: t("nav.find"), href: "/find-a-coach", flag: "coach_discovery", visible: showDiscovery },
+    { label: t("nav.marketplace"), href: "/marketplace", flag: "marketplace", visible: showDiscovery },
+    { label: t("nav.events"), href: "/events", flag: "events", visible: showDiscovery },
+    { label: t("nav.community"), href: "/community", flag: "community", visible: showDiscovery },
+    { label: "I OWN A CLUB OR ACADEMY", href: "/login", flag: "club_signup", visible: true },
+  ].map((l) => ({ ...l, active: isEnabled(l.flag), soon: isComingSoon(l.flag) })).filter((l) => l.visible);
 
 
   useEffect(() => {
@@ -68,15 +69,27 @@ const PublicHeader = () => {
           </Link>
           <div className="hidden md:flex items-center gap-6">
             {NAV_LINKS.map(link => (
-              <Link
-                key={link.href}
-                to={link.href}
-                className={`font-display text-xs tracking-wider transition-colors ${
-                  location.pathname === link.href ? "text-primary" : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                {link.label}
-              </Link>
+              link.active ? (
+                <Link
+                  key={link.href}
+                  to={link.href}
+                  className={`font-display text-xs tracking-wider transition-colors ${
+                    location.pathname === link.href ? "text-primary" : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              ) : (
+                <span
+                  key={link.href}
+                  className="inline-flex items-center gap-1.5 font-display text-xs tracking-wider text-muted-foreground/40 cursor-not-allowed"
+                >
+                  {link.label}
+                  <span className="inline-flex items-center rounded-full bg-primary/15 px-1.5 py-0.5 font-display text-[8px] tracking-wider text-primary">
+                    SOON
+                  </span>
+                </span>
+              )
             ))}
           </div>
           <div className="flex items-center gap-1 md:gap-2">
@@ -127,18 +140,30 @@ const PublicHeader = () => {
                 </span>
               </div>
               {NAV_LINKS.map(link => (
-                <Link
-                  key={link.href}
-                  to={link.href}
-                  onClick={() => setMenuOpen(false)}
-                  className={`block px-3 py-2.5 rounded-lg font-display text-sm tracking-wider transition-colors ${
-                    location.pathname === link.href
-                      ? "bg-primary text-primary-foreground"
-                      : "text-muted-foreground hover:text-foreground hover:bg-secondary"
-                  }`}
-                >
-                  {link.label}
-                </Link>
+                link.active ? (
+                  <Link
+                    key={link.href}
+                    to={link.href}
+                    onClick={() => setMenuOpen(false)}
+                    className={`block px-3 py-2.5 rounded-lg font-display text-sm tracking-wider transition-colors ${
+                      location.pathname === link.href
+                        ? "bg-primary text-primary-foreground"
+                        : "text-muted-foreground hover:text-foreground hover:bg-secondary"
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                ) : (
+                  <div
+                    key={link.href}
+                    className="flex items-center justify-between px-3 py-2.5 rounded-lg font-display text-sm tracking-wider text-muted-foreground/40"
+                  >
+                    {link.label}
+                    <span className="inline-flex items-center rounded-full bg-primary/15 px-1.5 py-0.5 font-display text-[8px] tracking-wider text-primary">
+                      SOON
+                    </span>
+                  </div>
+                )
               ))}
               <button
                 onClick={() => { toggleLang(); setMenuOpen(false); }}
