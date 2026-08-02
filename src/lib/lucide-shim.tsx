@@ -320,3 +320,10 @@ export { X as XIcon };
 
 // Default export kept for safety; lucide-react has no default but some bundlers complain.
 export default {};
+
+// Additional aliases used by the feature-flag & assessment screens.
+export const Sparkles = wrap(Sparkle, { weight: "fill" });
+export const Flag = wrap(PhFlag);
+export const ClipboardCheck = wrap(PhClipboard);
+export const ToggleLeft = wrap(PhToggleLeft);
+export const ToggleRight = wrap(PhToggleRight, { weight: "fill" });
