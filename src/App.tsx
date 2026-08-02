@@ -203,7 +203,7 @@ const App = () => (
             } />
             <Route path="/videos" element={
               <Suspense fallback={<PortalLoader />}>
-                <ProtectedRoute playerOnly><PlayerVideos /></ProtectedRoute>
+                <ProtectedRoute playerOnly><FeatureRoute feature="player_videos"><PlayerVideos /></FeatureRoute></ProtectedRoute>
               </Suspense>
             } />
             <Route path="/rewards" element={
