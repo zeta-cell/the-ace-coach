@@ -72,6 +72,8 @@ const PlayerProfile = () => {
   const [playerPhone, setPlayerPhone] = useState<string | null>(null);
   const [rackets, setRackets] = useState<RacketData[]>([]);
   const [editOpen, setEditOpen] = useState(false);
+  const devicesEnabled = useFeature("health_devices");
+  const [userStats, setUserStats] = useState<{ total_xp: number; current_level: string } | null>(null);
   const [notifPrefs, setNotifPrefs] = useState({
     new_message: true,
     coach_feedback: true,
