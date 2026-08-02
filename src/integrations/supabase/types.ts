@@ -1122,6 +1122,39 @@ export type Database = {
           },
         ]
       }
+      feature_flags: {
+        Row: {
+          category: string
+          coming_soon: boolean
+          created_at: string
+          description: string | null
+          is_enabled: boolean
+          key: string
+          label: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string
+          coming_soon?: boolean
+          created_at?: string
+          description?: string | null
+          is_enabled?: boolean
+          key: string
+          label: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          coming_soon?: boolean
+          created_at?: string
+          description?: string | null
+          is_enabled?: boolean
+          key?: string
+          label?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       founder_share_tokens: {
         Row: {
           created_at: string | null
@@ -1532,6 +1565,72 @@ export type Database = {
           status?: Database["public"]["Enums"]["payment_status"]
           type?: Database["public"]["Enums"]["payment_type"]
           user_id?: string
+        }
+        Relationships: []
+      }
+      player_assessments: {
+        Row: {
+          assessment_date: string
+          backhand_pct: number
+          coach_id: string
+          created_at: string
+          focus_areas: string | null
+          forehand_pct: number
+          id: string
+          level_system: string | null
+          lob_pct: number
+          next_goals: string | null
+          overall_level: number | null
+          player_id: string
+          serve_pct: number
+          smash_pct: number
+          sport: string
+          strengths: string | null
+          summary: string | null
+          updated_at: string
+          volley_pct: number
+        }
+        Insert: {
+          assessment_date?: string
+          backhand_pct?: number
+          coach_id: string
+          created_at?: string
+          focus_areas?: string | null
+          forehand_pct?: number
+          id?: string
+          level_system?: string | null
+          lob_pct?: number
+          next_goals?: string | null
+          overall_level?: number | null
+          player_id: string
+          serve_pct?: number
+          smash_pct?: number
+          sport?: string
+          strengths?: string | null
+          summary?: string | null
+          updated_at?: string
+          volley_pct?: number
+        }
+        Update: {
+          assessment_date?: string
+          backhand_pct?: number
+          coach_id?: string
+          created_at?: string
+          focus_areas?: string | null
+          forehand_pct?: number
+          id?: string
+          level_system?: string | null
+          lob_pct?: number
+          next_goals?: string | null
+          overall_level?: number | null
+          player_id?: string
+          serve_pct?: number
+          smash_pct?: number
+          sport?: string
+          strengths?: string | null
+          summary?: string | null
+          updated_at?: string
+          volley_pct?: number
         }
         Relationships: []
       }

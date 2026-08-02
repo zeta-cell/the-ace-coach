@@ -9,6 +9,9 @@ import { format, addDays, subDays, isToday } from "date-fns";
 import PortalLayout from "@/components/portal/PortalLayout";
 import { toast } from "sonner";
 import QuickAddTrainingDrawer from "@/components/portal/QuickAddTrainingDrawer";
+import AssessmentDrawer from "@/components/portal/AssessmentDrawer";
+import AssessmentHistory from "@/components/portal/AssessmentHistory";
+import type { Assessment } from "@/lib/assessments";
 
 interface ActiveProgram {
   request_id: string;
@@ -34,6 +37,10 @@ const CoachPlayerDetail = () => {
   const [activePrograms, setActivePrograms] = useState<ActiveProgram[]>([]);
   const [expandedProgram, setExpandedProgram] = useState<string | null>(null);
   const [trainDrawerOpen, setTrainDrawerOpen] = useState(false);
+  const [assessOpen, setAssessOpen] = useState(false);
+  const [assessPrevious, setAssessPrevious] = useState<Assessment | null>(null);
+  const [assessEditing, setAssessEditing] = useState<Assessment | null>(null);
+  const [assessRefresh, setAssessRefresh] = useState(0);
   const [upcomingPlans, setUpcomingPlans] = useState<any[]>([]);
   const [editMode, setEditMode] = useState(false);
   const [editData, setEditData] = useState<any>(null);
@@ -201,6 +208,17 @@ const CoachPlayerDetail = () => {
               className="w-10 h-10 rounded-xl bg-card border border-border flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary transition-colors">
               <CalendarDays size={18} />
             </Link>
+          </div>
+
+          {/* Assessments */}
+          <div className="mb-6">
+            <AssessmentHistory
+              playerId={playerId!}
+              canEdit
+              refreshKey={assessRefresh}
+              onNew={(previous) => { setAssessPrevious(previous); setAssessEditing(null); setAssessOpen(true); }}
+              onEdit={(assessment) => { setAssessEditing(assessment); setAssessPrevious(null); setAssessOpen(true); }}
+            />
           </div>
 
           {/* Active Programs */}
@@ -630,6 +648,17 @@ const CoachPlayerDetail = () => {
           onClose={() => setTrainDrawerOpen(false)}
           prefilledPlayerId={playerId}
         />
+
+        <AssessmentDrawer
+          open={assessOpen}
+          onClose={() => setAssessOpen(false)}
+          playerId={playerId!}
+          playerName={profileData?.full_name}
+          previous={assessPrevious}
+          editing={assessEditing}
+          onSaved={() => { setAssessRefresh((k) => k + 1); fetchAll(); }}
+        />
+
       </div>
     </PortalLayout>
   );

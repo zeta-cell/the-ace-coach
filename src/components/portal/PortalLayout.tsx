@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   LayoutDashboard, Calendar, BookOpen, Video,
   MessageSquare, User, LogOut, Menu, X, ChevronLeft, ChevronRight,
-  Users, Settings, Home, CreditCard, Link2, CalendarDays, UserCheck, Search, ShoppingBag, Eye, Square, Contact, DollarSign
+  Users, Settings, Home, CreditCard, Link2, CalendarDays, UserCheck, Search, ShoppingBag, Eye, Square, Contact, DollarSign, ToggleLeft
 } from "lucide-react";
 import {
   House as PhHouse,
@@ -16,8 +16,25 @@ import {
   Barbell as PhBarbell,
 } from "@phosphor-icons/react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useFeatureFlags } from "@/hooks/useFeatureFlags";
 import NotificationBell from "@/components/portal/NotificationBell";
 import QuickAddTrainingDrawer from "@/components/portal/QuickAddTrainingDrawer";
+
+/** Nav entries only render when their feature flag is on (admins always see everything). */
+const NAV_FEATURE: Record<string, string> = {
+  "/events": "events",
+  "/community": "community",
+  "/messages": "messaging",
+  "/videos": "player_videos",
+  "/find-a-coach": "coach_discovery",
+  "/marketplace": "marketplace",
+  "/coach/videos": "player_videos",
+  "/coach/events": "events",
+  "/coach/crm": "coach_crm",
+  "/coach/earnings": "coach_earnings",
+  "/coach/marketplace": "coach_marketplace",
+  "/coach/messages": "messaging",
+};
 
 // Phosphor icon overrides for the mobile bottom nav (filled glyph look)
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -36,6 +53,7 @@ const BOTTOM_NAV_ICON: Record<string, any> = {
 const playerNav = [
   { label: "Home", icon: Home, href: "/dashboard" },
   { label: "Training", icon: Calendar, href: "/training" },
+  { label: "My Progress", icon: User, href: "/profile" },
   { label: "Events", icon: CalendarDays, href: "/events" },
   { label: "Community", icon: Users, href: "/community" },
   { label: "Messages", icon: MessageSquare, href: "/messages" },
@@ -69,6 +87,7 @@ const adminNav = [
   { label: "Events", icon: Calendar, href: "/admin/events" },
   { label: "Payments", icon: CreditCard, href: "/admin/payments" },
   { label: "Schedule", icon: CalendarDays, href: "/admin/schedule" },
+  { label: "Features", icon: ToggleLeft, href: "/admin/features" },
   { label: "Founders", icon: Eye, href: "/founders" },
 ];
 
@@ -85,12 +104,19 @@ const clubNav = [
 
 const PortalLayout = ({ children }: { children: React.ReactNode }) => {
   const { role, profile, signOut } = useAuth();
+  const { isEnabled } = useFeatureFlags();
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [fabDrawerOpen, setFabDrawerOpen] = useState(false);
 
-  const navItems = role === "admin" ? adminNav : role === "club_manager" ? clubNav : role === "coach" ? coachNav : playerNav;
+  const baseNav = role === "admin" ? adminNav : role === "club_manager" ? clubNav : role === "coach" ? coachNav : playerNav;
+  const navItems = role === "admin"
+    ? baseNav
+    : baseNav.filter((item) => {
+        const feature = NAV_FEATURE[item.href];
+        return !feature || isEnabled(feature);
+      });
 
   const NavContent = () => (
     <div className="flex flex-col h-full">
@@ -212,7 +238,7 @@ const PortalLayout = ({ children }: { children: React.ReactNode }) => {
               );
             })
           ) : (
-            (role === "player" ? playerNav.slice(0, 5) : navItems.slice(0, 5)).map((item) => {
+            navItems.slice(0, 5).map((item) => {
               const isActive = location.pathname === item.href || (item.href === "/dashboard" && location.pathname === "/dashboard");
               const PhIcon = BOTTOM_NAV_ICON[item.href];
               return (

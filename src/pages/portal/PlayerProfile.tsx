@@ -15,6 +15,10 @@ import UpcomingSchedule from "@/components/portal/UpcomingSchedule";
 import PortalLayout from "@/components/portal/PortalLayout";
 import PlayerProfileEdit from "@/components/portal/PlayerProfileEdit";
 import HealthConnections from "@/components/portal/HealthConnections";
+import { useFeature } from "@/hooks/useFeatureFlags";
+import { ComingSoonOverlay } from "@/components/portal/FeatureGate";
+import CosmicPlayerCard from "@/components/portal/CosmicPlayerCard";
+import AssessmentHistory from "@/components/portal/AssessmentHistory";
 
 interface PlayerData {
   dominant_hand: string | null;
@@ -72,6 +76,8 @@ const PlayerProfile = () => {
   const [playerPhone, setPlayerPhone] = useState<string | null>(null);
   const [rackets, setRackets] = useState<RacketData[]>([]);
   const [editOpen, setEditOpen] = useState(false);
+  const devicesEnabled = useFeature("connected_devices");
+  const [userStats, setUserStats] = useState<{ total_xp: number; current_level: string } | null>(null);
   const [notifPrefs, setNotifPrefs] = useState({
     new_message: true,
     coach_feedback: true,
@@ -85,13 +91,15 @@ const PlayerProfile = () => {
 
   const fetchData = async () => {
     if (!user) return;
-    const [{ data: player }, { data: racketsData }, { data: prof }] = await Promise.all([
+    const [{ data: player }, { data: racketsData }, { data: prof }, { data: stats }] = await Promise.all([
       supabase.from("player_profiles").select("*").eq("user_id", user.id).single(),
       supabase.from("player_rackets").select("*").eq("player_id", user.id),
       supabase.from("profiles").select("notification_preferences, phone").eq("user_id", user.id).single(),
+      supabase.from("user_stats").select("total_xp, current_level").eq("user_id", user.id).maybeSingle(),
     ]);
     if (player) setPlayerData(player as unknown as PlayerData);
     if (racketsData) setRackets(racketsData as unknown as RacketData[]);
+    if (stats) setUserStats(stats as { total_xp: number; current_level: string });
     if (prof) {
       if (prof.phone) setPlayerPhone(prof.phone as string);
       if (prof.notification_preferences) {
@@ -300,6 +308,38 @@ const PlayerProfile = () => {
           </motion.div>
         )}
 
+        {/* Cosmic Player Card */}
+        {playerData && profile && (
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
+            <h2 className="font-display text-sm tracking-wider text-muted-foreground mb-3">MY PLAYER CARD</h2>
+            <CosmicPlayerCard
+              name={profile.full_name}
+              avatarUrl={profile.avatar_url}
+              level={userStats?.current_level || "bronze"}
+              xp={userStats?.total_xp || 0}
+              sport={playerData.preferred_sport || "padel"}
+              overallLevel={playerData.playtomic_level}
+              city={playerData.club_location || null}
+              cardNumber={profile.user_id.slice(0, 4).toUpperCase()}
+              shots={{
+                volley_pct: playerData.volley_pct,
+                forehand_pct: playerData.forehand_pct,
+                serve_pct: playerData.serve_pct,
+                smash_pct: playerData.smash_pct,
+                backhand_pct: playerData.backhand_pct,
+                lob_pct: playerData.lob_pct,
+              }}
+            />
+          </motion.div>
+        )}
+
+        {/* Coach assessments */}
+        {user && (
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18 }}>
+            <AssessmentHistory playerId={user.id} />
+          </motion.div>
+        )}
+
         {/* Play Style with Radar Chart */}
         {playerData && (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="bg-card border border-border rounded-xl p-6">
@@ -424,9 +464,19 @@ const PlayerProfile = () => {
         {/* Connected Devices */}
         {user && (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}>
-            <HealthConnections />
+            {devicesEnabled ? (
+              <HealthConnections />
+            ) : (
+              <ComingSoonOverlay
+                title="Coming soon"
+                subtitle="Whoop, Garmin, Oura and Apple Health syncing will land here shortly."
+              >
+                <HealthConnections />
+              </ComingSoonOverlay>
+            )}
           </motion.div>
         )}
+
 
         {/* Goals */}
         {playerData && playerData.goals.length > 0 && (

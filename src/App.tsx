@@ -6,6 +6,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import ScrollToTop from "@/components/ScrollToTop";
 import ProtectedRoute from "@/components/portal/ProtectedRoute";
+import { FeatureFlagsProvider } from "@/hooks/useFeatureFlags";
+import { FeatureRoute } from "@/components/portal/FeatureGate";
 import { lazy as reactLazy, Suspense } from "react";
 import { IconContext } from "@phosphor-icons/react";
 
@@ -109,6 +111,7 @@ const AdminUsers = lazy(() => import("./pages/portal/AdminUsers"));
 const AdminAssignments = lazy(() => import("./pages/portal/AdminAssignments"));
 const AdminPayments = lazy(() => import("./pages/portal/AdminPayments"));
 const AdminSchedule = lazy(() => import("./pages/portal/AdminSchedule"));
+const AdminFeatures = lazy(() => import("./pages/portal/AdminFeatures"));
 
 // Club pages (lazy-loaded)
 const ClubDashboard = lazy(() => import("./pages/portal/ClubDashboard"));
@@ -132,6 +135,7 @@ const PortalLoader = () => (
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
+      <FeatureFlagsProvider>
       <IconContext.Provider value={{ weight: "duotone", size: 20, mirrored: false }}>
         <TooltipProvider>
           <Toaster />
@@ -143,12 +147,12 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/coach/:slug" element={<Suspense fallback={<PortalLoader />}><PublicCoachProfile /></Suspense>} />
             <Route path="/c/:slug" element={<Suspense fallback={<PortalLoader />}><PublicClubPage /></Suspense>} />
-            <Route path="/find-a-coach" element={<Suspense fallback={<PortalLoader />}><FindACoach /></Suspense>} />
-            <Route path="/marketplace" element={<Suspense fallback={<PortalLoader />}><Marketplace /></Suspense>} />
+            <Route path="/find-a-coach" element={<Suspense fallback={<PortalLoader />}><FeatureRoute feature="coach_discovery" fallback="/"><FindACoach /></FeatureRoute></Suspense>} />
+            <Route path="/marketplace" element={<Suspense fallback={<PortalLoader />}><FeatureRoute feature="marketplace" fallback="/"><Marketplace /></FeatureRoute></Suspense>} />
             <Route path="/booking-success" element={<Suspense fallback={<PortalLoader />}><BookingSuccess /></Suspense>} />
-            <Route path="/rankings" element={<Suspense fallback={<PortalLoader />}><Rankings /></Suspense>} />
-            <Route path="/events" element={<Suspense fallback={<PortalLoader />}><Events /></Suspense>} />
-            <Route path="/community" element={<Suspense fallback={<PortalLoader />}><Community /></Suspense>} />
+            <Route path="/rankings" element={<Suspense fallback={<PortalLoader />}><FeatureRoute feature="community" fallback="/"><Rankings /></FeatureRoute></Suspense>} />
+            <Route path="/events" element={<Suspense fallback={<PortalLoader />}><FeatureRoute feature="events" fallback="/"><Events /></FeatureRoute></Suspense>} />
+            <Route path="/community" element={<Suspense fallback={<PortalLoader />}><FeatureRoute feature="community" fallback="/"><Community /></FeatureRoute></Suspense>} />
             <Route path="/club-invite/:token" element={<Suspense fallback={<PortalLoader />}><ClubInvite /></Suspense>} />
 
             {/* SEO city × sport landing pages (EN + ES) */}
@@ -199,7 +203,7 @@ const App = () => (
             } />
             <Route path="/videos" element={
               <Suspense fallback={<PortalLoader />}>
-                <ProtectedRoute playerOnly><PlayerVideos /></ProtectedRoute>
+                <ProtectedRoute playerOnly><FeatureRoute feature="player_videos"><PlayerVideos /></FeatureRoute></ProtectedRoute>
               </Suspense>
             } />
             <Route path="/rewards" element={
@@ -251,7 +255,7 @@ const App = () => (
             } />
             <Route path="/coach/videos" element={
               <Suspense fallback={<PortalLoader />}>
-                <ProtectedRoute requiredRole="coach"><CoachVideos /></ProtectedRoute>
+                <ProtectedRoute requiredRole="coach"><FeatureRoute feature="player_videos" fallback="/coach"><CoachVideos /></FeatureRoute></ProtectedRoute>
               </Suspense>
             } />
             <Route path="/coach/calendar" element={
@@ -266,17 +270,17 @@ const App = () => (
             } />
             <Route path="/coach/marketplace" element={
               <Suspense fallback={<PortalLoader />}>
-                <ProtectedRoute requiredRole="coach"><CoachMarketplace /></ProtectedRoute>
+                <ProtectedRoute requiredRole="coach"><FeatureRoute feature="coach_marketplace" fallback="/coach"><CoachMarketplace /></FeatureRoute></ProtectedRoute>
               </Suspense>
             } />
             <Route path="/coach/events" element={
               <Suspense fallback={<PortalLoader />}>
-                <ProtectedRoute requiredRole="coach"><CoachEvents /></ProtectedRoute>
+                <ProtectedRoute requiredRole="coach"><FeatureRoute feature="events" fallback="/coach"><CoachEvents /></FeatureRoute></ProtectedRoute>
               </Suspense>
             } />
             <Route path="/coach/earnings" element={
               <Suspense fallback={<PortalLoader />}>
-                <ProtectedRoute requiredRole="coach"><CoachEarnings /></ProtectedRoute>
+                <ProtectedRoute requiredRole="coach"><FeatureRoute feature="coach_earnings" fallback="/coach"><CoachEarnings /></FeatureRoute></ProtectedRoute>
               </Suspense>
             } />
 
@@ -304,6 +308,11 @@ const App = () => (
             <Route path="/admin/schedule" element={
               <Suspense fallback={<PortalLoader />}>
                 <ProtectedRoute requiredRole="admin"><AdminSchedule /></ProtectedRoute>
+              </Suspense>
+            } />
+            <Route path="/admin/features" element={
+              <Suspense fallback={<PortalLoader />}>
+                <ProtectedRoute requiredRole="admin"><AdminFeatures /></ProtectedRoute>
               </Suspense>
             } />
             <Route path="/admin/library" element={
@@ -382,7 +391,7 @@ const App = () => (
             {/* Coach CRM */}
             <Route path="/coach/crm" element={
               <Suspense fallback={<PortalLoader />}>
-                <ProtectedRoute requiredRole="coach"><Crm /></ProtectedRoute>
+                <ProtectedRoute requiredRole="coach"><FeatureRoute feature="coach_crm" fallback="/coach"><Crm /></FeatureRoute></ProtectedRoute>
               </Suspense>
             } />
 
@@ -391,6 +400,7 @@ const App = () => (
         </BrowserRouter>
         </TooltipProvider>
       </IconContext.Provider>
+      </FeatureFlagsProvider>
     </AuthProvider>
   </QueryClientProvider>
 );
