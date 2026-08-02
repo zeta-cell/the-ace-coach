@@ -155,6 +155,7 @@ const App = () => (
             <Route path="/events" element={<Suspense fallback={<PortalLoader />}><FeatureRoute feature="events" fallback="/"><Events /></FeatureRoute></Suspense>} />
             <Route path="/community" element={<Suspense fallback={<PortalLoader />}><FeatureRoute feature="community" fallback="/"><Community /></FeatureRoute></Suspense>} />
             <Route path="/club-invite/:token" element={<Suspense fallback={<PortalLoader />}><ClubInvite /></Suspense>} />
+            <Route path="/invite/:token" element={<Suspense fallback={<PortalLoader />}><CoachInvite /></Suspense>} />
 
             {/* SEO city × sport landing pages (EN + ES) */}
             <Route path="/padel-coach/:city" element={<Suspense fallback={<PortalLoader />}><CitySportLanding locale="en" sport="padel" /></Suspense>} />
