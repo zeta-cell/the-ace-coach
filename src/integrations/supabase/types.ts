@@ -1572,6 +1572,7 @@ export type Database = {
         Row: {
           assessment_date: string
           backhand_pct: number
+          bandeja_pct: number
           coach_id: string
           created_at: string
           focus_areas: string | null
@@ -1588,11 +1589,13 @@ export type Database = {
           strengths: string | null
           summary: string | null
           updated_at: string
+          vibora_pct: number
           volley_pct: number
         }
         Insert: {
           assessment_date?: string
           backhand_pct?: number
+          bandeja_pct?: number
           coach_id: string
           created_at?: string
           focus_areas?: string | null
@@ -1609,11 +1612,13 @@ export type Database = {
           strengths?: string | null
           summary?: string | null
           updated_at?: string
+          vibora_pct?: number
           volley_pct?: number
         }
         Update: {
           assessment_date?: string
           backhand_pct?: number
+          bandeja_pct?: number
           coach_id?: string
           created_at?: string
           focus_areas?: string | null
@@ -1630,6 +1635,7 @@ export type Database = {
           strengths?: string | null
           summary?: string | null
           updated_at?: string
+          vibora_pct?: number
           volley_pct?: number
         }
         Relationships: []
