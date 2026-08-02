@@ -310,6 +310,11 @@ const App = () => (
                 <ProtectedRoute requiredRole="admin"><AdminSchedule /></ProtectedRoute>
               </Suspense>
             } />
+            <Route path="/admin/features" element={
+              <Suspense fallback={<PortalLoader />}>
+                <ProtectedRoute requiredRole="admin"><AdminFeatures /></ProtectedRoute>
+              </Suspense>
+            } />
             <Route path="/admin/library" element={
               <Suspense fallback={<PortalLoader />}>
                 <ProtectedRoute requiredRole="admin"><Library /></ProtectedRoute>
