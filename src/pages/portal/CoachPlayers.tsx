@@ -88,7 +88,15 @@ const CoachPlayers = () => {
   return (
     <PortalLayout>
       <div className="max-w-4xl mx-auto">
-        <h1 className="font-display text-3xl text-foreground mb-4">PLAYERS</h1>
+        <div className="flex items-center justify-between gap-3 mb-4">
+          <h1 className="font-display text-3xl text-foreground">PLAYERS</h1>
+          <button
+            onClick={() => setInviteOpen(true)}
+            className="inline-flex items-center gap-2 bg-primary text-primary-foreground font-display text-xs tracking-wider px-4 py-2.5 rounded-lg hover:bg-primary/90 transition-colors"
+          >
+            <UserPlus size={15} /> INVITE PLAYER
+          </button>
+        </div>
 
         <div className="relative mb-6">
           <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
