@@ -21,20 +21,21 @@ const PublicHeader = () => {
   const location = useLocation();
   const { t, lang, setLang } = useI18n();
   const { user, role } = useAuth();
-  const { isEnabled } = useFeatureFlags();
+  const { isEnabled, isComingSoon } = useFeatureFlags();
   const isLoggedIn = !!user;
   const portalHref = role ? roleHome[role] || "/dashboard" : "/login";
 
   // Every public nav entry is controlled from /admin/features.
   // `public_nav` is the master switch for the discovery links.
+  // Disabled links stay visible with a "SOON" badge so the menu never looks empty.
   const showDiscovery = isEnabled("public_nav");
   const NAV_LINKS = [
-    { label: t("nav.find"), href: "/find-a-coach", show: showDiscovery && isEnabled("coach_discovery") },
-    { label: t("nav.marketplace"), href: "/marketplace", show: showDiscovery && isEnabled("marketplace") },
-    { label: t("nav.events"), href: "/events", show: showDiscovery && isEnabled("events") },
-    { label: t("nav.community"), href: "/community", show: showDiscovery && isEnabled("community") },
-    { label: "I OWN A CLUB OR ACADEMY", href: "/login", show: isEnabled("club_signup") },
-  ].filter(l => l.show);
+    { label: t("nav.find"), href: "/find-a-coach", flag: "coach_discovery", visible: showDiscovery },
+    { label: t("nav.marketplace"), href: "/marketplace", flag: "marketplace", visible: showDiscovery },
+    { label: t("nav.events"), href: "/events", flag: "events", visible: showDiscovery },
+    { label: t("nav.community"), href: "/community", flag: "community", visible: showDiscovery },
+    { label: "I OWN A CLUB OR ACADEMY", href: "/login", flag: "club_signup", visible: true },
+  ].map((l) => ({ ...l, active: isEnabled(l.flag), soon: isComingSoon(l.flag) }));
 
 
   useEffect(() => {
