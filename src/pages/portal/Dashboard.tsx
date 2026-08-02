@@ -75,6 +75,7 @@ const Dashboard = () => {
   const { user, profile } = useAuth();
   const devicesEnabled = useFeature("connected_devices");
   const rewardsEnabled = useFeature("rewards_discounts");
+  const communityEnabled = useFeature("community");
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [todayPlan, setTodayPlan] = useState<DayPlan | null>(null);
