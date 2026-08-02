@@ -91,13 +91,15 @@ const PlayerProfile = () => {
 
   const fetchData = async () => {
     if (!user) return;
-    const [{ data: player }, { data: racketsData }, { data: prof }] = await Promise.all([
+    const [{ data: player }, { data: racketsData }, { data: prof }, { data: stats }] = await Promise.all([
       supabase.from("player_profiles").select("*").eq("user_id", user.id).single(),
       supabase.from("player_rackets").select("*").eq("player_id", user.id),
       supabase.from("profiles").select("notification_preferences, phone").eq("user_id", user.id).single(),
+      supabase.from("user_stats").select("total_xp, current_level").eq("user_id", user.id).maybeSingle(),
     ]);
     if (player) setPlayerData(player as unknown as PlayerData);
     if (racketsData) setRackets(racketsData as unknown as RacketData[]);
+    if (stats) setUserStats(stats as { total_xp: number; current_level: string });
     if (prof) {
       if (prof.phone) setPlayerPhone(prof.phone as string);
       if (prof.notification_preferences) {
