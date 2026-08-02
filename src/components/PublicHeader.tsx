@@ -35,7 +35,7 @@ const PublicHeader = () => {
     { label: t("nav.events"), href: "/events", flag: "events", visible: showDiscovery },
     { label: t("nav.community"), href: "/community", flag: "community", visible: showDiscovery },
     { label: "I OWN A CLUB OR ACADEMY", href: "/login", flag: "club_signup", visible: true },
-  ].map((l) => ({ ...l, active: isEnabled(l.flag), soon: isComingSoon(l.flag) }));
+  ].map((l) => ({ ...l, active: isEnabled(l.flag), soon: isComingSoon(l.flag) })).filter((l) => l.visible);
 
 
   useEffect(() => {
