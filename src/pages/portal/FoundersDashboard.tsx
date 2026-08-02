@@ -1544,7 +1544,7 @@ const FoundersDashboard = () => {
                     </div>
                     <div className="h-6 bg-secondary/30 rounded overflow-hidden">
                       <motion.div
-                        initial={{ width: 0 }}
+                        initial={false}
                         animate={{ width: `${width}%` }}
                         transition={{ duration: 0.8, delay: i * 0.1 }}
                         className="h-full rounded"
@@ -2083,7 +2083,7 @@ const FoundersDashboard = () => {
               <p className="text-xs text-muted-foreground w-40 shrink-0">{c.name}</p>
               <div className="flex-1 h-3 bg-secondary/30 rounded-full overflow-hidden">
                 <motion.div
-                  initial={{ width: 0 }}
+                  initial={false}
                   animate={{ width: `${(c.earned / c.max) * 100}%` }}
                   transition={{ duration: 0.8 }}
                   className="h-full rounded-full bg-primary"

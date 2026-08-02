@@ -233,7 +233,7 @@ const AdminPayments = () => {
         ) : (
           <div className="space-y-2">
             {filtered.map((p, i) => (
-              <motion.div key={p.id} initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.02 }} className="bg-card border border-border rounded-xl p-4 flex flex-col sm:flex-row sm:items-center gap-3">
+              <motion.div key={p.id} initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.02 }} className="bg-card border border-border rounded-xl p-4 flex flex-col sm:flex-row sm:items-center gap-3">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
                     <span className="font-display text-foreground">€{Number(p.amount).toFixed(2)}</span>

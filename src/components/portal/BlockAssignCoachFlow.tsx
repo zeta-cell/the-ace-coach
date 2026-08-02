@@ -293,7 +293,7 @@ const BlockAssignCoachFlow = ({ block, coachProfile, onClose, onBack }: Props) =
         {/* STEP 3 */}
         {step === 3 && selectedCoach && (
           <div className="text-center py-8 space-y-6">
-            <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 260, damping: 20 }}>
+            <motion.div initial={false} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 260, damping: 20 }}>
               <div className="w-20 h-20 rounded-full bg-green-500/20 flex items-center justify-center mx-auto">
                 <CheckCircle size={40} className="text-green-400" />
               </div>

@@ -290,7 +290,7 @@ export const CoachModulesContent = ({ embedded = false }: { embedded?: boolean }
             {filtered.map((mod, i) => (
               <motion.div
                 key={mod.id}
-                initial={{ opacity: 0, y: 8 }}
+                initial={false}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.02 }}
                 className="bg-card border border-border rounded-xl p-4"

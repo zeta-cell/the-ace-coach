@@ -198,7 +198,7 @@ const AdminUsers = () => {
             {filtered.map((u, i) => (
               <motion.div
                 key={u.user_id}
-                initial={{ opacity: 0, y: 4 }}
+                initial={false}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.02 }}
                 onClick={() => handleUserClick(u)}

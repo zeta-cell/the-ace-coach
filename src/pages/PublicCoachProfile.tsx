@@ -344,7 +344,7 @@ const PublicCoachProfile = () => {
       <div className="max-w-5xl mx-auto px-4 py-8 space-y-8">
         {/* 1. HERO */}
         <motion.section
-          initial={{ opacity: 0, y: 20 }}
+          initial={false}
           animate={{ opacity: 1, y: 0 }}
           className="bg-card border border-border rounded-2xl p-6 md:p-8"
         >
@@ -426,7 +426,7 @@ const PublicCoachProfile = () => {
 
         {/* 2. STATS BAR */}
         <motion.section
-          initial={{ opacity: 0, y: 20 }}
+          initial={false}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
           className="grid grid-cols-2 md:grid-cols-4 gap-3"
@@ -454,7 +454,7 @@ const PublicCoachProfile = () => {
 
         {/* Specializations */}
         {coach.specializations?.length > 0 && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.15 }} className="flex flex-wrap gap-2">
+          <motion.div initial={false} animate={{ opacity: 1 }} transition={{ delay: 0.15 }} className="flex flex-wrap gap-2">
             {coach.specializations.map((s) => (
               <Badge key={s} variant="secondary" className="text-xs font-body">{s}</Badge>
             ))}
@@ -466,7 +466,7 @@ const PublicCoachProfile = () => {
             {/* 3. ABOUT */}
             {coach.bio && (
               <motion.section
-                initial={{ opacity: 0, y: 20 }}
+                initial={false}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
                 className="bg-card border border-border rounded-2xl p-6"
@@ -484,7 +484,7 @@ const PublicCoachProfile = () => {
             {/* CERTIFICATIONS */}
             {certifications.length > 0 && (
               <motion.section
-                initial={{ opacity: 0, y: 20 }}
+                initial={false}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.22 }}
                 className="bg-card border border-border rounded-2xl p-6"
@@ -510,7 +510,7 @@ const PublicCoachProfile = () => {
 
             {/* 4. PACKAGES */}
             <motion.section
-              initial={{ opacity: 0, y: 20 }}
+              initial={false}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.25 }}
             >
@@ -585,7 +585,7 @@ const PublicCoachProfile = () => {
 
             {/* 5.5 UPCOMING EVENTS */}
             {coachEvents.length > 0 && (
-              <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
+              <motion.section initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="font-display text-sm tracking-wider text-muted-foreground">UPCOMING EVENTS</h2>
                   <Link to="/events" className="font-display text-xs tracking-wider text-primary">VIEW ALL EVENTS →</Link>
@@ -617,7 +617,7 @@ const PublicCoachProfile = () => {
 
             {/* 6. REVIEWS */}
             <motion.section
-              initial={{ opacity: 0, y: 20 }}
+              initial={false}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.35 }}
             >
@@ -711,7 +711,7 @@ const PublicCoachProfile = () => {
           <div className="space-y-6">
             {/* 5. SHOT STATS RADAR */}
             <motion.section
-              initial={{ opacity: 0, y: 20 }}
+              initial={false}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
               className="bg-card border border-border rounded-2xl p-6"
@@ -742,7 +742,7 @@ const PublicCoachProfile = () => {
             {/* 7. CERTIFICATIONS */}
             {coach.certifications?.length > 0 && (
               <motion.section
-                initial={{ opacity: 0, y: 20 }}
+                initial={false}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
                 className="bg-card border border-border rounded-2xl p-6"
@@ -763,7 +763,7 @@ const PublicCoachProfile = () => {
 
             {/* Book CTA sticky on mobile */}
             <motion.div
-              initial={{ opacity: 0 }}
+              initial={false}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5 }}
               className="sticky top-20"

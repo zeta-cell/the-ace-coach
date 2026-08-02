@@ -122,7 +122,7 @@ const AdminAssignments = () => {
           <>
             {/* New assignment form */}
             <motion.div
-              initial={{ opacity: 0, y: 8 }}
+              initial={false}
               animate={{ opacity: 1, y: 0 }}
               className="bg-card border border-border rounded-xl p-6 mb-6"
             >
@@ -180,7 +180,7 @@ const AdminAssignments = () => {
                 {assignments.map((a, i) => (
                   <motion.div
                     key={a.id}
-                    initial={{ opacity: 0, y: 4 }}
+                    initial={false}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.02 }}
                     className="bg-card border border-border rounded-xl p-4 flex items-center gap-3"

@@ -1062,7 +1062,7 @@ const CoachCalendar = () => {
 
         {/* Selected day bookings — shown below calendar on mobile & desktop */}
         {selectedDay && selectedDayBookings.length > 0 && (
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-2">
+          <motion.div initial={false} animate={{ opacity: 1, y: 0 }} className="space-y-2">
             <h3 className="font-display text-sm tracking-wider text-foreground">
               BOOKINGS — {format(new Date(selectedDay + "T00:00:00"), "EEE d MMM").toUpperCase()}
             </h3>

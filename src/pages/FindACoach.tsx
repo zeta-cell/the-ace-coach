@@ -83,7 +83,7 @@ const CoachCardComponent = ({ coach }: { coach: CoachCard }) => {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 12 }}
+      initial={false}
       animate={{ opacity: 1, y: 0 }}
       className="bg-card border border-border rounded-2xl p-5 hover:border-primary/40 hover:-translate-y-0.5 transition-all duration-200 group"
     >

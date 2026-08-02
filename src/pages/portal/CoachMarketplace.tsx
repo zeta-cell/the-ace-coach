@@ -92,7 +92,7 @@ const CoachMarketplace = () => {
   return (
     <PortalLayout>
       <div className="max-w-4xl mx-auto">
-        <motion.h1 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+        <motion.h1 initial={false} animate={{ opacity: 1, y: 0 }}
           className="font-display text-2xl md:text-3xl text-foreground mb-6 tracking-wider">
           MY PROGRAMS & BLOCKS
         </motion.h1>

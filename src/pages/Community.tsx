@@ -162,7 +162,7 @@ const Community = () => {
                 const PodiumIcon = podiumIcons[i];
                 const lvlCfg = LEVEL_CONFIG[p.current_level] || LEVEL_CONFIG.bronze;
                 return (
-                  <motion.div key={p.user_id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}
+                  <motion.div key={p.user_id} initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}
                     className="flex flex-col items-center">
                     <div className="relative mb-2">
                       {p.avatar_url ? (

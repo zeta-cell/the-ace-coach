@@ -107,7 +107,7 @@ const CoachInvite = () => {
 
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center px-4 py-10">
-      <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-md">
+      <motion.div initial={false} animate={{ opacity: 1, y: 0 }} className="w-full max-w-md">
         <Link to="/" className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground text-sm font-body mb-6">
           <ArrowLeft size={16} /> Back to website
         </Link>

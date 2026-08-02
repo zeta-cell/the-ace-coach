@@ -213,7 +213,7 @@ const CoachProfile = () => {
     <PortalLayout>
       <div className="max-w-3xl mx-auto space-y-6">
         {/* Identity */}
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="bg-card border border-border rounded-xl p-6">
+        <motion.div initial={false} animate={{ opacity: 1, y: 0 }} className="bg-card border border-border rounded-xl p-6">
           <div className="flex items-center justify-between mb-2">
             <div />
             <button
@@ -279,7 +279,7 @@ const CoachProfile = () => {
         </motion.div>
 
         {/* Public profile link info box */}
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="bg-card border border-border rounded-xl p-4">
+        <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="bg-card border border-border rounded-xl p-4">
           <div className="flex items-center gap-2 mb-1">
             <Link2 size={14} className="text-primary shrink-0" />
             <span className="font-display text-xs tracking-wider text-muted-foreground">PUBLIC PROFILE</span>
@@ -311,7 +311,7 @@ const CoachProfile = () => {
 
         {/* Bio & Style */}
         {(coachData?.bio || coachData?.coaching_style) && (
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="bg-card border border-border rounded-xl p-6">
+          <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="bg-card border border-border rounded-xl p-6">
             <h2 className="font-display text-sm tracking-wider text-muted-foreground mb-3">ABOUT</h2>
             {coachData.bio && <p className="font-body text-sm text-foreground mb-3">{coachData.bio}</p>}
             {coachData.coaching_style && (
@@ -324,7 +324,7 @@ const CoachProfile = () => {
         )}
 
         {/* Certifications (from coach_certifications table) */}
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12 }} className="bg-card border border-border rounded-xl p-6">
+        <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12 }} className="bg-card border border-border rounded-xl p-6">
           <div className="flex items-center justify-between mb-3">
             <h2 className="font-display text-sm tracking-wider text-muted-foreground flex items-center gap-2">
               <Award size={14} /> CERTIFICATIONS
@@ -410,7 +410,7 @@ const CoachProfile = () => {
 
         {/* Languages, Specializations */}
         {(coachData?.languages?.length || coachData?.specializations?.length) ? (
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="bg-card border border-border rounded-xl p-6 space-y-4">
+          <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="bg-card border border-border rounded-xl p-6 space-y-4">
             {coachData.languages && coachData.languages.length > 0 && (
               <div>
                 <h3 className="font-display text-xs tracking-wider text-muted-foreground mb-2 flex items-center gap-2">
@@ -438,7 +438,7 @@ const CoachProfile = () => {
 
         {/* Playtomic */}
         {(coachData?.playtomic_level || coachData?.playtomic_url) && (
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="bg-card border border-border rounded-xl p-6">
+          <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="bg-card border border-border rounded-xl p-6">
             <h2 className="font-display text-sm tracking-wider text-muted-foreground mb-3">PLAYTOMIC</h2>
             <div className="flex items-center justify-between">
               {coachData.playtomic_level && <span className="font-display text-4xl text-foreground">{coachData.playtomic_level}</span>}
@@ -452,7 +452,7 @@ const CoachProfile = () => {
         )}
 
         {/* My Packages */}
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.22 }} className="bg-card border border-border rounded-xl p-6">
+        <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.22 }} className="bg-card border border-border rounded-xl p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-display text-sm tracking-wider text-muted-foreground">MY PACKAGES</h2>
             <button
@@ -481,7 +481,7 @@ const CoachProfile = () => {
 
         {/* Shot confidence */}
         {coachData && (
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }} className="bg-card border border-border rounded-xl p-6">
+          <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }} className="bg-card border border-border rounded-xl p-6">
             <h2 className="font-display text-sm tracking-wider text-muted-foreground mb-4">PLAY STYLE</h2>
             <div className="grid grid-cols-2 gap-3 mb-6">
               <div className="bg-secondary rounded-lg p-4 text-center">
@@ -517,7 +517,7 @@ const CoachProfile = () => {
 
         {/* Racket */}
         {coachData?.racket_brand && (
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="bg-card border border-border rounded-xl p-6">
+          <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="bg-card border border-border rounded-xl p-6">
             <h2 className="font-display text-sm tracking-wider text-muted-foreground mb-3">MY RACKET</h2>
             <div className="flex items-center gap-3 bg-secondary rounded-lg p-3">
               <div className="w-10 h-10 rounded-full bg-background flex items-center justify-center font-display text-sm text-foreground">
@@ -532,7 +532,7 @@ const CoachProfile = () => {
         )}
 
         {/* Notification Preferences */}
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="bg-card border border-border rounded-xl p-6">
+        <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="bg-card border border-border rounded-xl p-6">
           <h2 className="font-display text-sm tracking-wider text-muted-foreground mb-4">NOTIFICATION SETTINGS</h2>
           <div className="space-y-3">
             {([
@@ -560,7 +560,7 @@ const CoachProfile = () => {
         </motion.div>
 
         {/* Sign Out */}
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
+        <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
           <button
             onClick={signOut}
             className="w-full py-3 rounded-xl border border-destructive/30 text-destructive font-display text-sm tracking-widest hover:bg-destructive/10 transition-colors flex items-center justify-center gap-2"

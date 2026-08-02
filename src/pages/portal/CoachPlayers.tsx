@@ -140,7 +140,7 @@ const CoachPlayers = () => {
             {filtered.map((player, i) => (
               <motion.div
                 key={player.player_id}
-                initial={{ opacity: 0, y: 8 }}
+                initial={false}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.03 }}
               >

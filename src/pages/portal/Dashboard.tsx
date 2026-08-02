@@ -330,7 +330,7 @@ const Dashboard = () => {
             </div>
             <Link to="/rewards" className="text-xs font-display text-primary tracking-wider hover:underline">REWARDS →</Link>
           </div>
-          <motion.div initial={{ width: 0 }} animate={{ width: "100%" }} transition={{ duration: 0.5 }}>
+          <motion.div initial={false} animate={{ width: "100%" }} transition={{ duration: 0.5 }}>
             <Progress value={Math.min(xpProgress, 100)} className="h-3" />
           </motion.div>
         </motion.div>

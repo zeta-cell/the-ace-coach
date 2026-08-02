@@ -162,7 +162,7 @@ const PlayerProfile = () => {
     <PortalLayout>
       <div className="max-w-3xl mx-auto space-y-6">
         {/* Identity */}
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="bg-card border border-border rounded-xl p-6">
+        <motion.div initial={false} animate={{ opacity: 1, y: 0 }} className="bg-card border border-border rounded-xl p-6">
           <div className="flex items-center justify-between mb-2">
             <div />
             <button
@@ -248,7 +248,7 @@ const PlayerProfile = () => {
 
         {/* Sport Preferences */}
         {playerData && (playerData.favourite_players?.length > 0 || playerData.preferred_court_surface || playerData.training_freq) && (
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="bg-card border border-border rounded-xl p-6">
+          <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="bg-card border border-border rounded-xl p-6">
             <h2 className="font-display text-sm tracking-wider text-muted-foreground mb-4">SPORT PREFERENCES</h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-4">
               {playerData.preferred_court_surface && (
@@ -287,7 +287,7 @@ const PlayerProfile = () => {
 
         {/* My Club */}
         {playerData?.club_name && (
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }} className="bg-card border border-border rounded-xl p-6">
+          <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }} className="bg-card border border-border rounded-xl p-6">
             <h2 className="font-display text-sm tracking-wider text-muted-foreground mb-3">MY CLUB</h2>
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-xl bg-secondary flex items-center justify-center">
@@ -303,7 +303,7 @@ const PlayerProfile = () => {
 
         {/* Playtomic */}
         {(playerData?.playtomic_level || playerData?.playtomic_url) && (
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="bg-card border border-border rounded-xl p-6">
+          <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="bg-card border border-border rounded-xl p-6">
             <h2 className="font-display text-sm tracking-wider text-muted-foreground mb-3">PLAYTOMIC</h2>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
@@ -328,7 +328,7 @@ const PlayerProfile = () => {
 
         {/* Cosmic Player Card */}
         {playerData && profile && (
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
+          <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
             <h2 className="font-display text-sm tracking-wider text-muted-foreground mb-3">MY PLAYER CARD</h2>
             <CosmicPlayerCard
               name={profile.full_name}
@@ -356,7 +356,7 @@ const PlayerProfile = () => {
 
         {/* Development lines + coach assessments */}
         {user && (
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18 }} className="space-y-6">
+          <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18 }} className="space-y-6">
             <DevelopmentChart playerId={user.id} />
             <AssessmentHistory playerId={user.id} />
           </motion.div>
@@ -364,7 +364,7 @@ const PlayerProfile = () => {
 
         {/* Play Style with Radar Chart */}
         {playerData && (
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="bg-card border border-border rounded-xl p-6">
+          <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="bg-card border border-border rounded-xl p-6">
             <div className="flex items-center justify-between mb-4">
               <h2 className="font-display text-sm tracking-wider text-muted-foreground">PLAY STYLE</h2>
               {playerData.shot_data_source === "coach" && (
@@ -436,7 +436,7 @@ const PlayerProfile = () => {
 
         {/* Rackets — enhanced */}
         {rackets.length > 0 && (
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="bg-card border border-border rounded-xl p-6">
+          <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="bg-card border border-border rounded-xl p-6">
             <div className="flex items-center justify-between mb-4">
               <h2 className="font-display text-sm tracking-wider text-muted-foreground">MY RACKETS</h2>
               {favoriteRacket && <span className="text-xs font-body text-muted-foreground">Favorite: {favoriteRacket.brand}</span>}
@@ -485,7 +485,7 @@ const PlayerProfile = () => {
 
         {/* Connected Devices */}
         {user && (
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}>
+          <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}>
             {devicesEnabled ? (
               <HealthConnections />
             ) : (
@@ -502,7 +502,7 @@ const PlayerProfile = () => {
 
         {/* Goals */}
         {playerData && playerData.goals.length > 0 && (
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="bg-card border border-border rounded-xl p-6">
+          <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="bg-card border border-border rounded-xl p-6">
             <h2 className="font-display text-sm tracking-wider text-muted-foreground mb-3">GOALS & FITNESS</h2>
             <div className="flex flex-wrap gap-2 mb-3">
               {playerData.goals.map((goal) => (
@@ -517,13 +517,13 @@ const PlayerProfile = () => {
 
         {/* Upcoming Training */}
         {user && (
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45 }}>
+          <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45 }}>
             <UpcomingSchedule playerId={user.id} linkPrefix="training" showCoach={true} />
           </motion.div>
         )}
 
         {/* Notifications */}
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="bg-card border border-border rounded-xl p-6">
+        <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="bg-card border border-border rounded-xl p-6">
           <h2 className="font-display text-sm tracking-wider text-muted-foreground mb-4">NOTIFICATION SETTINGS</h2>
           <div className="space-y-3">
             {([
@@ -548,7 +548,7 @@ const PlayerProfile = () => {
         </motion.div>
 
         {/* Sign Out */}
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}>
+        <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}>
           <button
             onClick={signOut}
             className="w-full py-3 rounded-xl border border-destructive/30 text-destructive font-display text-sm tracking-widest hover:bg-destructive/10 transition-colors flex items-center justify-center gap-2"

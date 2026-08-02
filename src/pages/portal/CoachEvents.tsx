@@ -145,7 +145,7 @@ const CoachEvents = () => {
               const regs = registrations[event.id] || [];
 
               return (
-                <motion.div key={event.id} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+                <motion.div key={event.id} initial={false} animate={{ opacity: 1, y: 0 }}
                   className="bg-card border border-border rounded-xl p-5 space-y-3">
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex-1 min-w-0">

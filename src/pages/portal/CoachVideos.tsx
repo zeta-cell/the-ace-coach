@@ -196,7 +196,7 @@ const CoachVideos = () => {
             {videos.map((v, i) => (
               <motion.div
                 key={v.id}
-                initial={{ opacity: 0, y: 8 }}
+                initial={false}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.03 }}
                 onClick={() => { setSelectedVideo(v); setFeedback(v.coach_feedback || ""); setShowComments(false); fetchComments(v.id); }}
