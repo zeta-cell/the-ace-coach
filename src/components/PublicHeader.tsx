@@ -69,15 +69,27 @@ const PublicHeader = () => {
           </Link>
           <div className="hidden md:flex items-center gap-6">
             {NAV_LINKS.map(link => (
-              <Link
-                key={link.href}
-                to={link.href}
-                className={`font-display text-xs tracking-wider transition-colors ${
-                  location.pathname === link.href ? "text-primary" : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                {link.label}
-              </Link>
+              link.active ? (
+                <Link
+                  key={link.href}
+                  to={link.href}
+                  className={`font-display text-xs tracking-wider transition-colors ${
+                    location.pathname === link.href ? "text-primary" : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              ) : (
+                <span
+                  key={link.href}
+                  className="inline-flex items-center gap-1.5 font-display text-xs tracking-wider text-muted-foreground/40 cursor-not-allowed"
+                >
+                  {link.label}
+                  <span className="inline-flex items-center rounded-full bg-primary/15 px-1.5 py-0.5 font-display text-[8px] tracking-wider text-primary">
+                    SOON
+                  </span>
+                </span>
+              )
             ))}
           </div>
           <div className="flex items-center gap-1 md:gap-2">
