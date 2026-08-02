@@ -210,6 +210,17 @@ const CoachPlayerDetail = () => {
             </Link>
           </div>
 
+          {/* Assessments */}
+          <div className="mb-6">
+            <AssessmentHistory
+              playerId={playerId!}
+              canEdit
+              refreshKey={assessRefresh}
+              onNew={(previous) => { setAssessPrevious(previous); setAssessEditing(null); setAssessOpen(true); }}
+              onEdit={(assessment) => { setAssessEditing(assessment); setAssessPrevious(null); setAssessOpen(true); }}
+            />
+          </div>
+
           {/* Active Programs */}
           {activePrograms.length > 0 && (
             <div className="mb-6 space-y-2">
