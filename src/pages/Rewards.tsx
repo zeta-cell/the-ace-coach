@@ -24,6 +24,7 @@ const LEVEL_DISCOUNT_BONUS: Record<string, number> = {
 
 const Rewards = () => {
   const { user } = useAuth();
+  const discountsEnabled = useFeature("rewards_discounts");
   const [stats, setStats] = useState<any>(null);
 
   useEffect(() => {
