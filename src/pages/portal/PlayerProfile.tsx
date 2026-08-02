@@ -15,6 +15,10 @@ import UpcomingSchedule from "@/components/portal/UpcomingSchedule";
 import PortalLayout from "@/components/portal/PortalLayout";
 import PlayerProfileEdit from "@/components/portal/PlayerProfileEdit";
 import HealthConnections from "@/components/portal/HealthConnections";
+import { useFeature } from "@/hooks/useFeatureFlags";
+import { ComingSoonOverlay } from "@/components/portal/FeatureGate";
+import CosmicPlayerCard from "@/components/portal/CosmicPlayerCard";
+import AssessmentHistory from "@/components/portal/AssessmentHistory";
 
 interface PlayerData {
   dominant_hand: string | null;
