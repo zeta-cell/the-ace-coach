@@ -15,6 +15,7 @@ interface Props {
 
 const AssessmentHistory = ({ playerId, canEdit, onNew, onEdit, refreshKey = 0 }: Props) => {
   const [items, setItems] = useState<Assessment[]>([]);
+  const [coaches, setCoaches] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   const [openId, setOpenId] = useState<string | null>(null);
 
@@ -31,6 +32,16 @@ const AssessmentHistory = ({ playerId, canEdit, onNew, onEdit, refreshKey = 0 }:
       const list = (data || []) as Assessment[];
       setItems(list);
       setOpenId(list[0]?.id ?? null);
+      const ids = Array.from(new Set(list.map((a) => a.coach_id)));
+      if (ids.length) {
+        const { data: profs } = await supabase.from("profiles").select("user_id, full_name").in("user_id", ids);
+        if (!active) return;
+        const map: Record<string, string> = {};
+        (profs || []).forEach((p) => {
+          map[p.user_id as string] = (p.full_name as string) || "Coach";
+        });
+        setCoaches(map);
+      }
       setLoading(false);
     })();
     return () => {
@@ -87,6 +98,7 @@ const AssessmentHistory = ({ playerId, canEdit, onNew, onEdit, refreshKey = 0 }:
                     </p>
                     <p className="font-body text-[11px] text-muted-foreground capitalize">
                       {a.sport}
+                      {` · by ${coaches[a.coach_id] || "Coach"}`}
                       {a.overall_level != null && ` · level ${a.overall_level}`}
                       {i === 0 && " · latest"}
                     </p>

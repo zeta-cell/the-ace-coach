@@ -19,6 +19,7 @@ import { useFeature } from "@/hooks/useFeatureFlags";
 import { ComingSoonOverlay } from "@/components/portal/FeatureGate";
 import CosmicPlayerCard from "@/components/portal/CosmicPlayerCard";
 import AssessmentHistory from "@/components/portal/AssessmentHistory";
+import DevelopmentChart from "@/components/portal/DevelopmentChart";
 
 interface PlayerData {
   dominant_hand: string | null;
@@ -126,25 +127,32 @@ const PlayerProfile = () => {
     }
   };
 
+  // Shot values: coach assessment wins, player self-rating is the fallback.
+  const shotValue = (key: string, fallback: number) => latestShots?.[key] ?? fallback ?? 0;
+
   const radarData = playerData
     ? [
-        { shot: "Forehand", value: playerData.forehand_pct },
-        { shot: "Backhand", value: playerData.backhand_pct },
-        { shot: "Serve", value: playerData.serve_pct },
-        { shot: "Volley", value: playerData.volley_pct },
-        { shot: "Smash", value: playerData.smash_pct },
-        { shot: "Lob", value: playerData.lob_pct },
+        { shot: "Forehand", value: shotValue("forehand_pct", playerData.forehand_pct) },
+        { shot: "Backhand", value: shotValue("backhand_pct", playerData.backhand_pct) },
+        { shot: "Serve", value: shotValue("serve_pct", playerData.serve_pct) },
+        { shot: "Bandeja", value: shotValue("bandeja_pct", 50) },
+        { shot: "Víbora", value: shotValue("vibora_pct", 50) },
+        { shot: "Volley", value: shotValue("volley_pct", playerData.volley_pct) },
+        { shot: "Smash", value: shotValue("smash_pct", playerData.smash_pct) },
+        { shot: "Lob", value: shotValue("lob_pct", playerData.lob_pct) },
       ]
     : [];
 
   const shots = playerData
     ? [
-        { name: "Volley", pct: playerData.volley_pct },
-        { name: "Forehand", pct: playerData.forehand_pct },
-        { name: "Serve", pct: playerData.serve_pct },
-        { name: "Smash", pct: playerData.smash_pct },
-        { name: "Backhand", pct: playerData.backhand_pct },
-        { name: "Lob", pct: playerData.lob_pct },
+        { name: "Volley", pct: shotValue("volley_pct", playerData.volley_pct) },
+        { name: "Forehand", pct: shotValue("forehand_pct", playerData.forehand_pct) },
+        { name: "Serve", pct: shotValue("serve_pct", playerData.serve_pct) },
+        { name: "Smash", pct: shotValue("smash_pct", playerData.smash_pct) },
+        { name: "Backhand", pct: shotValue("backhand_pct", playerData.backhand_pct) },
+        { name: "Lob", pct: shotValue("lob_pct", playerData.lob_pct) },
+        { name: "Bandeja", pct: shotValue("bandeja_pct", 50) },
+        { name: "Víbora", pct: shotValue("vibora_pct", 50) },
       ].sort((a, b) => b.pct - a.pct)
     : [];
 
@@ -346,9 +354,10 @@ const PlayerProfile = () => {
           </motion.div>
         )}
 
-        {/* Coach assessments */}
+        {/* Development lines + coach assessments */}
         {user && (
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18 }}>
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18 }} className="space-y-6">
+            <DevelopmentChart playerId={user.id} />
             <AssessmentHistory playerId={user.id} />
           </motion.div>
         )}
