@@ -576,6 +576,18 @@ const Onboarding = () => {
               style={{ width: `${(step / 4) * 100}%` }}
             />
           </div>
+          <button
+            type="button"
+            onClick={async () => {
+              if (!user) return;
+              await supabase.from("profiles").update({ onboarding_completed: true }).eq("user_id", user.id);
+              await refreshProfile();
+              navigate("/profile");
+            }}
+            className="mt-2 font-body text-[11px] text-muted-foreground hover:text-primary transition-colors"
+          >
+            Skip — take me to my assessment →
+          </button>
         </div>
       </div>
 
