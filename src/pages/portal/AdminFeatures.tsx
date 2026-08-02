@@ -85,16 +85,14 @@ const AdminFeatures = () => {
             <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
           </div>
         ) : (
-          <div className="space-y-6">
-            {categories.map((cat) => (
-              <div key={cat}>
-                <h2 className="font-display text-xs tracking-wider text-muted-foreground mb-2">
-                  {(CATEGORY_LABEL[cat] || cat).toUpperCase()}
-                </h2>
+          <div className="space-y-8">
+            {groups.map((g) => (
+              <div key={g.id}>
+                <h2 className="font-display text-xs tracking-wider text-primary mb-1">{g.title}</h2>
+                <p className="font-body text-[11px] text-muted-foreground mb-2">{g.hint}</p>
                 <div className="bg-card border border-border rounded-xl divide-y divide-border">
-                  {list
-                    .filter((f) => f.category === cat)
-                    .map((f) => (
+                  {g.items.map((f) => (
+
                       <div key={f.key} className="p-4 flex items-start justify-between gap-4">
                         <div className="min-w-0">
                           <div className="flex items-center gap-2">
