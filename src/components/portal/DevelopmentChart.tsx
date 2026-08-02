@@ -161,6 +161,7 @@ const DevelopmentChart = ({ playerId, refreshKey = 0 }: Props) => {
               strokeWidth={2.5}
               strokeDasharray="5 4"
               dot={{ r: 3 }}
+              isAnimationActive={false}
             />
             {SHOT_KEYS.filter((s) => active.includes(s.key)).map((s) => (
               <Line
@@ -171,6 +172,7 @@ const DevelopmentChart = ({ playerId, refreshKey = 0 }: Props) => {
                 stroke={SHOT_COLORS[s.key]}
                 strokeWidth={2}
                 dot={{ r: 2.5 }}
+                isAnimationActive={false}
               />
             ))}
           </LineChart>
