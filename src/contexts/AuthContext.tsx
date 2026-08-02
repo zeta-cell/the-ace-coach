@@ -145,10 +145,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setSession(session);
       setUser(session?.user ?? null);
       if (session?.user) {
-        Promise.all([
-          fetchProfile(session.user.id),
-          fetchRole(session.user.id),
-        ]).then(() => setLoading(false));
+        fetchProfile(session.user.id)
+          .then(() => fetchRole(session.user.id))
+          .then(() => setLoading(false));
       } else {
         setLoading(false);
       }
