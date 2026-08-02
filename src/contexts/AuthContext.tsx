@@ -115,7 +115,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const refreshProfile = async () => {
     if (user) {
-      await Promise.all([fetchProfile(user.id), fetchRole(user.id)]);
+      await fetchProfile(user.id);
+      await fetchRole(user.id);
     }
   };
 
@@ -127,10 +128,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         if (session?.user) {
           // Use setTimeout to avoid potential deadlock with Supabase auth
           setTimeout(async () => {
-            await Promise.all([
-              fetchProfile(session.user.id),
-              fetchRole(session.user.id),
-            ]);
+            // Profile first: it bootstraps missing records for brand-new accounts.
+            await fetchProfile(session.user.id);
+            await fetchRole(session.user.id);
             setLoading(false);
           }, 0);
         } else {
