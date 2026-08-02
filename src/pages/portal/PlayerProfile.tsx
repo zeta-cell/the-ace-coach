@@ -424,9 +424,19 @@ const PlayerProfile = () => {
         {/* Connected Devices */}
         {user && (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}>
-            <HealthConnections />
+            {devicesEnabled ? (
+              <HealthConnections />
+            ) : (
+              <ComingSoonOverlay
+                title="Coming soon"
+                subtitle="Whoop, Garmin, Oura and Apple Health syncing will land here shortly."
+              >
+                <HealthConnections />
+              </ComingSoonOverlay>
+            )}
           </motion.div>
         )}
+
 
         {/* Goals */}
         {playerData && playerData.goals.length > 0 && (
