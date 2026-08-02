@@ -6,16 +6,36 @@ import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { Sparkles, ToggleLeft } from "lucide-react";
 
-const CATEGORY_LABEL: Record<string, string> = {
-  core: "Core",
-  training: "Training",
-  discovery: "Discovery",
-  social: "Social",
-  rewards: "Rewards",
-  integrations: "Integrations",
-  coach: "Coach tools",
-  general: "General",
-};
+/**
+ * Rollout order — the sequence in which features should be switched on as the
+ * platform grows. Everything not listed lands in the last phase.
+ */
+const PHASES: { id: string; title: string; hint: string; keys: string[] }[] = [
+  {
+    id: "phase1",
+    title: "PHASE 1 · LIVE NOW (first customers)",
+    hint: "Assessments, player card, coach ↔ player messaging, trainings & events, refer & earn.",
+    keys: ["assessments", "player_card", "messaging", "events", "referrals"],
+  },
+  {
+    id: "phase2",
+    title: "PHASE 2 · WHEN COACHES SELL (bookings & money)",
+    hint: "Turn on once coaches want paid sessions and payouts.",
+    keys: ["bookings", "coach_earnings", "player_videos", "coach_crm"],
+  },
+  {
+    id: "phase3",
+    title: "PHASE 3 · WHEN THERE IS SUPPLY (discovery)",
+    hint: "Only switch on with enough coaches and programs — these open the public website.",
+    keys: ["public_nav", "coach_discovery", "marketplace", "coach_marketplace", "club_signup"],
+  },
+  {
+    id: "phase4",
+    title: "PHASE 4 · WHEN THERE IS A CROWD (social & extras)",
+    hint: "Leaderboards, reward discounts and device integrations.",
+    keys: ["community", "rewards_discounts", "connected_devices"],
+  },
+];
 
 const AdminFeatures = () => {
   const { flags, loading, refresh } = useFeatureFlags();
@@ -33,7 +53,20 @@ const AdminFeatures = () => {
   };
 
   const list = Object.values(flags);
-  const categories = Array.from(new Set(list.map((f) => f.category)));
+  const known = new Set(PHASES.flatMap((p) => p.keys));
+  const groups = [
+    ...PHASES.map((p) => ({
+      ...p,
+      items: p.keys.map((k) => flags[k]).filter(Boolean),
+    })),
+    {
+      id: "other",
+      title: "OTHER MODULES",
+      hint: "Not part of the planned rollout.",
+      items: list.filter((f) => !known.has(f.key)),
+    },
+  ].filter((g) => g.items.length > 0);
+
 
   return (
     <PortalLayout>
@@ -52,16 +85,14 @@ const AdminFeatures = () => {
             <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
           </div>
         ) : (
-          <div className="space-y-6">
-            {categories.map((cat) => (
-              <div key={cat}>
-                <h2 className="font-display text-xs tracking-wider text-muted-foreground mb-2">
-                  {(CATEGORY_LABEL[cat] || cat).toUpperCase()}
-                </h2>
+          <div className="space-y-8">
+            {groups.map((g) => (
+              <div key={g.id}>
+                <h2 className="font-display text-xs tracking-wider text-primary mb-1">{g.title}</h2>
+                <p className="font-body text-[11px] text-muted-foreground mb-2">{g.hint}</p>
                 <div className="bg-card border border-border rounded-xl divide-y divide-border">
-                  {list
-                    .filter((f) => f.category === cat)
-                    .map((f) => (
+                  {g.items.map((f) => (
+
                       <div key={f.key} className="p-4 flex items-start justify-between gap-4">
                         <div className="min-w-0">
                           <div className="flex items-center gap-2">

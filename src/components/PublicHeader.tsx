@@ -4,6 +4,7 @@ import { List as Menu, X, Sun, Moon, Globe } from "@phosphor-icons/react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useI18n } from "@/lib/i18n";
 import { useAuth } from "@/contexts/AuthContext";
+import { useFeatureFlags } from "@/hooks/useFeatureFlags";
 
 const roleHome: Record<string, string> = {
   player: "/dashboard",
@@ -20,16 +21,21 @@ const PublicHeader = () => {
   const location = useLocation();
   const { t, lang, setLang } = useI18n();
   const { user, role } = useAuth();
+  const { isEnabled } = useFeatureFlags();
   const isLoggedIn = !!user;
   const portalHref = role ? roleHome[role] || "/dashboard" : "/login";
 
+  // Every public nav entry is controlled from /admin/features.
+  // `public_nav` is the master switch for the discovery links.
+  const showDiscovery = isEnabled("public_nav");
   const NAV_LINKS = [
-    { label: t("nav.find"), href: "/find-a-coach" },
-    { label: t("nav.marketplace"), href: "/marketplace" },
-    { label: t("nav.events"), href: "/events" },
-    { label: t("nav.community"), href: "/community" },
-    { label: "I OWN A CLUB OR ACADEMY", href: "/login" },
-  ];
+    { label: t("nav.find"), href: "/find-a-coach", show: showDiscovery && isEnabled("coach_discovery") },
+    { label: t("nav.marketplace"), href: "/marketplace", show: showDiscovery && isEnabled("marketplace") },
+    { label: t("nav.events"), href: "/events", show: showDiscovery && isEnabled("events") },
+    { label: t("nav.community"), href: "/community", show: showDiscovery && isEnabled("community") },
+    { label: "I OWN A CLUB OR ACADEMY", href: "/login", show: isEnabled("club_signup") },
+  ].filter(l => l.show);
+
 
   useEffect(() => {
     const root = document.documentElement;
