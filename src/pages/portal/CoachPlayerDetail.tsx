@@ -648,6 +648,17 @@ const CoachPlayerDetail = () => {
           onClose={() => setTrainDrawerOpen(false)}
           prefilledPlayerId={playerId}
         />
+
+        <AssessmentDrawer
+          open={assessOpen}
+          onClose={() => setAssessOpen(false)}
+          playerId={playerId!}
+          playerName={profileData?.full_name}
+          previous={assessPrevious}
+          editing={assessEditing}
+          onSaved={() => { setAssessRefresh((k) => k + 1); fetchData(); }}
+        />
+
       </div>
     </PortalLayout>
   );
