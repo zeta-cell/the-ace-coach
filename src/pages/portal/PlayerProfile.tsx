@@ -322,12 +322,12 @@ const PlayerProfile = () => {
               city={playerData.club_location || null}
               cardNumber={profile.user_id.slice(0, 4).toUpperCase()}
               shots={{
-                volley: playerData.volley_pct,
-                forehand: playerData.forehand_pct,
-                serve: playerData.serve_pct,
-                smash: playerData.smash_pct,
-                backhand: playerData.backhand_pct,
-                lob: playerData.lob_pct,
+                volley_pct: playerData.volley_pct,
+                forehand_pct: playerData.forehand_pct,
+                serve_pct: playerData.serve_pct,
+                smash_pct: playerData.smash_pct,
+                backhand_pct: playerData.backhand_pct,
+                lob_pct: playerData.lob_pct,
               }}
             />
           </motion.div>
