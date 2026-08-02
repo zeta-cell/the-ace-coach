@@ -105,30 +105,52 @@ const Rewards = () => {
           </div>
         </motion.div>
 
-        {/* Partner Discounts */}
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="mb-6">
-          <h2 className="font-display text-sm tracking-wider text-muted-foreground mb-3">PARTNER DISCOUNTS</h2>
-          <div className="grid grid-cols-2 gap-3">
-            {PARTNERS.map(partner => {
-              const discount = partner.baseDiscount + (LEVEL_DISCOUNT_BONUS[level] || 0);
-              return (
-                <div key={partner.name} className="bg-card border border-border rounded-xl p-4">
-                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-2">
-                    <span className="font-display text-sm text-primary">{partner.name.charAt(0)}</span>
+        {/* Partner Discounts — gated */}
+        {discountsEnabled ? (
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="mb-6">
+            <h2 className="font-display text-sm tracking-wider text-muted-foreground mb-3">PARTNER DISCOUNTS</h2>
+            <div className="grid grid-cols-2 gap-3">
+              {PARTNERS.map(partner => {
+                const discount = partner.baseDiscount + (LEVEL_DISCOUNT_BONUS[level] || 0);
+                return (
+                  <div key={partner.name} className="bg-card border border-border rounded-xl p-4">
+                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-2">
+                      <span className="font-display text-sm text-primary">{partner.name.charAt(0)}</span>
+                    </div>
+                    <p className="font-display text-sm text-foreground">{partner.name}</p>
+                    <p className="font-display text-xl text-primary">{discount}% OFF</p>
+                    <button onClick={() => getCode(partner)}
+                      className="mt-2 w-full py-1.5 rounded-lg bg-secondary text-foreground font-display text-[10px] tracking-wider hover:bg-secondary/80 transition-colors flex items-center justify-center gap-1">
+                      <Copy size={10} /> GET CODE
+                    </button>
                   </div>
-                  <p className="font-display text-sm text-foreground">{partner.name}</p>
-                  <p className="font-display text-xl text-primary">{discount}% OFF</p>
-                  <button onClick={() => getCode(partner)}
-                    className="mt-2 w-full py-1.5 rounded-lg bg-secondary text-foreground font-display text-[10px] tracking-wider hover:bg-secondary/80 transition-colors flex items-center justify-center gap-1">
-                    <Copy size={10} /> GET CODE
-                  </button>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
+          </motion.div>
+        ) : (
+          <div className="mb-6">
+            <h2 className="font-display text-sm tracking-wider text-muted-foreground mb-3">PARTNER DISCOUNTS</h2>
+            <ComingSoonOverlay
+              title="Coming soon"
+              subtitle="Partner discounts on rackets, gear and merch are on the way. Collect XP now — your level decides how big your discount will be."
+            >
+              <div className="grid grid-cols-2 gap-3">
+                {PARTNERS.map(partner => (
+                  <div key={partner.name} className="bg-card border border-border rounded-xl p-4">
+                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-2">
+                      <span className="font-display text-sm text-primary">{partner.name.charAt(0)}</span>
+                    </div>
+                    <p className="font-display text-sm text-foreground">{partner.name}</p>
+                    <p className="font-display text-xl text-primary">{partner.baseDiscount}% OFF</p>
+                  </div>
+                ))}
+              </div>
+            </ComingSoonOverlay>
           </div>
-        </motion.div>
+        )}
 
-        {/* Wallet */}
+        {/* Wallet + Refer & Earn */}
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
           <WalletCard />
         </motion.div>
