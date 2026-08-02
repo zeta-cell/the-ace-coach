@@ -395,6 +395,7 @@ const App = () => (
         </BrowserRouter>
         </TooltipProvider>
       </IconContext.Provider>
+      </FeatureFlagsProvider>
     </AuthProvider>
   </QueryClientProvider>
 );
