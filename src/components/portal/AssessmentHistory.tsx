@@ -98,6 +98,7 @@ const AssessmentHistory = ({ playerId, canEdit, onNew, onEdit, refreshKey = 0 }:
                     </p>
                     <p className="font-body text-[11px] text-muted-foreground capitalize">
                       {a.sport}
+                      {` · by ${coaches[a.coach_id] || "Coach"}`}
                       {a.overall_level != null && ` · level ${a.overall_level}`}
                       {i === 0 && " · latest"}
                     </p>
