@@ -391,7 +391,7 @@ const App = () => (
             {/* Coach CRM */}
             <Route path="/coach/crm" element={
               <Suspense fallback={<PortalLoader />}>
-                <ProtectedRoute requiredRole="coach"><Crm /></ProtectedRoute>
+                <ProtectedRoute requiredRole="coach"><FeatureRoute feature="coach_crm" fallback="/coach"><Crm /></FeatureRoute></ProtectedRoute>
               </Suspense>
             } />
 
