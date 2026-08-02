@@ -418,29 +418,12 @@ const Dashboard = () => {
         </motion.div>
 
         {/* Leaderboard Preview */}
+        {communityEnabled && (
         <motion.div initial={false} className="bg-card border border-border rounded-xl p-5 mb-6">
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="font-display text-sm tracking-wider text-muted-foreground flex items-center gap-2"><Trophy size={14} className="text-primary" /> LEADERBOARD</h3>
-            <Link to="/rankings" className="text-xs font-display text-primary tracking-wider hover:underline">VIEW ALL →</Link>
-          </div>
-          {myRank && <p className="font-body text-xs text-muted-foreground mb-3">Your rank: <span className="text-primary font-display">#{myRank}</span></p>}
-          <div className="space-y-2">
-            {topPlayers.map((p, i) => {
-              const colors = ['#FFD700', '#C0C0C0', '#CD7F32'];
-              return (
-                <div key={p.user_id} className="flex items-center gap-3">
-                  <span className="font-display text-lg w-6 text-center" style={{ color: colors[i] }}>{i + 1}</span>
-                  <div className="w-8 h-8 rounded-full bg-secondary overflow-hidden shrink-0">
-                    {p.avatar_url ? <img src={p.avatar_url} alt="" className="w-full h-full object-cover" /> :
-                      <div className="w-full h-full flex items-center justify-center font-display text-sm text-primary">{p.display_name?.charAt(0) || "?"}</div>}
-                  </div>
-                  <span className="font-body text-sm text-foreground flex-1 truncate">{p.display_name || "Player"}</span>
-                  <span className="font-display text-sm text-foreground">{p.total_xp} XP</span>
-                </div>
-              );
-            })}
+...
           </div>
         </motion.div>
+        )}
 
         {/* My Coaches */}
         {myCoaches.length > 0 && (
