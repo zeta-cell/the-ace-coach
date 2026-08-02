@@ -255,7 +255,7 @@ const App = () => (
             } />
             <Route path="/coach/videos" element={
               <Suspense fallback={<PortalLoader />}>
-                <ProtectedRoute requiredRole="coach"><CoachVideos /></ProtectedRoute>
+                <ProtectedRoute requiredRole="coach"><FeatureRoute feature="player_videos" fallback="/coach"><CoachVideos /></FeatureRoute></ProtectedRoute>
               </Suspense>
             } />
             <Route path="/coach/calendar" element={
@@ -270,17 +270,17 @@ const App = () => (
             } />
             <Route path="/coach/marketplace" element={
               <Suspense fallback={<PortalLoader />}>
-                <ProtectedRoute requiredRole="coach"><CoachMarketplace /></ProtectedRoute>
+                <ProtectedRoute requiredRole="coach"><FeatureRoute feature="coach_marketplace" fallback="/coach"><CoachMarketplace /></FeatureRoute></ProtectedRoute>
               </Suspense>
             } />
             <Route path="/coach/events" element={
               <Suspense fallback={<PortalLoader />}>
-                <ProtectedRoute requiredRole="coach"><CoachEvents /></ProtectedRoute>
+                <ProtectedRoute requiredRole="coach"><FeatureRoute feature="events" fallback="/coach"><CoachEvents /></FeatureRoute></ProtectedRoute>
               </Suspense>
             } />
             <Route path="/coach/earnings" element={
               <Suspense fallback={<PortalLoader />}>
-                <ProtectedRoute requiredRole="coach"><CoachEarnings /></ProtectedRoute>
+                <ProtectedRoute requiredRole="coach"><FeatureRoute feature="coach_earnings" fallback="/coach"><CoachEarnings /></FeatureRoute></ProtectedRoute>
               </Suspense>
             } />
 
