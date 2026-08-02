@@ -308,8 +308,6 @@ const PlayerProfile = () => {
           </motion.div>
         )}
 
-        {/* Play Style with Radar Chart */}
-        {playerData && (
         {/* Cosmic Player Card */}
         {playerData && profile && (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
