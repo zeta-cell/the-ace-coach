@@ -52,7 +52,10 @@ const CosmicPlayerCard = ({
   const stars = useStars(name || "player", 70);
   const lvl = LEVEL_CONFIG[level] || LEVEL_CONFIG.bronze;
 
-  const values = SHOT_KEYS.map((s) => ({ label: s.label, value: Number(shots?.[s.key]) || 0 }));
+  const values = SHOT_KEYS.filter((s) => shots?.[s.key] != null).map((s) => ({
+    label: s.label,
+    value: Number(shots?.[s.key]) || 0,
+  }));
   const overall = Math.round(values.reduce((a, b) => a + b.value, 0) / values.length);
   const initials = (name || "?")
     .split(" ")
@@ -188,7 +191,7 @@ const CosmicPlayerCard = ({
             </div>
 
             {/* Stats grid */}
-            <div className="relative mt-3 grid grid-cols-3 gap-x-3 gap-y-1.5 rounded-xl bg-white/[0.06] p-3 backdrop-blur-sm">
+            <div className={`relative mt-3 grid gap-x-3 gap-y-1.5 ${values.length > 6 ? "grid-cols-4" : "grid-cols-3"} rounded-xl bg-white/[0.06] p-3 backdrop-blur-sm`}>
               {values.map((v) => (
                 <div key={v.label} className="text-center">
                   <p className="font-display text-sm text-white leading-none">{v.value}</p>
