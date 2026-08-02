@@ -459,7 +459,19 @@ const Dashboard = () => {
         <motion.div initial={false} className="mb-6"><WalletCard /></motion.div>
 
         {/* Health Connections */}
-        <motion.div initial={false} className="mb-6"><HealthConnections /></motion.div>
+        <motion.div initial={false} className="mb-6">
+          {devicesEnabled ? (
+            <HealthConnections />
+          ) : (
+            <ComingSoonOverlay
+              title="Coming soon"
+              subtitle="Whoop, Garmin, Oura and Apple Health syncing will land here shortly."
+            >
+              <HealthConnections />
+            </ComingSoonOverlay>
+          )}
+        </motion.div>
+
 
         {/* Raffle */}
         {isGoldPlus && <motion.div initial={false} className="mb-6"><RaffleCard /></motion.div>}
