@@ -78,8 +78,8 @@ const PlayerProfile = () => {
   const [editOpen, setEditOpen] = useState(false);
   const devicesEnabled = useFeature("connected_devices");
   const [userStats, setUserStats] = useState<{ total_xp: number; current_level: string } | null>(null);
-  // Latest coach assessment supplies the two padel-specific shots (bandeja / víbora).
-  const [latestShots, setLatestShots] = useState<{ bandeja_pct: number; vibora_pct: number } | null>(null);
+  // Latest coach assessment is the source of truth for the player card shots.
+  const [latestShots, setLatestShots] = useState<Record<string, number> | null>(null);
   const [notifPrefs, setNotifPrefs] = useState({
     new_message: true,
     coach_feedback: true,
