@@ -37,6 +37,10 @@ const CoachPlayerDetail = () => {
   const [activePrograms, setActivePrograms] = useState<ActiveProgram[]>([]);
   const [expandedProgram, setExpandedProgram] = useState<string | null>(null);
   const [trainDrawerOpen, setTrainDrawerOpen] = useState(false);
+  const [assessOpen, setAssessOpen] = useState(false);
+  const [assessPrevious, setAssessPrevious] = useState<Assessment | null>(null);
+  const [assessEditing, setAssessEditing] = useState<Assessment | null>(null);
+  const [assessRefresh, setAssessRefresh] = useState(0);
   const [upcomingPlans, setUpcomingPlans] = useState<any[]>([]);
   const [editMode, setEditMode] = useState(false);
   const [editData, setEditData] = useState<any>(null);
