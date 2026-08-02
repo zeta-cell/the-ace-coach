@@ -210,7 +210,10 @@ const CoachPlayerDetail = () => {
             </Link>
           </div>
 
-          {/* Assessments */}
+          {/* Development + assessments */}
+          <div className="mb-6">
+            <DevelopmentChart playerId={playerId!} refreshKey={assessRefresh} />
+          </div>
           <div className="mb-6">
             <AssessmentHistory
               playerId={playerId!}
