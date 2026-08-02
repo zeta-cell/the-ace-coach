@@ -310,6 +310,40 @@ const PlayerProfile = () => {
 
         {/* Play Style with Radar Chart */}
         {playerData && (
+        {/* Cosmic Player Card */}
+        {playerData && profile && (
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
+            <h2 className="font-display text-sm tracking-wider text-muted-foreground mb-3">MY PLAYER CARD</h2>
+            <CosmicPlayerCard
+              name={profile.full_name}
+              avatarUrl={profile.avatar_url}
+              level={userStats?.current_level || "bronze"}
+              xp={userStats?.total_xp || 0}
+              sport={playerData.preferred_sport || "padel"}
+              overallLevel={playerData.playtomic_level}
+              city={playerData.club_location || null}
+              cardNumber={profile.user_id.slice(0, 4).toUpperCase()}
+              shots={{
+                volley: playerData.volley_pct,
+                forehand: playerData.forehand_pct,
+                serve: playerData.serve_pct,
+                smash: playerData.smash_pct,
+                backhand: playerData.backhand_pct,
+                lob: playerData.lob_pct,
+              }}
+            />
+          </motion.div>
+        )}
+
+        {/* Coach assessments */}
+        {user && (
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18 }}>
+            <AssessmentHistory playerId={user.id} />
+          </motion.div>
+        )}
+
+        {/* Play Style with Radar Chart */}
+        {playerData && (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="bg-card border border-border rounded-xl p-6">
             <div className="flex items-center justify-between mb-4">
               <h2 className="font-display text-sm tracking-wider text-muted-foreground">PLAY STYLE</h2>
