@@ -111,6 +111,7 @@ const AdminUsers = lazy(() => import("./pages/portal/AdminUsers"));
 const AdminAssignments = lazy(() => import("./pages/portal/AdminAssignments"));
 const AdminPayments = lazy(() => import("./pages/portal/AdminPayments"));
 const AdminSchedule = lazy(() => import("./pages/portal/AdminSchedule"));
+const AdminFeatures = lazy(() => import("./pages/portal/AdminFeatures"));
 
 // Club pages (lazy-loaded)
 const ClubDashboard = lazy(() => import("./pages/portal/ClubDashboard"));
