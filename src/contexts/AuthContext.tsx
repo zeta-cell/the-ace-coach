@@ -51,11 +51,23 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   const fetchProfile = async (userId: string) => {
-    const { data } = await supabase
+    let { data } = await supabase
       .from("profiles")
       .select("*")
       .eq("user_id", userId)
-      .single();
+      .maybeSingle();
+
+    // New accounts (email, Google or Apple) may not have their records yet.
+    if (!data) {
+      await supabase.rpc("ensure_user_bootstrap" as any, { _full_name: null } as any);
+      const retry = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("user_id", userId)
+        .maybeSingle();
+      data = retry.data;
+    }
+
     if (data) {
       setProfile(data as Profile);
       // Initialize gamification records if needed
