@@ -477,7 +477,7 @@ const Dashboard = () => {
 
 
         {/* Raffle */}
-        {isGoldPlus && <motion.div initial={false} className="mb-6"><RaffleCard /></motion.div>}
+        {isGoldPlus && rewardsEnabled && <motion.div initial={false} className="mb-6"><RaffleCard /></motion.div>}
 
         {/* Today's plan */}
         <motion.div initial={false} className="bg-card border border-border rounded-xl overflow-hidden mb-6">
