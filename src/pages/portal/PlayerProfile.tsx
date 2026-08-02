@@ -353,9 +353,10 @@ const PlayerProfile = () => {
           </motion.div>
         )}
 
-        {/* Coach assessments */}
+        {/* Development lines + coach assessments */}
         {user && (
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18 }}>
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18 }} className="space-y-6">
+            <DevelopmentChart playerId={user.id} />
             <AssessmentHistory playerId={user.id} />
           </motion.div>
         )}
