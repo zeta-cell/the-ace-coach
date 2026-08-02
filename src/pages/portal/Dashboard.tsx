@@ -277,6 +277,8 @@ const Dashboard = () => {
           WELCOME BACK, {firstName}
         </motion.h1>
 
+        <AssignCoachPrompt />
+
         {/* Hero Stats Bar — 6 metrics */}
         <motion.div initial={false} className="grid grid-cols-3 md:grid-cols-6 gap-2 mb-6">
           <div className="bg-card border border-border rounded-xl p-3 text-center">
