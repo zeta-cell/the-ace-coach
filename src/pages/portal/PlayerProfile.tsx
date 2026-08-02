@@ -19,6 +19,7 @@ import { useFeature } from "@/hooks/useFeatureFlags";
 import { ComingSoonOverlay } from "@/components/portal/FeatureGate";
 import CosmicPlayerCard from "@/components/portal/CosmicPlayerCard";
 import AssessmentHistory from "@/components/portal/AssessmentHistory";
+import DevelopmentChart from "@/components/portal/DevelopmentChart";
 
 interface PlayerData {
   dominant_hand: string | null;
