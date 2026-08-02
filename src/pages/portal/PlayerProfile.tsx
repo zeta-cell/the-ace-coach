@@ -100,7 +100,7 @@ const PlayerProfile = () => {
       supabase.from("user_stats").select("total_xp, current_level").eq("user_id", user.id).maybeSingle(),
       supabase
         .from("player_assessments")
-        .select("bandeja_pct, vibora_pct")
+        .select("volley_pct, forehand_pct, serve_pct, smash_pct, backhand_pct, lob_pct, bandeja_pct, vibora_pct")
         .eq("player_id", user.id)
         .order("assessment_date", { ascending: false })
         .limit(1)
@@ -109,7 +109,7 @@ const PlayerProfile = () => {
     if (player) setPlayerData(player as unknown as PlayerData);
     if (racketsData) setRackets(racketsData as unknown as RacketData[]);
     if (stats) setUserStats(stats as { total_xp: number; current_level: string });
-    if (latestAssessment) setLatestShots(latestAssessment as { bandeja_pct: number; vibora_pct: number });
+    if (latestAssessment) setLatestShots(latestAssessment as Record<string, number>);
     if (prof) {
       if (prof.phone) setPlayerPhone(prof.phone as string);
       if (prof.notification_preferences) {
