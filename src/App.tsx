@@ -135,6 +135,7 @@ const PortalLoader = () => (
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
+      <FeatureFlagsProvider>
       <IconContext.Provider value={{ weight: "duotone", size: 20, mirrored: false }}>
         <TooltipProvider>
           <Toaster />
