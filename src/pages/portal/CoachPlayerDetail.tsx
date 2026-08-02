@@ -656,7 +656,7 @@ const CoachPlayerDetail = () => {
           playerName={profileData?.full_name}
           previous={assessPrevious}
           editing={assessEditing}
-          onSaved={() => { setAssessRefresh((k) => k + 1); fetchData(); }}
+          onSaved={() => { setAssessRefresh((k) => k + 1); fetchAll(); }}
         />
 
       </div>
