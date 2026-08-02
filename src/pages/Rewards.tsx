@@ -8,6 +8,8 @@ import WalletCard from "@/components/portal/WalletCard";
 import { LEVEL_CONFIG, LEVEL_PERKS, getNextLevel } from "@/lib/gamification";
 import { toast } from "sonner";
 import { Progress } from "@/components/ui/progress";
+import { useFeature } from "@/hooks/useFeatureFlags";
+import { ComingSoonOverlay } from "@/components/portal/FeatureGate";
 
 const PARTNERS = [
   { name: "Bullpadel", code: "ACE", baseDiscount: 10 },
