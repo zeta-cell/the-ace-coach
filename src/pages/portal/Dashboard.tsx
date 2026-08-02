@@ -368,9 +368,11 @@ const Dashboard = () => {
         </motion.div>
 
         {/* Health Data Card */}
-        <motion.div initial={false} className="mb-6">
-          <HealthDataCard />
-        </motion.div>
+        {devicesEnabled && (
+          <motion.div initial={false} className="mb-6">
+            <HealthDataCard />
+          </motion.div>
+        )}
 
         {/* Badges */}
         <motion.div initial={false} className="mb-6">
