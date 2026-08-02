@@ -266,6 +266,18 @@ const Login = () => {
           </form>
         )}
 
+        <SocialAuthButtons
+          className="mt-6"
+          onSelect={async (provider) => {
+            setError("");
+            const result = await lovable.auth.signInWithOAuth(provider, {
+              redirect_uri: window.location.origin + "/login",
+            });
+            if (result.error) setError(result.error.message || "Sign-in failed");
+          }}
+        />
+
+
         {/* Quick Login Cards */}
         <div className="mt-8 pt-6 border-t border-border">
           <p className="text-muted-foreground text-xs font-body mb-3 text-center uppercase tracking-wider">Quick Access — Demo Accounts</p>
