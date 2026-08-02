@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { useFeature } from "@/hooks/useFeatureFlags";
 import { motion } from "framer-motion";
 import { Calendar, X, Users, Hash, Info, KeyRound, ChevronDown } from "lucide-react";
 import { format, differenceInHours } from "date-fns";
