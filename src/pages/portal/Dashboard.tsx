@@ -29,6 +29,8 @@ import MyClubsCard from "@/components/portal/MyClubsCard";
 import { Progress } from "@/components/ui/progress";
 import { LEVEL_CONFIG, BADGE_DEFINITIONS, getNextLevel } from "@/lib/gamification";
 import { toast } from "sonner";
+import { useFeature } from "@/hooks/useFeatureFlags";
+import { ComingSoonOverlay } from "@/components/portal/FeatureGate";
 
 interface DayPlan {
   id: string; plan_date: string; notes: string | null;
