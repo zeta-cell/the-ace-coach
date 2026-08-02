@@ -64,6 +64,8 @@ const Login = () => {
     if (!user) return;
     let cancelled = false;
     (async () => {
+      // If the user arrived via a coach invite link, link them to that coach.
+      if (getPendingInvite()) await claimPendingInvite();
       const { data: roleData } = await supabase
         .from("user_roles")
         .select("role")
