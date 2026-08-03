@@ -36,7 +36,34 @@ const emptyState = (previous?: Assessment | null) => ({
 });
 
 const AssessmentDrawer = ({ open, onClose, playerId, inviteId, playerName, previous, editing, onSaved }: Props) => {
-...
+  const { user } = useAuth();
+  const [form, setForm] = useState<any>(emptyState(previous));
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    if (!open) return;
+    if (editing) {
+      setForm({
+        assessment_date: editing.assessment_date,
+        sport: editing.sport,
+        ...Object.fromEntries(SHOT_KEYS.map((s) => [s.key, editing[s.key] ?? 50])),
+        overall_level: editing.overall_level,
+        level_system: editing.level_system || "playtomic",
+        summary: editing.summary || "",
+        strengths: editing.strengths || "",
+        focus_areas: editing.focus_areas || "",
+        next_goals: editing.next_goals || "",
+      });
+    } else {
+      setForm(emptyState(previous));
+    }
+  }, [open, editing, previous]);
+
+  const set = (k: string, v: any) => setForm((f: any) => ({ ...f, [k]: v }));
+
+  const save = async () => {
+    if (!user) return;
+    setSaving(true);
     const payload = {
       ...form,
       overall_level: form.overall_level === null || form.overall_level === "" ? null : Number(form.overall_level),
