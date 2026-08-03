@@ -90,6 +90,8 @@ const Library = lazy(() => import("./pages/portal/Library"));
 const CoachPlanBuilder = lazy(() => import("./pages/portal/CoachPlanBuilder"));
 const CoachVideos = lazy(() => import("./pages/portal/CoachVideos"));
 const CoachCalendar = lazy(() => import("./pages/portal/CoachCalendar"));
+const CoachAcademy = lazy(() => import("./pages/portal/CoachAcademy"));
+
 const CoachProfile = lazy(() => import("./pages/portal/CoachProfile"));
 const CoachMarketplace = lazy(() => import("./pages/portal/CoachMarketplace"));
 const CoachEarnings = lazy(() => import("./pages/portal/CoachEarnings"));
