@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/hooks/use-toast";
 import { X, Plus } from "lucide-react";
+import ClubListEditor from "@/components/portal/ClubListEditor";
+import { parseClubs, PlayerClub } from "@/lib/coachInvite";
 
 interface PlayerEditData {
   nationality: string;
@@ -91,6 +93,7 @@ const PlayerProfileEdit = ({ open, onClose, playerData, phone, onSaved }: Props)
   const { user, refreshProfile } = useAuth();
   const [saving, setSaving] = useState(false);
   const [editPhone, setEditPhone] = useState(phone || "");
+  const [clubs, setClubs] = useState<PlayerClub[]>(parseClubs(playerData?.clubs));
   const [form, setForm] = useState<PlayerEditData>({
     nationality: playerData?.nationality || "",
     date_of_birth: playerData?.date_of_birth || "",
@@ -138,8 +141,9 @@ const PlayerProfileEdit = ({ open, onClose, playerData, phone, onSaved }: Props)
             weakest_shot: form.weakest_shot || null,
             preferred_sport: (form.preferred_sport || null) as any,
             favourite_players: form.favourite_players,
-            club_name: form.club_name || null,
-            club_location: form.club_location || null,
+            clubs: clubs.filter((c) => c.name.trim()) as any,
+            club_name: clubs[0]?.name || form.club_name || null,
+            club_location: clubs[0]?.city || form.club_location || null,
             shirt_size: form.shirt_size || null,
             target_ranking: form.target_ranking || null,
             plays_since_year: form.plays_since_year ? parseInt(form.plays_since_year) : null,
@@ -248,9 +252,8 @@ const PlayerProfileEdit = ({ open, onClose, playerData, phone, onSaved }: Props)
 
           {/* Club */}
           <section className="space-y-3">
-            <h3 className="font-display text-xs tracking-wider text-muted-foreground border-b border-border pb-2">MY CLUB</h3>
-            <Field label="CLUB NAME" field="club_name" placeholder="e.g. Padel Club London" />
-            <Field label="CLUB LOCATION" field="club_location" placeholder="e.g. London, UK" />
+            <h3 className="font-display text-xs tracking-wider text-muted-foreground border-b border-border pb-2">MY CLUBS</h3>
+            <ClubListEditor value={clubs} onChange={setClubs} label="CLUBS I TRAIN AT" />
           </section>
 
           {/* Fitness & Goals */}
