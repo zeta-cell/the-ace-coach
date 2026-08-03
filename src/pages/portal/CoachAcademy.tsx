@@ -1,33 +1,35 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAcademy } from "@/hooks/useAcademy";
 import PortalLayout from "@/components/portal/PortalLayout";
-import AcademyLocations from "@/components/portal/academy/AcademyLocations";
+import AcademyHostClubs from "@/components/portal/academy/AcademyHostClubs";
 import AcademyRoster from "@/components/portal/academy/AcademyRoster";
 import AcademyTeamAvailability from "@/components/portal/academy/AcademyTeamAvailability";
 import AcademySchedule from "@/components/portal/academy/AcademySchedule";
-import { Building2, MapPin, Users, Clock, CalendarDays, Loader2, Save } from "lucide-react";
+import { Building2, Users, Clock, CalendarDays, Loader2, Save, Lock } from "lucide-react";
 import { toast } from "sonner";
 
-type Tab = "settings" | "locations" | "coaches" | "availability" | "schedule";
+type Tab = "settings" | "clubs" | "coaches" | "availability" | "schedule";
 
 const TABS: { key: Tab; label: string; icon: typeof Building2 }[] = [
   { key: "schedule", label: "TRAININGS & CAMPS", icon: CalendarDays },
   { key: "availability", label: "AVAILABILITY", icon: Clock },
   { key: "coaches", label: "COACHES", icon: Users },
-  { key: "locations", label: "LOCATIONS", icon: MapPin },
+  { key: "clubs", label: "CLUBS", icon: Building2 },
   { key: "settings", label: "ACADEMY", icon: Building2 },
 ];
 
 const CoachAcademy = () => {
   const { user } = useAuth();
-  const { academy, coaches, loading, reload } = useAcademy();
+  const { academy, coaches, loading, reload, availableClubs, canCreateAcademy } = useAcademy();
   const [tab, setTab] = useState<Tab>("schedule");
   const [selfName, setSelfName] = useState("Me");
 
   // Create form
   const [newName, setNewName] = useState("");
+  const [newClubId, setNewClubId] = useState("");
   const [newAddress, setNewAddress] = useState("");
   const [newCity, setNewCity] = useState("");
   const [newCountry, setNewCountry] = useState("");
@@ -48,6 +50,16 @@ const CoachAcademy = () => {
   }, [user]);
 
   useEffect(() => {
+    if (!newClubId && availableClubs.length) {
+      const c = availableClubs[0];
+      setNewClubId(c.id);
+      setNewAddress((v) => v || c.address || "");
+      setNewCity((v) => v || c.city || "");
+      setNewCountry((v) => v || c.country || "");
+    }
+  }, [availableClubs, newClubId]);
+
+  useEffect(() => {
     if (academy) {
       setForm({
         name: academy.name || "",
@@ -66,35 +78,24 @@ const CoachAcademy = () => {
       toast.error("Academy name is required");
       return;
     }
-    setCreating(true);
-    const { data, error } = await supabase
-      .from("clubs")
-      .insert({
-        name: newName.trim(),
-        owner_id: user.id,
-        address: newAddress.trim() || null,
-        city: newCity.trim() || null,
-        country: newCountry.trim() || null,
-      })
-      .select("id")
-      .single();
-
-    if (error) {
-      setCreating(false);
-      toast.error(error.message);
+    if (!newClubId) {
+      toast.error("Pick the club that owns this academy");
       return;
     }
-
-    await supabase.from("club_locations").insert({
-      club_id: data.id,
-      name: `${newName.trim()} — Main`,
+    setCreating(true);
+    const { error } = await supabase.from("academies").insert({
+      club_id: newClubId,
+      owner_id: user.id,
+      name: newName.trim(),
       address: newAddress.trim() || null,
       city: newCity.trim() || null,
       country: newCountry.trim() || null,
-      is_primary: true,
     });
-
     setCreating(false);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
     toast.success("Academy created");
     reload();
   };
@@ -103,7 +104,7 @@ const CoachAcademy = () => {
     if (!academy) return;
     setSaving(true);
     const { error } = await supabase
-      .from("clubs")
+      .from("academies")
       .update({
         name: form.name.trim(),
         description: form.description.trim() || null,
@@ -131,7 +132,7 @@ const CoachAcademy = () => {
         <div>
           <h1 className="font-display text-2xl md:text-3xl tracking-wider text-foreground">MY ACADEMY</h1>
           <p className="font-body text-sm text-muted-foreground mt-1">
-            Your own brand, your coaches, your locations — trainings and camps in one place.
+            An academy belongs to one club, but can train at several. Court rentals stay with the clubs.
           </p>
         </div>
 
@@ -140,25 +141,60 @@ const CoachAcademy = () => {
             <Loader2 className="animate-spin text-muted-foreground" />
           </div>
         ) : !academy ? (
-          <div className="bg-card border border-border rounded-2xl p-5 space-y-3 max-w-xl">
-            <h2 className="font-display text-sm tracking-wider text-foreground">CREATE YOUR ACADEMY</h2>
-            <p className="font-body text-xs text-muted-foreground">
-              Name your academy and set the main address. You can add more locations and coaches right after.
-            </p>
-            <input value={newName} onChange={(e) => setNewName(e.target.value)} placeholder="Academy name" className={inputCls} />
-            <input value={newAddress} onChange={(e) => setNewAddress(e.target.value)} placeholder="Main address" className={inputCls} />
-            <div className="grid grid-cols-2 gap-2">
-              <input value={newCity} onChange={(e) => setNewCity(e.target.value)} placeholder="City" className={inputCls} />
-              <input value={newCountry} onChange={(e) => setNewCountry(e.target.value)} placeholder="Country" className={inputCls} />
+          canCreateAcademy ? (
+            <div className="bg-card border border-border rounded-2xl p-5 space-y-3 max-w-xl">
+              <h2 className="font-display text-sm tracking-wider text-foreground">CREATE YOUR ACADEMY</h2>
+              <p className="font-body text-xs text-muted-foreground">
+                Pick the club that owns the academy — each club can own one academy. You can add more clubs and coaches right after.
+              </p>
+              <select value={newClubId} onChange={(e) => setNewClubId(e.target.value)} className={inputCls}>
+                {availableClubs.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name}
+                    {c.city ? ` · ${c.city}` : ""}
+                  </option>
+                ))}
+              </select>
+              <input value={newName} onChange={(e) => setNewName(e.target.value)} placeholder="Academy name" className={inputCls} />
+              <input value={newAddress} onChange={(e) => setNewAddress(e.target.value)} placeholder="Main address" className={inputCls} />
+              <div className="grid grid-cols-2 gap-2">
+                <input value={newCity} onChange={(e) => setNewCity(e.target.value)} placeholder="City" className={inputCls} />
+                <input value={newCountry} onChange={(e) => setNewCountry(e.target.value)} placeholder="Country" className={inputCls} />
+              </div>
+              <button
+                onClick={createAcademy}
+                disabled={creating}
+                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground font-display text-[11px] tracking-wider disabled:opacity-60"
+              >
+                {creating ? <Loader2 size={14} className="animate-spin" /> : <Building2 size={14} />} CREATE ACADEMY
+              </button>
             </div>
-            <button
-              onClick={createAcademy}
-              disabled={creating}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground font-display text-[11px] tracking-wider disabled:opacity-60"
-            >
-              {creating ? <Loader2 size={14} className="animate-spin" /> : <Building2 size={14} />} CREATE ACADEMY
-            </button>
-          </div>
+          ) : (
+            <div className="bg-card border border-border rounded-2xl p-5 space-y-3 max-w-xl">
+              <div className="flex items-center gap-2">
+                <Lock size={16} className="text-primary" />
+                <h2 className="font-display text-sm tracking-wider text-foreground">AN ACADEMY NEEDS A CLUB</h2>
+              </div>
+              <p className="font-body text-sm text-muted-foreground">
+                Only a club owner or club manager can create an academy. Without a club you can still run your own camps,
+                clinics and trainings as events — and get added to someone else's academy roster.
+              </p>
+              <div className="flex flex-wrap gap-2 pt-1">
+                <Link
+                  to="/coach/calendar"
+                  className="px-4 py-2 rounded-lg bg-primary text-primary-foreground font-display text-[11px] tracking-wider"
+                >
+                  MY CAMPS & CLINICS
+                </Link>
+                <Link
+                  to="/for-clubs"
+                  className="px-4 py-2 rounded-lg bg-secondary border border-border text-foreground font-display text-[11px] tracking-wider"
+                >
+                  REGISTER A CLUB
+                </Link>
+              </div>
+            </div>
+          )
         ) : (
           <>
             <div className="flex gap-1 bg-secondary rounded-lg p-0.5 overflow-x-auto scrollbar-none">
@@ -184,10 +220,16 @@ const CoachAcademy = () => {
             )}
 
             {tab === "coaches" && (
-              <AcademyRoster clubId={academy.id} coaches={coaches} ownerId={academy.owner_id} onChanged={reload} />
+              <AcademyRoster
+                academyId={academy.id}
+                clubId={academy.club_id}
+                coaches={coaches}
+                ownerId={academy.owner_id}
+                onChanged={reload}
+              />
             )}
 
-            {tab === "locations" && <AcademyLocations clubId={academy.id} />}
+            {tab === "clubs" && <AcademyHostClubs academyId={academy.id} homeClubId={academy.club_id} />}
 
             {tab === "settings" && (
               <div className="bg-card border border-border rounded-2xl p-5 space-y-3 max-w-xl">
