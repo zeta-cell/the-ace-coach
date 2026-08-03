@@ -90,6 +90,8 @@ const Library = lazy(() => import("./pages/portal/Library"));
 const CoachPlanBuilder = lazy(() => import("./pages/portal/CoachPlanBuilder"));
 const CoachVideos = lazy(() => import("./pages/portal/CoachVideos"));
 const CoachCalendar = lazy(() => import("./pages/portal/CoachCalendar"));
+const CoachAcademy = lazy(() => import("./pages/portal/CoachAcademy"));
+
 const CoachProfile = lazy(() => import("./pages/portal/CoachProfile"));
 const CoachMarketplace = lazy(() => import("./pages/portal/CoachMarketplace"));
 const CoachEarnings = lazy(() => import("./pages/portal/CoachEarnings"));
@@ -283,11 +285,17 @@ const App = () => (
                 <ProtectedRoute requiredRole="coach"><FeatureRoute feature="coach_marketplace" fallback="/coach"><CoachMarketplace /></FeatureRoute></ProtectedRoute>
               </Suspense>
             } />
+            <Route path="/coach/academy" element={
+              <Suspense fallback={<PortalLoader />}>
+                <ProtectedRoute requiredRole="coach"><CoachAcademy /></ProtectedRoute>
+              </Suspense>
+            } />
             <Route path="/coach/events" element={
               <Suspense fallback={<PortalLoader />}>
                 <ProtectedRoute requiredRole="coach"><FeatureRoute feature="events" fallback="/coach"><CoachEvents /></FeatureRoute></ProtectedRoute>
               </Suspense>
             } />
+
             <Route path="/coach/earnings" element={
               <Suspense fallback={<PortalLoader />}>
                 <ProtectedRoute requiredRole="coach"><FeatureRoute feature="coach_earnings" fallback="/coach"><CoachEarnings /></FeatureRoute></ProtectedRoute>
