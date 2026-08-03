@@ -53,7 +53,7 @@ const BOTTOM_NAV_ICON: Record<string, any> = {
 const playerNav = [
   { label: "Home", icon: Home, href: "/dashboard" },
   { label: "Training", icon: Calendar, href: "/training" },
-  { label: "My Progress", icon: User, href: "/profile" },
+  { label: "My Shots", icon: User, href: "/profile" },
   { label: "Events", icon: CalendarDays, href: "/events" },
   { label: "Community", icon: Users, href: "/community" },
   { label: "Messages", icon: MessageSquare, href: "/messages" },
