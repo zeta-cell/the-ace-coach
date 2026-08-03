@@ -10,7 +10,10 @@ import { format } from "date-fns";
 interface Props {
   open: boolean;
   onClose: () => void;
-  playerId: string;
+  /** Existing player account. Omit for a prospect that only has an invite so far. */
+  playerId?: string | null;
+  /** Pending coach invite this assessment belongs to (prospect without an account). */
+  inviteId?: string | null;
   playerName?: string;
   /** Previous assessment (for pre-filling and delta context) */
   previous?: Assessment | null;
@@ -18,6 +21,7 @@ interface Props {
   editing?: Assessment | null;
   onSaved?: () => void;
 }
+
 
 const emptyState = (previous?: Assessment | null) => ({
   assessment_date: format(new Date(), "yyyy-MM-dd"),
@@ -31,7 +35,7 @@ const emptyState = (previous?: Assessment | null) => ({
   next_goals: "",
 });
 
-const AssessmentDrawer = ({ open, onClose, playerId, playerName, previous, editing, onSaved }: Props) => {
+const AssessmentDrawer = ({ open, onClose, playerId, inviteId, playerName, previous, editing, onSaved }: Props) => {
   const { user } = useAuth();
   const [form, setForm] = useState<any>(emptyState(previous));
   const [saving, setSaving] = useState(false);
@@ -63,7 +67,8 @@ const AssessmentDrawer = ({ open, onClose, playerId, playerName, previous, editi
     const payload = {
       ...form,
       overall_level: form.overall_level === null || form.overall_level === "" ? null : Number(form.overall_level),
-      player_id: playerId,
+      player_id: playerId ?? null,
+      invite_id: inviteId ?? null,
       coach_id: user.id,
     };
     const { error } = editing
@@ -74,24 +79,28 @@ const AssessmentDrawer = ({ open, onClose, playerId, playerName, previous, editi
       toast.error("Could not save assessment", { description: error.message });
     } else {
       // Keep the player's live matrix in sync with the latest assessment.
-      await supabase
-        .from("player_profiles")
-        .update({
-          volley_pct: payload.volley_pct,
-          forehand_pct: payload.forehand_pct,
-          serve_pct: payload.serve_pct,
-          smash_pct: payload.smash_pct,
-          backhand_pct: payload.backhand_pct,
-          lob_pct: payload.lob_pct,
-          shot_data_source: "coach",
-        })
-        .eq("user_id", playerId);
+      if (playerId) {
+        await supabase
+          .from("player_profiles")
+          .update({
+            volley_pct: payload.volley_pct,
+            forehand_pct: payload.forehand_pct,
+            serve_pct: payload.serve_pct,
+            smash_pct: payload.smash_pct,
+            backhand_pct: payload.backhand_pct,
+            lob_pct: payload.lob_pct,
+            shot_data_source: "coach",
+          })
+          .eq("user_id", playerId);
+      }
       toast.success(editing ? "Assessment updated" : "Assessment saved");
       onSaved?.();
       onClose();
     }
     setSaving(false);
   };
+
+
 
   return (
     <AnimatePresence>

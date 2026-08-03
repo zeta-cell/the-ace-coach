@@ -82,6 +82,8 @@ const PlayerVideos = lazy(() => import("./pages/portal/PlayerVideos"));
 const CoachDashboard = lazy(() => import("./pages/portal/CoachDashboard"));
 const CoachPlayers = lazy(() => import("./pages/portal/CoachPlayers"));
 const CoachPlayerDetail = lazy(() => import("./pages/portal/CoachPlayerDetail"));
+const NewPlayerAssessment = lazy(() => import("./pages/portal/NewPlayerAssessment"));
+
 const CoachModules = lazy(() => import("./pages/portal/CoachModules"));
 const TrainingBlocks = lazy(() => import("./pages/portal/TrainingBlocks"));
 const Library = lazy(() => import("./pages/portal/Library"));
@@ -225,6 +227,12 @@ const App = () => (
                 <ProtectedRoute requiredRole="coach"><CoachPlayers /></ProtectedRoute>
               </Suspense>
             } />
+            <Route path="/coach/players/new" element={
+              <Suspense fallback={<PortalLoader />}>
+                <ProtectedRoute requiredRole="coach"><NewPlayerAssessment /></ProtectedRoute>
+              </Suspense>
+            } />
+
             <Route path="/coach/players/:playerId" element={
               <Suspense fallback={<PortalLoader />}>
                 <ProtectedRoute requiredRole="coach"><CoachPlayerDetail /></ProtectedRoute>

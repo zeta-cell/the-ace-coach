@@ -592,6 +592,7 @@ export type Database = {
         Row: {
           accepted_at: string | null
           accepted_by: string | null
+          clubs: Json
           coach_id: string
           created_at: string
           email: string | null
@@ -599,12 +600,14 @@ export type Database = {
           full_name: string | null
           id: string
           note: string | null
+          phone: string | null
           token: string
           updated_at: string
         }
         Insert: {
           accepted_at?: string | null
           accepted_by?: string | null
+          clubs?: Json
           coach_id: string
           created_at?: string
           email?: string | null
@@ -612,12 +615,14 @@ export type Database = {
           full_name?: string | null
           id?: string
           note?: string | null
+          phone?: string | null
           token?: string
           updated_at?: string
         }
         Update: {
           accepted_at?: string | null
           accepted_by?: string | null
+          clubs?: Json
           coach_id?: string
           created_at?: string
           email?: string | null
@@ -625,6 +630,7 @@ export type Database = {
           full_name?: string | null
           id?: string
           note?: string | null
+          phone?: string | null
           token?: string
           updated_at?: string
         }
@@ -1620,11 +1626,12 @@ export type Database = {
           focus_areas: string | null
           forehand_pct: number
           id: string
+          invite_id: string | null
           level_system: string | null
           lob_pct: number
           next_goals: string | null
           overall_level: number | null
-          player_id: string
+          player_id: string | null
           serve_pct: number
           smash_pct: number
           sport: string
@@ -1643,11 +1650,12 @@ export type Database = {
           focus_areas?: string | null
           forehand_pct?: number
           id?: string
+          invite_id?: string | null
           level_system?: string | null
           lob_pct?: number
           next_goals?: string | null
           overall_level?: number | null
-          player_id: string
+          player_id?: string | null
           serve_pct?: number
           smash_pct?: number
           sport?: string
@@ -1666,11 +1674,12 @@ export type Database = {
           focus_areas?: string | null
           forehand_pct?: number
           id?: string
+          invite_id?: string | null
           level_system?: string | null
           lob_pct?: number
           next_goals?: string | null
           overall_level?: number | null
-          player_id?: string
+          player_id?: string | null
           serve_pct?: number
           smash_pct?: number
           sport?: string
@@ -1680,7 +1689,15 @@ export type Database = {
           vibora_pct?: number
           volley_pct?: number
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "player_assessments_invite_id_fkey"
+            columns: ["invite_id"]
+            isOneToOne: false
+            referencedRelation: "coach_invites"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       player_day_plan_items: {
         Row: {
@@ -1798,6 +1815,7 @@ export type Database = {
           best_shot: string | null
           club_location: string | null
           club_name: string | null
+          clubs: Json
           created_at: string
           current_usta_ntrp: number | null
           date_of_birth: string | null
@@ -1839,6 +1857,7 @@ export type Database = {
           best_shot?: string | null
           club_location?: string | null
           club_name?: string | null
+          clubs?: Json
           created_at?: string
           current_usta_ntrp?: number | null
           date_of_birth?: string | null
@@ -1882,6 +1901,7 @@ export type Database = {
           best_shot?: string | null
           club_location?: string | null
           club_name?: string | null
+          clubs?: Json
           created_at?: string
           current_usta_ntrp?: number | null
           date_of_birth?: string | null
@@ -2522,12 +2542,18 @@ export type Database = {
       get_coach_invite: {
         Args: { _token: string }
         Returns: {
+          assessment_date: string
           coach_avatar: string
           coach_id: string
           coach_name: string
           email: string
           full_name: string
+          has_assessment: boolean
           is_valid: boolean
+          level_system: string
+          overall_level: number
+          phone: string
+          sport: string
         }[]
       }
       get_user_clubs: { Args: { _user_id: string }; Returns: string[] }

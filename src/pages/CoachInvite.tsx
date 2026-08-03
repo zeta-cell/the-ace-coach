@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { CoachInviteInfo, fetchInvite, storePendingInvite, claimPendingInvite } from "@/lib/coachInvite";
-import { Eye, EyeOff, Sparkles, ShieldCheck, ArrowLeft } from "lucide-react";
+import { Eye, EyeOff, Sparkles, ShieldCheck, ArrowLeft, CalendarDays, Trophy, Lock } from "lucide-react";
 import SocialAuthButtons from "@/components/auth/SocialAuthButtons";
 
 /**
@@ -126,13 +126,64 @@ const CoachInvite = () => {
               <p className="font-display text-lg text-foreground tracking-wide">{invite.coach_name || "Your coach"}</p>
             </div>
           </div>
-          <div className="flex items-start gap-2 rounded-xl bg-primary/10 p-3">
-            <Sparkles size={16} className="text-primary mt-0.5" />
-            <p className="font-body text-sm text-foreground">
-              Your training assessment is ready. Create your account to see your player card, scores and development.
-            </p>
-          </div>
+          {invite.has_assessment ? (
+            <>
+              <div className="grid grid-cols-2 gap-3 mb-3">
+                <div className="rounded-xl bg-secondary p-3">
+                  <p className="flex items-center gap-1 font-display text-[10px] tracking-wider text-muted-foreground">
+                    <CalendarDays size={12} className="text-primary" /> ASSESSED
+                  </p>
+                  <p className="mt-1 font-display text-sm text-foreground">
+                    {invite.assessment_date
+                      ? new Date(invite.assessment_date).toLocaleDateString(undefined, { day: "2-digit", month: "short", year: "numeric" })
+                      : "—"}
+                  </p>
+                </div>
+                <div className="rounded-xl bg-secondary p-3">
+                  <p className="flex items-center gap-1 font-display text-[10px] tracking-wider text-muted-foreground">
+                    <Trophy size={12} className="text-primary" /> OVERALL LEVEL
+                  </p>
+                  <p className="mt-1 font-display text-sm text-foreground">
+                    {invite.overall_level ?? "—"}
+                    {invite.level_system ? <span className="ml-1 text-[10px] text-muted-foreground uppercase">{invite.level_system}</span> : null}
+                  </p>
+                </div>
+              </div>
+
+              {/* Blurred teaser — real values unlock after the password is set */}
+              <div className="relative overflow-hidden rounded-xl border border-border bg-secondary/60 p-3">
+                <div className="space-y-2 blur-[5px] select-none" aria-hidden="true">
+                  {["Volley", "Forehand", "Serve", "Smash", "Backhand", "Lob", "Bandeja", "Víbora"].map((s, i) => (
+                    <div key={s} className="flex items-center gap-2">
+                      <span className="w-20 font-body text-[11px] text-foreground">{s}</span>
+                      <div className="h-1.5 flex-1 rounded-full bg-border">
+                        <div className="h-1.5 rounded-full bg-primary" style={{ width: `${45 + ((i * 7) % 45)}%` }} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 bg-card/40">
+                  <Lock size={16} className="text-primary" />
+                  <p className="font-display text-[11px] tracking-wider text-foreground">
+                    SET A PASSWORD TO UNLOCK
+                  </p>
+                </div>
+              </div>
+              <p className="mt-3 font-body text-xs text-muted-foreground">
+                Your 8-shot breakdown, coach notes and development curves are waiting inside
+                {invite.sport ? ` (${invite.sport})` : ""}.
+              </p>
+            </>
+          ) : (
+            <div className="flex items-start gap-2 rounded-xl bg-primary/10 p-3">
+              <Sparkles size={16} className="text-primary mt-0.5" />
+              <p className="font-body text-sm text-foreground">
+                Your training assessment is ready. Create your account to see your player card, scores and development.
+              </p>
+            </div>
+          )}
         </div>
+
 
         {error && (
           <div className="bg-destructive/10 border border-destructive/30 text-destructive text-sm font-body rounded-lg p-3 mb-4">{error}</div>

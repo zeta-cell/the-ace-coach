@@ -3,10 +3,20 @@ import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion } from "framer-motion";
-import { ChevronRight, Search, Users, BookOpen, Calendar, MessageSquare, UserPlus } from "lucide-react";
+import { ChevronRight, Search, Users, BookOpen, Calendar, MessageSquare, UserPlus, ClipboardCheck, Clock, Copy, Check } from "lucide-react";
+import { toast } from "sonner";
 import PortalLayout from "@/components/portal/PortalLayout";
 import QuickAddTrainingDrawer from "@/components/portal/QuickAddTrainingDrawer";
 import InvitePlayerDrawer from "@/components/portal/InvitePlayerDrawer";
+
+interface PendingInvite {
+  id: string;
+  full_name: string | null;
+  email: string | null;
+  token: string;
+  created_at: string;
+  has_assessment?: boolean;
+}
 
 interface PlayerRow {
   player_id: string;
@@ -28,10 +38,43 @@ const CoachPlayers = () => {
   const [trainDrawerOpen, setTrainDrawerOpen] = useState(false);
   const [trainPlayerId, setTrainPlayerId] = useState<string | undefined>();
   const [inviteOpen, setInviteOpen] = useState(false);
+  const [pending, setPending] = useState<PendingInvite[]>([]);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
 
   useEffect(() => {
-    if (user) fetchPlayers();
+    if (user) {
+      fetchPlayers();
+      fetchPending();
+    }
   }, [user]);
+
+  const fetchPending = async () => {
+    if (!user) return;
+    const { data } = await supabase
+      .from("coach_invites")
+      .select("id, full_name, email, token, created_at")
+      .eq("coach_id", user.id)
+      .is("accepted_at", null)
+      .order("created_at", { ascending: false });
+
+    const invites = (data || []) as PendingInvite[];
+    if (invites.length) {
+      const { data: assessed } = await supabase
+        .from("player_assessments")
+        .select("invite_id")
+        .in("invite_id", invites.map((i) => i.id));
+      const withAssessment = new Set((assessed || []).map((a: any) => a.invite_id));
+      invites.forEach((i) => (i.has_assessment = withAssessment.has(i.id)));
+    }
+    setPending(invites);
+  };
+
+  const copyLink = async (invite: PendingInvite) => {
+    await navigator.clipboard.writeText(`${window.location.origin}/invite/${invite.token}`);
+    setCopiedId(invite.id);
+    toast.success("Invite link copied");
+    setTimeout(() => setCopiedId(null), 2000);
+  };
 
   const fetchPlayers = async () => {
     if (!user) return;
@@ -92,13 +135,51 @@ const CoachPlayers = () => {
       <div className="max-w-4xl mx-auto">
         <div className="flex items-center justify-between gap-3 mb-4">
           <h1 className="font-display text-3xl text-foreground">PLAYERS</h1>
-          <button
-            onClick={() => setInviteOpen(true)}
-            className="inline-flex items-center gap-2 bg-primary text-primary-foreground font-display text-xs tracking-wider px-4 py-2.5 rounded-lg hover:bg-primary/90 transition-colors"
-          >
-            <UserPlus size={15} /> INVITE PLAYER
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setInviteOpen(true)}
+              className="inline-flex items-center gap-2 bg-secondary text-foreground font-display text-xs tracking-wider px-3.5 py-2.5 rounded-lg hover:bg-secondary/80 transition-colors"
+            >
+              <UserPlus size={15} /> INVITE
+            </button>
+            <Link
+              to="/coach/players/new"
+              className="inline-flex items-center gap-2 bg-primary text-primary-foreground font-display text-xs tracking-wider px-4 py-2.5 rounded-lg hover:bg-primary/90 transition-colors"
+            >
+              <ClipboardCheck size={15} /> NEW PLAYER
+            </Link>
+          </div>
         </div>
+
+        {pending.length > 0 && (
+          <div className="mb-6">
+            <h2 className="flex items-center gap-1.5 font-display text-xs tracking-wider text-muted-foreground mb-2">
+              <Clock size={13} className="text-primary" /> PENDING INVITES ({pending.length})
+            </h2>
+            <div className="space-y-2">
+              {pending.map((inv) => (
+                <div key={inv.id} className="flex items-center gap-3 rounded-xl border border-dashed border-border bg-card p-3">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-secondary font-display text-sm text-muted-foreground">
+                    {inv.full_name?.charAt(0)?.toUpperCase() || "?"}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate font-display text-sm text-foreground">{inv.full_name || inv.email}</p>
+                    <p className="font-body text-[11px] text-muted-foreground">
+                      {inv.has_assessment ? "Assessment ready — waiting for sign-up" : "No assessment yet"}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => copyLink(inv)}
+                    className="shrink-0 rounded-lg bg-primary/10 p-2 text-primary hover:bg-primary/20"
+                    title="Copy invite link"
+                  >
+                    {copiedId === inv.id ? <Check size={16} /> : <Copy size={16} />}
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         <div className="relative mb-6">
           <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
@@ -194,7 +275,7 @@ const CoachPlayers = () => {
           onClose={() => { setTrainDrawerOpen(false); setTrainPlayerId(undefined); }}
           prefilledPlayerId={trainPlayerId}
         />
-        <InvitePlayerDrawer open={inviteOpen} onClose={() => { setInviteOpen(false); fetchPlayers(); }} />
+        <InvitePlayerDrawer open={inviteOpen} onClose={() => { setInviteOpen(false); fetchPlayers(); fetchPending(); }} />
       </div>
     </PortalLayout>
   );
