@@ -69,6 +69,8 @@ const coachNav = [
   { label: "Library", icon: BookOpen, href: "/coach/library" },
   { label: "Videos", icon: Video, href: "/coach/videos" },
   { label: "Calendar", icon: CalendarDays, href: "/coach/calendar" },
+  { label: "My Academy", icon: Building2, href: "/coach/academy" },
+
   { label: "Events", icon: Calendar, href: "/coach/events" },
   { label: "CRM", icon: Contact, href: "/coach/crm" },
   { label: "Earnings", icon: DollarSign, href: "/coach/earnings" },
