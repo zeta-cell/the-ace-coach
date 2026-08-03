@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   LayoutDashboard, Calendar, BookOpen, Video,
   MessageSquare, User, LogOut, Menu, X, ChevronLeft, ChevronRight,
-  Users, Settings, Home, CreditCard, Link2, CalendarDays, UserCheck, Search, ShoppingBag, Eye, Square, Contact, DollarSign, ToggleLeft
+  Users, Settings, Home, CreditCard, Link2, CalendarDays, UserCheck, Search, ShoppingBag, Eye, Square, Contact, DollarSign, ToggleLeft, Building2
 } from "lucide-react";
 import {
   House as PhHouse,
