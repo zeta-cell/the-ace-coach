@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { CoachInviteInfo, fetchInvite, storePendingInvite, claimPendingInvite } from "@/lib/coachInvite";
-import { Eye, EyeOff, Sparkles, ShieldCheck, ArrowLeft } from "lucide-react";
+import { Eye, EyeOff, Sparkles, ShieldCheck, ArrowLeft, CalendarDays, Trophy, Lock } from "lucide-react";
 import SocialAuthButtons from "@/components/auth/SocialAuthButtons";
 
 /**
