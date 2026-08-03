@@ -187,7 +187,7 @@ const CoachAcademy = () => {
                   MY CAMPS & CLINICS
                 </Link>
                 <Link
-                  to="/for-clubs"
+                  to="/club/settings"
                   className="px-4 py-2 rounded-lg bg-secondary border border-border text-foreground font-display text-[11px] tracking-wider"
                 >
                   REGISTER A CLUB
