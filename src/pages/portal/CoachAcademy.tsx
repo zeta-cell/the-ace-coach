@@ -7,14 +7,14 @@ import AcademyLocations from "@/components/portal/academy/AcademyLocations";
 import AcademyRoster from "@/components/portal/academy/AcademyRoster";
 import AcademyTeamAvailability from "@/components/portal/academy/AcademyTeamAvailability";
 import AcademySchedule from "@/components/portal/academy/AcademySchedule";
-import { Building2, MapPin, Users, CalendarClock, CalendarDays, Loader2, Save } from "lucide-react";
+import { Building2, MapPin, Users, Clock, CalendarDays, Loader2, Save } from "lucide-react";
 import { toast } from "sonner";
 
 type Tab = "settings" | "locations" | "coaches" | "availability" | "schedule";
 
 const TABS: { key: Tab; label: string; icon: typeof Building2 }[] = [
   { key: "schedule", label: "TRAININGS & CAMPS", icon: CalendarDays },
-  { key: "availability", label: "AVAILABILITY", icon: CalendarClock },
+  { key: "availability", label: "AVAILABILITY", icon: Clock },
   { key: "coaches", label: "COACHES", icon: Users },
   { key: "locations", label: "LOCATIONS", icon: MapPin },
   { key: "settings", label: "ACADEMY", icon: Building2 },
