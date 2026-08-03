@@ -35,39 +35,13 @@ const emptyState = (previous?: Assessment | null) => ({
   next_goals: "",
 });
 
-const AssessmentDrawer = ({ open, onClose, playerId, playerName, previous, editing, onSaved }: Props) => {
-  const { user } = useAuth();
-  const [form, setForm] = useState<any>(emptyState(previous));
-  const [saving, setSaving] = useState(false);
-
-  useEffect(() => {
-    if (!open) return;
-    if (editing) {
-      setForm({
-        assessment_date: editing.assessment_date,
-        sport: editing.sport,
-        ...Object.fromEntries(SHOT_KEYS.map((s) => [s.key, editing[s.key] ?? 50])),
-        overall_level: editing.overall_level,
-        level_system: editing.level_system || "playtomic",
-        summary: editing.summary || "",
-        strengths: editing.strengths || "",
-        focus_areas: editing.focus_areas || "",
-        next_goals: editing.next_goals || "",
-      });
-    } else {
-      setForm(emptyState(previous));
-    }
-  }, [open, editing, previous]);
-
-  const set = (k: string, v: any) => setForm((f: any) => ({ ...f, [k]: v }));
-
-  const save = async () => {
-    if (!user) return;
-    setSaving(true);
+const AssessmentDrawer = ({ open, onClose, playerId, inviteId, playerName, previous, editing, onSaved }: Props) => {
+...
     const payload = {
       ...form,
       overall_level: form.overall_level === null || form.overall_level === "" ? null : Number(form.overall_level),
-      player_id: playerId,
+      player_id: playerId ?? null,
+      invite_id: inviteId ?? null,
       coach_id: user.id,
     };
     const { error } = editing
@@ -78,24 +52,28 @@ const AssessmentDrawer = ({ open, onClose, playerId, playerName, previous, editi
       toast.error("Could not save assessment", { description: error.message });
     } else {
       // Keep the player's live matrix in sync with the latest assessment.
-      await supabase
-        .from("player_profiles")
-        .update({
-          volley_pct: payload.volley_pct,
-          forehand_pct: payload.forehand_pct,
-          serve_pct: payload.serve_pct,
-          smash_pct: payload.smash_pct,
-          backhand_pct: payload.backhand_pct,
-          lob_pct: payload.lob_pct,
-          shot_data_source: "coach",
-        })
-        .eq("user_id", playerId);
+      if (playerId) {
+        await supabase
+          .from("player_profiles")
+          .update({
+            volley_pct: payload.volley_pct,
+            forehand_pct: payload.forehand_pct,
+            serve_pct: payload.serve_pct,
+            smash_pct: payload.smash_pct,
+            backhand_pct: payload.backhand_pct,
+            lob_pct: payload.lob_pct,
+            shot_data_source: "coach",
+          })
+          .eq("user_id", playerId);
+      }
       toast.success(editing ? "Assessment updated" : "Assessment saved");
       onSaved?.();
       onClose();
     }
     setSaving(false);
   };
+
+
 
   return (
     <AnimatePresence>
