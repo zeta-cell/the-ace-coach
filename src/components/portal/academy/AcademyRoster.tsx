@@ -8,13 +8,14 @@ import type { AcademyCoach } from "@/hooks/useAcademy";
 const roleIcon = (r: string) => (r === "owner" ? Crown : r === "manager" ? Shield : User);
 
 interface Props {
+  academyId: string;
   clubId: string;
   coaches: AcademyCoach[];
   ownerId: string;
   onChanged: () => void;
 }
 
-const AcademyRoster = ({ clubId, coaches, ownerId, onChanged }: Props) => {
+const AcademyRoster = ({ academyId, clubId, coaches, ownerId, onChanged }: Props) => {
   const { user } = useAuth();
   const [inviteEmail, setInviteEmail] = useState("");
   const [inviteRole, setInviteRole] = useState<"coach" | "manager">("coach");
@@ -60,8 +61,8 @@ const AcademyRoster = ({ clubId, coaches, ownerId, onChanged }: Props) => {
       return;
     }
     const { error } = await supabase
-      .from("club_coaches")
-      .insert({ club_id: clubId, coach_id: profile.user_id, club_role: "coach" });
+      .from("academy_coaches")
+      .insert({ academy_id: academyId, coach_id: profile.user_id, academy_role: "coach" });
     setBusy(false);
     if (error) {
       toast.error(error.message);
@@ -72,15 +73,15 @@ const AcademyRoster = ({ clubId, coaches, ownerId, onChanged }: Props) => {
     onChanged();
   };
 
-  const changeRole = async (id: string, club_role: string) => {
-    const { error } = await supabase.from("club_coaches").update({ club_role }).eq("id", id);
+  const changeRole = async (id: string, academy_role: string) => {
+    const { error } = await supabase.from("academy_coaches").update({ academy_role }).eq("id", id);
     if (error) toast.error(error.message);
     else onChanged();
   };
 
   const remove = async (id: string) => {
     if (!confirm("Remove this coach from your academy?")) return;
-    const { error } = await supabase.from("club_coaches").delete().eq("id", id);
+    const { error } = await supabase.from("academy_coaches").delete().eq("id", id);
     if (error) toast.error(error.message);
     else {
       toast.success("Removed");
@@ -119,6 +120,9 @@ const AcademyRoster = ({ clubId, coaches, ownerId, onChanged }: Props) => {
           >
             <UserPlus size={14} /> CREATE INVITE LINK
           </button>
+          <p className="font-body text-[11px] text-muted-foreground">
+            The invite adds the coach to your home club — add them to the academy roster once they signed up.
+          </p>
         </div>
 
         <div className="bg-card border border-border rounded-2xl p-4 space-y-3">
@@ -144,7 +148,7 @@ const AcademyRoster = ({ clubId, coaches, ownerId, onChanged }: Props) => {
           <p className="text-muted-foreground font-body text-sm">No coaches in your academy yet.</p>
         ) : (
           coaches.map((c) => {
-            const Icon = roleIcon(c.club_role);
+            const Icon = roleIcon(c.academy_role);
             return (
               <div key={c.id} className="bg-card border border-border rounded-2xl p-4 flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3 min-w-0">
@@ -162,15 +166,15 @@ const AcademyRoster = ({ clubId, coaches, ownerId, onChanged }: Props) => {
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
                   <span className="font-display text-[10px] tracking-wider px-2 py-1 rounded-full bg-secondary text-muted-foreground">
-                    {c.club_role.toUpperCase()}
+                    {c.academy_role.toUpperCase()}
                   </span>
                   {c.coach_id !== ownerId && (
                     <>
                       <button
-                        onClick={() => changeRole(c.id, c.club_role === "manager" ? "coach" : "manager")}
+                        onClick={() => changeRole(c.id, c.academy_role === "manager" ? "coach" : "manager")}
                         className="font-display text-[10px] tracking-wider text-muted-foreground hover:text-primary"
                       >
-                        {c.club_role === "manager" ? "MAKE COACH" : "MAKE MANAGER"}
+                        {c.academy_role === "manager" ? "MAKE COACH" : "MAKE MANAGER"}
                       </button>
                       <button onClick={() => remove(c.id)} className="text-muted-foreground hover:text-destructive">
                         <Trash2 size={16} />

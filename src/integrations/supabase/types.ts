@@ -14,6 +14,139 @@ export type Database = {
   }
   public: {
     Tables: {
+      academies: {
+        Row: {
+          address: string | null
+          city: string | null
+          club_id: string
+          contact_email: string | null
+          contact_phone: string | null
+          country: string | null
+          created_at: string
+          description: string | null
+          id: string
+          is_active: boolean
+          logo_url: string | null
+          name: string
+          owner_id: string
+          slug: string | null
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          city?: string | null
+          club_id: string
+          contact_email?: string | null
+          contact_phone?: string | null
+          country?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          logo_url?: string | null
+          name: string
+          owner_id: string
+          slug?: string | null
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          city?: string | null
+          club_id?: string
+          contact_email?: string | null
+          contact_phone?: string | null
+          country?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          logo_url?: string | null
+          name?: string
+          owner_id?: string
+          slug?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "academies_club_id_fkey"
+            columns: ["club_id"]
+            isOneToOne: true
+            referencedRelation: "clubs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      academy_clubs: {
+        Row: {
+          academy_id: string
+          club_id: string
+          created_at: string
+          id: string
+          is_primary: boolean
+        }
+        Insert: {
+          academy_id: string
+          club_id: string
+          created_at?: string
+          id?: string
+          is_primary?: boolean
+        }
+        Update: {
+          academy_id?: string
+          club_id?: string
+          created_at?: string
+          id?: string
+          is_primary?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "academy_clubs_academy_id_fkey"
+            columns: ["academy_id"]
+            isOneToOne: false
+            referencedRelation: "academies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "academy_clubs_club_id_fkey"
+            columns: ["club_id"]
+            isOneToOne: false
+            referencedRelation: "clubs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      academy_coaches: {
+        Row: {
+          academy_id: string
+          academy_role: string
+          coach_id: string
+          id: string
+          joined_at: string
+        }
+        Insert: {
+          academy_id: string
+          academy_role?: string
+          coach_id: string
+          id?: string
+          joined_at?: string
+        }
+        Update: {
+          academy_id?: string
+          academy_role?: string
+          coach_id?: string
+          id?: string
+          joined_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "academy_coaches_academy_id_fkey"
+            columns: ["academy_id"]
+            isOneToOne: false
+            referencedRelation: "academies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       block_purchases: {
         Row: {
           amount_paid: number
@@ -2606,6 +2739,7 @@ export type Database = {
           sport: string
         }[]
       }
+      get_user_academies: { Args: { _user_id: string }; Returns: string[] }
       get_user_clubs: { Args: { _user_id: string }; Returns: string[] }
       get_user_role: {
         Args: { _user_id: string }
@@ -2630,12 +2764,20 @@ export type Database = {
         Args: { p_minutes?: number; p_user_id: string }
         Returns: undefined
       }
+      is_academy_manager: {
+        Args: { _academy_id: string; _user_id: string }
+        Returns: boolean
+      }
       is_club_manager: {
         Args: { _club_id: string; _user_id: string }
         Returns: boolean
       }
       is_club_member: {
         Args: { _club_id: string; _user_id: string }
+        Returns: boolean
+      }
+      manages_academy_coach: {
+        Args: { _coach_id: string; _manager_id: string }
         Returns: boolean
       }
       recalculate_rankings: { Args: never; Returns: undefined }
