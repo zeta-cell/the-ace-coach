@@ -283,11 +283,17 @@ const App = () => (
                 <ProtectedRoute requiredRole="coach"><FeatureRoute feature="coach_marketplace" fallback="/coach"><CoachMarketplace /></FeatureRoute></ProtectedRoute>
               </Suspense>
             } />
+            <Route path="/coach/academy" element={
+              <Suspense fallback={<PortalLoader />}>
+                <ProtectedRoute requiredRole="coach"><CoachAcademy /></ProtectedRoute>
+              </Suspense>
+            } />
             <Route path="/coach/events" element={
               <Suspense fallback={<PortalLoader />}>
                 <ProtectedRoute requiredRole="coach"><FeatureRoute feature="events" fallback="/coach"><CoachEvents /></FeatureRoute></ProtectedRoute>
               </Suspense>
             } />
+
             <Route path="/coach/earnings" element={
               <Suspense fallback={<PortalLoader />}>
                 <ProtectedRoute requiredRole="coach"><FeatureRoute feature="coach_earnings" fallback="/coach"><CoachEarnings /></FeatureRoute></ProtectedRoute>
