@@ -10,7 +10,10 @@ import { format } from "date-fns";
 interface Props {
   open: boolean;
   onClose: () => void;
-  playerId: string;
+  /** Existing player account. Omit for a prospect that only has an invite so far. */
+  playerId?: string | null;
+  /** Pending coach invite this assessment belongs to (prospect without an account). */
+  inviteId?: string | null;
   playerName?: string;
   /** Previous assessment (for pre-filling and delta context) */
   previous?: Assessment | null;
@@ -18,6 +21,7 @@ interface Props {
   editing?: Assessment | null;
   onSaved?: () => void;
 }
+
 
 const emptyState = (previous?: Assessment | null) => ({
   assessment_date: format(new Date(), "yyyy-MM-dd"),
