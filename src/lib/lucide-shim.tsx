@@ -17,6 +17,14 @@
  */
 import * as React from "react";
 import {
+  Backpack as PhBackpack,
+  GraduationCap as PhGraduationCap,
+  Gauge as PhGauge,
+  Image as PhImage,
+  Megaphone as PhMegaphone,
+  Tent as PhTent,
+  ArrowCounterClockwise,
+  UserCircleMinus as PhUserCircleMinus,
   AirplaneTilt,
   ArrowBendDownLeft,
   ArrowBendUpRight,
@@ -327,3 +335,13 @@ export const Flag = wrap(PhFlag);
 export const ClipboardCheck = wrap(PhClipboard);
 export const ToggleLeft = wrap(PhToggleLeft);
 export const ToggleRight = wrap(PhToggleRight, { weight: "fill" });
+
+// Class / clinic screens.
+export const Backpack = wrap(PhBackpack);
+export const GraduationCap = wrap(PhGraduationCap);
+export const Gauge = wrap(PhGauge);
+export const Image = wrap(PhImage);
+export const Megaphone = wrap(PhMegaphone);
+export const Tent = wrap(PhTent);
+export const RotateCcw = wrap(ArrowCounterClockwise, { weight: "bold" });
+export const UserMinus = wrap(PhUserCircleMinus);
