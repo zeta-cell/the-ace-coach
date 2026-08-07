@@ -24,8 +24,9 @@ const AssignCoachPrompt = () => {
   useEffect(() => {
     if (!user || role !== "player") return;
     (async () => {
-      // A pending invite link takes priority — claim it silently.
+      // A pending invite / coach link takes priority — claim it silently.
       if (getPendingInvite()) await claimPendingInvite();
+      if (getPendingCoach()) await claimPendingCoach();
 
       const { count } = await supabase
         .from("coach_player_assignments")
