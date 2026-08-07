@@ -2991,6 +2991,34 @@ export type Database = {
         Returns: undefined
       }
       event_attendees_public: { Args: { _event_id: string }; Returns: boolean }
+      get_class_attendees: {
+        Args: { _event_id: string }
+        Returns: {
+          added_by_coach: boolean
+          attended: boolean
+          avatar_url: string
+          full_name: string
+          level: number
+          player_id: string
+          registered_at: string
+          registration_id: string
+          status: string
+        }[]
+      }
+      get_class_thread: {
+        Args: { _event_id: string }
+        Returns: {
+          attachment_url: string
+          author_avatar: string
+          author_id: string
+          author_name: string
+          content: string
+          created_at: string
+          id: string
+          is_announcement: boolean
+          is_coach: boolean
+        }[]
+      }
       get_coach_invite: {
         Args: { _token: string }
         Returns: {
