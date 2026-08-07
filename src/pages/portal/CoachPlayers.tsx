@@ -151,6 +151,10 @@ const CoachPlayers = () => {
           </div>
         </div>
 
+        <CoachSignupLinkCard />
+
+
+
         {pending.length > 0 && (
           <div className="mb-6">
             <h2 className="flex items-center gap-1.5 font-display text-xs tracking-wider text-muted-foreground mb-2">
