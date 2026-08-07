@@ -104,6 +104,7 @@ const Rewards = lazy(() => import("./pages/Rewards"));
 
 // Events & Community (lazy-loaded)
 const Events = lazy(() => import("./pages/Events"));
+const ClassDetail = lazy(() => import("./pages/ClassDetail"));
 const Community = lazy(() => import("./pages/Community"));
 const CitySportLanding = lazy(() => import("./pages/seo/CitySportLanding"));
 
