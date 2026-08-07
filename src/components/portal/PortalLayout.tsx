@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { BarChart3, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -73,6 +73,7 @@ const coachNav = [
 
   { label: "Events", icon: Calendar, href: "/coach/events" },
   { label: "CRM", icon: Contact, href: "/coach/crm" },
+  { label: "Analytics", icon: BarChart3, href: "/coach/analytics" },
   { label: "Earnings", icon: DollarSign, href: "/coach/earnings" },
   { label: "Marketplace", icon: ShoppingBag, href: "/coach/marketplace" },
   { label: "Requests", icon: UserCheck, href: "/coach" },
