@@ -129,12 +129,14 @@ const CoachAcademy = () => {
   return (
     <PortalLayout>
       <div className="p-4 md:p-6 max-w-5xl mx-auto space-y-6">
-        <div>
-          <h1 className="font-display text-2xl md:text-3xl tracking-wider text-foreground">MY ACADEMY</h1>
-          <p className="font-body text-sm text-muted-foreground mt-1">
-            An academy belongs to one club, but can train at several. Court rentals stay with the clubs.
-          </p>
-        </div>
+        {!academy && (
+          <div>
+            <h1 className="font-display text-2xl md:text-3xl tracking-wider text-foreground">MY ACADEMY</h1>
+            <p className="font-body text-sm text-muted-foreground mt-1">
+              An academy belongs to one club, but can train at several. Court rentals stay with the clubs.
+            </p>
+          </div>
+        )}
 
         {loading ? (
           <div className="flex justify-center py-16">
