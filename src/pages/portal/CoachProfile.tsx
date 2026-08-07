@@ -14,6 +14,7 @@ import CoachProfileEdit from "@/components/portal/CoachProfileEdit";
 import CoachPackageCard, { type CoachPackage } from "@/components/portal/CoachPackageCard";
 import CoachPackageDialog from "@/components/portal/CoachPackageDialog";
 import { Trash2 } from "lucide-react";
+import ProfileHero from "@/components/portal/ProfileHero";
 
 interface Certification {
   id: string;
@@ -213,60 +214,32 @@ const CoachProfile = () => {
     <PortalLayout>
       <div className="max-w-3xl mx-auto space-y-6">
         {/* Identity */}
-        <motion.div initial={false} animate={{ opacity: 1, y: 0 }} className="bg-card border border-border rounded-xl p-6">
-          <div className="flex items-center justify-between mb-2">
-            <div />
-            <button
-              onClick={() => setEditOpen(true)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-secondary text-foreground text-xs font-display tracking-wider hover:bg-secondary/80 transition-colors"
-            >
-              <Pencil size={12} /> EDIT
-            </button>
-          </div>
-          <div className="flex items-center gap-4">
-            <div className="relative">
-              <div className="w-20 h-20 rounded-full bg-secondary flex items-center justify-center overflow-hidden">
-                {profile?.avatar_url ? (
-                  <img src={profile.avatar_url} alt="" className="w-full h-full object-cover" />
-                ) : (
-                  <span className="font-display text-3xl text-primary">
-                    {profile?.full_name?.charAt(0)?.toUpperCase()}
-                  </span>
-                )}
-              </div>
-              <button className="absolute bottom-0 right-0 bg-primary rounded-full p-1.5">
-                <Camera size={12} className="text-primary-foreground" />
-              </button>
-            </div>
-            <div className="flex-1">
-              <h1 className="font-display text-2xl text-foreground">{profile?.full_name?.toUpperCase()}</h1>
-              <div className="flex items-center gap-2 mt-1 flex-wrap">
-                {coachData?.primary_sport && (
-                  <span className="font-body text-[10px] bg-accent/20 text-accent-foreground px-2 py-0.5 rounded-full uppercase font-semibold">
-                    {coachData.primary_sport === "padel" ? "Padel" : "Tennis"} Coach
-                  </span>
-                )}
-                {coachData?.nationality && (
-                  <span className="font-body text-xs text-muted-foreground">{coachData.nationality}</span>
-                )}
-                {coachData?.years_experience != null && coachData.years_experience > 0 && (
-                  <span className="font-body text-xs text-muted-foreground">{coachData.years_experience}y experience</span>
-                )}
-                {coachData?.dominant_hand && (
-                  <span className="font-body text-[10px] bg-primary/10 text-primary px-2 py-0.5 rounded-full uppercase font-semibold">
-                    {coachData.dominant_hand} hand
-                  </span>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* Contact */}
-          <div className="mt-4 pt-4 border-t border-border space-y-2">
+        <ProfileHero
+          name={profile?.full_name}
+          avatarUrl={profile?.avatar_url}
+          eyebrow={coachData?.primary_sport ? `${coachData.primary_sport === "padel" ? "PADEL" : "TENNIS"} COACH` : "COACH"}
+          meta={[coachData?.location_city, coachData?.location_country].filter(Boolean).join(" · ") || coachData?.nationality || null}
+          verified={coachData?.is_verified}
+          onEdit={() => setEditOpen(true)}
+          onAvatarClick={() => setEditOpen(true)}
+          chips={[
+            ...(coachData?.badge_level ? [{ label: coachData.badge_level, tone: "mustard" as const }] : []),
+            ...(coachData?.dominant_hand ? [{ label: `${coachData.dominant_hand} hand`, tone: "primary" as const }] : []),
+            ...(coachData?.preferred_side ? [{ label: `${coachData.preferred_side} side`, tone: "neutral" as const }] : []),
+            ...(coachData?.languages || []).slice(0, 3).map((l) => ({ label: l, tone: "neutral" as const })),
+          ]}
+          stats={[
+            ...(coachData?.years_experience ? [{ label: "Experience", value: `${coachData.years_experience}y` }] : []),
+            { label: "Sessions", value: coachData?.total_sessions_coached ?? 0 },
+            ...(coachData?.hourly_rate_from ? [{ label: "From", value: `€${coachData.hourly_rate_from}` }] : []),
+            { label: "Reply time", value: `${coachData?.response_time_hours ?? 24}h` },
+          ]}
+        >
+          <div className="space-y-2">
             {profile?.email && (
               <div className="flex items-center gap-2 text-sm font-body text-foreground">
                 <Mail size={14} className="text-muted-foreground shrink-0" />
-                <span>{profile.email}</span>
+                <span className="truncate">{profile.email}</span>
               </div>
             )}
             {coachData?.phone && (
@@ -276,7 +249,8 @@ const CoachProfile = () => {
               </div>
             )}
           </div>
-        </motion.div>
+        </ProfileHero>
+
 
         {/* Public profile link info box */}
         <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="bg-card border border-border rounded-xl p-4">

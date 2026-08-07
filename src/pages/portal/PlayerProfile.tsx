@@ -20,6 +20,7 @@ import { ComingSoonOverlay } from "@/components/portal/FeatureGate";
 import CosmicPlayerCard from "@/components/portal/CosmicPlayerCard";
 import AssessmentHistory from "@/components/portal/AssessmentHistory";
 import DevelopmentChart from "@/components/portal/DevelopmentChart";
+import ProfileHero from "@/components/portal/ProfileHero";
 
 interface PlayerData {
   dominant_hand: string | null;
@@ -162,56 +163,26 @@ const PlayerProfile = () => {
     <PortalLayout>
       <div className="max-w-3xl mx-auto space-y-6">
         {/* Identity */}
-        <motion.div initial={false} animate={{ opacity: 1, y: 0 }} className="bg-card border border-border rounded-xl p-6">
-          <div className="flex items-center justify-between mb-2">
-            <div />
-            <button
-              onClick={() => setEditOpen(true)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-secondary text-foreground text-xs font-display tracking-wider hover:bg-secondary/80 transition-colors"
-            >
-              <Pencil size={12} /> EDIT
-            </button>
-          </div>
-          <div className="flex items-center gap-4">
-            <div className="relative">
-              <div className="w-20 h-20 rounded-full bg-secondary flex items-center justify-center overflow-hidden">
-                {profile?.avatar_url ? (
-                  <img src={profile.avatar_url} alt="" className="w-full h-full object-cover" />
-                ) : (
-                  <span className="font-display text-3xl text-primary">
-                    {profile?.full_name?.charAt(0)?.toUpperCase()}
-                  </span>
-                )}
-              </div>
-              <button className="absolute bottom-0 right-0 bg-primary rounded-full p-1.5">
-                <Camera size={12} className="text-primary-foreground" />
-              </button>
-            </div>
-            <div className="flex-1">
-              <h1 className="font-display text-2xl text-foreground">{profile?.full_name?.toUpperCase()}</h1>
-              <div className="flex items-center gap-2 mt-1 flex-wrap">
-                {playerData?.nationality && (
-                  <span className="font-body text-xs text-muted-foreground">{playerData.nationality}</span>
-                )}
-                {playerData?.dominant_hand && (
-                  <span className="font-body text-[10px] bg-primary/10 text-primary px-2 py-0.5 rounded-full uppercase font-semibold">
-                    {playerData.dominant_hand} hand
-                  </span>
-                )}
-                {playerData?.preferred_sport && (
-                  <span className="font-body text-[10px] bg-secondary text-foreground px-2 py-0.5 rounded-full font-semibold">
-                    {SPORT_LABELS[playerData.preferred_sport] || playerData.preferred_sport}
-                  </span>
-                )}
-                {playerData?.years_playing !== undefined && playerData.years_playing > 0 && (
-                  <span className="font-body text-xs text-muted-foreground">{playerData.years_playing}y playing</span>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* Contact details */}
-          <div className="mt-4 pt-4 border-t border-border space-y-2">
+        <ProfileHero
+          name={profile?.full_name}
+          avatarUrl={profile?.avatar_url}
+          eyebrow={playerData?.preferred_sport ? `${SPORT_LABELS[playerData.preferred_sport] || playerData.preferred_sport} PLAYER` : "PLAYER"}
+          meta={[playerData?.club_name, playerData?.club_location].filter(Boolean).join(" · ") || playerData?.nationality || null}
+          onEdit={() => setEditOpen(true)}
+          onAvatarClick={() => setEditOpen(true)}
+          chips={[
+            ...(playerData?.dominant_hand ? [{ label: `${playerData.dominant_hand} hand`, tone: "primary" as const }] : []),
+            ...(userStats?.current_level ? [{ label: userStats.current_level, tone: "mustard" as const }] : []),
+            ...(playerData?.fitness_level ? [{ label: playerData.fitness_level, tone: "neutral" as const }] : []),
+          ]}
+          stats={[
+            ...(playerData?.playtomic_level ? [{ label: "Level", value: playerData.playtomic_level }] : []),
+            ...(playerData?.years_playing ? [{ label: "Years playing", value: `${playerData.years_playing}y` }] : []),
+            { label: "Total XP", value: userStats?.total_xp ?? 0 },
+            { label: "Best shot", value: playerData?.best_shot || "—" },
+          ]}
+        >
+          <div className="space-y-2">
             {playerData?.date_of_birth && (
               <div className="flex items-center gap-2 text-sm font-body text-foreground">
                 <Calendar size={14} className="text-muted-foreground shrink-0" />
@@ -227,7 +198,7 @@ const PlayerProfile = () => {
             {profile?.email && (
               <div className="flex items-center gap-2 text-sm font-body text-foreground">
                 <Mail size={14} className="text-muted-foreground shrink-0" />
-                <span>{profile.email}</span>
+                <span className="truncate">{profile.email}</span>
               </div>
             )}
             {playerPhone && (
@@ -236,15 +207,15 @@ const PlayerProfile = () => {
                 <span>{playerPhone}</span>
               </div>
             )}
+            <button
+              onClick={() => navigate("/messages")}
+              className="mt-2 w-full py-2.5 rounded-xl bg-primary text-primary-foreground font-display text-sm tracking-widest hover:bg-primary/90 transition-colors flex items-center justify-center gap-2"
+            >
+              <MessageCircle size={16} /> MESSAGE MY COACH
+            </button>
           </div>
+        </ProfileHero>
 
-          <button
-            onClick={() => navigate("/messages")}
-            className="mt-4 w-full py-2.5 rounded-lg bg-primary text-primary-foreground font-display text-sm tracking-widest hover:bg-primary/90 transition-colors flex items-center justify-center gap-2"
-          >
-            <MessageCircle size={16} /> MESSAGE MY COACH
-          </button>
-        </motion.div>
 
         {/* Sport Preferences */}
         {playerData && (playerData.favourite_players?.length > 0 || playerData.preferred_court_surface || playerData.training_freq) && (
