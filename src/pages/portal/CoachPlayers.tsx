@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import PortalLayout from "@/components/portal/PortalLayout";
 import QuickAddTrainingDrawer from "@/components/portal/QuickAddTrainingDrawer";
 import InvitePlayerDrawer from "@/components/portal/InvitePlayerDrawer";
+import CoachSignupLinkCard from "@/components/portal/CoachSignupLinkCard";
 
 interface PendingInvite {
   id: string;
