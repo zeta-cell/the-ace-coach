@@ -71,3 +71,43 @@ export const assignSelfToCoach = async (coachId: string) => {
   if (error) throw error;
   return data as string | null;
 };
+
+/* ---------- Public coach sign-up link: /join/:slug ---------- */
+
+const COACH_KEY = "hv_pending_coach";
+
+export const storePendingCoach = (slug: string) => {
+  if (slug) localStorage.setItem(COACH_KEY, slug);
+};
+
+export const getPendingCoach = () => localStorage.getItem(COACH_KEY);
+
+export const clearPendingCoach = () => localStorage.removeItem(COACH_KEY);
+
+export interface CoachJoinInfo {
+  coach_id: string;
+  coach_name: string | null;
+  coach_avatar: string | null;
+  bio: string | null;
+  is_valid: boolean;
+}
+
+/** Public lookup for a coach sign-up link (slug or coach user id). */
+export const fetchCoachJoinInfo = async (slug: string): Promise<CoachJoinInfo | null> => {
+  const { data, error } = await supabase.rpc("get_coach_join_info", { _slug: slug });
+  if (error) return null;
+  const row = Array.isArray(data) ? data[0] : data;
+  return (row as CoachJoinInfo) || null;
+};
+
+/**
+ * Links the signed-in player to the coach whose link they used and creates a
+ * lead in that coach's CRM. Idempotent.
+ */
+export const claimPendingCoach = async (): Promise<string | null> => {
+  const slug = getPendingCoach();
+  if (!slug) return null;
+  const { data, error } = await supabase.rpc("join_coach", { _slug: slug });
+  if (!error) clearPendingCoach();
+  return (data as string | null) ?? null;
+};
