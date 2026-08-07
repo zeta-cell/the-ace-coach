@@ -127,6 +127,7 @@ const ClubBookings = lazy(() => import("./pages/portal/ClubBookings"));
 const ClubSettings = lazy(() => import("./pages/portal/ClubSettings"));
 const ClubInvite = lazy(() => import("./pages/ClubInvite"));
 const CoachInvite = lazy(() => import("./pages/CoachInvite"));
+const CoachJoin = lazy(() => import("./pages/CoachJoin"));
 const Crm = lazy(() => import("./pages/portal/Crm"));
 
 const queryClient = new QueryClient();
