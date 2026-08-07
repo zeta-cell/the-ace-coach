@@ -364,7 +364,7 @@ const CoachAnalytics = () => {
             </div>
             <div className="flex gap-6">
               <div>
-                <div className="flex items-center gap-1.5 text-mustard">
+                <div className="flex items-center gap-1.5" style={{ color: "hsl(var(--mustard))" }}>
                   <Star size={16} />
                   <span className="font-display text-2xl text-foreground">
                     {kpi.avgRating ? kpi.avgRating.toFixed(1) : "—"}
