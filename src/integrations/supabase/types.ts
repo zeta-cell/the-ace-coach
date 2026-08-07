@@ -3005,6 +3005,14 @@ export type Database = {
           status: string
         }[]
       }
+      get_class_roster_candidates: {
+        Args: { _event_id: string }
+        Returns: {
+          full_name: string
+          level: number
+          player_id: string
+        }[]
+      }
       get_class_thread: {
         Args: { _event_id: string }
         Returns: {
