@@ -8,6 +8,7 @@ import AcademyHostClubs from "@/components/portal/academy/AcademyHostClubs";
 import AcademyRoster from "@/components/portal/academy/AcademyRoster";
 import AcademyTeamAvailability from "@/components/portal/academy/AcademyTeamAvailability";
 import AcademySchedule from "@/components/portal/academy/AcademySchedule";
+import ProfileHero from "@/components/portal/ProfileHero";
 import { Building2, Users, Clock, CalendarDays, Loader2, Save, Lock } from "lucide-react";
 import { toast } from "sonner";
 
@@ -199,19 +200,44 @@ const CoachAcademy = () => {
           )
         ) : (
           <>
-            <div className="flex gap-1 bg-secondary rounded-lg p-0.5 overflow-x-auto scrollbar-none">
+            <ProfileHero
+              square
+              name={academy.name}
+              avatarUrl={academy.logo_url}
+              eyebrow="ACADEMY"
+              meta={[academy.city, academy.country].filter(Boolean).join(" · ") || academy.address}
+              chips={[
+                { label: "Club owned", tone: "primary" },
+                ...(academy.contact_email ? [{ label: academy.contact_email, tone: "neutral" as const }] : []),
+                ...(academy.contact_phone ? [{ label: academy.contact_phone, tone: "neutral" as const }] : []),
+              ]}
+              stats={[
+                { label: "Coaches", value: coaches.length },
+                { label: "Home club", value: 1 },
+                { label: "Courts", value: "Club" },
+                { label: "Status", value: "Live" },
+              ]}
+              onEdit={() => setTab("settings")}
+            >
+              {academy.description && (
+                <p className="font-body text-sm text-muted-foreground">{academy.description}</p>
+              )}
+            </ProfileHero>
+
+            <div className="flex gap-1 bg-secondary rounded-xl p-1 overflow-x-auto scrollbar-none">
               {TABS.map((t) => (
                 <button
                   key={t.key}
                   onClick={() => setTab(t.key)}
-                  className={`flex-1 min-w-[120px] py-2.5 rounded-md font-display text-[10px] tracking-wider flex items-center justify-center gap-1.5 whitespace-nowrap ${
-                    tab === t.key ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
+                  className={`flex-1 min-w-[120px] py-2.5 rounded-lg font-display text-[10px] tracking-wider flex items-center justify-center gap-1.5 whitespace-nowrap transition-colors ${
+                    tab === t.key ? "bg-primary text-primary-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
                   <t.icon size={13} /> {t.label}
                 </button>
               ))}
             </div>
+
 
             {tab === "schedule" && user && (
               <AcademySchedule coaches={coaches} selfId={user.id} selfName={selfName} />
