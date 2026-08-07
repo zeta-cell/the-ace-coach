@@ -470,7 +470,7 @@ const CoachAnalytics = () => {
                 <h2 className="font-display text-lg text-foreground uppercase tracking-wide">Revenue</h2>
                 <p className="text-[10px] font-body text-muted-foreground uppercase tracking-wider">Gross vs payout</p>
               </div>
-              <Euro size={18} className="text-sky" />
+              <Euro size={18} style={{ color: "hsl(var(--sky))" }} />
             </div>
             <div className="h-56">
               <ResponsiveContainer width="100%" height="100%">
