@@ -104,6 +104,7 @@ const Rewards = lazy(() => import("./pages/Rewards"));
 
 // Events & Community (lazy-loaded)
 const Events = lazy(() => import("./pages/Events"));
+const ClassDetail = lazy(() => import("./pages/ClassDetail"));
 const Community = lazy(() => import("./pages/Community"));
 const CitySportLanding = lazy(() => import("./pages/seo/CitySportLanding"));
 
@@ -160,6 +161,7 @@ const App = () => (
             <Route path="/booking-success" element={<Suspense fallback={<PortalLoader />}><BookingSuccess /></Suspense>} />
             <Route path="/rankings" element={<Suspense fallback={<PortalLoader />}><FeatureRoute feature="community" fallback="/"><Rankings /></FeatureRoute></Suspense>} />
             <Route path="/events" element={<Suspense fallback={<PortalLoader />}><FeatureRoute feature="events" fallback="/"><Events /></FeatureRoute></Suspense>} />
+            <Route path="/class/:id" element={<Suspense fallback={<PortalLoader />}><ClassDetail /></Suspense>} />
             <Route path="/community" element={<Suspense fallback={<PortalLoader />}><FeatureRoute feature="community" fallback="/"><Community /></FeatureRoute></Suspense>} />
             <Route path="/club-invite/:token" element={<Suspense fallback={<PortalLoader />}><ClubInvite /></Suspense>} />
             <Route path="/invite/:token" element={<Suspense fallback={<PortalLoader />}><CoachInvite /></Suspense>} />

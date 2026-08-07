@@ -299,6 +299,51 @@ export type Database = {
           },
         ]
       }
+      booking_rentals: {
+        Row: {
+          booking_id: string
+          created_at: string
+          currency: string
+          id: string
+          quantity: number
+          rental_item_id: string
+          unit_price: number
+        }
+        Insert: {
+          booking_id: string
+          created_at?: string
+          currency?: string
+          id?: string
+          quantity?: number
+          rental_item_id: string
+          unit_price?: number
+        }
+        Update: {
+          booking_id?: string
+          created_at?: string
+          currency?: string
+          id?: string
+          quantity?: number
+          rental_item_id?: string
+          unit_price?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "booking_rentals_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "booking_rentals_rental_item_id_fkey"
+            columns: ["rental_item_id"]
+            isOneToOne: false
+            referencedRelation: "rental_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       booking_waitlist: {
         Row: {
           coach_id: string
@@ -746,27 +791,36 @@ export type Database = {
           certificate_url: string | null
           coach_id: string
           created_at: string | null
+          credential_type: string
           id: string
+          is_verified: boolean
           issuing_body: string | null
           name: string
+          order_index: number
           year_obtained: number | null
         }
         Insert: {
           certificate_url?: string | null
           coach_id: string
           created_at?: string | null
+          credential_type?: string
           id?: string
+          is_verified?: boolean
           issuing_body?: string | null
           name: string
+          order_index?: number
           year_obtained?: number | null
         }
         Update: {
           certificate_url?: string | null
           coach_id?: string
           created_at?: string | null
+          credential_type?: string
           id?: string
+          is_verified?: boolean
           issuing_body?: string | null
           name?: string
+          order_index?: number
           year_obtained?: number | null
         }
         Relationships: []
@@ -1029,6 +1083,51 @@ export type Database = {
         }
         Relationships: []
       }
+      coach_promo_codes: {
+        Row: {
+          brand: string
+          coach_id: string
+          code: string
+          created_at: string
+          description: string | null
+          discount_label: string | null
+          expires_at: string | null
+          id: string
+          is_active: boolean
+          logo_url: string | null
+          updated_at: string
+          url: string | null
+        }
+        Insert: {
+          brand: string
+          coach_id: string
+          code: string
+          created_at?: string
+          description?: string | null
+          discount_label?: string | null
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean
+          logo_url?: string | null
+          updated_at?: string
+          url?: string | null
+        }
+        Update: {
+          brand?: string
+          coach_id?: string
+          code?: string
+          created_at?: string
+          description?: string | null
+          discount_label?: string | null
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean
+          logo_url?: string | null
+          updated_at?: string
+          url?: string | null
+        }
+        Relationships: []
+      }
       coach_requests: {
         Row: {
           block_id: string | null
@@ -1210,9 +1309,52 @@ export type Database = {
         }
         Relationships: []
       }
+      event_messages: {
+        Row: {
+          attachment_url: string | null
+          author_id: string
+          content: string
+          created_at: string
+          event_id: string
+          id: string
+          is_announcement: boolean
+        }
+        Insert: {
+          attachment_url?: string | null
+          author_id: string
+          content: string
+          created_at?: string
+          event_id: string
+          id?: string
+          is_announcement?: boolean
+        }
+        Update: {
+          attachment_url?: string | null
+          author_id?: string
+          content?: string
+          created_at?: string
+          event_id?: string
+          id?: string
+          is_announcement?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_messages_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       event_registrations: {
         Row: {
+          added_by_coach: boolean
           amount_paid: number | null
+          attended: boolean | null
+          cancelled_at: string | null
+          checked_in_at: string | null
+          coach_note: string | null
           event_id: string
           id: string
           payment_status: string | null
@@ -1221,7 +1363,12 @@ export type Database = {
           status: string | null
         }
         Insert: {
+          added_by_coach?: boolean
           amount_paid?: number | null
+          attended?: boolean | null
+          cancelled_at?: string | null
+          checked_in_at?: string | null
+          coach_note?: string | null
           event_id: string
           id?: string
           payment_status?: string | null
@@ -1230,7 +1377,12 @@ export type Database = {
           status?: string | null
         }
         Update: {
+          added_by_coach?: boolean
           amount_paid?: number | null
+          attended?: boolean | null
+          cancelled_at?: string | null
+          checked_in_at?: string | null
+          coach_note?: string | null
           event_id?: string
           id?: string
           payment_status?: string | null
@@ -1250,8 +1402,12 @@ export type Database = {
       }
       events: {
         Row: {
+          academy_id: string | null
           age_group: string | null
           arrival_instructions: string | null
+          attendees_visible: boolean
+          cancellation_hours: number
+          cancellation_policy: string | null
           club_id: string | null
           coach_id: string
           court_id: string | null
@@ -1263,24 +1419,36 @@ export type Database = {
           description: string | null
           end_datetime: string
           event_type: string
+          goals: string | null
           id: string
           is_online: boolean | null
+          level_max: number | null
+          level_min: number | null
           location_address: string | null
           location_city: string | null
           location_country: string | null
           location_name: string | null
           max_participants: number | null
+          media_urls: string[]
+          min_participants: number
           price_per_person: number | null
+          registration_deadline: string | null
           skill_level: string | null
           sport: string
           start_datetime: string
           status: string | null
           title: string
           updated_at: string | null
+          video_urls: string[]
+          what_to_bring: string | null
         }
         Insert: {
+          academy_id?: string | null
           age_group?: string | null
           arrival_instructions?: string | null
+          attendees_visible?: boolean
+          cancellation_hours?: number
+          cancellation_policy?: string | null
           club_id?: string | null
           coach_id: string
           court_id?: string | null
@@ -1292,24 +1460,36 @@ export type Database = {
           description?: string | null
           end_datetime: string
           event_type?: string
+          goals?: string | null
           id?: string
           is_online?: boolean | null
+          level_max?: number | null
+          level_min?: number | null
           location_address?: string | null
           location_city?: string | null
           location_country?: string | null
           location_name?: string | null
           max_participants?: number | null
+          media_urls?: string[]
+          min_participants?: number
           price_per_person?: number | null
+          registration_deadline?: string | null
           skill_level?: string | null
           sport?: string
           start_datetime: string
           status?: string | null
           title: string
           updated_at?: string | null
+          video_urls?: string[]
+          what_to_bring?: string | null
         }
         Update: {
+          academy_id?: string | null
           age_group?: string | null
           arrival_instructions?: string | null
+          attendees_visible?: boolean
+          cancellation_hours?: number
+          cancellation_policy?: string | null
           club_id?: string | null
           coach_id?: string
           court_id?: string | null
@@ -1321,22 +1501,37 @@ export type Database = {
           description?: string | null
           end_datetime?: string
           event_type?: string
+          goals?: string | null
           id?: string
           is_online?: boolean | null
+          level_max?: number | null
+          level_min?: number | null
           location_address?: string | null
           location_city?: string | null
           location_country?: string | null
           location_name?: string | null
           max_participants?: number | null
+          media_urls?: string[]
+          min_participants?: number
           price_per_person?: number | null
+          registration_deadline?: string | null
           skill_level?: string | null
           sport?: string
           start_datetime?: string
           status?: string | null
           title?: string
           updated_at?: string | null
+          video_urls?: string[]
+          what_to_bring?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "events_academy_id_fkey"
+            columns: ["academy_id"]
+            isOneToOne: false
+            referencedRelation: "academies"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "events_club_id_fkey"
             columns: ["club_id"]
@@ -2280,32 +2475,101 @@ export type Database = {
         }
         Relationships: []
       }
+      rental_items: {
+        Row: {
+          category: string
+          created_at: string
+          currency: string
+          description: string | null
+          id: string
+          image_url: string | null
+          is_active: boolean
+          name: string
+          owner_id: string
+          owner_type: string
+          price_per_session: number
+          quantity_available: number
+          updated_at: string
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          currency?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          name: string
+          owner_id: string
+          owner_type?: string
+          price_per_session?: number
+          quantity_available?: number
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          currency?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          name?: string
+          owner_id?: string
+          owner_type?: string
+          price_per_session?: number
+          quantity_available?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       reviews: {
         Row: {
+          booking_id: string | null
           coach_id: string
           comment: string | null
           created_at: string
+          event_id: string | null
           id: string
           player_id: string
           rating: number
         }
         Insert: {
+          booking_id?: string | null
           coach_id: string
           comment?: string | null
           created_at?: string
+          event_id?: string | null
           id?: string
           player_id: string
           rating: number
         }
         Update: {
+          booking_id?: string | null
           coach_id?: string
           comment?: string | null
           created_at?: string
+          event_id?: string | null
           id?: string
           player_id?: string
           rating?: number
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "reviews_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reviews_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       stripe_customers: {
         Row: {
@@ -2705,6 +2969,10 @@ export type Database = {
         }
         Returns: undefined
       }
+      can_manage_event: {
+        Args: { _event_id: string; _user_id: string }
+        Returns: boolean
+      }
       can_notify: { Args: { _target: string }; Returns: boolean }
       claim_coach_invite: { Args: { _token: string }; Returns: string }
       claim_referral: { Args: { _code: string }; Returns: string }
@@ -2721,6 +2989,43 @@ export type Database = {
       ensure_user_bootstrap: {
         Args: { _full_name?: string }
         Returns: undefined
+      }
+      event_attendees_public: { Args: { _event_id: string }; Returns: boolean }
+      get_class_attendees: {
+        Args: { _event_id: string }
+        Returns: {
+          added_by_coach: boolean
+          attended: boolean
+          avatar_url: string
+          full_name: string
+          level: number
+          player_id: string
+          registered_at: string
+          registration_id: string
+          status: string
+        }[]
+      }
+      get_class_roster_candidates: {
+        Args: { _event_id: string }
+        Returns: {
+          full_name: string
+          level: number
+          player_id: string
+        }[]
+      }
+      get_class_thread: {
+        Args: { _event_id: string }
+        Returns: {
+          attachment_url: string
+          author_avatar: string
+          author_id: string
+          author_name: string
+          content: string
+          created_at: string
+          id: string
+          is_announcement: boolean
+          is_coach: boolean
+        }[]
       }
       get_coach_invite: {
         Args: { _token: string }
@@ -2784,6 +3089,10 @@ export type Database = {
       }
       is_club_member: {
         Args: { _club_id: string; _user_id: string }
+        Returns: boolean
+      }
+      is_event_attendee: {
+        Args: { _event_id: string; _user_id: string }
         Returns: boolean
       }
       join_coach: { Args: { _slug: string }; Returns: string }

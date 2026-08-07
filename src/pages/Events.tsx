@@ -1,60 +1,70 @@
 import { useState, useEffect, useMemo } from "react";
 import PublicHeader from "@/components/PublicHeader";
+import PublicBottomNav from "@/components/PublicBottomNav";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
-  MapPin, Search, Calendar, Clock, Users, Globe, ChevronRight,
-  Zap, Star, Crown, Shield, Award, CheckCircle,
+  MapPin, Search, Calendar, Users, Globe, SlidersHorizontal, X,
+  CheckCircle, ChevronRight, Target, Trophy, GraduationCap, Tent,
+  Video, Zap, Sparkles, RotateCcw,
 } from "lucide-react";
-import PublicBottomNav from "@/components/PublicBottomNav";
-import { format, isWithinInterval, addDays } from "date-fns";
+import { format, addDays } from "date-fns";
 import { toast } from "sonner";
 
 interface EventRow {
   id: string; coach_id: string; title: string; description: string | null;
   event_type: string; sport: string; start_datetime: string; end_datetime: string;
-  location_name: string | null; location_address: string | null;
-  location_city: string | null; location_country: string | null;
-  is_online: boolean; max_participants: number | null;
-  current_participants: number; price_per_person: number;
-  currency: string; age_group: string; skill_level: string;
-  cover_image_url: string | null; status: string;
-  created_at: string; updated_at: string;
-  coach_name?: string; coach_avatar?: string | null;
+  location_name: string | null; location_city: string | null; location_country: string | null;
+  is_online: boolean; max_participants: number | null; min_participants: number | null;
+  current_participants: number; price_per_person: number; currency: string;
+  age_group: string; skill_level: string;
+  level_min: number | null; level_max: number | null;
+  cover_image_url: string | null; status: string; club_id: string | null;
+  coach_name?: string; coach_avatar?: string | null; academy_name?: string | null;
 }
 
-const EVENT_TYPE_COLORS: Record<string, string> = {
-  clinic: "bg-blue-500/20 text-blue-400",
-  camp: "bg-emerald-500/20 text-emerald-400",
-  group_session: "bg-violet-500/20 text-violet-400",
-  masterclass: "bg-amber-500/20 text-amber-400",
-  tournament: "bg-red-500/20 text-red-400",
-  webinar: "bg-gray-500/20 text-gray-400",
+const TYPE_META: Record<string, { color: string; gradient: string; icon: typeof Target }> = {
+  clinic: { color: "bg-blue-500/20 text-blue-400", gradient: "from-blue-600/80 to-blue-900/80", icon: Target },
+  camp: { color: "bg-emerald-500/20 text-emerald-400", gradient: "from-emerald-600/80 to-emerald-900/80", icon: Tent },
+  group_session: { color: "bg-violet-500/20 text-violet-400", gradient: "from-violet-600/80 to-violet-900/80", icon: Users },
+  private_lesson: { color: "bg-primary/20 text-primary", gradient: "from-primary/70 to-primary/30", icon: Zap },
+  masterclass: { color: "bg-amber-500/20 text-amber-400", gradient: "from-amber-600/80 to-amber-900/80", icon: GraduationCap },
+  tournament: { color: "bg-red-500/20 text-red-400", gradient: "from-red-600/80 to-red-900/80", icon: Trophy },
+  webinar: { color: "bg-sky-500/20 text-sky-400", gradient: "from-sky-600/80 to-sky-900/80", icon: Video },
 };
 
-const EVENT_TYPE_GRADIENTS: Record<string, string> = {
-  clinic: "from-blue-600/80 to-blue-900/80",
-  camp: "from-emerald-600/80 to-emerald-900/80",
-  group_session: "from-violet-600/80 to-violet-900/80",
-  masterclass: "from-amber-600/80 to-amber-900/80",
-  tournament: "from-red-600/80 to-red-900/80",
-  webinar: "from-gray-600/80 to-gray-900/80",
-};
+const FORMAT_TABS = [
+  { key: "all", label: "ALL" },
+  { key: "clinic", label: "CLINICS" },
+  { key: "camp", label: "CAMPS" },
+  { key: "private_lesson", label: "PRIVATE" },
+  { key: "group_session", label: "GROUP" },
+  { key: "academy", label: "ACADEMIES" },
+  { key: "tournament", label: "TOURNAMENTS" },
+  { key: "online", label: "ONLINE" },
+];
 
-const EVENT_TYPES = ["All", "clinic", "camp", "group_session", "masterclass", "tournament", "webinar"];
-const SPORT_FILTERS = ["All", "Tennis", "Padel"];
-const LEVEL_FILTERS = ["All", "Beginner", "Intermediate", "Advanced"];
-const AGE_FILTERS = ["All", "Kids", "Junior", "Adult"];
-const SORT_OPTIONS = [
-  { key: "soonest", label: "Soonest" },
-  { key: "cheapest", label: "Cheapest" },
-  { key: "popular", label: "Most Popular" },
+const SPORTS = ["All", "Tennis", "Padel"];
+const AGES = ["All", "kids", "junior", "adult"];
+const VENUES = ["All", "Indoor / on court", "Online"];
+const WHENS = [
+  { key: "any", label: "Any time" },
+  { key: "7", label: "Next 7 days" },
+  { key: "30", label: "Next 30 days" },
+  { key: "90", label: "Next 3 months" },
+];
+const SORTS = [
+  { key: "soonest", label: "Soonest first" },
+  { key: "cheapest", label: "Lowest price" },
+  { key: "popular", label: "Most popular" },
+  { key: "spots", label: "Fewest spots left" },
 ];
 
 const currencySymbol = (c: string) => ({ EUR: "€", USD: "$", GBP: "£" }[c] || c);
-const formatEventType = (t: string) => t.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase());
+const fmtType = (t: string) => t.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
+const lvl = (v: number | null) => (v == null ? null : String(v).replace(/\.?0+$/, ""));
 
 const Events = () => {
   const { user } = useAuth();
@@ -64,19 +74,25 @@ const Events = () => {
   const [registeredIds, setRegisteredIds] = useState<Set<string>>(new Set());
   const [registering, setRegistering] = useState<string | null>(null);
 
-  const [citySearch, setCitySearch] = useState("");
-  const [typeFilter, setTypeFilter] = useState("All");
-  const [sportFilter, setSportFilter] = useState("All");
-  const [levelFilter, setLevelFilter] = useState("All");
-  const [ageFilter, setAgeFilter] = useState("All");
+  const [search, setSearch] = useState("");
+  const [format_, setFormat] = useState("all");
+  const [sport, setSport] = useState("All");
+  const [age, setAge] = useState("All");
+  const [venue, setVenue] = useState("All");
+  const [when, setWhen] = useState("any");
+  const [maxPrice, setMaxPrice] = useState(300);
+  const [playerLevel, setPlayerLevel] = useState(0);
+  const [freeOnly, setFreeOnly] = useState(false);
+  const [availableOnly, setAvailableOnly] = useState(false);
   const [sortBy, setSortBy] = useState("soonest");
+  const [sheetOpen, setSheetOpen] = useState(false);
 
   useEffect(() => { fetchEvents(); }, []);
   useEffect(() => { if (user) fetchRegistrations(); }, [user]);
   useEffect(() => {
     import("@/lib/seo").then(({ setSeo }) => setSeo({
-      title: "Tennis & Padel Events, Clinics, Camps & Tournaments – ACE Coach",
-      description: "Join coach-led tennis and padel events: clinics, camps, masterclasses, tournaments and group sessions worldwide.",
+      title: "Tennis & Padel Clinics, Camps & Classes | Hi Volley",
+      description: "Find coach-led clinics, camps, private lessons, academy programmes, tournaments and online classes for tennis and padel — filter by level, city, date and price.",
       path: "/events",
     }));
   }, []);
@@ -91,17 +107,24 @@ const Events = () => {
       .order("start_datetime");
 
     if (data && data.length > 0) {
-      const coachIds = [...new Set(data.map(e => e.coach_id))];
-      const { data: profiles } = await supabase
-        .from("profiles")
-        .select("user_id, full_name, avatar_url")
-        .in("user_id", coachIds);
-      const profileMap = new Map((profiles || []).map(p => [p.user_id, p]));
-      setEvents(data.map(e => ({
-        ...e,
-        coach_name: profileMap.get(e.coach_id)?.full_name || "Coach",
-        coach_avatar: profileMap.get(e.coach_id)?.avatar_url || null,
-      })));
+      const coachIds = [...new Set(data.map((e) => e.coach_id))];
+      const clubIds = [...new Set(data.map((e) => e.club_id).filter(Boolean))] as string[];
+      const [{ data: profiles }, { data: academies }] = await Promise.all([
+        supabase.from("profiles").select("user_id, full_name, avatar_url").in("user_id", coachIds),
+        clubIds.length
+          ? supabase.from("academies").select("club_id, name").in("club_id", clubIds)
+          : Promise.resolve({ data: [] as { club_id: string; name: string }[] }),
+      ]);
+      const profileMap = new Map((profiles || []).map((p) => [p.user_id, p]));
+      const academyMap = new Map((academies || []).map((a) => [a.club_id, a.name]));
+      setEvents(
+        data.map((e) => ({
+          ...e,
+          coach_name: profileMap.get(e.coach_id)?.full_name || "Coach",
+          coach_avatar: profileMap.get(e.coach_id)?.avatar_url || null,
+          academy_name: e.club_id ? academyMap.get(e.club_id) || null : null,
+        })) as unknown as EventRow[],
+      );
     } else {
       setEvents([]);
     }
@@ -115,14 +138,13 @@ const Events = () => {
       .select("event_id")
       .eq("player_id", user.id)
       .eq("status", "registered");
-    setRegisteredIds(new Set((data || []).map(r => r.event_id)));
+    setRegisteredIds(new Set((data || []).map((r) => r.event_id)));
   };
 
   const handleRegister = async (event: EventRow) => {
-    if (!user) { navigate("/login?redirect=/events"); return; }
+    if (!user) { navigate(`/login?redirect=/class/${event.id}`); return; }
     if (registeredIds.has(event.id)) return;
     setRegistering(event.id);
-
     const isFree = Number(event.price_per_person) === 0;
     const { error } = await supabase.from("event_registrations").insert({
       event_id: event.id,
@@ -131,142 +153,192 @@ const Events = () => {
       payment_status: isFree ? "paid" : "pending",
       amount_paid: isFree ? 0 : Number(event.price_per_person),
     });
-
     if (error) {
-      toast.error(error.message.includes("duplicate") ? "Already registered!" : "Registration failed");
+      toast.error(error.message.includes("duplicate") ? "Already registered!" : error.message);
       setRegistering(null);
       return;
     }
-
-    // Award XP + raffle ticket
     await Promise.all([
       supabase.rpc("award_xp", { p_user_id: user.id, p_amount: 30, p_event_type: "event_registration", p_description: `Registered for ${event.title}` }),
       supabase.rpc("increment_raffle_tickets", { p_user_id: user.id }),
-      supabase.from("notifications").insert({ user_id: user.id, title: `You're registered for ${event.title}!`, body: `See you there!`, link: "/events" }),
-      supabase.from("notifications").insert({ user_id: event.coach_id, title: `New registration for ${event.title}`, body: "A player just registered for your event", link: "/coach/events" }),
     ]);
-
-    setRegisteredIds(prev => new Set([...prev, event.id]));
-    toast.success("You're registered! See you there!");
+    setRegisteredIds((prev) => new Set([...prev, event.id]));
+    toast.success("You're registered! See you on court.");
     setRegistering(null);
     fetchEvents();
   };
 
-  const handleCancel = async (eventId: string) => {
-    if (!user) return;
-    await supabase.from("event_registrations")
-      .update({ status: "cancelled" })
-      .eq("event_id", eventId)
-      .eq("player_id", user.id);
-    setRegisteredIds(prev => { const s = new Set(prev); s.delete(eventId); return s; });
-    toast.success("Registration cancelled");
-    fetchEvents();
+  const resetFilters = () => {
+    setSport("All"); setAge("All"); setVenue("All"); setWhen("any");
+    setMaxPrice(300); setPlayerLevel(0); setFreeOnly(false); setAvailableOnly(false);
+    setSortBy("soonest");
   };
+
+  const activeCount = [
+    sport !== "All", age !== "All", venue !== "All", when !== "any",
+    maxPrice < 300, playerLevel > 0, freeOnly, availableOnly,
+  ].filter(Boolean).length;
 
   const filtered = useMemo(() => {
     let result = [...events];
-    if (citySearch) result = result.filter(e => e.location_city?.toLowerCase().includes(citySearch.toLowerCase()));
-    if (typeFilter !== "All") result = result.filter(e => e.event_type === typeFilter);
-    if (sportFilter !== "All") result = result.filter(e => e.sport === sportFilter.toLowerCase() || e.sport === "both");
-    if (levelFilter !== "All") result = result.filter(e => e.skill_level === levelFilter.toLowerCase() || e.skill_level === "all");
-    if (ageFilter !== "All") result = result.filter(e => e.age_group === ageFilter.toLowerCase() || e.age_group === "all");
+    const q = search.trim().toLowerCase();
+    if (q) {
+      result = result.filter((e) =>
+        [e.title, e.location_city, e.location_name, e.coach_name, e.academy_name, e.description]
+          .some((f) => f?.toLowerCase().includes(q)),
+      );
+    }
+    if (format_ === "online") result = result.filter((e) => e.is_online);
+    else if (format_ === "academy") result = result.filter((e) => !!e.academy_name);
+    else if (format_ !== "all") result = result.filter((e) => e.event_type === format_);
+
+    if (sport !== "All") result = result.filter((e) => e.sport === sport.toLowerCase() || e.sport === "both");
+    if (age !== "All") result = result.filter((e) => e.age_group === age || e.age_group === "all");
+    if (venue === "Online") result = result.filter((e) => e.is_online);
+    if (venue === "Indoor / on court") result = result.filter((e) => !e.is_online);
+    if (when !== "any") {
+      const until = addDays(new Date(), Number(when));
+      result = result.filter((e) => new Date(e.start_datetime) <= until);
+    }
+    if (freeOnly) result = result.filter((e) => Number(e.price_per_person) === 0);
+    else if (maxPrice < 300) result = result.filter((e) => Number(e.price_per_person) <= maxPrice);
+    if (playerLevel > 0) {
+      result = result.filter(
+        (e) => (e.level_min == null || playerLevel >= Number(e.level_min)) &&
+               (e.level_max == null || playerLevel <= Number(e.level_max)),
+      );
+    }
+    if (availableOnly) {
+      result = result.filter((e) => e.status !== "full" && (!e.max_participants || e.current_participants < e.max_participants));
+    }
+
     switch (sortBy) {
       case "cheapest": result.sort((a, b) => Number(a.price_per_person) - Number(b.price_per_person)); break;
       case "popular": result.sort((a, b) => b.current_participants - a.current_participants); break;
+      case "spots":
+        result.sort((a, b) => {
+          const s = (e: EventRow) => (e.max_participants ? e.max_participants - e.current_participants : 99);
+          return s(a) - s(b);
+        });
+        break;
     }
     return result;
-  }, [events, citySearch, typeFilter, sportFilter, levelFilter, ageFilter, sortBy]);
+  }, [events, search, format_, sport, age, venue, when, maxPrice, playerLevel, freeOnly, availableOnly, sortBy]);
 
   const featured = useMemo(() => {
     const soon = addDays(new Date(), 7);
-    return events.filter(e => e.current_participants > 0 && new Date(e.start_datetime) <= soon);
+    return events.filter((e) => new Date(e.start_datetime) <= soon).slice(0, 8);
   }, [events]);
 
-  const spotsLeft = (e: EventRow) => e.max_participants ? e.max_participants - e.current_participants : null;
-
   const EventCard = ({ event, large = false }: { event: EventRow; large?: boolean }) => {
-    const spots = spotsLeft(event);
+    const spots = event.max_participants ? event.max_participants - event.current_participants : null;
     const isRegistered = registeredIds.has(event.id);
-    const isFull = event.status === "full";
+    const isFull = event.status === "full" || spots === 0;
     const isFree = Number(event.price_per_person) === 0;
-    const gradient = EVENT_TYPE_GRADIENTS[event.event_type] || EVENT_TYPE_GRADIENTS.clinic;
+    const meta = TYPE_META[event.event_type] || TYPE_META.clinic;
+    const TypeIcon = meta.icon;
+    const lo = lvl(event.level_min);
+    const hi = lvl(event.level_max);
 
     return (
       <motion.div
         initial={false}
-        animate={{ opacity: 1, y: 0 }}
-        className={`bg-card border border-border rounded-2xl overflow-hidden hover:border-primary/40 transition-all ${large ? "min-w-[300px] shrink-0" : ""}`}
+        className={`group overflow-hidden rounded-2xl border border-border bg-card transition-all hover:border-primary/40 ${large ? "min-w-[300px] shrink-0" : ""}`}
       >
-        {/* Cover gradient */}
-        <div className={`h-28 bg-gradient-to-br ${gradient} relative flex items-end p-4`}>
-          <span className={`absolute top-3 left-3 px-2 py-0.5 rounded-full text-[10px] font-display tracking-wider ${EVENT_TYPE_COLORS[event.event_type] || EVENT_TYPE_COLORS.clinic}`}>
-            {formatEventType(event.event_type).toUpperCase()}
-          </span>
-          <span className="absolute top-3 right-3 px-2 py-0.5 rounded-full bg-card/50 backdrop-blur text-[10px] font-display tracking-wider text-foreground">
-            {event.sport.toUpperCase()}
-          </span>
-        </div>
+        <Link to={`/class/${event.id}`} className="block">
+          <div className={`relative flex h-28 items-end bg-gradient-to-br ${meta.gradient} p-4`}>
+            {event.cover_image_url && (
+              <img src={event.cover_image_url} alt={event.title} loading="lazy" className="absolute inset-0 h-full w-full object-cover opacity-70" />
+            )}
+            <span className={`absolute left-3 top-3 flex items-center gap-1 rounded-full px-2 py-0.5 font-display text-[10px] tracking-wider ${meta.color}`}>
+              <TypeIcon size={10} /> {fmtType(event.event_type).toUpperCase()}
+            </span>
+            <span className="absolute right-3 top-3 rounded-full bg-card/60 px-2 py-0.5 font-display text-[10px] tracking-wider text-foreground backdrop-blur">
+              {event.sport.toUpperCase()}
+            </span>
+            {event.is_online && (
+              <span className="absolute bottom-3 left-3 flex items-center gap-1 rounded-full bg-card/60 px-2 py-0.5 font-display text-[10px] tracking-wider text-sky-300 backdrop-blur">
+                <Globe size={10} /> ONLINE
+              </span>
+            )}
+          </div>
+        </Link>
 
-        <div className="p-4 space-y-3">
-          <h3 className="font-display text-base tracking-wider text-foreground line-clamp-2">{event.title}</h3>
+        <div className="space-y-3 p-4">
+          <Link to={`/class/${event.id}`}>
+            <h3 className="line-clamp-2 font-display text-base tracking-wider text-foreground group-hover:text-primary">{event.title}</h3>
+          </Link>
 
           <div className="flex items-center gap-2">
             {event.coach_avatar ? (
-              <img src={event.coach_avatar} className="w-6 h-6 rounded-full object-cover" alt="" />
+              <img src={event.coach_avatar} alt="" className="h-6 w-6 rounded-full object-cover" />
             ) : (
-              <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center">
-                <span className="text-[10px] font-display text-primary">{event.coach_name?.charAt(0)}</span>
+              <div className="grid h-6 w-6 place-items-center rounded-full bg-primary/20">
+                <span className="font-display text-[10px] text-primary">{event.coach_name?.charAt(0)}</span>
               </div>
             )}
-            <span className="font-body text-xs text-muted-foreground">{event.coach_name}</span>
+            <span className="truncate font-body text-xs text-muted-foreground">
+              {event.coach_name}{event.academy_name ? ` · ${event.academy_name}` : ""}
+            </span>
           </div>
 
           <div className="space-y-1.5">
-            <div className="flex items-center gap-2 text-xs font-body text-muted-foreground">
-              <Calendar size={12} />
-              <span>{format(new Date(event.start_datetime), "EEE, d MMM · HH:mm")} – {format(new Date(event.end_datetime), "HH:mm")}</span>
-            </div>
-            <div className="flex items-center gap-2 text-xs font-body text-muted-foreground">
-              <MapPin size={12} />
-              <span>{event.location_city || "TBA"}{event.is_online && <span className="ml-1 text-primary">· Online</span>}</span>
-            </div>
+            <p className="flex items-center gap-2 font-body text-xs text-muted-foreground">
+              <Calendar size={12} /> {format(new Date(event.start_datetime), "EEE, d MMM · HH:mm")} – {format(new Date(event.end_datetime), "HH:mm")}
+            </p>
+            <p className="flex items-center gap-2 font-body text-xs text-muted-foreground">
+              <MapPin size={12} /> {event.is_online ? "Online session" : event.location_name || event.location_city || "TBA"}
+            </p>
+            <p className="flex items-center gap-2 font-body text-xs text-muted-foreground">
+              <Users size={12} /> {event.current_participants}{event.max_participants ? `/${event.max_participants}` : ""} players
+              {event.min_participants ? ` · from ${event.min_participants}` : ""}
+            </p>
           </div>
 
           <div className="flex flex-wrap gap-1.5">
+            {(lo || hi) && (
+              <span className="rounded-full bg-secondary px-2 py-0.5 font-display text-[10px] tracking-wider text-muted-foreground">
+                LEVEL {lo || "0"}–{hi || "10"}
+              </span>
+            )}
             {event.age_group !== "all" && (
-              <span className="px-2 py-0.5 rounded-full bg-secondary text-[10px] font-display tracking-wider text-muted-foreground">{event.age_group.toUpperCase()}</span>
+              <span className="rounded-full bg-secondary px-2 py-0.5 font-display text-[10px] tracking-wider text-muted-foreground">{event.age_group.toUpperCase()}</span>
             )}
             {event.skill_level !== "all" && (
-              <span className="px-2 py-0.5 rounded-full bg-secondary text-[10px] font-display tracking-wider text-muted-foreground">{event.skill_level.toUpperCase()}</span>
+              <span className="rounded-full bg-secondary px-2 py-0.5 font-display text-[10px] tracking-wider text-muted-foreground">{event.skill_level.toUpperCase()}</span>
             )}
           </div>
 
-          <div className="flex items-center justify-between pt-2 border-t border-border">
+          <div className="flex items-center justify-between border-t border-border pt-2">
             <div>
-              {spots !== null && spots < 5 && !isFull && (
-                <p className="text-[10px] font-display text-amber-400">{spots} spots left</p>
-              )}
-              {isFull && <p className="text-[10px] font-display text-red-400">FULL</p>}
-              <p className={`font-display text-lg ${isFree ? "text-emerald-400" : "text-foreground"}`}>
+              {spots !== null && spots > 0 && spots < 5 && <p className="font-display text-[10px] text-amber-500">{spots} spots left</p>}
+              {isFull && <p className="font-display text-[10px] text-red-400">FULL</p>}
+              <p className={`font-display text-lg ${isFree ? "text-emerald-500" : "text-foreground"}`}>
                 {isFree ? "Free" : `${currencySymbol(event.currency)}${Number(event.price_per_person)}`}
               </p>
             </div>
 
             {isRegistered ? (
-              <div className="flex flex-col items-end gap-1">
-                <span className="px-3 py-1.5 rounded-lg bg-emerald-500/20 text-emerald-400 text-[10px] font-display tracking-wider flex items-center gap-1"><CheckCircle size={10} /> REGISTERED</span>
-                <button onClick={() => handleCancel(event.id)} className="text-[9px] font-body text-muted-foreground hover:text-destructive transition-colors">Cancel</button>
-              </div>
+              <Link to={`/class/${event.id}`} className="flex items-center gap-1 rounded-lg bg-emerald-500/20 px-3 py-1.5 font-display text-[10px] tracking-wider text-emerald-500">
+                <CheckCircle size={10} /> REGISTERED
+              </Link>
             ) : isFull ? (
-              <span className="px-3 py-1.5 rounded-lg bg-muted text-muted-foreground text-[10px] font-display tracking-wider">FULL</span>
+              <Link to={`/class/${event.id}`} className="rounded-lg bg-muted px-3 py-1.5 font-display text-[10px] tracking-wider text-muted-foreground">
+                VIEW
+              </Link>
             ) : (
-              <button
-                onClick={() => handleRegister(event)}
-                disabled={registering === event.id}
-                className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-xs font-display tracking-wider hover:bg-primary/90 transition-colors disabled:opacity-50"
-              >
-                {registering === event.id ? "..." : "REGISTER"}
-              </button>
+              <div className="flex items-center gap-1.5">
+                <Link to={`/class/${event.id}`} className="rounded-lg bg-secondary px-2.5 py-2 font-display text-[10px] tracking-wider text-foreground">
+                  DETAILS
+                </Link>
+                <button
+                  onClick={() => handleRegister(event)}
+                  disabled={registering === event.id}
+                  className="rounded-lg bg-primary px-3 py-2 font-display text-[10px] tracking-wider text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-50"
+                >
+                  {registering === event.id ? "…" : "JOIN"}
+                </button>
+              </div>
             )}
           </div>
         </div>
@@ -274,105 +346,203 @@ const Events = () => {
     );
   };
 
+  const chip = (active: boolean) =>
+    `px-3 py-1.5 rounded-full font-display text-[10px] tracking-wider border transition-colors ${
+      active ? "bg-primary text-primary-foreground border-primary" : "bg-secondary text-muted-foreground border-border"
+    }`;
+
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      {/* Nav */}
+    <div className="min-h-screen bg-background pb-28 text-foreground">
       <PublicHeader />
 
-      {/* Hero */}
-      <div className="bg-card border-b border-border py-12 px-4 text-center relative overflow-hidden">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
-        <h1 className="font-display text-3xl md:text-5xl text-foreground mb-3 relative">UPCOMING EVENTS</h1>
-        <p className="font-body text-sm md:text-base text-muted-foreground max-w-2xl mx-auto relative">
-          Clinics, camps and group sessions from the world's best tennis and padel coaches
+      <div className="relative overflow-hidden border-b border-border bg-card px-4 py-12 text-center">
+        <div className="absolute left-1/4 top-0 h-96 w-96 rounded-full bg-primary/5 blur-3xl" />
+        <h1 className="relative mb-3 font-display text-3xl text-foreground md:text-5xl">CLASSES & CLINICS</h1>
+        <p className="relative mx-auto max-w-2xl font-body text-sm text-muted-foreground md:text-base">
+          Clinics, camps, private lessons, academy programmes, tournaments and online sessions — filtered to your level.
         </p>
       </div>
 
-      {/* Search & Filters */}
-      <div className="sticky top-16 z-40 bg-background/90 backdrop-blur-xl border-b border-border px-4 py-3">
-        <div className="max-w-7xl mx-auto space-y-3">
-          <div className="flex flex-wrap items-center gap-3">
-            <div className="flex items-center gap-2 bg-card border border-border rounded-xl px-3 py-2 max-w-xs w-full sm:w-auto">
-              <Search size={16} className="text-muted-foreground shrink-0" />
-              <input type="text" value={citySearch} onChange={(e) => setCitySearch(e.target.value)}
-                placeholder="Search by city..."
-                className="flex-1 bg-transparent font-body text-sm text-foreground placeholder:text-muted-foreground focus:outline-none" />
+      {/* Sticky search + format tabs */}
+      <div className="sticky top-16 z-40 border-b border-border bg-background/90 px-4 py-3 backdrop-blur-xl">
+        <div className="mx-auto max-w-7xl space-y-3">
+          <div className="flex items-center gap-2">
+            <div className="flex w-full items-center gap-2 rounded-xl border border-border bg-card px-3 py-2">
+              <Search size={16} className="shrink-0 text-muted-foreground" />
+              <input
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search city, coach, academy or title…"
+                className="flex-1 bg-transparent font-body text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
+              />
+              {search && (
+                <button onClick={() => setSearch("")} aria-label="Clear search"><X size={14} className="text-muted-foreground" /></button>
+              )}
             </div>
-
-            <div className="flex items-center gap-1 bg-card border border-border rounded-xl p-1 overflow-x-auto">
-              {EVENT_TYPES.map(t => (
-                <button key={t} onClick={() => setTypeFilter(t)}
-                  className={`px-2.5 py-1 rounded-lg font-display text-[10px] tracking-wider whitespace-nowrap transition-colors ${typeFilter === t ? "bg-primary text-primary-foreground" : "text-muted-foreground"}`}>
-                  {t === "All" ? "ALL" : formatEventType(t).toUpperCase()}
-                </button>
-              ))}
-            </div>
-
-            <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}
-              className="bg-card border border-border rounded-xl px-3 py-2 font-display text-[10px] tracking-wider text-foreground">
-              {SORT_OPTIONS.map(s => <option key={s.key} value={s.key}>{s.label}</option>)}
-            </select>
+            <button
+              onClick={() => setSheetOpen(true)}
+              className="relative flex shrink-0 items-center gap-1.5 rounded-xl border border-border bg-card px-3.5 py-2.5 font-display text-[10px] tracking-wider text-foreground"
+            >
+              <SlidersHorizontal size={14} /> FILTERS
+              {activeCount > 0 && (
+                <span className="absolute -right-1 -top-1 grid h-4 w-4 place-items-center rounded-full bg-primary font-display text-[9px] text-primary-foreground">
+                  {activeCount}
+                </span>
+              )}
+            </button>
           </div>
 
-          <div className="flex flex-wrap gap-2">
-            <div className="flex items-center gap-1 bg-card border border-border rounded-xl p-1">
-              {SPORT_FILTERS.map(s => (
-                <button key={s} onClick={() => setSportFilter(s)}
-                  className={`px-2.5 py-1 rounded-lg font-display text-[10px] tracking-wider transition-colors ${sportFilter === s ? "bg-primary text-primary-foreground" : "text-muted-foreground"}`}>
-                  {s.toUpperCase()}
-                </button>
-              ))}
-            </div>
-            <div className="flex items-center gap-1 bg-card border border-border rounded-xl p-1">
-              {LEVEL_FILTERS.map(l => (
-                <button key={l} onClick={() => setLevelFilter(l)}
-                  className={`px-2.5 py-1 rounded-lg font-display text-[10px] tracking-wider transition-colors ${levelFilter === l ? "bg-primary text-primary-foreground" : "text-muted-foreground"}`}>
-                  {l.toUpperCase()}
-                </button>
-              ))}
-            </div>
-            <div className="flex items-center gap-1 bg-card border border-border rounded-xl p-1">
-              {AGE_FILTERS.map(a => (
-                <button key={a} onClick={() => setAgeFilter(a)}
-                  className={`px-2.5 py-1 rounded-lg font-display text-[10px] tracking-wider transition-colors ${ageFilter === a ? "bg-primary text-primary-foreground" : "text-muted-foreground"}`}>
-                  {a.toUpperCase()}
-                </button>
-              ))}
-            </div>
+          <div className="scrollbar-none flex gap-1.5 overflow-x-auto">
+            {FORMAT_TABS.map((t) => (
+              <button key={t.key} onClick={() => setFormat(t.key)} className={`${chip(format_ === t.key)} whitespace-nowrap`}>
+                {t.label}
+              </button>
+            ))}
           </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 md:px-6 py-8 space-y-10">
-        {/* Featured */}
-        {featured.length > 0 && (
+      <div className="mx-auto max-w-7xl space-y-10 px-4 py-8 md:px-6">
+        {featured.length > 0 && format_ === "all" && !search && (
           <section>
-            <h2 className="font-display text-sm tracking-wider text-muted-foreground mb-4">HAPPENING SOON</h2>
-            <div className="flex gap-4 overflow-x-auto pb-4 -mx-4 px-4">
-              {featured.map(e => <EventCard key={e.id} event={e} large />)}
+            <h2 className="mb-4 flex items-center gap-2 font-display text-sm tracking-wider text-muted-foreground">
+              <Sparkles size={14} className="text-primary" /> HAPPENING THIS WEEK
+            </h2>
+            <div className="-mx-4 flex gap-4 overflow-x-auto px-4 pb-4">
+              {featured.map((e) => <EventCard key={e.id} event={e} large />)}
             </div>
           </section>
         )}
 
-        {/* Main grid */}
-        {loading ? (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="bg-card border border-border rounded-2xl h-80 animate-pulse" />
-            ))}
+        <section>
+          <div className="mb-4 flex items-center justify-between">
+            <h2 className="font-display text-sm tracking-wider text-muted-foreground">
+              {filtered.length} {filtered.length === 1 ? "CLASS" : "CLASSES"}
+            </h2>
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              className="rounded-xl border border-border bg-card px-3 py-2 font-display text-[10px] tracking-wider text-foreground"
+            >
+              {SORTS.map((s) => <option key={s.key} value={s.key}>{s.label}</option>)}
+            </select>
           </div>
-        ) : filtered.length === 0 ? (
-          <div className="text-center py-20">
-            <Calendar size={48} className="mx-auto text-muted-foreground mb-4" />
-            <p className="font-display text-lg text-foreground">No upcoming events yet</p>
-            <p className="font-body text-sm text-muted-foreground mt-1">Check back soon!</p>
-          </div>
-        ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filtered.map(e => <EventCard key={e.id} event={e} />)}
-          </div>
-        )}
+
+          {loading ? (
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <div key={i} className="h-80 animate-pulse rounded-2xl border border-border bg-card" />
+              ))}
+            </div>
+          ) : filtered.length === 0 ? (
+            <div className="py-20 text-center">
+              <Calendar size={48} className="mx-auto mb-4 text-muted-foreground" />
+              <p className="font-display text-lg text-foreground">Nothing matches those filters</p>
+              <button onClick={resetFilters} className="mt-3 inline-flex items-center gap-1.5 font-display text-[11px] tracking-wider text-primary">
+                <RotateCcw size={12} /> RESET FILTERS
+              </button>
+            </div>
+          ) : (
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {filtered.map((e) => <EventCard key={e.id} event={e} />)}
+            </div>
+          )}
+        </section>
       </div>
+
+      {/* Filter bottom sheet */}
+      <AnimatePresence>
+        {sheetOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              onClick={() => setSheetOpen(false)}
+              className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm"
+            />
+            <motion.div
+              initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }}
+              transition={{ type: "spring", damping: 30, stiffness: 300 }}
+              className="fixed inset-x-0 bottom-0 z-50 max-h-[85vh] overflow-y-auto rounded-t-3xl border-t border-border bg-card p-5"
+            >
+              <div className="mx-auto max-w-2xl space-y-5">
+                <div className="flex items-center justify-between">
+                  <h2 className="font-display text-base tracking-wider text-foreground">FILTERS</h2>
+                  <button onClick={() => setSheetOpen(false)} className="text-muted-foreground hover:text-foreground"><X size={18} /></button>
+                </div>
+
+                <div>
+                  <p className="mb-2 font-display text-[10px] tracking-wider text-muted-foreground">SPORT</p>
+                  <div className="flex flex-wrap gap-2">
+                    {SPORTS.map((s) => <button key={s} onClick={() => setSport(s)} className={chip(sport === s)}>{s.toUpperCase()}</button>)}
+                  </div>
+                </div>
+
+                <div>
+                  <p className="mb-2 font-display text-[10px] tracking-wider text-muted-foreground">WHEN</p>
+                  <div className="flex flex-wrap gap-2">
+                    {WHENS.map((w) => <button key={w.key} onClick={() => setWhen(w.key)} className={chip(when === w.key)}>{w.label.toUpperCase()}</button>)}
+                  </div>
+                </div>
+
+                <div>
+                  <p className="mb-2 font-display text-[10px] tracking-wider text-muted-foreground">SETTING</p>
+                  <div className="flex flex-wrap gap-2">
+                    {VENUES.map((v) => <button key={v} onClick={() => setVenue(v)} className={chip(venue === v)}>{v.toUpperCase()}</button>)}
+                  </div>
+                </div>
+
+                <div>
+                  <p className="mb-2 font-display text-[10px] tracking-wider text-muted-foreground">AGE GROUP</p>
+                  <div className="flex flex-wrap gap-2">
+                    {AGES.map((a) => <button key={a} onClick={() => setAge(a)} className={chip(age === a)}>{a.toUpperCase()}</button>)}
+                  </div>
+                </div>
+
+                <div>
+                  <div className="mb-2 flex items-center justify-between">
+                    <p className="font-display text-[10px] tracking-wider text-muted-foreground">MY LEVEL</p>
+                    <span className="font-body text-xs text-foreground">{playerLevel === 0 ? "Any" : playerLevel.toFixed(1)}</span>
+                  </div>
+                  <input
+                    type="range" min={0} max={7} step={0.25}
+                    value={playerLevel} onChange={(e) => setPlayerLevel(Number(e.target.value))}
+                    aria-label="My level"
+                    className="w-full accent-primary"
+                  />
+                  <p className="mt-1 font-body text-[11px] text-muted-foreground">Only shows classes that accept your level.</p>
+                </div>
+
+                <div>
+                  <div className="mb-2 flex items-center justify-between">
+                    <p className="font-display text-[10px] tracking-wider text-muted-foreground">MAX PRICE</p>
+                    <span className="font-body text-xs text-foreground">{maxPrice >= 300 ? "Any" : `€${maxPrice}`}</span>
+                  </div>
+                  <input
+                    type="range" min={0} max={300} step={5}
+                    value={maxPrice} onChange={(e) => setMaxPrice(Number(e.target.value))}
+                    disabled={freeOnly} aria-label="Max price"
+                    className="w-full accent-primary disabled:opacity-40"
+                  />
+                </div>
+
+                <div className="flex flex-wrap gap-2">
+                  <button onClick={() => setFreeOnly((v) => !v)} className={chip(freeOnly)}>FREE ONLY</button>
+                  <button onClick={() => setAvailableOnly((v) => !v)} className={chip(availableOnly)}>SPOTS AVAILABLE</button>
+                </div>
+
+                <div className="flex gap-2 pt-1">
+                  <button onClick={resetFilters} className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-secondary py-3 font-display text-[11px] tracking-wider text-foreground">
+                    <RotateCcw size={13} /> RESET
+                  </button>
+                  <button onClick={() => setSheetOpen(false)} className="flex flex-[2] items-center justify-center gap-1.5 rounded-xl bg-primary py-3 font-display text-[11px] tracking-wider text-primary-foreground">
+                    SHOW {filtered.length} CLASSES <ChevronRight size={13} />
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
 
       <PublicBottomNav />
     </div>
