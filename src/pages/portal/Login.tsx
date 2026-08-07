@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { motion } from "framer-motion";
-import { Eye, EyeOff, ArrowLeft, Circle, Dumbbell, Crown, Building2 } from "lucide-react";
+import { Eye, EyeOff, ArrowLeft } from "lucide-react";
 import SocialAuthButtons from "@/components/auth/SocialAuthButtons";
 import { lovable } from "@/integrations/lovable/index";
 import { claimPendingInvite, getPendingInvite } from "@/lib/coachInvite";
@@ -89,17 +89,6 @@ const Login = () => {
     // Redirect handled by useEffect when AuthContext picks up the new session.
   };
 
-  const handleQuickLogin = async (email: string, _redirect?: string) => {
-    setError("");
-    setLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password: "AceAcademy2026!",
-    });
-    setLoading(false);
-    if (error) setError(error.message);
-    // Redirect handled by useEffect when AuthContext picks up the new session.
-  };
 
   const handleRegister = async (data: RegisterForm) => {
     setError("");
@@ -283,60 +272,6 @@ const Login = () => {
         />
 
 
-        {/* Quick Login Cards */}
-        <div className="mt-8 pt-6 border-t border-border">
-          <p className="text-muted-foreground text-xs font-body mb-3 text-center uppercase tracking-wider">Quick Access — Demo Accounts</p>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-            <button
-              type="button"
-              onClick={() => handleQuickLogin("player.anna@the-ace.academy", "/dashboard")}
-              disabled={loading}
-              className="flex flex-col items-center gap-1.5 p-3 rounded-xl border border-border bg-card hover:border-primary/50 hover:bg-primary/5 transition-all disabled:opacity-50"
-            >
-              <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
-                <Circle size={18} className="text-primary" />
-              </div>
-              <span className="font-display text-[10px] tracking-wider text-foreground">PLAYER</span>
-              <span className="text-[9px] font-body text-muted-foreground">Anna Müller</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => handleQuickLogin("coach.francisco@the-ace.academy", "/coach")}
-              disabled={loading}
-              className="flex flex-col items-center gap-1.5 p-3 rounded-xl border border-border bg-card hover:border-primary/50 hover:bg-primary/5 transition-all disabled:opacity-50"
-            >
-              <div className="w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center">
-                <Dumbbell size={18} className="text-accent-foreground" />
-              </div>
-              <span className="font-display text-[10px] tracking-wider text-foreground">COACH</span>
-              <span className="text-[9px] font-body text-muted-foreground">Francisco López</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => handleQuickLogin("club.manager@the-ace.academy", "/club")}
-              disabled={loading}
-              className="flex flex-col items-center gap-1.5 p-3 rounded-xl border border-border bg-card hover:border-primary/50 hover:bg-primary/5 transition-all disabled:opacity-50"
-            >
-              <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center">
-                <Building2 size={18} className="text-blue-400" />
-              </div>
-              <span className="font-display text-[10px] tracking-wider text-foreground">CLUB</span>
-              <span className="text-[9px] font-body text-muted-foreground">Club Manager</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => handleQuickLogin("admin@the-ace.academy", "/founders")}
-              disabled={loading}
-              className="flex flex-col items-center gap-1.5 p-3 rounded-xl border border-border bg-card hover:border-primary/50 hover:bg-primary/5 transition-all disabled:opacity-50"
-            >
-              <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center">
-                <Crown size={18} className="text-amber-400" />
-              </div>
-              <span className="font-display text-[10px] tracking-wider text-foreground">FOUNDER</span>
-              <span className="text-[9px] font-body text-muted-foreground">Admin Ace</span>
-            </button>
-          </div>
-        </div>
       </motion.div>
     </div>
   );
