@@ -2739,6 +2739,16 @@ export type Database = {
           sport: string
         }[]
       }
+      get_coach_join_info: {
+        Args: { _slug: string }
+        Returns: {
+          bio: string
+          coach_avatar: string
+          coach_id: string
+          coach_name: string
+          is_valid: boolean
+        }[]
+      }
       get_user_academies: { Args: { _user_id: string }; Returns: string[] }
       get_user_clubs: { Args: { _user_id: string }; Returns: string[] }
       get_user_role: {
@@ -2776,6 +2786,7 @@ export type Database = {
         Args: { _club_id: string; _user_id: string }
         Returns: boolean
       }
+      join_coach: { Args: { _slug: string }; Returns: string }
       manages_academy_coach: {
         Args: { _coach_id: string; _manager_id: string }
         Returns: boolean
