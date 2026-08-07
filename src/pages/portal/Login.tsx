@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { motion } from "framer-motion";
-import { Eye, EyeOff, ArrowLeft, Circle, Dumbbell, Crown, Building2 } from "lucide-react";
+import { Eye, EyeOff, ArrowLeft } from "lucide-react";
 import SocialAuthButtons from "@/components/auth/SocialAuthButtons";
 import { lovable } from "@/integrations/lovable/index";
 import { claimPendingInvite, getPendingInvite } from "@/lib/coachInvite";
@@ -89,17 +89,6 @@ const Login = () => {
     // Redirect handled by useEffect when AuthContext picks up the new session.
   };
 
-  const handleQuickLogin = async (email: string, _redirect?: string) => {
-    setError("");
-    setLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password: "AceAcademy2026!",
-    });
-    setLoading(false);
-    if (error) setError(error.message);
-    // Redirect handled by useEffect when AuthContext picks up the new session.
-  };
 
   const handleRegister = async (data: RegisterForm) => {
     setError("");
