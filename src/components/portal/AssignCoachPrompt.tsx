@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { assignSelfToCoach, claimPendingInvite, getPendingInvite } from "@/lib/coachInvite";
+import { assignSelfToCoach, claimPendingInvite, getPendingInvite, claimPendingCoach, getPendingCoach } from "@/lib/coachInvite";
 import { toast } from "sonner";
 import { UserCheck } from "lucide-react";
 
