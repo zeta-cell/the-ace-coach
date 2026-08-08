@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useI18n } from "@/lib/i18n";
 import { useAuth } from "@/contexts/AuthContext";
 import { useFeatureFlags } from "@/hooks/useFeatureFlags";
+import { BrandLogo } from "@/components/BrandLogo";
 
 const roleHome: Record<string, string> = {
   player: "/dashboard",
