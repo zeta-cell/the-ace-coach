@@ -14,6 +14,7 @@ const CoachSignupLinkCard = () => {
   const { user } = useAuth();
   const [slug, setSlug] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const [showQr, setShowQr] = useState(false);
 
   useEffect(() => {
     if (!user) return;
