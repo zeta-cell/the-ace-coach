@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { Link2, Copy, Check, Share2 } from "lucide-react";
+import { Link2, Copy, Check, Share2, QrCode, Download } from "lucide-react";
 import { toast } from "sonner";
+import { QRCodeCanvas } from "qrcode.react";
 
 /**
  * The coach's permanent public sign-up link. Anyone who signs up through it
