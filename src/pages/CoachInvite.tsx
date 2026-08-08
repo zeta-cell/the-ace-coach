@@ -37,19 +37,24 @@ const CoachInvite = () => {
 
   // If a session already exists (e.g. after returning from Google/Apple), claim + continue.
   useEffect(() => {
+    const proceed = async (userId: string) => {
+      await claimPendingInvite();
+      const { data } = await supabase
+        .from("profiles")
+        .select("onboarding_completed")
+        .eq("user_id", userId)
+        .maybeSingle();
+      navigate(data?.onboarding_completed ? "/profile" : "/welcome", { replace: true });
+    };
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => {
       if (session?.user) {
-        setTimeout(async () => {
-          await claimPendingInvite();
-          navigate("/dashboard", { replace: true });
-        }, 0);
+        const uid = session.user.id;
+        setTimeout(() => { proceed(uid); }, 0);
       }
     });
     supabase.auth.getSession().then(async ({ data }) => {
-      if (data.session?.user) {
-        await claimPendingInvite();
-        navigate("/dashboard", { replace: true });
-      }
+      if (data.session?.user) await proceed(data.session.user.id);
     });
     return () => subscription.unsubscribe();
   }, [navigate]);
