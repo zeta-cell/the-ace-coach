@@ -144,6 +144,12 @@ const CoachPlayers = () => {
               <UserPlus size={15} /> INVITE
             </button>
             <Link
+              to="/coach/players/bulk"
+              className="inline-flex flex-1 items-center justify-center gap-1.5 bg-secondary text-foreground font-display text-[11px] sm:text-xs tracking-wider px-3 py-2.5 rounded-lg hover:bg-secondary/80 transition-colors whitespace-nowrap sm:flex-none"
+            >
+              <UserPlus size={15} /> GROUP
+            </Link>
+            <Link
               to="/coach/players/new"
               className="inline-flex flex-1 items-center justify-center gap-1.5 bg-primary text-primary-foreground font-display text-[11px] sm:text-xs tracking-wider px-3 sm:px-4 py-2.5 rounded-lg hover:bg-primary/90 transition-colors whitespace-nowrap sm:flex-none"
             >
