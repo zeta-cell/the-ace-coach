@@ -66,6 +66,7 @@ const playerNav = [
 const coachNav = [
   { label: "Training Center", icon: LayoutDashboard, href: "/coach" },
   { label: "Players", icon: Users, href: "/coach/players" },
+  { label: "My QR Code", icon: QrCode, href: "/coach/players?qr=1" },
   { label: "Library", icon: BookOpen, href: "/coach/library" },
   { label: "Videos", icon: Video, href: "/coach/videos" },
   { label: "Calendar", icon: CalendarDays, href: "/coach/calendar" },
