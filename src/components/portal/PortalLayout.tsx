@@ -19,6 +19,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useFeatureFlags } from "@/hooks/useFeatureFlags";
 import NotificationBell from "@/components/portal/NotificationBell";
 import QuickAddTrainingDrawer from "@/components/portal/QuickAddTrainingDrawer";
+import { BrandLogo, BrandIcon } from "@/components/BrandLogo";
+
 
 /** Nav entries only render when their feature flag is on (admins always see everything). */
 const NAV_FEATURE: Record<string, string> = {
@@ -125,9 +127,10 @@ const PortalLayout = ({ children }: { children: React.ReactNode }) => {
   const NavContent = () => (
     <div className="flex flex-col h-full">
       <div className="p-4 border-b border-border flex items-center gap-3">
-        <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center font-display text-sm text-primary-foreground">CA</div>
-        {sidebarOpen && <span className="font-display text-lg text-foreground tracking-wide">PORTAL</span>}
+        <BrandIcon className="h-8 w-8" />
+        {sidebarOpen && <BrandLogo className="h-5" />}
       </div>
+
 
       <nav className="flex-1 p-3 space-y-1">
         {navItems.map((item) => {
