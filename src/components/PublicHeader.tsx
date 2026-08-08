@@ -62,11 +62,10 @@ const PublicHeader = () => {
             {menuOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
 
-          <Link to="/" className="hidden md:flex items-center gap-1.5 font-display text-2xl tracking-wider text-foreground shrink-0">
-            <span className="text-primary">Hi</span>
-            <span>Volley</span>
-            <span className="inline-block w-2 h-2 rounded-full bg-mustard" aria-hidden />
+          <Link to="/" className="hidden md:flex items-center shrink-0">
+            <BrandLogo className="h-7" />
           </Link>
+
           <div className="hidden md:flex items-center gap-6">
             {NAV_LINKS.map(link => (
               link.active ? (
