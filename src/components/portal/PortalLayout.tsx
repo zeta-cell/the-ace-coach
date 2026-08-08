@@ -257,7 +257,7 @@ const PortalLayout = ({ children }: { children: React.ReactNode }) => {
       </div>
 
       {/* Main content */}
-      <main className="flex-1 overflow-y-auto pb-20 md:pb-0">
+      <main className="flex-1 min-w-0 overflow-x-hidden overflow-y-auto pb-20 md:pb-0">
         {/* Top bar */}
         <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-xl border-b border-border px-4 md:px-6 h-14 flex items-center justify-between">
           <button className="md:hidden" onClick={() => setMobileOpen(!mobileOpen)}>
