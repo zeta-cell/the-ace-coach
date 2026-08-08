@@ -59,9 +59,15 @@ const PublicHeader = () => {
     <>
       <nav className="sticky top-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border">
         <div className="max-w-7xl mx-auto px-4 md:px-6 h-14 flex items-center justify-between">
-          <button className="md:hidden" onClick={() => setMenuOpen(!menuOpen)}>
-            {menuOpen ? <X size={20} /> : <Menu size={20} />}
-          </button>
+          <div className="md:hidden flex items-center gap-2">
+            <button onClick={() => setMenuOpen(!menuOpen)}>
+              {menuOpen ? <X size={20} /> : <Menu size={20} />}
+            </button>
+            <Link to="/" className="flex items-center">
+              <BrandLogo className="h-5" />
+            </Link>
+          </div>
+
 
           <Link to="/" className="hidden md:flex items-center shrink-0">
             <BrandLogo className="h-7" />
@@ -139,11 +145,8 @@ const PublicHeader = () => {
             <div className="absolute inset-0 bg-background/80" onClick={() => setMenuOpen(false)} />
             <div className="relative w-64 h-full bg-card border-r border-border p-4 space-y-1">
               <div className="p-3 mb-4 border-b border-border">
-                <span className="font-display text-xl tracking-wider text-foreground inline-flex items-center gap-1.5">
-                  <span className="text-primary">Hi</span>
-                  <span>Volley</span>
-                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-mustard" aria-hidden />
-                </span>
+                <BrandLogo className="h-6" />
+
               </div>
               {NAV_LINKS.map(link => (
                 link.active ? (
