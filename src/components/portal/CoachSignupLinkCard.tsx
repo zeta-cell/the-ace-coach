@@ -50,6 +50,16 @@ const CoachSignupLinkCard = () => {
     copy();
   };
 
+  const downloadQr = () => {
+    const canvas = document.getElementById("coach-join-qr") as HTMLCanvasElement | null;
+    if (!canvas) return;
+    const link = document.createElement("a");
+    link.download = `hivolley-qr-${slug}.png`;
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+    toast.success("QR code downloaded");
+  };
+
   return (
     <div className="mb-6 rounded-2xl border border-primary/30 bg-card p-4">
       <div className="mb-1 flex items-center gap-2">
@@ -57,8 +67,8 @@ const CoachSignupLinkCard = () => {
         <h2 className="font-display text-sm tracking-wider text-foreground">MY SIGN-UP LINK</h2>
       </div>
       <p className="mb-3 font-body text-xs text-muted-foreground">
-        Share this link with your players. They sign up with email, Google or Apple and land
-        straight in your CRM — ready for their assessment.
+        Share this link or let players scan your QR code. They sign up with email, Google or Apple
+        and land straight in your CRM — ready for their assessment.
       </p>
       <div className="flex items-center gap-2">
         <code className="min-w-0 flex-1 truncate rounded-lg bg-secondary px-3 py-2 font-body text-xs text-foreground">
@@ -67,12 +77,37 @@ const CoachSignupLinkCard = () => {
         <button onClick={copy} className="shrink-0 rounded-lg bg-primary/10 p-2 text-primary hover:bg-primary/20" title="Copy link">
           {copied ? <Check size={16} /> : <Copy size={16} />}
         </button>
+        <button
+          onClick={() => setShowQr((v) => !v)}
+          className={`shrink-0 rounded-lg p-2 transition-colors ${showQr ? "bg-primary text-primary-foreground" : "bg-primary/10 text-primary hover:bg-primary/20"}`}
+          title="Show QR code"
+        >
+          <QrCode size={16} />
+        </button>
         <button onClick={share} className="shrink-0 rounded-lg bg-primary p-2 text-primary-foreground hover:bg-primary/90" title="Share link">
           <Share2 size={16} />
         </button>
       </div>
+
+      {showQr && (
+        <div className="mt-4 flex flex-col items-center gap-3 rounded-xl border border-border bg-background p-4">
+          <div className="rounded-xl bg-white p-3">
+            <QRCodeCanvas id="coach-join-qr" value={url} size={184} level="M" includeMargin={false} />
+          </div>
+          <p className="text-center font-body text-[11px] text-muted-foreground">
+            Players scan this and are instantly connected to you.
+          </p>
+          <button
+            onClick={downloadQr}
+            className="inline-flex items-center gap-2 rounded-lg bg-secondary px-3 py-2 font-display text-xs tracking-wider text-foreground hover:bg-secondary/80"
+          >
+            <Download size={14} /> DOWNLOAD QR
+          </button>
+        </div>
+      )}
     </div>
   );
+
 };
 
 export default CoachSignupLinkCard;
