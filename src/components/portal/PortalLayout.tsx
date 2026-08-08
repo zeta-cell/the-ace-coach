@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   BarChart3, LayoutDashboard, Calendar, BookOpen, Video,
   MessageSquare, User, LogOut, Menu, X, ChevronLeft, ChevronRight,
-  Users, Settings, Home, CreditCard, Link2, CalendarDays, UserCheck, Search, ShoppingBag, Eye, Square, Contact, DollarSign, ToggleLeft, Building2
+  Users, Settings, Home, CreditCard, Link2, CalendarDays, UserCheck, Search, ShoppingBag, Eye, Square, Contact, DollarSign, ToggleLeft, Building2, QrCode
 } from "lucide-react";
 import {
   House as PhHouse,
@@ -66,6 +66,7 @@ const playerNav = [
 const coachNav = [
   { label: "Training Center", icon: LayoutDashboard, href: "/coach" },
   { label: "Players", icon: Users, href: "/coach/players" },
+  { label: "My QR Code", icon: QrCode, href: "/coach/players?qr=1" },
   { label: "Library", icon: BookOpen, href: "/coach/library" },
   { label: "Videos", icon: Video, href: "/coach/videos" },
   { label: "Calendar", icon: CalendarDays, href: "/coach/calendar" },

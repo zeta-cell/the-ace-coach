@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { Link2, Copy, Check, Share2, QrCode, Download } from "lucide-react";
@@ -12,9 +13,20 @@ import { QRCodeCanvas } from "qrcode.react";
  */
 const CoachSignupLinkCard = () => {
   const { user } = useAuth();
+  const [params] = useSearchParams();
+  const wantsQr = params.get("qr") === "1";
+  const cardRef = useRef<HTMLDivElement>(null);
   const [slug, setSlug] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
-  const [showQr, setShowQr] = useState(false);
+  const [showQr, setShowQr] = useState(wantsQr);
+
+  useEffect(() => {
+    if (wantsQr) {
+      setShowQr(true);
+      cardRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [wantsQr, slug]);
+
 
   useEffect(() => {
     if (!user) return;
@@ -61,7 +73,7 @@ const CoachSignupLinkCard = () => {
   };
 
   return (
-    <div className="mb-6 rounded-2xl border border-primary/30 bg-card p-4">
+    <div ref={cardRef} className="mb-6 scroll-mt-20 rounded-2xl border border-primary/30 bg-card p-4">
       <div className="mb-1 flex items-center gap-2">
         <Link2 size={16} className="text-primary" />
         <h2 className="font-display text-sm tracking-wider text-foreground">MY SIGN-UP LINK</h2>
