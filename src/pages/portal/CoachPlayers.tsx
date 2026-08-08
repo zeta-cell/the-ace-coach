@@ -134,23 +134,24 @@ const CoachPlayers = () => {
   return (
     <PortalLayout>
       <div className="max-w-4xl mx-auto">
-        <div className="flex items-center justify-between gap-3 mb-4">
-          <h1 className="font-display text-3xl text-foreground">PLAYERS</h1>
-          <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
+          <h1 className="font-display text-2xl sm:text-3xl text-foreground">PLAYERS</h1>
+          <div className="flex flex-wrap items-center gap-2 min-w-0">
             <button
               onClick={() => setInviteOpen(true)}
-              className="inline-flex items-center gap-2 bg-secondary text-foreground font-display text-xs tracking-wider px-3.5 py-2.5 rounded-lg hover:bg-secondary/80 transition-colors"
+              className="inline-flex shrink-0 items-center gap-1.5 bg-secondary text-foreground font-display text-[11px] sm:text-xs tracking-wider px-3 py-2.5 rounded-lg hover:bg-secondary/80 transition-colors whitespace-nowrap"
             >
               <UserPlus size={15} /> INVITE
             </button>
             <Link
               to="/coach/players/new"
-              className="inline-flex items-center gap-2 bg-primary text-primary-foreground font-display text-xs tracking-wider px-4 py-2.5 rounded-lg hover:bg-primary/90 transition-colors"
+              className="inline-flex shrink-0 items-center gap-1.5 bg-primary text-primary-foreground font-display text-[11px] sm:text-xs tracking-wider px-3 sm:px-4 py-2.5 rounded-lg hover:bg-primary/90 transition-colors whitespace-nowrap"
             >
               <ClipboardCheck size={15} /> NEW PLAYER
             </Link>
           </div>
         </div>
+
 
         <CoachSignupLinkCard />
 
