@@ -73,7 +73,7 @@ const CoachSignupLinkCard = () => {
   };
 
   return (
-    <div className="mb-6 rounded-2xl border border-primary/30 bg-card p-4">
+    <div ref={cardRef} className="mb-6 scroll-mt-20 rounded-2xl border border-primary/30 bg-card p-4">
       <div className="mb-1 flex items-center gap-2">
         <Link2 size={16} className="text-primary" />
         <h2 className="font-display text-sm tracking-wider text-foreground">MY SIGN-UP LINK</h2>
