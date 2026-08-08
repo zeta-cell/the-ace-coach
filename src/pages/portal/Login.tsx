@@ -130,6 +130,18 @@ const Login = () => {
           <span className="font-display text-2xl text-foreground tracking-wide">MEMBER PORTAL</span>
         </div>
 
+        {/* Coming from a coach invite link: explain what happens next */}
+        {getPendingInvite() && (
+          <div className="mb-6 rounded-xl border border-primary/30 bg-primary/10 p-4">
+            <p className="font-display text-xs tracking-wider text-foreground">YOUR COACH INVITED YOU</p>
+            <p className="mt-1.5 font-body text-sm text-muted-foreground">
+              Create your account (or log in) with the email your coach used. You'll be linked to your
+              coach automatically and your assessment — shot scores, notes and development — opens right
+              after you add a photo, your name and your goals.
+            </p>
+          </div>
+        )}
+
         {/* Tab toggle */}
         <div className="flex mb-6 bg-card rounded-lg p-1 border border-border">
           <button

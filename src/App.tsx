@@ -132,6 +132,8 @@ const ClubInvite = lazy(() => import("./pages/ClubInvite"));
 const CoachInvite = lazy(() => import("./pages/CoachInvite"));
 const CoachJoin = lazy(() => import("./pages/CoachJoin"));
 const Crm = lazy(() => import("./pages/portal/Crm"));
+const BulkInvite = lazy(() => import("./pages/portal/BulkInvite"));
+const WelcomeSetup = lazy(() => import("./pages/portal/WelcomeSetup"));
 
 const queryClient = new QueryClient();
 
@@ -185,6 +187,12 @@ const App = () => (
                 <ProtectedRoute><Onboarding /></ProtectedRoute>
               </Suspense>
             } />
+            <Route path="/welcome" element={
+              <Suspense fallback={<PortalLoader />}>
+                <ProtectedRoute><WelcomeSetup /></ProtectedRoute>
+              </Suspense>
+            } />
+
 
             {/* Book a coach */}
             <Route path="/book/:coachSlug" element={
@@ -239,6 +247,11 @@ const App = () => (
             <Route path="/coach/players/new" element={
               <Suspense fallback={<PortalLoader />}>
                 <ProtectedRoute requiredRole="coach"><NewPlayerAssessment /></ProtectedRoute>
+              </Suspense>
+            } />
+            <Route path="/coach/players/bulk" element={
+              <Suspense fallback={<PortalLoader />}>
+                <ProtectedRoute requiredRole="coach"><BulkInvite /></ProtectedRoute>
               </Suspense>
             } />
 

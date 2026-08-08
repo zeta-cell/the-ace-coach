@@ -37,19 +37,24 @@ const CoachInvite = () => {
 
   // If a session already exists (e.g. after returning from Google/Apple), claim + continue.
   useEffect(() => {
+    const proceed = async (userId: string) => {
+      await claimPendingInvite();
+      const { data } = await supabase
+        .from("profiles")
+        .select("onboarding_completed")
+        .eq("user_id", userId)
+        .maybeSingle();
+      navigate(data?.onboarding_completed ? "/profile" : "/welcome", { replace: true });
+    };
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => {
       if (session?.user) {
-        setTimeout(async () => {
-          await claimPendingInvite();
-          navigate("/dashboard", { replace: true });
-        }, 0);
+        const uid = session.user.id;
+        setTimeout(() => { proceed(uid); }, 0);
       }
     });
     supabase.auth.getSession().then(async ({ data }) => {
-      if (data.session?.user) {
-        await claimPendingInvite();
-        navigate("/dashboard", { replace: true });
-      }
+      if (data.session?.user) await proceed(data.session.user.id);
     });
     return () => subscription.unsubscribe();
   }, [navigate]);
@@ -175,14 +180,24 @@ const CoachInvite = () => {
               </p>
             </>
           ) : (
-            <div className="flex items-start gap-2 rounded-xl bg-primary/10 p-3">
-              <Sparkles size={16} className="text-primary mt-0.5" />
-              <p className="font-body text-sm text-foreground">
-                Your training assessment is ready. Create your account to see your player card, scores and development.
-              </p>
+            <div className="space-y-3">
+              <div className="flex items-start gap-2 rounded-xl bg-primary/10 p-3">
+                <Sparkles size={16} className="text-primary mt-0.5" />
+                <p className="font-body text-sm text-foreground">
+                  You trained with {invite.coach_name || "your coach"} on court — now it moves into the app.
+                  Set a password and your coach can publish your personal assessment: 8 shot scores,
+                  notes and your development over time.
+                </p>
+              </div>
+              <ol className="space-y-1.5 font-body text-xs text-muted-foreground">
+                <li>1. Set a password below (email is already filled in).</li>
+                <li>2. Add a photo, your name and your goals — takes a minute.</li>
+                <li>3. Your player card and assessment open right after.</li>
+              </ol>
             </div>
           )}
         </div>
+
 
 
         {error && (

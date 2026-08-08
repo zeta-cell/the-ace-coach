@@ -49,14 +49,15 @@ const ProtectedRoute = ({ children, requiredRole, playerOnly }: ProtectedRoutePr
     return <Navigate to={ROLE_HOME[role]} replace />;
   }
 
-  // Send to onboarding if not completed (players only).
+  // Send to the short welcome setup if not completed (players only).
   if (
     role === "player" &&
     profile &&
     !profile.onboarding_completed &&
-    location.pathname !== "/onboarding"
+    location.pathname !== "/onboarding" &&
+    location.pathname !== "/welcome"
   ) {
-    return <Navigate to="/onboarding" replace />;
+    return <Navigate to="/welcome" replace />;
   }
 
   return <>{children}</>;
