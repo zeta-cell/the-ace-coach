@@ -183,7 +183,6 @@ const App = () => (
 
             {/* Onboarding */}
             <Route path="/onboarding" element={
-            <Route path="/onboarding" element={
               <Suspense fallback={<PortalLoader />}>
                 <ProtectedRoute><Onboarding /></ProtectedRoute>
               </Suspense>
