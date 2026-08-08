@@ -249,6 +249,11 @@ const App = () => (
                 <ProtectedRoute requiredRole="coach"><NewPlayerAssessment /></ProtectedRoute>
               </Suspense>
             } />
+            <Route path="/coach/players/bulk" element={
+              <Suspense fallback={<PortalLoader />}>
+                <ProtectedRoute requiredRole="coach"><BulkInvite /></ProtectedRoute>
+              </Suspense>
+            } />
 
             <Route path="/coach/players/:playerId" element={
               <Suspense fallback={<PortalLoader />}>
