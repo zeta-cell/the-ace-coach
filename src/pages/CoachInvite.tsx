@@ -180,14 +180,24 @@ const CoachInvite = () => {
               </p>
             </>
           ) : (
-            <div className="flex items-start gap-2 rounded-xl bg-primary/10 p-3">
-              <Sparkles size={16} className="text-primary mt-0.5" />
-              <p className="font-body text-sm text-foreground">
-                Your training assessment is ready. Create your account to see your player card, scores and development.
-              </p>
+            <div className="space-y-3">
+              <div className="flex items-start gap-2 rounded-xl bg-primary/10 p-3">
+                <Sparkles size={16} className="text-primary mt-0.5" />
+                <p className="font-body text-sm text-foreground">
+                  You trained with {invite.coach_name || "your coach"} on court — now it moves into the app.
+                  Set a password and your coach can publish your personal assessment: 8 shot scores,
+                  notes and your development over time.
+                </p>
+              </div>
+              <ol className="space-y-1.5 font-body text-xs text-muted-foreground">
+                <li>1. Set a password below (email is already filled in).</li>
+                <li>2. Add a photo, your name and your goals — takes a minute.</li>
+                <li>3. Your player card and assessment open right after.</li>
+              </ol>
             </div>
           )}
         </div>
+
 
 
         {error && (
