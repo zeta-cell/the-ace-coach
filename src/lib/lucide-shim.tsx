@@ -69,6 +69,7 @@ import {
   CurrencyEur,
   Database as PhDatabase,
   DownloadSimple,
+  QrCode as PhQrCode,
   Drop,
   DotsThree,
   DotsSixVertical,
@@ -193,6 +194,7 @@ const wrap = (Ph: PhIcon, opts?: { weight?: "fill" | "regular" | "bold" }) => {
 // Some icons are intentionally left as `regular` weight where the filled
 // version would be too heavy (chevrons, arrows, separators).
 
+export const QrCode = wrap(PhQrCode);
 export const Activity = wrap(Pulse);
 export const AlertCircle = wrap(WarningCircle);
 export const AlertTriangle = wrap(Warning);
