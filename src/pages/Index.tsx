@@ -84,6 +84,12 @@ const Index = () => {
 
         <div className="relative z-10 w-full max-w-5xl mx-auto px-6 pb-6 pt-20 md:pb-[6.18rem] md:pt-40">
           <motion.div initial={false}>
+            <img
+              src={logoWhite.url}
+              alt="Hi Volley"
+              className="h-9 md:h-14 w-auto mb-5 md:mb-8 drop-shadow-[0_2px_18px_hsl(var(--navy)/0.5)]"
+              loading="eager"
+            />
             <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary text-primary-foreground font-body text-xs tracking-wider mb-5 md:mb-10 shadow-lg">
               <MapPin size={14} /> {t("home.badge")}
             </span>
