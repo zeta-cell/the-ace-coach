@@ -280,11 +280,8 @@ const Index = () => {
       {/* Footer */}
       <footer className="border-t border-border py-8 px-6">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-          <span className="font-display text-lg tracking-wider inline-flex items-center gap-1.5">
-            <span className="text-primary">Hi</span>
-            <span>Volley</span>
-            <span className="inline-block w-1.5 h-1.5 rounded-full bg-mustard" aria-hidden />
-          </span>
+          <BrandLogo className="h-6" />
+
           <p className="font-body text-xs text-muted-foreground">
             © {new Date().getFullYear()} Hi Volley. {t("footer.tagline")}
           </p>
