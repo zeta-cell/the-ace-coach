@@ -14,6 +14,8 @@ import { FeatureIconCard } from "@/components/ui/animated-icons/FeatureIconCard"
 import heroPadel from "@/assets/hero-padel.jpg";
 import featuresTennis from "@/assets/features-tennis.jpg";
 import ctaCourt from "@/assets/cta-court.jpg";
+import logoWhite from "@/assets/hi-volley-logo-white.png.asset.json";
+import { BrandIcon, BrandLogo } from "@/components/BrandLogo";
 import { setSeo } from "@/lib/seo";
 import { useI18n } from "@/lib/i18n";
 
