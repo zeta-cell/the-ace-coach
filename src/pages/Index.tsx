@@ -214,8 +214,17 @@ const Index = () => {
         />
         <div className="absolute inset-0 bg-background/70 backdrop-blur-[2px]" />
 
+        <img
+          src={logoWhite.url}
+          alt=""
+          aria-hidden
+          className="pointer-events-none absolute left-1/2 top-1/2 w-[130%] max-w-none -translate-x-1/2 -translate-y-1/2 opacity-[0.06]"
+          loading="lazy"
+        />
+
         <div className="relative z-10 max-w-3xl mx-auto text-center">
           <motion.div initial={false}>
+            <BrandIcon className="h-12 w-12 mx-auto mb-6 shadow-lg" />
             <h2 className="font-display text-4xl md:text-6xl mb-4">
               {t("cta.h2.a")} <span className="text-primary">{t("cta.h2.b")}</span> {t("cta.h2.c")}
             </h2>
