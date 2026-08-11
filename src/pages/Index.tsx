@@ -14,6 +14,8 @@ import { FeatureIconCard } from "@/components/ui/animated-icons/FeatureIconCard"
 import heroPadel from "@/assets/hero-padel.jpg";
 import featuresTennis from "@/assets/features-tennis.jpg";
 import ctaCourt from "@/assets/cta-court.jpg";
+import logoWhite from "@/assets/hi-volley-logo-white.png.asset.json";
+import { BrandIcon, BrandLogo } from "@/components/BrandLogo";
 import { setSeo } from "@/lib/seo";
 import { useI18n } from "@/lib/i18n";
 
@@ -84,6 +86,12 @@ const Index = () => {
 
         <div className="relative z-10 w-full max-w-5xl mx-auto px-6 pb-6 pt-20 md:pb-[6.18rem] md:pt-40">
           <motion.div initial={false}>
+            <img
+              src={logoWhite.url}
+              alt="Hi Volley"
+              className="h-9 md:h-14 w-auto mb-5 md:mb-8 drop-shadow-[0_2px_18px_hsl(var(--navy)/0.5)]"
+              loading="eager"
+            />
             <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary text-primary-foreground font-body text-xs tracking-wider mb-5 md:mb-10 shadow-lg">
               <MapPin size={14} /> {t("home.badge")}
             </span>
@@ -206,8 +214,17 @@ const Index = () => {
         />
         <div className="absolute inset-0 bg-background/70 backdrop-blur-[2px]" />
 
+        <img
+          src={logoWhite.url}
+          alt=""
+          aria-hidden
+          className="pointer-events-none absolute left-1/2 top-1/2 w-[130%] max-w-none -translate-x-1/2 -translate-y-1/2 opacity-[0.06]"
+          loading="lazy"
+        />
+
         <div className="relative z-10 max-w-3xl mx-auto text-center">
           <motion.div initial={false}>
+            <BrandIcon className="h-12 w-12 mx-auto mb-6 shadow-lg" />
             <h2 className="font-display text-4xl md:text-6xl mb-4">
               {t("cta.h2.a")} <span className="text-primary">{t("cta.h2.b")}</span> {t("cta.h2.c")}
             </h2>
@@ -263,11 +280,8 @@ const Index = () => {
       {/* Footer */}
       <footer className="border-t border-border py-8 px-6">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-          <span className="font-display text-lg tracking-wider inline-flex items-center gap-1.5">
-            <span className="text-primary">Hi</span>
-            <span>Volley</span>
-            <span className="inline-block w-1.5 h-1.5 rounded-full bg-mustard" aria-hidden />
-          </span>
+          <BrandLogo className="h-6" />
+
           <p className="font-body text-xs text-muted-foreground">
             © {new Date().getFullYear()} Hi Volley. {t("footer.tagline")}
           </p>
