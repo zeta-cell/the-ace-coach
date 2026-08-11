@@ -153,8 +153,9 @@ const Index = () => {
         <div className="relative z-10 max-w-6xl mx-auto">
           <motion.div
             initial={false}
-            className="text-center mb-16"
+            className="flex flex-col items-center text-center mb-16"
           >
+            <BrandIcon className="h-12 w-12 mb-5 shadow-lg" />
             <h2 className="font-display text-4xl md:text-5xl mb-4">
               {t("features.h2.a")} <span className="text-primary">{t("features.h2.b")}</span>
             </h2>
