@@ -47,8 +47,8 @@ const dict = {
   "features.h2.a": { en: "EVERYTHING YOU", es: "TODO LO QUE" },
   "features.h2.b": { en: "NEED", es: "NECESITAS" },
   "features.lead": {
-    en: "No other platform bundles all these features for racket sports. We're building the future of coaching.",
-    es: "Ninguna otra plataforma reúne todas estas funciones para los deportes de raqueta. Estamos construyendo el futuro del coaching.",
+    en: "No other platform bundles all these features for racket sports. Hi Volley is building the future of coaching.",
+    es: "Ninguna otra plataforma reúne todas estas funciones para los deportes de raqueta. Hi Volley construye el futuro del coaching.",
   },
   "feat.find.title": { en: "FIND YOUR COACH", es: "ENCUENTRA TU PROFESOR" },
   "feat.find.desc": { en: "Search by sport, location, language, availability & price. Tennis or Padel — your perfect match awaits.", es: "Busca por deporte, ubicación, idioma, disponibilidad y precio. Tenis o pádel — tu match perfecto te espera." },
