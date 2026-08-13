@@ -32,6 +32,11 @@ interface ProfileHeroProps {
   avatarUploadUserId?: string | null;
   /** Called after a successful avatar upload */
   onAvatarUploaded?: (url: string) => void;
+  /** Current cover/background image */
+  coverUrl?: string | null;
+  /** Called after a successful cover upload */
+  onCoverUploaded?: (url: string) => void;
+
 
   /** Rounded square avatar instead of circle — used for academies/clubs */
   square?: boolean;
