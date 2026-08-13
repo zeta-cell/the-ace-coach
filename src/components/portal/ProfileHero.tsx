@@ -162,30 +162,71 @@ const ProfileHero = ({
     >
       {/* Cover */}
       <div className="relative h-32 sm:h-40">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary/80 to-mustard" />
-        <div className="absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_20%_20%,hsl(var(--background)/0.5),transparent_55%)]" />
-        {/* court lines motif */}
-        <svg
-          className="absolute inset-0 h-full w-full text-primary-foreground/25"
-          viewBox="0 0 400 160"
-          preserveAspectRatio="none"
-          aria-hidden
-        >
-          <path d="M0 118 H400" stroke="currentColor" strokeWidth="1" fill="none" />
-          <path d="M60 160 L150 40 H400" stroke="currentColor" strokeWidth="1" fill="none" />
-          <path d="M200 160 V40" stroke="currentColor" strokeWidth="1" fill="none" />
-          <circle cx="330" cy="46" r="26" stroke="currentColor" strokeWidth="1" fill="none" />
-        </svg>
+        {shownCover ? (
+          <>
+            <img src={shownCover} alt="" className="absolute inset-0 h-full w-full object-cover" />
+            <div className="absolute inset-0 bg-gradient-to-t from-card/80 via-card/10 to-transparent" />
+          </>
+        ) : (
+          <>
+            <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary/80 to-mustard" />
+            <div className="absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_20%_20%,hsl(var(--background)/0.5),transparent_55%)]" />
+            {/* court lines motif */}
+            <svg
+              className="absolute inset-0 h-full w-full text-primary-foreground/25"
+              viewBox="0 0 400 160"
+              preserveAspectRatio="none"
+              aria-hidden
+            >
+              <path d="M0 118 H400" stroke="currentColor" strokeWidth="1" fill="none" />
+              <path d="M60 160 L150 40 H400" stroke="currentColor" strokeWidth="1" fill="none" />
+              <path d="M200 160 V40" stroke="currentColor" strokeWidth="1" fill="none" />
+              <circle cx="330" cy="46" r="26" stroke="currentColor" strokeWidth="1" fill="none" />
+            </svg>
+          </>
+        )}
 
-        {onEdit && (
-          <button
-            onClick={onEdit}
-            className="absolute top-3 right-3 flex items-center gap-1.5 rounded-full bg-background/85 px-3 py-1.5 font-display text-[10px] tracking-wider text-foreground backdrop-blur-md transition-colors hover:bg-background"
-          >
-            <Pencil size={11} /> EDIT
-          </button>
+        <div className="absolute top-3 right-3 flex items-center gap-2">
+          {canUpload && (
+            <button
+              type="button"
+              onClick={() => coverRef.current?.click()}
+              aria-label="Change background photo"
+              className="flex items-center gap-1.5 rounded-full bg-background/85 px-3 py-1.5 font-display text-[10px] tracking-wider text-foreground backdrop-blur-md transition-colors hover:bg-background"
+            >
+              {coverUploading ? (
+                <Loader2 size={12} className="animate-spin" />
+              ) : (
+                <ImageIcon size={12} />
+              )}
+              COVER
+            </button>
+          )}
+          {onEdit && (
+            <button
+              onClick={onEdit}
+              className="flex items-center gap-1.5 rounded-full bg-background/85 px-3 py-1.5 font-display text-[10px] tracking-wider text-foreground backdrop-blur-md transition-colors hover:bg-background"
+            >
+              <Pencil size={11} /> EDIT
+            </button>
+          )}
+        </div>
+
+        {canUpload && (
+          <input
+            ref={coverRef}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={(e) => {
+              const f = e.target.files?.[0];
+              if (f) handleCoverFile(f);
+              e.target.value = "";
+            }}
+          />
         )}
       </div>
+
 
       {/* Identity */}
       <div className="px-5 pb-5 sm:px-6 sm:pb-6">
