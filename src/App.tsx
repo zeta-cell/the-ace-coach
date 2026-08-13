@@ -234,6 +234,12 @@ const App = () => (
                 <ProtectedRoute playerOnly><Rewards /></ProtectedRoute>
               </Suspense>
             } />
+            <Route path="/my-coach" element={
+              <Suspense fallback={<PortalLoader />}>
+                <ProtectedRoute playerOnly><MyCoach /></ProtectedRoute>
+              </Suspense>
+            } />
+
 
             {/* Coach */}
             <Route path="/coach" element={
