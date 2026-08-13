@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useFeature } from "@/hooks/useFeatureFlags";
-import { CalendarPlus, MessageSquare, UserCheck, Clock } from "lucide-react";
+import { CalendarDays, MessageSquare, UserCheck, Clock } from "lucide-react";
 
 interface CoachEntry {
   coach_id: string;
