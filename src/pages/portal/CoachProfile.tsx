@@ -60,7 +60,7 @@ interface CoachData {
 }
 
 const CoachProfile = () => {
-  const { user, profile, signOut } = useAuth();
+  const { user, profile, signOut, refreshProfile } = useAuth();
   const navigate = useNavigate();
   const [coachData, setCoachData] = useState<CoachData | null>(null);
   const [editOpen, setEditOpen] = useState(false);
@@ -221,7 +221,8 @@ const CoachProfile = () => {
           meta={[coachData?.location_city, coachData?.location_country].filter(Boolean).join(" · ") || coachData?.nationality || null}
           verified={coachData?.is_verified}
           onEdit={() => setEditOpen(true)}
-          onAvatarClick={() => setEditOpen(true)}
+          avatarUploadUserId={user?.id}
+          onAvatarUploaded={() => refreshProfile?.()}
           chips={[
             ...(coachData?.badge_level ? [{ label: coachData.badge_level, tone: "mustard" as const }] : []),
             ...(coachData?.dominant_hand ? [{ label: `${coachData.dominant_hand} hand`, tone: "primary" as const }] : []),

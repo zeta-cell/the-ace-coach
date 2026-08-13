@@ -1,6 +1,9 @@
-import { type ReactNode } from "react";
-import { Camera, Pencil, CheckCircle2 } from "lucide-react";
+import { useRef, useState, type ReactNode } from "react";
+import { Camera, Pencil, CheckCircle2, Loader2 } from "lucide-react";
+import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
+
 
 export interface HeroChip {
   label: string;
@@ -25,6 +28,11 @@ interface ProfileHeroProps {
   verified?: boolean;
   onEdit?: () => void;
   onAvatarClick?: () => void;
+  /** When set, tapping the avatar opens a file picker and uploads to the avatars bucket */
+  avatarUploadUserId?: string | null;
+  /** Called after a successful avatar upload */
+  onAvatarUploaded?: (url: string) => void;
+
   /** Rounded square avatar instead of circle — used for academies/clubs */
   square?: boolean;
   children?: ReactNode;
@@ -52,11 +60,59 @@ const ProfileHero = ({
   verified,
   onEdit,
   onAvatarClick,
+  avatarUploadUserId,
+  onAvatarUploaded,
   square,
   children,
   className,
 }: ProfileHeroProps) => {
   const initial = name?.trim()?.charAt(0)?.toUpperCase() || "?";
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [uploading, setUploading] = useState(false);
+  const [localUrl, setLocalUrl] = useState<string | null>(null);
+  const shownAvatar = localUrl || avatarUrl;
+  const canUpload = Boolean(avatarUploadUserId);
+
+  const handleFile = async (file: File) => {
+    if (!avatarUploadUserId) return;
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please choose an image file");
+      return;
+    }
+    if (file.size > 8 * 1024 * 1024) {
+      toast.error("Image too large", { description: "Please use a photo under 8 MB." });
+      return;
+    }
+    setUploading(true);
+    try {
+      const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
+      const path = `${avatarUploadUserId}/avatar-${Date.now()}.${ext}`;
+      const { error: upErr } = await supabase.storage
+        .from("avatars")
+        .upload(path, file, { upsert: true, contentType: file.type });
+      if (upErr) throw upErr;
+      const url = supabase.storage.from("avatars").getPublicUrl(path).data.publicUrl;
+      const { error: dbErr } = await supabase
+        .from("profiles")
+        .update({ avatar_url: url })
+        .eq("user_id", avatarUploadUserId);
+      if (dbErr) throw dbErr;
+      setLocalUrl(url);
+      onAvatarUploaded?.(url);
+      toast.success("Profile photo updated");
+    } catch (err) {
+      console.error("Avatar upload failed", err);
+      toast.error("Couldn't upload photo", { description: "Please try again." });
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const triggerAvatar = () => {
+    if (canUpload) fileRef.current?.click();
+    else onAvatarClick?.();
+  };
+
 
   return (
     <div
@@ -96,27 +152,61 @@ const ProfileHero = ({
       <div className="px-5 pb-5 sm:px-6 sm:pb-6">
         <div className="-mt-12 flex items-end gap-4 sm:-mt-14">
           <div className="relative shrink-0">
-            <div
+            <button
+              type="button"
+              onClick={triggerAvatar}
+              disabled={!canUpload && !onAvatarClick}
+              aria-label="Change profile photo"
               className={cn(
-                "flex h-24 w-24 items-center justify-center overflow-hidden border-4 border-card bg-secondary sm:h-28 sm:w-28",
+                "group relative flex h-24 w-24 items-center justify-center overflow-hidden border-4 border-card bg-secondary sm:h-28 sm:w-28",
                 square ? "rounded-2xl" : "rounded-full",
+                (canUpload || onAvatarClick) && "cursor-pointer",
               )}
             >
-              {avatarUrl ? (
-                <img src={avatarUrl} alt={name || ""} className="h-full w-full object-cover" />
+              {shownAvatar ? (
+                <img src={shownAvatar} alt={name || ""} className="h-full w-full object-cover" />
               ) : (
                 <span className="font-display text-4xl text-primary">{initial}</span>
               )}
-            </div>
-            {onAvatarClick && (
+              {(canUpload || onAvatarClick) && (
+                <span className="absolute inset-0 hidden items-center justify-center bg-foreground/45 sm:group-hover:flex">
+                  <Camera size={20} className="text-background" />
+                </span>
+              )}
+              {uploading && (
+                <span className="absolute inset-0 flex items-center justify-center bg-foreground/55">
+                  <Loader2 size={22} className="animate-spin text-background" />
+                </span>
+              )}
+            </button>
+            {(canUpload || onAvatarClick) && (
               <button
-                onClick={onAvatarClick}
-                aria-label="Change photo"
-                className="absolute bottom-1 right-1 rounded-full bg-primary p-1.5 shadow-md"
+                type="button"
+                onClick={triggerAvatar}
+                aria-label="Change profile photo"
+                className="absolute -bottom-1 -right-1 flex h-10 w-10 items-center justify-center rounded-full border-2 border-card bg-primary shadow-lg transition-transform active:scale-95"
               >
-                <Camera size={12} className="text-primary-foreground" />
+                {uploading ? (
+                  <Loader2 size={18} className="animate-spin text-primary-foreground" />
+                ) : (
+                  <Camera size={18} className="text-primary-foreground" />
+                )}
               </button>
             )}
+            {canUpload && (
+              <input
+                ref={fileRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={(e) => {
+                  const f = e.target.files?.[0];
+                  if (f) handleFile(f);
+                  e.target.value = "";
+                }}
+              />
+            )}
+
           </div>
 
           <div className="min-w-0 flex-1 pb-1">

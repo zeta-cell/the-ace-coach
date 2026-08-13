@@ -72,7 +72,7 @@ const SURFACE_LABELS: Record<string, string> = { clay: "Clay", hard: "Hard Court
 const FREQ_LABELS: Record<string, string> = { daily: "Daily", "3-4x_week": "3–4× / week", "1-2x_week": "1–2× / week", occasional: "Occasional" };
 
 const PlayerProfile = () => {
-  const { user, profile, signOut } = useAuth();
+  const { user, profile, signOut, refreshProfile } = useAuth();
   const navigate = useNavigate();
   const [playerData, setPlayerData] = useState<PlayerData | null>(null);
   const [playerPhone, setPlayerPhone] = useState<string | null>(null);
@@ -169,7 +169,8 @@ const PlayerProfile = () => {
           eyebrow={playerData?.preferred_sport ? `${SPORT_LABELS[playerData.preferred_sport] || playerData.preferred_sport} PLAYER` : "PLAYER"}
           meta={[playerData?.club_name, playerData?.club_location].filter(Boolean).join(" · ") || playerData?.nationality || null}
           onEdit={() => setEditOpen(true)}
-          onAvatarClick={() => setEditOpen(true)}
+          avatarUploadUserId={user?.id}
+          onAvatarUploaded={() => refreshProfile?.()}
           chips={[
             ...(playerData?.dominant_hand ? [{ label: `${playerData.dominant_hand} hand`, tone: "primary" as const }] : []),
             ...(userStats?.current_level ? [{ label: userStats.current_level, tone: "mustard" as const }] : []),
