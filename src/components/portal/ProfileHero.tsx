@@ -1,5 +1,5 @@
 import { useRef, useState, type ReactNode } from "react";
-import { Camera, Pencil, CheckCircle2, Loader2 } from "lucide-react";
+import { Camera, Pencil, CheckCircle2, Loader2, Image as ImageIcon } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
@@ -32,6 +32,11 @@ interface ProfileHeroProps {
   avatarUploadUserId?: string | null;
   /** Called after a successful avatar upload */
   onAvatarUploaded?: (url: string) => void;
+  /** Current cover/background image */
+  coverUrl?: string | null;
+  /** Called after a successful cover upload */
+  onCoverUploaded?: (url: string) => void;
+
 
   /** Rounded square avatar instead of circle — used for academies/clubs */
   square?: boolean;
@@ -62,44 +67,60 @@ const ProfileHero = ({
   onAvatarClick,
   avatarUploadUserId,
   onAvatarUploaded,
+  coverUrl,
+  onCoverUploaded,
   square,
   children,
   className,
 }: ProfileHeroProps) => {
   const initial = name?.trim()?.charAt(0)?.toUpperCase() || "?";
   const fileRef = useRef<HTMLInputElement>(null);
+  const coverRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
+  const [coverUploading, setCoverUploading] = useState(false);
   const [localUrl, setLocalUrl] = useState<string | null>(null);
+  const [localCover, setLocalCover] = useState<string | null>(null);
   const shownAvatar = localUrl || avatarUrl;
+  const shownCover = localCover || coverUrl;
   const canUpload = Boolean(avatarUploadUserId);
 
-  const handleFile = async (file: File) => {
-    if (!avatarUploadUserId) return;
+  const uploadImage = async (
+    file: File,
+    kind: "avatar" | "cover",
+  ): Promise<string | null> => {
+    if (!avatarUploadUserId) return null;
     if (!file.type.startsWith("image/")) {
       toast.error("Please choose an image file");
-      return;
+      return null;
     }
     if (file.size > 8 * 1024 * 1024) {
       toast.error("Image too large", { description: "Please use a photo under 8 MB." });
-      return;
+      return null;
     }
+    const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
+    const path = `${avatarUploadUserId}/${kind}-${Date.now()}.${ext}`;
+    const { error: upErr } = await supabase.storage
+      .from("avatars")
+      .upload(path, file, { upsert: true, contentType: file.type });
+    if (upErr) throw upErr;
+    const url = supabase.storage.from("avatars").getPublicUrl(path).data.publicUrl;
+    const { error: dbErr } = await supabase
+      .from("profiles")
+      .update(kind === "avatar" ? { avatar_url: url } : { cover_url: url })
+      .eq("user_id", avatarUploadUserId);
+    if (dbErr) throw dbErr;
+    return url;
+  };
+
+  const handleFile = async (file: File) => {
     setUploading(true);
     try {
-      const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
-      const path = `${avatarUploadUserId}/avatar-${Date.now()}.${ext}`;
-      const { error: upErr } = await supabase.storage
-        .from("avatars")
-        .upload(path, file, { upsert: true, contentType: file.type });
-      if (upErr) throw upErr;
-      const url = supabase.storage.from("avatars").getPublicUrl(path).data.publicUrl;
-      const { error: dbErr } = await supabase
-        .from("profiles")
-        .update({ avatar_url: url })
-        .eq("user_id", avatarUploadUserId);
-      if (dbErr) throw dbErr;
-      setLocalUrl(url);
-      onAvatarUploaded?.(url);
-      toast.success("Profile photo updated");
+      const url = await uploadImage(file, "avatar");
+      if (url) {
+        setLocalUrl(url);
+        onAvatarUploaded?.(url);
+        toast.success("Profile photo updated");
+      }
     } catch (err) {
       console.error("Avatar upload failed", err);
       toast.error("Couldn't upload photo", { description: "Please try again." });
@@ -108,10 +129,28 @@ const ProfileHero = ({
     }
   };
 
+  const handleCoverFile = async (file: File) => {
+    setCoverUploading(true);
+    try {
+      const url = await uploadImage(file, "cover");
+      if (url) {
+        setLocalCover(url);
+        onCoverUploaded?.(url);
+        toast.success("Background photo updated");
+      }
+    } catch (err) {
+      console.error("Cover upload failed", err);
+      toast.error("Couldn't upload background", { description: "Please try again." });
+    } finally {
+      setCoverUploading(false);
+    }
+  };
+
   const triggerAvatar = () => {
     if (canUpload) fileRef.current?.click();
     else onAvatarClick?.();
   };
+
 
 
   return (
@@ -123,30 +162,71 @@ const ProfileHero = ({
     >
       {/* Cover */}
       <div className="relative h-32 sm:h-40">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary/80 to-mustard" />
-        <div className="absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_20%_20%,hsl(var(--background)/0.5),transparent_55%)]" />
-        {/* court lines motif */}
-        <svg
-          className="absolute inset-0 h-full w-full text-primary-foreground/25"
-          viewBox="0 0 400 160"
-          preserveAspectRatio="none"
-          aria-hidden
-        >
-          <path d="M0 118 H400" stroke="currentColor" strokeWidth="1" fill="none" />
-          <path d="M60 160 L150 40 H400" stroke="currentColor" strokeWidth="1" fill="none" />
-          <path d="M200 160 V40" stroke="currentColor" strokeWidth="1" fill="none" />
-          <circle cx="330" cy="46" r="26" stroke="currentColor" strokeWidth="1" fill="none" />
-        </svg>
+        {shownCover ? (
+          <>
+            <img src={shownCover} alt="" className="absolute inset-0 h-full w-full object-cover" />
+            <div className="absolute inset-0 bg-gradient-to-t from-card/80 via-card/10 to-transparent" />
+          </>
+        ) : (
+          <>
+            <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary/80 to-mustard" />
+            <div className="absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_20%_20%,hsl(var(--background)/0.5),transparent_55%)]" />
+            {/* court lines motif */}
+            <svg
+              className="absolute inset-0 h-full w-full text-primary-foreground/25"
+              viewBox="0 0 400 160"
+              preserveAspectRatio="none"
+              aria-hidden
+            >
+              <path d="M0 118 H400" stroke="currentColor" strokeWidth="1" fill="none" />
+              <path d="M60 160 L150 40 H400" stroke="currentColor" strokeWidth="1" fill="none" />
+              <path d="M200 160 V40" stroke="currentColor" strokeWidth="1" fill="none" />
+              <circle cx="330" cy="46" r="26" stroke="currentColor" strokeWidth="1" fill="none" />
+            </svg>
+          </>
+        )}
 
-        {onEdit && (
-          <button
-            onClick={onEdit}
-            className="absolute top-3 right-3 flex items-center gap-1.5 rounded-full bg-background/85 px-3 py-1.5 font-display text-[10px] tracking-wider text-foreground backdrop-blur-md transition-colors hover:bg-background"
-          >
-            <Pencil size={11} /> EDIT
-          </button>
+        <div className="absolute top-3 right-3 flex items-center gap-2">
+          {canUpload && (
+            <button
+              type="button"
+              onClick={() => coverRef.current?.click()}
+              aria-label="Change background photo"
+              className="flex items-center gap-1.5 rounded-full bg-background/85 px-3 py-1.5 font-display text-[10px] tracking-wider text-foreground backdrop-blur-md transition-colors hover:bg-background"
+            >
+              {coverUploading ? (
+                <Loader2 size={12} className="animate-spin" />
+              ) : (
+                <ImageIcon size={12} />
+              )}
+              COVER
+            </button>
+          )}
+          {onEdit && (
+            <button
+              onClick={onEdit}
+              className="flex items-center gap-1.5 rounded-full bg-background/85 px-3 py-1.5 font-display text-[10px] tracking-wider text-foreground backdrop-blur-md transition-colors hover:bg-background"
+            >
+              <Pencil size={11} /> EDIT
+            </button>
+          )}
+        </div>
+
+        {canUpload && (
+          <input
+            ref={coverRef}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={(e) => {
+              const f = e.target.files?.[0];
+              if (f) handleCoverFile(f);
+              e.target.value = "";
+            }}
+          />
         )}
       </div>
+
 
       {/* Identity */}
       <div className="px-5 pb-5 sm:px-6 sm:pb-6">

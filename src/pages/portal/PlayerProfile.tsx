@@ -169,7 +169,9 @@ const PlayerProfile = () => {
           eyebrow={playerData?.preferred_sport ? `${SPORT_LABELS[playerData.preferred_sport] || playerData.preferred_sport} PLAYER` : "PLAYER"}
           meta={[playerData?.club_name, playerData?.club_location].filter(Boolean).join(" · ") || playerData?.nationality || null}
           onEdit={() => setEditOpen(true)}
+          coverUrl={(profile as any)?.cover_url}
           avatarUploadUserId={user?.id}
+          onCoverUploaded={() => refreshProfile?.()}
           onAvatarUploaded={() => refreshProfile?.()}
           chips={[
             ...(playerData?.dominant_hand ? [{ label: `${playerData.dominant_hand} hand`, tone: "primary" as const }] : []),
