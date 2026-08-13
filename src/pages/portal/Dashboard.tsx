@@ -27,6 +27,8 @@ import RaffleCard from "@/components/portal/RaffleCard";
 import HealthDataCard from "@/components/portal/HealthDataCard";
 import HealthConnections from "@/components/portal/HealthConnections";
 import MyClubsCard from "@/components/portal/MyClubsCard";
+import MyCoachCard from "@/components/portal/MyCoachCard";
+
 import { Progress } from "@/components/ui/progress";
 import { LEVEL_CONFIG, BADGE_DEFINITIONS, getNextLevel } from "@/lib/gamification";
 import { toast } from "sonner";
@@ -512,7 +514,10 @@ const Dashboard = () => {
           </div>
         </motion.div>
 
+        <MyCoachCard />
+
         <UpcomingBookings />
+
 
         {/* Upcoming Events */}
         {upcomingEvents.length > 0 && (
