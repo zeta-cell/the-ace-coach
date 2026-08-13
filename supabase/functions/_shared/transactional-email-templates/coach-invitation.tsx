@@ -66,7 +66,24 @@ const CoachInvitationEmail = ({
               border: '3px solid #FF6B4A',
             }}
           />
-        ) : null}
+        ) : (
+          <Text
+            style={{
+              width: '88px',
+              height: '88px',
+              borderRadius: '44px',
+              backgroundColor: '#FFE6DF',
+              color: '#FF5A33',
+              fontSize: '34px',
+              fontWeight: 700,
+              lineHeight: '88px',
+              textAlign: 'center',
+              margin: '8px 0 4px',
+            }}
+          >
+            {(coachName || 'C').charAt(0).toUpperCase()}
+          </Text>
+        )}
         <Heading style={h1}>{coachName} invited you</Heading>
         <Text style={text}>
           {academyName
