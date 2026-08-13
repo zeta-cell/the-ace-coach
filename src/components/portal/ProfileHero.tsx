@@ -103,7 +103,7 @@ const ProfileHero = ({
       .from("avatars")
       .upload(path, file, { upsert: true, contentType: file.type });
     if (upErr) throw upErr;
-    const url = supabase.storage.from("avatars").getPublicUrl(path).data.publicUrl;
+    const url = `${supabase.storage.from("avatars").getPublicUrl(path).data.publicUrl}?t=${Date.now()}`;
     const { error: dbErr } = await supabase
       .from("profiles")
       .update(kind === "avatar" ? { avatar_url: url } : { cover_url: url })
@@ -113,35 +113,60 @@ const ProfileHero = ({
   };
 
   const handleFile = async (file: File) => {
+    // Instant local preview while the upload runs
+    const preview = URL.createObjectURL(file);
+    setLocalUrl(preview);
     setUploading(true);
     try {
       const url = await uploadImage(file, "avatar");
       if (url) {
+        await new Promise<void>((resolve) => {
+          const img = new Image();
+          img.onload = () => resolve();
+          img.onerror = () => resolve();
+          img.src = url;
+        });
         setLocalUrl(url);
         onAvatarUploaded?.(url);
         toast.success("Profile photo updated");
+      } else {
+        setLocalUrl(null);
       }
     } catch (err) {
       console.error("Avatar upload failed", err);
+      setLocalUrl(null);
       toast.error("Couldn't upload photo", { description: "Please try again." });
     } finally {
+      URL.revokeObjectURL(preview);
       setUploading(false);
     }
   };
 
   const handleCoverFile = async (file: File) => {
+    const preview = URL.createObjectURL(file);
+    setLocalCover(preview);
     setCoverUploading(true);
     try {
       const url = await uploadImage(file, "cover");
       if (url) {
+        await new Promise<void>((resolve) => {
+          const img = new Image();
+          img.onload = () => resolve();
+          img.onerror = () => resolve();
+          img.src = url;
+        });
         setLocalCover(url);
         onCoverUploaded?.(url);
         toast.success("Background photo updated");
+      } else {
+        setLocalCover(null);
       }
     } catch (err) {
       console.error("Cover upload failed", err);
+      setLocalCover(null);
       toast.error("Couldn't upload background", { description: "Please try again." });
     } finally {
+      URL.revokeObjectURL(preview);
       setCoverUploading(false);
     }
   };
