@@ -24,6 +24,7 @@ import { BrandLogo, BrandIcon } from "@/components/BrandLogo";
 
 /** Nav entries only render when their feature flag is on (admins always see everything). */
 const NAV_FEATURE: Record<string, string> = {
+  "/my-coach": "bookings",
   "/events": "events",
   "/community": "community",
   "/messages": "messaging",
@@ -37,6 +38,7 @@ const NAV_FEATURE: Record<string, string> = {
   "/coach/marketplace": "coach_marketplace",
   "/coach/messages": "messaging",
 };
+
 
 // Phosphor icon overrides for the mobile bottom nav (filled glyph look)
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -55,6 +57,7 @@ const BOTTOM_NAV_ICON: Record<string, any> = {
 const playerNav = [
   { label: "Home", icon: Home, href: "/dashboard" },
   { label: "Training", icon: Calendar, href: "/training" },
+  { label: "Book a Session", icon: CalendarDays, href: "/my-coach" },
   { label: "My Shots", icon: User, href: "/profile" },
   { label: "Events", icon: CalendarDays, href: "/events" },
   { label: "Community", icon: Users, href: "/community" },

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useFeature } from "@/hooks/useFeatureFlags";
-import { CalendarPlus, MessageSquare, UserCheck, Clock } from "lucide-react";
+import { CalendarDays, MessageSquare, UserCheck, Clock } from "lucide-react";
 
 interface CoachEntry {
   coach_id: string;
@@ -124,7 +124,7 @@ const MyCoachCard = () => {
                   to={`/book/${c.slug || c.coach_id}`}
                   className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-primary text-primary-foreground font-display text-[10px] tracking-wider hover:bg-primary/90 transition-colors"
                 >
-                  <CalendarPlus size={14} /> BOOK
+                  <CalendarDays size={14} /> BOOK
                 </Link>
               )}
             </div>

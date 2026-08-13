@@ -102,6 +102,7 @@ const CoachAnalytics = lazy(() => import("./pages/portal/CoachAnalytics"));
 // Gamification pages (lazy-loaded)
 const Rankings = lazy(() => import("./pages/Rankings"));
 const Rewards = lazy(() => import("./pages/Rewards"));
+const MyCoach = lazy(() => import("./pages/portal/MyCoach"));
 
 // Events & Community (lazy-loaded)
 const Events = lazy(() => import("./pages/Events"));
@@ -234,6 +235,12 @@ const App = () => (
                 <ProtectedRoute playerOnly><Rewards /></ProtectedRoute>
               </Suspense>
             } />
+            <Route path="/my-coach" element={
+              <Suspense fallback={<PortalLoader />}>
+                <ProtectedRoute playerOnly><MyCoach /></ProtectedRoute>
+              </Suspense>
+            } />
+
 
             {/* Coach */}
             <Route path="/coach" element={
