@@ -14,7 +14,7 @@ import CoachProfileEdit from "@/components/portal/CoachProfileEdit";
 import CoachPackageCard, { type CoachPackage } from "@/components/portal/CoachPackageCard";
 import CoachPackageDialog from "@/components/portal/CoachPackageDialog";
 import PromoteDrawer, { type PromoteContent } from "@/components/portal/PromoteDrawer";
-import { Trash2 } from "lucide-react";
+import { Trash2, Megaphone } from "lucide-react";
 import ProfileHero from "@/components/portal/ProfileHero";
 
 interface Certification {
@@ -571,6 +571,12 @@ const CoachProfile = () => {
             onSaved={fetchData}
           />
         )}
+
+        <PromoteDrawer
+          open={!!promoteContent}
+          onClose={() => setPromoteContent(null)}
+          initial={promoteContent || undefined}
+        />
 
         <CoachPackageDialog
           open={pkgDialogOpen}
