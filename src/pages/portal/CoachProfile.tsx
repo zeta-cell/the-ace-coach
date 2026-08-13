@@ -13,6 +13,7 @@ import PortalLayout from "@/components/portal/PortalLayout";
 import CoachProfileEdit from "@/components/portal/CoachProfileEdit";
 import CoachPackageCard, { type CoachPackage } from "@/components/portal/CoachPackageCard";
 import CoachPackageDialog from "@/components/portal/CoachPackageDialog";
+import PromoteDrawer, { type PromoteContent } from "@/components/portal/PromoteDrawer";
 import { Trash2 } from "lucide-react";
 import ProfileHero from "@/components/portal/ProfileHero";
 
@@ -67,6 +68,7 @@ const CoachProfile = () => {
   const [packages, setPackages] = useState<CoachPackage[]>([]);
   const [pkgDialogOpen, setPkgDialogOpen] = useState(false);
   const [editingPkg, setEditingPkg] = useState<CoachPackage | null>(null);
+  const [promoteContent, setPromoteContent] = useState<PromoteContent | null>(null);
   const [pkgSaving, setPkgSaving] = useState(false);
   const [certifications, setCertifications] = useState<Certification[]>([]);
   const [certForm, setCertForm] = useState({ name: "", issuing_body: "", year_obtained: "", certificate_url: "" });
@@ -432,12 +434,26 @@ const CoachProfile = () => {
         <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.22 }} className="bg-card border border-border rounded-xl p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-display text-sm tracking-wider text-muted-foreground">MY PACKAGES</h2>
+            <div className="flex items-center gap-2">
+            <button
+              onClick={() => setPromoteContent({
+                headline: "Private sessions — open slots",
+                message: "My calendar is open for private 1:1 sessions. Pick a slot that suits you and let's work on your game.",
+                ctaLabel: "Book a session",
+                ctaUrl: `${window.location.origin}/my-coach`,
+                detailLines: packages.filter(p => p.is_active).slice(0, 3).map(p => `${p.title} · ${p.duration_minutes} min · ${p.currency} ${Number(p.price_per_session)}`),
+              })}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-primary/40 bg-primary/10 text-primary text-xs font-display tracking-wider hover:bg-primary/20 transition-colors"
+            >
+              <Megaphone size={12} /> PROMOTE
+            </button>
             <button
               onClick={() => { setEditingPkg(null); setPkgDialogOpen(true); }}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-display tracking-wider hover:bg-primary/90 transition-colors"
             >
               <Plus size={12} /> CREATE
             </button>
+            </div>
           </div>
           {packages.length === 0 ? (
             <p className="font-body text-sm text-muted-foreground text-center py-8">No packages yet. Create your first coaching package!</p>
