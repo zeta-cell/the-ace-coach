@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import BrandLogo from "@/components/BrandLogo";
-import { Check, MailX, TriangleAlert } from "lucide-react";
+import { Check, Mail, AlertTriangle } from "lucide-react";
 
 type State = "loading" | "valid" | "done" | "used" | "invalid";
 
@@ -49,7 +49,7 @@ const Unsubscribe = () => {
 
         {state === "valid" && (
           <>
-            <MailX size={28} className="mx-auto mb-3 text-primary" />
+            <Mail size={28} className="mx-auto mb-3 text-primary" />
             <h1 className="font-display text-xl text-foreground mb-2">UNSUBSCRIBE</h1>
             <p className="font-body text-sm text-muted-foreground mb-6">
               {email ? `Stop sending emails to ${email}?` : "Stop sending emails to this address?"}
@@ -84,7 +84,7 @@ const Unsubscribe = () => {
 
         {state === "invalid" && (
           <>
-            <TriangleAlert size={28} className="mx-auto mb-3 text-amber-500" />
+            <AlertTriangle size={28} className="mx-auto mb-3 text-amber-500" />
             <h1 className="font-display text-xl text-foreground mb-2">LINK NOT VALID</h1>
             <p className="font-body text-sm text-muted-foreground">
               This unsubscribe link is invalid or has expired.
