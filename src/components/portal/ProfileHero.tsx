@@ -67,44 +67,60 @@ const ProfileHero = ({
   onAvatarClick,
   avatarUploadUserId,
   onAvatarUploaded,
+  coverUrl,
+  onCoverUploaded,
   square,
   children,
   className,
 }: ProfileHeroProps) => {
   const initial = name?.trim()?.charAt(0)?.toUpperCase() || "?";
   const fileRef = useRef<HTMLInputElement>(null);
+  const coverRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
+  const [coverUploading, setCoverUploading] = useState(false);
   const [localUrl, setLocalUrl] = useState<string | null>(null);
+  const [localCover, setLocalCover] = useState<string | null>(null);
   const shownAvatar = localUrl || avatarUrl;
+  const shownCover = localCover || coverUrl;
   const canUpload = Boolean(avatarUploadUserId);
 
-  const handleFile = async (file: File) => {
-    if (!avatarUploadUserId) return;
+  const uploadImage = async (
+    file: File,
+    kind: "avatar" | "cover",
+  ): Promise<string | null> => {
+    if (!avatarUploadUserId) return null;
     if (!file.type.startsWith("image/")) {
       toast.error("Please choose an image file");
-      return;
+      return null;
     }
     if (file.size > 8 * 1024 * 1024) {
       toast.error("Image too large", { description: "Please use a photo under 8 MB." });
-      return;
+      return null;
     }
+    const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
+    const path = `${avatarUploadUserId}/${kind}-${Date.now()}.${ext}`;
+    const { error: upErr } = await supabase.storage
+      .from("avatars")
+      .upload(path, file, { upsert: true, contentType: file.type });
+    if (upErr) throw upErr;
+    const url = supabase.storage.from("avatars").getPublicUrl(path).data.publicUrl;
+    const { error: dbErr } = await supabase
+      .from("profiles")
+      .update(kind === "avatar" ? { avatar_url: url } : { cover_url: url })
+      .eq("user_id", avatarUploadUserId);
+    if (dbErr) throw dbErr;
+    return url;
+  };
+
+  const handleFile = async (file: File) => {
     setUploading(true);
     try {
-      const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
-      const path = `${avatarUploadUserId}/avatar-${Date.now()}.${ext}`;
-      const { error: upErr } = await supabase.storage
-        .from("avatars")
-        .upload(path, file, { upsert: true, contentType: file.type });
-      if (upErr) throw upErr;
-      const url = supabase.storage.from("avatars").getPublicUrl(path).data.publicUrl;
-      const { error: dbErr } = await supabase
-        .from("profiles")
-        .update({ avatar_url: url })
-        .eq("user_id", avatarUploadUserId);
-      if (dbErr) throw dbErr;
-      setLocalUrl(url);
-      onAvatarUploaded?.(url);
-      toast.success("Profile photo updated");
+      const url = await uploadImage(file, "avatar");
+      if (url) {
+        setLocalUrl(url);
+        onAvatarUploaded?.(url);
+        toast.success("Profile photo updated");
+      }
     } catch (err) {
       console.error("Avatar upload failed", err);
       toast.error("Couldn't upload photo", { description: "Please try again." });
@@ -113,10 +129,28 @@ const ProfileHero = ({
     }
   };
 
+  const handleCoverFile = async (file: File) => {
+    setCoverUploading(true);
+    try {
+      const url = await uploadImage(file, "cover");
+      if (url) {
+        setLocalCover(url);
+        onCoverUploaded?.(url);
+        toast.success("Background photo updated");
+      }
+    } catch (err) {
+      console.error("Cover upload failed", err);
+      toast.error("Couldn't upload background", { description: "Please try again." });
+    } finally {
+      setCoverUploading(false);
+    }
+  };
+
   const triggerAvatar = () => {
     if (canUpload) fileRef.current?.click();
     else onAvatarClick?.();
   };
+
 
 
   return (
