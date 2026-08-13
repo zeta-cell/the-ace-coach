@@ -132,13 +132,16 @@ const BookCoach = () => {
 
   const fetchCoachData = async () => {
     setLoading(true);
-    const { data: coachData } = await supabase
+    const isUuid = !!coachSlug && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(coachSlug);
+    const query = supabase
       .from("coach_profiles")
-      .select("user_id, profile_slug, is_verified, badge_level, location_city, location_country")
-      .eq("profile_slug", coachSlug)
-      .single();
+      .select("user_id, profile_slug, is_verified, badge_level, location_city, location_country");
+    const { data: coachData } = isUuid
+      ? await query.eq("user_id", coachSlug).maybeSingle()
+      : await query.eq("profile_slug", coachSlug).maybeSingle();
 
-    if (!coachData) { navigate("/find-a-coach"); return; }
+    if (!coachData) { navigate("/dashboard"); return; }
+
     setCoach(coachData as unknown as CoachData);
 
     const [profileRes, packagesRes, slotsRes, reviewsRes] = await Promise.all([
