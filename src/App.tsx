@@ -72,6 +72,7 @@ const BookingSuccess = lazy(() => import("./pages/BookingSuccess"));
 // Portal pages (lazy-loaded)
 const Login = lazy(() => import("./pages/portal/Login"));
 const TestAccounts = lazy(() => import("./pages/portal/TestAccounts"));
+const Unsubscribe = lazy(() => import("./pages/Unsubscribe"));
 const Onboarding = lazy(() => import("./pages/portal/Onboarding"));
 const Dashboard = lazy(() => import("./pages/portal/Dashboard"));
 const Training = lazy(() => import("./pages/portal/Training"));
@@ -180,6 +181,7 @@ const App = () => (
             <Route path="/portal/login" element={<Suspense fallback={<PortalLoader />}><Login /></Suspense>} />
             <Route path="/portal" element={<Suspense fallback={<PortalLoader />}><Login /></Suspense>} />
             <Route path="/test" element={<Suspense fallback={<PortalLoader />}><TestAccounts /></Suspense>} />
+            <Route path="/unsubscribe" element={<Suspense fallback={<PortalLoader />}><Unsubscribe /></Suspense>} />
 
             {/* Onboarding */}
             <Route path="/onboarding" element={
