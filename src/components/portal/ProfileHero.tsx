@@ -152,27 +152,61 @@ const ProfileHero = ({
       <div className="px-5 pb-5 sm:px-6 sm:pb-6">
         <div className="-mt-12 flex items-end gap-4 sm:-mt-14">
           <div className="relative shrink-0">
-            <div
+            <button
+              type="button"
+              onClick={triggerAvatar}
+              disabled={!canUpload && !onAvatarClick}
+              aria-label="Change profile photo"
               className={cn(
-                "flex h-24 w-24 items-center justify-center overflow-hidden border-4 border-card bg-secondary sm:h-28 sm:w-28",
+                "group relative flex h-24 w-24 items-center justify-center overflow-hidden border-4 border-card bg-secondary sm:h-28 sm:w-28",
                 square ? "rounded-2xl" : "rounded-full",
+                (canUpload || onAvatarClick) && "cursor-pointer",
               )}
             >
-              {avatarUrl ? (
-                <img src={avatarUrl} alt={name || ""} className="h-full w-full object-cover" />
+              {shownAvatar ? (
+                <img src={shownAvatar} alt={name || ""} className="h-full w-full object-cover" />
               ) : (
                 <span className="font-display text-4xl text-primary">{initial}</span>
               )}
-            </div>
-            {onAvatarClick && (
+              {(canUpload || onAvatarClick) && (
+                <span className="absolute inset-0 hidden items-center justify-center bg-foreground/45 sm:group-hover:flex">
+                  <Camera size={20} className="text-background" />
+                </span>
+              )}
+              {uploading && (
+                <span className="absolute inset-0 flex items-center justify-center bg-foreground/55">
+                  <Loader2 size={22} className="animate-spin text-background" />
+                </span>
+              )}
+            </button>
+            {(canUpload || onAvatarClick) && (
               <button
-                onClick={onAvatarClick}
-                aria-label="Change photo"
-                className="absolute bottom-1 right-1 rounded-full bg-primary p-1.5 shadow-md"
+                type="button"
+                onClick={triggerAvatar}
+                aria-label="Change profile photo"
+                className="absolute -bottom-1 -right-1 flex h-10 w-10 items-center justify-center rounded-full border-2 border-card bg-primary shadow-lg transition-transform active:scale-95"
               >
-                <Camera size={12} className="text-primary-foreground" />
+                {uploading ? (
+                  <Loader2 size={18} className="animate-spin text-primary-foreground" />
+                ) : (
+                  <Camera size={18} className="text-primary-foreground" />
+                )}
               </button>
             )}
+            {canUpload && (
+              <input
+                ref={fileRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={(e) => {
+                  const f = e.target.files?.[0];
+                  if (f) handleFile(f);
+                  e.target.value = "";
+                }}
+              />
+            )}
+
           </div>
 
           <div className="min-w-0 flex-1 pb-1">
