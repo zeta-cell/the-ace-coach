@@ -31,6 +31,7 @@ import {
 
 interface Props {
   coachName?: string
+  coachAvatarUrl?: string | null
   academyName?: string | null
   message?: string | null
   inviteUrl?: string
@@ -38,6 +39,7 @@ interface Props {
 
 const CoachInvitationEmail = ({
   coachName = 'your coach',
+  coachAvatarUrl,
   academyName,
   message,
   inviteUrl = BRAND.url,
@@ -48,6 +50,40 @@ const CoachInvitationEmail = ({
     <Body style={main}>
       <Container style={container}>
         <Img src={BRAND.logo} alt="Hi Volley" width="150" style={logoStyle} />
+        {coachAvatarUrl ? (
+          <Img
+            src={coachAvatarUrl}
+            alt={coachName}
+            width="88"
+            height="88"
+            style={{
+              width: '88px',
+              height: '88px',
+              borderRadius: '44px',
+              objectFit: 'cover',
+              display: 'block',
+              margin: '8px 0 4px',
+              border: '3px solid #FF6B4A',
+            }}
+          />
+        ) : (
+          <Text
+            style={{
+              width: '88px',
+              height: '88px',
+              borderRadius: '44px',
+              backgroundColor: '#FFE6DF',
+              color: '#FF5A33',
+              fontSize: '34px',
+              fontWeight: 700,
+              lineHeight: '88px',
+              textAlign: 'center',
+              margin: '8px 0 4px',
+            }}
+          >
+            {(coachName || 'C').charAt(0).toUpperCase()}
+          </Text>
+        )}
         <Heading style={h1}>{coachName} invited you</Heading>
         <Text style={text}>
           {academyName
@@ -56,6 +92,7 @@ const CoachInvitationEmail = ({
           Set up your Hi Volley profile so your coach can share your camp assessment,
           your shot levels and your development curve with you.
         </Text>
+
         {message ? <Text style={text}>“{message}”</Text> : null}
         <Button style={button} href={inviteUrl}>
           Set up my profile
@@ -81,6 +118,7 @@ export const template = {
   displayName: 'Coach invitation',
   previewData: {
     coachName: 'Pedro Sousa Martinez',
+    coachAvatarUrl: null,
     academyName: 'Tio Tio Padel Academy',
     message: 'To put your assessment into the app I need you to register.',
     inviteUrl: 'https://hivolley.com/invite/demo',
