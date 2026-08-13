@@ -118,6 +118,7 @@ export const template = {
   displayName: 'Coach invitation',
   previewData: {
     coachName: 'Pedro Sousa Martinez',
+    coachAvatarUrl: null,
     academyName: 'Tio Tio Padel Academy',
     message: 'To put your assessment into the app I need you to register.',
     inviteUrl: 'https://hivolley.com/invite/demo',
