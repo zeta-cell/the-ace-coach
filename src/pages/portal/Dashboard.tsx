@@ -514,7 +514,10 @@ const Dashboard = () => {
           </div>
         </motion.div>
 
+        <MyCoachCard />
+
         <UpcomingBookings />
+
 
         {/* Upcoming Events */}
         {upcomingEvents.length > 0 && (
