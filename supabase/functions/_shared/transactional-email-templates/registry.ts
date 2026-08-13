@@ -3,6 +3,7 @@
 import type * as React from 'npm:react@18.3.1'
 
 import { template as coachInvitation } from './coach-invitation.tsx'
+import { template as coachAnnouncement } from './coach-announcement.tsx'
 
 export interface TemplateEntry {
   // deno-lint-ignore no-explicit-any
@@ -16,4 +17,5 @@ export interface TemplateEntry {
 
 export const TEMPLATES: Record<string, TemplateEntry> = {
   'coach-invitation': coachInvitation,
+  'coach-announcement': coachAnnouncement,
 }

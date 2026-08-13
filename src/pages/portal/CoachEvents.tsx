@@ -2,12 +2,13 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion } from "framer-motion";
-import { Calendar, Plus, Users, Edit, X, Eye, CheckCircle, ChevronDown, ChevronUp } from "lucide-react";
+import { Calendar, Plus, Users, Edit, X, Eye, CheckCircle, ChevronDown, ChevronUp, Megaphone } from "lucide-react";
 import { format } from "date-fns";
 import { toast } from "sonner";
 import PortalLayout from "@/components/portal/PortalLayout";
 import CreateEventDrawer from "@/components/portal/CreateEventDrawer";
 import { Progress } from "@/components/ui/progress";
+import PromoteDrawer, { type PromoteContent } from "@/components/portal/PromoteDrawer";
 
 interface EventRow {
   id: string; coach_id: string; title: string; description: string | null;
@@ -54,6 +55,23 @@ const CoachEvents = () => {
   const [editingEvent, setEditingEvent] = useState<EventRow | null>(null);
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [registrations, setRegistrations] = useState<Record<string, Registration[]>>({});
+  const [promoteContent, setPromoteContent] = useState<PromoteContent | null>(null);
+
+  const promoteEvent = (event: EventRow) => {
+    const spotsLeft = event.max_participants ? event.max_participants - event.current_participants : null;
+    setPromoteContent({
+      headline: event.title,
+      message: event.description || `Join my ${formatEventType(event.event_type).toLowerCase()} — ${format(new Date(event.start_datetime), "EEEE d MMM 'at' HH:mm")}.`,
+      ctaLabel: "Reserve my spot",
+      ctaUrl: `${window.location.origin}/events/${event.id}`,
+      detailLines: [
+        `${format(new Date(event.start_datetime), "EEE d MMM · HH:mm")} – ${format(new Date(event.end_datetime), "HH:mm")}`,
+        event.location_name || event.location_city || "",
+        `${currencySymbol(event.currency)}${Number(event.price_per_person)} per person`,
+        spotsLeft !== null ? `${spotsLeft} spot${spotsLeft === 1 ? "" : "s"} left` : "",
+      ].filter(Boolean),
+    });
+  };
 
   useEffect(() => { if (user) fetchEvents(); }, [user]);
 
@@ -121,6 +139,18 @@ const CoachEvents = () => {
           </button>
         </div>
 
+        <button
+          onClick={() => setPromoteContent({
+            headline: "Private sessions available",
+            message: "I have open slots for private 1:1 sessions this week. Reply here or book directly — first come, first served.",
+            ctaLabel: "Book a session",
+            ctaUrl: `${window.location.origin}/my-coach`,
+          })}
+          className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-primary/40 bg-primary/10 text-primary font-display text-[11px] tracking-widest hover:bg-primary/20 transition-colors"
+        >
+          <Megaphone size={14} /> PROMOTE MY FREE SLOTS FOR PRIVATE SESSIONS
+        </button>
+
         <div className="flex gap-1 bg-card border border-border rounded-xl p-1">
           {(["upcoming", "past", "drafts"] as const).map(t => (
             <button key={t} onClick={() => setTab(t)}
@@ -179,6 +209,10 @@ const CoachEvents = () => {
                       className="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-border text-[10px] font-display tracking-wider text-muted-foreground hover:text-foreground transition-colors">
                       <Edit size={12} /> EDIT
                     </button>
+                    <button onClick={() => promoteEvent(event)}
+                      className="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-primary/40 bg-primary/10 text-[10px] font-display tracking-wider text-primary hover:bg-primary/20 transition-colors">
+                      <Megaphone size={12} /> PROMOTE
+                    </button>
                     <button onClick={() => fetchRegistrations(event.id)}
                       className="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-border text-[10px] font-display tracking-wider text-muted-foreground hover:text-foreground transition-colors">
                       <Users size={12} /> REGISTRATIONS {expandedId === event.id ? <ChevronUp size={10} /> : <ChevronDown size={10} />}
@@ -235,6 +269,12 @@ const CoachEvents = () => {
         onClose={() => { setDrawerOpen(false); setEditingEvent(null); }}
         event={editingEvent}
         onSaved={() => { fetchEvents(); setDrawerOpen(false); setEditingEvent(null); }}
+      />
+
+      <PromoteDrawer
+        open={!!promoteContent}
+        onClose={() => setPromoteContent(null)}
+        initial={promoteContent || undefined}
       />
     </PortalLayout>
   );
