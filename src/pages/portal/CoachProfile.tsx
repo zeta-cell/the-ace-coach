@@ -221,7 +221,9 @@ const CoachProfile = () => {
           meta={[coachData?.location_city, coachData?.location_country].filter(Boolean).join(" · ") || coachData?.nationality || null}
           verified={coachData?.is_verified}
           onEdit={() => setEditOpen(true)}
+          coverUrl={(profile as any)?.cover_url}
           avatarUploadUserId={user?.id}
+          onCoverUploaded={() => refreshProfile?.()}
           onAvatarUploaded={() => refreshProfile?.()}
           chips={[
             ...(coachData?.badge_level ? [{ label: coachData.badge_level, tone: "mustard" as const }] : []),
