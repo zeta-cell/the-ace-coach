@@ -168,7 +168,7 @@ const CoachCardComponent = ({ coach }: { coach: CoachCard }) => {
           VIEW PROFILE
         </Link>
         <Link
-          to="/login"
+          to={`/book/${coach.profile_slug || coach.user_id}`}
           className="flex-1 text-center py-2.5 rounded-xl bg-primary font-display text-xs tracking-wider text-primary-foreground hover:bg-primary/90 transition-colors"
         >
           BOOK NOW
