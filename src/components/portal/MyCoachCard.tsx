@@ -124,7 +124,7 @@ const MyCoachCard = () => {
                   to={`/book/${c.slug || c.coach_id}`}
                   className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-primary text-primary-foreground font-display text-[10px] tracking-wider hover:bg-primary/90 transition-colors"
                 >
-                  <CalendarPlus size={14} /> BOOK
+                  <CalendarDays size={14} /> BOOK
                 </Link>
               )}
             </div>
