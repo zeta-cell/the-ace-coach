@@ -59,7 +59,7 @@ const playerNav = [
   { label: "Training", icon: Calendar, href: "/training" },
   { label: "Book a Session", icon: CalendarDays, href: "/my-coach" },
   { label: "My Shots", icon: User, href: "/profile" },
-
+  { label: "Events", icon: CalendarDays, href: "/events" },
   { label: "Community", icon: Users, href: "/community" },
   { label: "Messages", icon: MessageSquare, href: "/messages" },
   { label: "Videos", icon: Video, href: "/videos" },
