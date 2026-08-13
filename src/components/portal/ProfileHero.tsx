@@ -101,7 +101,7 @@ const ProfileHero = ({
     const path = `${avatarUploadUserId}/${kind}-${Date.now()}.${ext}`;
     const { error: upErr } = await supabase.storage
       .from("avatars")
-      .upload(path, file, { upsert: true, contentType: file.type });
+      .upload(path, file, { upsert: false, contentType: file.type });
     if (upErr) throw upErr;
     const url = `${supabase.storage.from("avatars").getPublicUrl(path).data.publicUrl}?t=${Date.now()}`;
     const { error: dbErr } = await supabase
@@ -135,7 +135,9 @@ const ProfileHero = ({
     } catch (err) {
       console.error("Avatar upload failed", err);
       setLocalUrl(null);
-      toast.error("Couldn't upload photo", { description: "Please try again." });
+      toast.error("Couldn't upload photo", {
+        description: err instanceof Error ? err.message : "Please try again.",
+      });
     } finally {
       URL.revokeObjectURL(preview);
       setUploading(false);
@@ -164,7 +166,9 @@ const ProfileHero = ({
     } catch (err) {
       console.error("Cover upload failed", err);
       setLocalCover(null);
-      toast.error("Couldn't upload background", { description: "Please try again." });
+      toast.error("Couldn't upload background", {
+        description: err instanceof Error ? err.message : "Please try again.",
+      });
     } finally {
       URL.revokeObjectURL(preview);
       setCoverUploading(false);
