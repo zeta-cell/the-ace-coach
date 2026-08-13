@@ -28,6 +28,11 @@ interface ProfileHeroProps {
   verified?: boolean;
   onEdit?: () => void;
   onAvatarClick?: () => void;
+  /** When set, tapping the avatar opens a file picker and uploads to the avatars bucket */
+  avatarUploadUserId?: string | null;
+  /** Called after a successful avatar upload */
+  onAvatarUploaded?: (url: string) => void;
+
   /** Rounded square avatar instead of circle — used for academies/clubs */
   square?: boolean;
   children?: ReactNode;
