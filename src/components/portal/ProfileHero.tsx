@@ -60,11 +60,59 @@ const ProfileHero = ({
   verified,
   onEdit,
   onAvatarClick,
+  avatarUploadUserId,
+  onAvatarUploaded,
   square,
   children,
   className,
 }: ProfileHeroProps) => {
   const initial = name?.trim()?.charAt(0)?.toUpperCase() || "?";
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [uploading, setUploading] = useState(false);
+  const [localUrl, setLocalUrl] = useState<string | null>(null);
+  const shownAvatar = localUrl || avatarUrl;
+  const canUpload = Boolean(avatarUploadUserId);
+
+  const handleFile = async (file: File) => {
+    if (!avatarUploadUserId) return;
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please choose an image file");
+      return;
+    }
+    if (file.size > 8 * 1024 * 1024) {
+      toast.error("Image too large", { description: "Please use a photo under 8 MB." });
+      return;
+    }
+    setUploading(true);
+    try {
+      const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
+      const path = `${avatarUploadUserId}/avatar-${Date.now()}.${ext}`;
+      const { error: upErr } = await supabase.storage
+        .from("avatars")
+        .upload(path, file, { upsert: true, contentType: file.type });
+      if (upErr) throw upErr;
+      const url = supabase.storage.from("avatars").getPublicUrl(path).data.publicUrl;
+      const { error: dbErr } = await supabase
+        .from("profiles")
+        .update({ avatar_url: url })
+        .eq("user_id", avatarUploadUserId);
+      if (dbErr) throw dbErr;
+      setLocalUrl(url);
+      onAvatarUploaded?.(url);
+      toast.success("Profile photo updated");
+    } catch (err) {
+      console.error("Avatar upload failed", err);
+      toast.error("Couldn't upload photo", { description: "Please try again." });
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const triggerAvatar = () => {
+    if (canUpload) fileRef.current?.click();
+    else onAvatarClick?.();
+  };
+
 
   return (
     <div
