@@ -60,7 +60,7 @@ interface CoachData {
 }
 
 const CoachProfile = () => {
-  const { user, profile, signOut } = useAuth();
+  const { user, profile, signOut, refreshProfile } = useAuth();
   const navigate = useNavigate();
   const [coachData, setCoachData] = useState<CoachData | null>(null);
   const [editOpen, setEditOpen] = useState(false);

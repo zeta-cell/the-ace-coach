@@ -72,7 +72,7 @@ const SURFACE_LABELS: Record<string, string> = { clay: "Clay", hard: "Hard Court
 const FREQ_LABELS: Record<string, string> = { daily: "Daily", "3-4x_week": "3–4× / week", "1-2x_week": "1–2× / week", occasional: "Occasional" };
 
 const PlayerProfile = () => {
-  const { user, profile, signOut } = useAuth();
+  const { user, profile, signOut, refreshProfile } = useAuth();
   const navigate = useNavigate();
   const [playerData, setPlayerData] = useState<PlayerData | null>(null);
   const [playerPhone, setPlayerPhone] = useState<string | null>(null);
