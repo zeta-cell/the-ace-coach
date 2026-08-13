@@ -181,6 +181,7 @@ const App = () => (
             <Route path="/portal/login" element={<Suspense fallback={<PortalLoader />}><Login /></Suspense>} />
             <Route path="/portal" element={<Suspense fallback={<PortalLoader />}><Login /></Suspense>} />
             <Route path="/test" element={<Suspense fallback={<PortalLoader />}><TestAccounts /></Suspense>} />
+            <Route path="/unsubscribe" element={<Suspense fallback={<PortalLoader />}><Unsubscribe /></Suspense>} />
 
             {/* Onboarding */}
             <Route path="/onboarding" element={
