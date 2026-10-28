@@ -152,6 +152,7 @@ const App = () => (
       <IconContext.Provider value={{ weight: "duotone", size: 20, mirrored: false }}>
         <TooltipProvider>
           <Toaster />
+          <SitePasswordGate />
           <Sonner />
         <BrowserRouter>
           <ScrollToTop />
