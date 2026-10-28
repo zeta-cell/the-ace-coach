@@ -1,3 +1,4 @@
+import SitePasswordGate from "@/components/SitePasswordGate";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -152,6 +153,7 @@ const App = () => (
       <IconContext.Provider value={{ weight: "duotone", size: 20, mirrored: false }}>
         <TooltipProvider>
           <Toaster />
+          <SitePasswordGate />
           <Sonner />
         <BrowserRouter>
           <ScrollToTop />
