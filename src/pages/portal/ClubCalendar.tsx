@@ -185,9 +185,9 @@ const ClubCalendar = () => {
               onPick={(d) => { setCursor(d); setView("day"); }} />
           ) : view === "day" && dayTab === "courts" ? (
             <TimeGrid
-              columns={courts.length ? courts.map((c) => ({ key: c.id, label: `Court ${c.court_number}`, date: ds(cursor), courtId: c.id })) : [{ key: "none", label: "No courts set up", date: ds(cursor) }]}
+              columns={courts.length ? courts.map((c) => ({ key: c.id, label: c.court_number, date: ds(cursor), courtId: c.id })) : [{ key: "none", label: "No courts set up", date: ds(cursor) }]}
               bookings={visible}
-              match={(b, col) => b.booking_date === col.date && (b.court_id === col.courtId || (!b.court_id && b.court_number === col.label.replace("Court ", "")))}
+              match={(b, col) => b.booking_date === col.date && (b.court_id === col.courtId || (!b.court_id && b.court_number === col.label))}
               colorOf={colorOf} onDrop={move}
             />
           ) : (
