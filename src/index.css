@@ -37,6 +37,13 @@
     --popover: 8 65% 97%;
     --popover-foreground: 213 38% 18%;
 
+    /* Coach colours for schedule views */
+    --coach-1: 25 95% 58%;
+    --coach-2: 199 80% 55%;
+    --coach-3: 152 60% 45%;
+    --coach-4: 280 60% 62%;
+    --coach-5: 47 85% 55%;
+    --coach-6: 340 75% 60%;
     /* Yellow primary (preview) */
     --primary: 25 95% 58%;
     --primary-foreground: 213 38% 18%;
