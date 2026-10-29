@@ -9,22 +9,11 @@ import {
   format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, eachDayOfInterval,
   addDays, addMonths, isSameDay, isSameMonth, isToday,
 } from "date-fns";
+import CalendarItemSheet, { type CalItem } from "@/components/portal/CalendarItemSheet";
 
-interface ClubBooking {
-  id: string;
-  booking_date: string;
-  start_time: string;
-  end_time: string;
-  status: string;
-  court_number: string | null;
-  court_id: string | null;
-  coach_id: string;
-  player_id: string;
-  coach_name?: string;
-  player_name?: string;
-}
 interface Court { id: string; court_number: string }
 interface Coach { id: string; name: string; color: string }
+type ClubBooking = CalItem;
 
 type ViewMode = "day" | "week" | "month";
 type DayTab = "sessions" | "courts";
@@ -49,6 +38,7 @@ const ClubCalendar = () => {
   const [dayTab, setDayTab] = useState<DayTab>("sessions");
   const [cursor, setCursor] = useState(new Date());
   const [coachFilter, setCoachFilter] = useState("all");
+  const [selected, setSelected] = useState<CalItem | null>(null);
 
   const range = useMemo(() => {
     if (view === "day") return { from: cursor, to: cursor };
@@ -59,7 +49,12 @@ const ClubCalendar = () => {
   const load = useCallback(async () => {
     if (!activeClubId) return;
     setLoading(true);
-    const [{ data }, { data: courtRows }, { data: coachRows }] = await Promise.all([
+    const { data: coachRows } = await supabase.from("club_coaches").select("coach_id").eq("club_id", activeClubId);
+    const rosterIds = (coachRows || []).map((c) => c.coach_id);
+    const fromIso = new Date(`${ds(range.from)}T00:00`).toISOString();
+    const toIso = new Date(`${ds(addDays(range.to, 1))}T00:00`).toISOString();
+    const evFilter = rosterIds.length ? `club_id.eq.${activeClubId},coach_id.in.(${rosterIds.join(",")})` : `club_id.eq.${activeClubId}`;
+    const [{ data }, { data: courtRows }, { data: evRows }] = await Promise.all([
       supabase.from("bookings")
         .select("id, booking_date, start_time, end_time, status, court_number, court_id, coach_id, player_id")
         .eq("club_id", activeClubId)
@@ -67,10 +62,15 @@ const ClubCalendar = () => {
         .neq("status", "cancelled")
         .order("start_time"),
       supabase.from("club_courts").select("id, court_number").eq("club_id", activeClubId).eq("is_active", true).order("court_number"),
-      supabase.from("club_coaches").select("coach_id").eq("club_id", activeClubId),
+      supabase.from("events")
+        .select("id, title, start_datetime, end_datetime, coach_id, court_id, court_number, current_participants, max_participants, min_participants, level_min, level_max, status")
+        .or(evFilter)
+        .gte("start_datetime", fromIso).lt("start_datetime", toIso)
+        .neq("status", "cancelled"),
     ]);
-    const rows = (data || []) as ClubBooking[];
-    const coachIds = Array.from(new Set([...(coachRows || []).map((c) => c.coach_id), ...rows.map((b) => b.coach_id)]));
+    const rows = data || [];
+    const evs = evRows || [];
+    const coachIds = Array.from(new Set([...rosterIds, ...rows.map((b) => b.coach_id), ...evs.map((e) => e.coach_id)]));
     const ids = Array.from(new Set([...coachIds, ...rows.map((b) => b.player_id)]));
     const { data: profiles } = ids.length
       ? await supabase.from("profiles").select("user_id, full_name").in("user_id", ids)
@@ -80,7 +80,24 @@ const ClubCalendar = () => {
       .sort((a, b) => a.name.localeCompare(b.name))
       .map((c, i) => ({ ...c, color: coachColor(i) })));
     setCourts((courtRows || []) as Court[]);
-    setBookings(rows.map((b) => ({ ...b, coach_name: nameOf(b.coach_id), player_name: nameOf(b.player_id) })));
+    const items: CalItem[] = [
+      ...rows.map((b) => ({
+        kind: "booking" as const, id: b.id, date: b.booking_date, start: b.start_time, end: b.end_time,
+        coach_id: b.coach_id, court_id: b.court_id, court_number: b.court_number,
+        title: nameOf(b.coach_id) || "Coach", sub: nameOf(b.player_id) || "Member",
+      })),
+      ...evs.map((e) => {
+        const s = new Date(e.start_datetime), en = new Date(e.end_datetime);
+        return {
+          kind: "class" as const, id: e.id, date: ds(s), start: format(s, "HH:mm:ss"), end: format(en, "HH:mm:ss"),
+          coach_id: e.coach_id, court_id: e.court_id, court_number: e.court_number,
+          title: e.title, sub: nameOf(e.coach_id) || "Coach",
+          count: e.current_participants ?? 0, max: e.max_participants, min: e.min_participants,
+          level_min: e.level_min, level_max: e.level_max,
+        };
+      }),
+    ].sort((a, b) => a.start.localeCompare(b.start));
+    setBookings(items);
     setLoading(false);
   }, [activeClubId, range]);
 
@@ -92,20 +109,26 @@ const ClubCalendar = () => {
   const move = async (id: string, date: string, startMin: number, courtId?: string) => {
     const b = bookings.find((x) => x.id === id);
     if (!b) return;
-    const dur = toMin(b.end_time) - toMin(b.start_time);
-    const patch: Partial<ClubBooking> = { booking_date: date, start_time: toTime(startMin), end_time: toTime(startMin + dur) };
+    const dur = toMin(b.end) - toMin(b.start);
+    const patch: Partial<CalItem> = { date, start: toTime(startMin), end: toTime(startMin + dur) };
     if (courtId) {
       patch.court_id = courtId;
       patch.court_number = courts.find((c) => c.id === courtId)?.court_number ?? b.court_number;
     }
     const prev = bookings;
     setBookings((list) => list.map((x) => (x.id === id ? { ...x, ...patch } : x)));
-    const { error } = await supabase.from("bookings").update(patch).eq("id", id);
+    const court = courtId ? { court_id: patch.court_id, court_number: patch.court_number } : {};
+    const { error } = b.kind === "class"
+      ? await supabase.from("events").update({
+          start_datetime: new Date(`${date}T${patch.start}`).toISOString(),
+          end_datetime: new Date(`${date}T${patch.end}`).toISOString(), ...court,
+        }).eq("id", id)
+      : await supabase.from("bookings").update({ booking_date: date, start_time: patch.start, end_time: patch.end, ...court }).eq("id", id);
     if (error) {
       setBookings(prev);
-      toast({ title: "Could not move session", description: error.message.includes("conflict") ? "That court is already booked at this time." : error.message, variant: "destructive" });
+      toast({ title: "Could not move", description: error.message.includes("conflict") ? "That court is already booked at this time." : error.message, variant: "destructive" });
     } else {
-      toast({ title: "Session moved", description: `${format(new Date(date), "EEE d MMM")} · ${toTime(startMin).slice(0, 5)}` });
+      toast({ title: b.kind === "class" ? "Class moved" : "Session moved", description: `${format(new Date(date), "EEE d MMM")} · ${toTime(startMin).slice(0, 5)}` });
     }
   };
 
@@ -126,7 +149,7 @@ const ClubCalendar = () => {
       <div className="space-y-5">
         <div>
           <h1 className="font-display text-2xl tracking-wide text-foreground uppercase">Coach Calendar</h1>
-          <p className="text-xs font-body text-muted-foreground uppercase tracking-wider mt-1">All coaches, members, courts and bookings · drag a session to move it</p>
+          <p className="text-xs font-body text-muted-foreground uppercase tracking-wider mt-1">All coaches, members, courts and bookings · drag to move · click to edit</p>
         </div>
 
         {/* Coach filter */}
@@ -187,8 +210,8 @@ const ClubCalendar = () => {
             <TimeGrid
               columns={courts.length ? courts.map((c) => ({ key: c.id, label: c.court_number, date: ds(cursor), courtId: c.id })) : [{ key: "none", label: "No courts set up", date: ds(cursor) }]}
               bookings={visible}
-              match={(b, col) => b.booking_date === col.date && (b.court_id === col.courtId || (!b.court_id && b.court_number === col.label))}
-              colorOf={colorOf} onDrop={move}
+              match={(b, col) => b.date === col.date && (b.court_id === col.courtId || (!b.court_id && b.court_number === col.label))}
+              colorOf={colorOf} onDrop={move} onOpen={setSelected}
             />
           ) : (
             <TimeGrid
@@ -196,8 +219,8 @@ const ClubCalendar = () => {
                 key: ds(d), label: format(d, view === "day" ? "EEEE d" : "EEE d"), date: ds(d), today: isToday(d),
               }))}
               bookings={visible}
-              match={(b, col) => b.booking_date === col.date}
-              colorOf={colorOf} onDrop={move}
+              match={(b, col) => b.date === col.date}
+              colorOf={colorOf} onDrop={move} onOpen={setSelected}
             />
           )}
         </Card>
@@ -206,18 +229,20 @@ const ClubCalendar = () => {
           <p className="text-sm text-muted-foreground flex items-center gap-2"><CalendarDays size={16} /> No sessions in this period.</p>
         )}
       </div>
+      <CalendarItemSheet item={selected} onClose={() => setSelected(null)} onSaved={load} coaches={coaches} courts={courts} />
     </PortalLayout>
   );
 };
 
 interface Column { key: string; label: string; date: string; courtId?: string; today?: boolean }
 
-const TimeGrid = ({ columns, bookings, match, colorOf, onDrop }: {
+const TimeGrid = ({ columns, bookings, match, colorOf, onDrop, onOpen }: {
   columns: Column[];
   bookings: ClubBooking[];
   match: (b: ClubBooking, c: Column) => boolean;
   colorOf: (id: string) => string;
   onDrop: (id: string, date: string, startMin: number, courtId?: string) => void;
+  onOpen: (b: ClubBooking) => void;
 }) => {
   const [over, setOver] = useState<string | null>(null);
   return (
@@ -250,7 +275,7 @@ const TimeGrid = ({ columns, bookings, match, colorOf, onDrop }: {
               );
             })}
             {bookings.filter((b) => match(b, col)).map((b) => {
-              const s = toMin(b.start_time), e = toMin(b.end_time);
+              const s = toMin(b.start), e = toMin(b.end);
               const top = ((s - START_HOUR * 60) / 30) * SLOT_H;
               const h = Math.max(((e - s) / 30) * SLOT_H - 3, 22);
               const color = colorOf(b.coach_id);
@@ -259,12 +284,13 @@ const TimeGrid = ({ columns, bookings, match, colorOf, onDrop }: {
                   onDragStart={(ev) => { ev.dataTransfer.setData("text/plain", b.id); ev.dataTransfer.effectAllowed = "move"; }}
                   className="absolute left-1 right-1 rounded-md px-2 py-1 overflow-hidden cursor-grab active:cursor-grabbing bg-card border border-border hover:brightness-110"
                   style={{ top: top + 1, height: h, borderLeft: `3px solid ${color}`, background: `color-mix(in hsl, ${color} 18%, hsl(var(--card)))` }}
-                  title={`${b.start_time.slice(0, 5)}–${b.end_time.slice(0, 5)} · ${b.coach_name} with ${b.player_name}`}
+                  onClick={() => onOpen(b)}
+                  title={`${b.start.slice(0, 5)}–${b.end.slice(0, 5)} · ${b.title} · click to edit`}
                 >
-                  <div className="text-[11px] font-display tracking-wide text-foreground">{b.start_time.slice(0, 5)}–{b.end_time.slice(0, 5)}</div>
-                  <div className="text-[11px] font-body text-foreground truncate">{b.coach_name || "Coach"}</div>
-                  {h > 50 && <div className="text-[10px] text-muted-foreground truncate flex items-center gap-1"><Users size={10} />{b.player_name || "Member"}</div>}
-                  {h > 66 && b.court_number && <div className="text-[10px] text-muted-foreground truncate flex items-center gap-1"><MapPin size={10} />Court {b.court_number}</div>}
+                  <div className="text-[11px] font-display tracking-wide text-foreground">{b.start.slice(0, 5)}–{b.end.slice(0, 5)}</div>
+                  <div className="text-[11px] font-body text-foreground truncate">{b.title}</div>
+                  {h > 50 && <div className="text-[10px] text-muted-foreground truncate flex items-center gap-1"><Users size={10} />{b.kind === "class" ? `${b.count ?? 0}${b.max ? `/${b.max}` : ""} · ${b.sub}` : b.sub}</div>}
+                  {h > 66 && b.court_number && <div className="text-[10px] text-muted-foreground truncate flex items-center gap-1"><MapPin size={10} />{b.court_number}</div>}
                 </div>
               );
             })}
@@ -286,7 +312,7 @@ const MonthGrid = ({ from, to, cursor, bookings, colorOf, onPick }: {
         <div key={d} className="py-2 text-center font-display text-[11px] tracking-wider uppercase text-muted-foreground border-b border-border">{d}</div>
       ))}
       {days.map((d) => {
-        const list = bookings.filter((b) => isSameDay(new Date(b.booking_date + "T00:00"), d));
+        const list = bookings.filter((b) => isSameDay(new Date(b.date + "T00:00"), d));
         return (
           <button key={d.toISOString()} onClick={() => onPick(d)}
             className={`min-h-[96px] p-2 text-left border-b border-l border-border hover:bg-secondary/50 transition-colors ${isSameMonth(d, cursor) ? "" : "opacity-40"}`}
@@ -296,7 +322,7 @@ const MonthGrid = ({ from, to, cursor, bookings, colorOf, onPick }: {
               {list.slice(0, 3).map((b) => (
                 <div key={b.id} className="flex items-center gap-1 text-[10px] text-foreground truncate">
                   <span className="h-1.5 w-1.5 rounded-full shrink-0" style={{ background: colorOf(b.coach_id) }} />
-                  {b.start_time.slice(0, 5)} {b.coach_name?.split(" ")[0]}
+                  {b.start.slice(0, 5)} {b.title.split(" ")[0]}
                 </div>
               ))}
               {list.length > 3 && <div className="text-[10px] text-muted-foreground">+{list.length - 3} more</div>}
