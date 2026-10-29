@@ -4,7 +4,7 @@ import PortalLayout from "@/components/portal/PortalLayout";
 import { useClub } from "@/hooks/useClub";
 import { Card } from "@/components/ui/card";
 import { toast } from "@/hooks/use-toast";
-import { ChevronLeft, ChevronRight, MapPin, Users, CalendarDays, LayoutGrid, X, Clock, User, Wallet, StickyNote } from "lucide-react";
+import { ChevronLeft, ChevronRight, MapPin, Users, CalendarDays, LayoutGrid, X, Clock, User, Wallet, FileText } from "lucide-react";
 import {
   format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, eachDayOfInterval,
   addDays, addMonths, isSameDay, isSameMonth, isToday,
@@ -360,7 +360,7 @@ const DetailsPanel = ({ selected, bookings, courts, coaches, colorOf, periodLabe
           </div>
           {selected.notes && (
             <div className="flex items-start gap-3">
-              <StickyNote size={14} className="mt-0.5 text-primary shrink-0" />
+              <FileText size={14} className="mt-0.5 text-primary shrink-0" />
               <div className="min-w-0">
                 <dt className="text-[10px] font-display tracking-wider uppercase text-muted-foreground">Notes</dt>
                 <dd className="text-sm font-body text-foreground break-words">{selected.notes}</dd>
