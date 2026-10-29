@@ -34,7 +34,7 @@ type DayTab = "sessions" | "courts";
 
 const START_HOUR = 7;
 const END_HOUR = 22;
-const SLOT_H = 28; // px per 30 min
+const SLOT_H = 36; // px per 30 min
 const SLOTS = Array.from({ length: (END_HOUR - START_HOUR) * 2 }, (_, i) => START_HOUR * 60 + i * 30);
 
 const toMin = (t: string) => { const [h, m] = t.split(":").map(Number); return h * 60 + m; };
