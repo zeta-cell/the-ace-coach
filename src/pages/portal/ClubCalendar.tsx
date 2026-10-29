@@ -4,7 +4,7 @@ import PortalLayout from "@/components/portal/PortalLayout";
 import { useClub } from "@/hooks/useClub";
 import { Card } from "@/components/ui/card";
 import { toast } from "@/hooks/use-toast";
-import { ChevronLeft, ChevronRight, MapPin, Users, CalendarDays } from "lucide-react";
+import { ChevronLeft, ChevronRight, MapPin, Users, CalendarDays, LayoutGrid, X, Clock, User, Wallet, StickyNote } from "lucide-react";
 import {
   format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, eachDayOfInterval,
   addDays, addMonths, isSameDay, isSameMonth, isToday,
@@ -20,6 +20,9 @@ interface ClubBooking {
   court_id: string | null;
   coach_id: string;
   player_id: string;
+  total_price?: number | null;
+  currency?: string | null;
+  notes?: string | null;
   coach_name?: string;
   player_name?: string;
 }
@@ -49,6 +52,7 @@ const ClubCalendar = () => {
   const [dayTab, setDayTab] = useState<DayTab>("sessions");
   const [cursor, setCursor] = useState(new Date());
   const [coachFilter, setCoachFilter] = useState("all");
+  const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const range = useMemo(() => {
     if (view === "day") return { from: cursor, to: cursor };
@@ -61,7 +65,7 @@ const ClubCalendar = () => {
     setLoading(true);
     const [{ data }, { data: courtRows }, { data: coachRows }] = await Promise.all([
       supabase.from("bookings")
-        .select("id, booking_date, start_time, end_time, status, court_number, court_id, coach_id, player_id")
+        .select("id, booking_date, start_time, end_time, status, court_number, court_id, coach_id, player_id, total_price, currency, notes")
         .eq("club_id", activeClubId)
         .gte("booking_date", ds(range.from)).lte("booking_date", ds(range.to))
         .neq("status", "cancelled")
@@ -88,6 +92,7 @@ const ClubCalendar = () => {
 
   const colorOf = (coachId: string) => coaches.find((c) => c.id === coachId)?.color || "hsl(var(--primary))";
   const visible = bookings.filter((b) => coachFilter === "all" || b.coach_id === coachFilter);
+  const selected = bookings.find((b) => b.id === selectedId) || null;
 
   const move = async (id: string, date: string, startMin: number, courtId?: string) => {
     const b = bookings.find((x) => x.id === id);
@@ -167,40 +172,57 @@ const ClubCalendar = () => {
           </div>
         </div>
 
-        {view === "day" && (
+        <div className="flex flex-wrap items-center gap-3">
           <div className="flex gap-1 p-1 rounded-xl bg-secondary/60 w-fit">
             {(["sessions", "courts"] as DayTab[]).map((t) => (
-              <button key={t} onClick={() => setDayTab(t)}
-                className={`px-4 py-1.5 rounded-lg font-display text-[11px] tracking-wider transition-colors ${dayTab === t ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"}`}
-              >{t.toUpperCase()}</button>
+              <button key={t} onClick={() => { setDayTab(t); if (t === "courts" && view !== "day") setView("day"); }}
+                className={`flex items-center gap-1.5 px-4 py-1.5 rounded-lg font-display text-[11px] tracking-wider transition-colors ${dayTab === t ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"}`}
+              >{t === "courts" ? <LayoutGrid size={12} /> : <CalendarDays size={12} />}{t.toUpperCase()}</button>
             ))}
           </div>
-        )}
-
-        <Card className="p-0 overflow-hidden">
-          {loading && bookings.length === 0 ? (
-            <p className="p-6 text-sm text-muted-foreground">Loading…</p>
-          ) : view === "month" ? (
-            <MonthGrid from={range.from} to={range.to} cursor={cursor} bookings={visible} colorOf={colorOf}
-              onPick={(d) => { setCursor(d); setView("day"); }} />
-          ) : view === "day" && dayTab === "courts" ? (
-            <TimeGrid
-              columns={courts.length ? courts.map((c) => ({ key: c.id, label: c.court_number, date: ds(cursor), courtId: c.id })) : [{ key: "none", label: "No courts set up", date: ds(cursor) }]}
-              bookings={visible}
-              match={(b, col) => b.booking_date === col.date && (b.court_id === col.courtId || (!b.court_id && b.court_number === col.label))}
-              colorOf={colorOf} onDrop={move}
-            />
-          ) : (
-            <TimeGrid
-              columns={(view === "day" ? [cursor] : eachDayOfInterval({ start: range.from, end: range.to })).map((d) => ({
-                key: ds(d), label: format(d, view === "day" ? "EEEE d" : "EEE d"), date: ds(d), today: isToday(d),
-              }))}
-              bookings={visible}
-              match={(b, col) => b.booking_date === col.date}
-              colorOf={colorOf} onDrop={move}
-            />
+          {dayTab === "courts" && (
+            <span className="text-[11px] font-body text-muted-foreground">One column per court · drag a session onto another court to move it</span>
           )}
-        </Card>
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_260px] items-start">
+          <Card className="p-0 overflow-hidden min-w-0">
+            {loading && bookings.length === 0 ? (
+              <p className="p-6 text-sm text-muted-foreground">Loading…</p>
+            ) : view === "month" ? (
+              <MonthGrid from={range.from} to={range.to} cursor={cursor} bookings={visible} colorOf={colorOf}
+                onPick={(d) => { setCursor(d); setView("day"); }} />
+            ) : view === "day" && dayTab === "courts" ? (
+              <TimeGrid
+                columns={courts.length ? courts.map((c) => ({ key: c.id, label: c.court_number, date: ds(cursor), courtId: c.id })) : [{ key: "none", label: "No courts set up", date: ds(cursor) }]}
+                bookings={visible}
+                match={(b, col) => b.booking_date === col.date && (b.court_id === col.courtId || (!b.court_id && b.court_number === col.label))}
+                colorOf={colorOf} onDrop={move} selectedId={selectedId} onSelect={setSelectedId} showCourt={false}
+              />
+            ) : (
+              <TimeGrid
+                columns={(view === "day" ? [cursor] : eachDayOfInterval({ start: range.from, end: range.to })).map((d) => ({
+                  key: ds(d), label: format(d, view === "day" ? "EEEE d" : "EEE d"), date: ds(d), today: isToday(d),
+                }))}
+                bookings={visible}
+                match={(b, col) => b.booking_date === col.date}
+                colorOf={colorOf} onDrop={move} selectedId={selectedId} onSelect={setSelectedId} showCourt
+              />
+            )}
+          </Card>
+
+          <DetailsPanel
+            selected={selected}
+            bookings={visible}
+            courts={courts}
+            coaches={coaches}
+            colorOf={colorOf}
+            periodLabel={title}
+            onClear={() => setSelectedId(null)}
+            onOpenCourts={() => { setDayTab("courts"); setView("day"); }}
+            onSelect={setSelectedId}
+          />
+        </div>
 
         {!loading && visible.length === 0 && (
           <p className="text-sm text-muted-foreground flex items-center gap-2"><CalendarDays size={16} /> No sessions in this period.</p>
