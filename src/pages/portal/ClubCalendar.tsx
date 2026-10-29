@@ -234,7 +234,7 @@ const ClubCalendar = () => {
 
 interface Column { key: string; label: string; date: string; courtId?: string; today?: boolean }
 
-const TimeGrid = ({ columns, bookings, match, colorOf, onDrop }: {
+const TimeGrid = ({ columns, bookings, match, colorOf, onDrop, selectedId, onSelect, showCourt }: {
   columns: Column[];
   bookings: ClubBooking[];
   match: (b: ClubBooking, c: Column) => boolean;
