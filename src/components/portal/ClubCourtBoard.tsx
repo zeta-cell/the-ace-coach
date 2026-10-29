@@ -173,7 +173,7 @@ const ClubCourtBoard = ({ clubId, date, courts, coaches, onChanged }: Props) => 
                     if (regId && from) movePlayer(regId, from, court, time);
                   }}>
                   {/* Court visual: net in the middle, 2 players per side */}
-                  <div className="court-surface relative rounded-md border-2 overflow-hidden"
+                  <div className="relative bg-secondary/50 rounded-md border-2 overflow-hidden"
                     style={{ borderColor: color ? `color-mix(in hsl, ${color} 70%, transparent)` : "hsl(var(--border))" }}>
                     <div className="absolute inset-y-0 left-1/2 w-px bg-foreground/40" />
                     <div className="absolute inset-x-2 top-1/2 h-px bg-foreground/15" />
