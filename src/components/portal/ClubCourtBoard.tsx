@@ -13,6 +13,7 @@ interface Court { id: string; court_number: string }
 interface Coach { id: string; name: string; color: string }
 interface Player { player_id: string; full_name: string; level: number | null }
 interface Spot { reg_id: string; player_id: string; name: string }
+interface Booked { id: string; court_id: string; start: string; end: string; coach_id: string; player: string }
 interface Group { id: string; court_id: string; time: string; coach_id: string; title: string; players: Spot[] }
 
 const addMin = (t: string, m: number) => {
@@ -26,6 +27,7 @@ interface Props { clubId: string; date: string; courts: Court[]; coaches: Coach[
 const ClubCourtBoard = ({ clubId, date, courts, coaches, onChanged }: Props) => {
   const [groups, setGroups] = useState<Group[]>([]);
   const [players, setPlayers] = useState<Player[]>([]);
+  const [booked, setBooked] = useState<Booked[]>([]);
   const [loading, setLoading] = useState(true);
   const [target, setTarget] = useState<{ court: Court; time: string; group?: Group } | null>(null);
   const [search, setSearch] = useState("");
@@ -43,9 +45,15 @@ const ClubCourtBoard = ({ clubId, date, courts, coaches, onChanged }: Props) => 
     const { data: regs } = ids.length
       ? await supabase.from("event_registrations").select("id, event_id, player_id, status").in("event_id", ids).neq("status", "cancelled")
       : { data: [] as { id: string; event_id: string; player_id: string; status: string | null }[] };
-    const pids = Array.from(new Set((regs || []).map((r) => r.player_id)));
+    const courtIds = courts.map((c) => c.id);
+    const { data: bks } = courtIds.length
+      ? await supabase.from("bookings").select("id, court_id, start_time, end_time, coach_id, player_id, status")
+          .eq("booking_date", date).in("court_id", courtIds).not("status", "in", "(cancelled,declined)")
+      : { data: [] as { id: string; court_id: string | null; start_time: string; end_time: string; coach_id: string; player_id: string; status: string }[] };
+    const pids = Array.from(new Set([...(regs || []).map((r) => r.player_id), ...(bks || []).map((b) => b.player_id)]));
     const { data: profs } = pids.length ? await supabase.from("profiles").select("user_id, full_name").in("user_id", pids) : { data: [] };
     const nm = new Map((profs || []).map((p) => [p.user_id, p.full_name]));
+    setBooked((bks || []).map((b) => ({ id: b.id, court_id: b.court_id as string, start: b.start_time.slice(0, 5), end: b.end_time.slice(0, 5), coach_id: b.coach_id, player: nm.get(b.player_id) || "Player" })));
     setGroups((evs || []).map((e) => {
       const d = new Date(e.start_datetime);
       return {
@@ -55,7 +63,7 @@ const ClubCourtBoard = ({ clubId, date, courts, coaches, onChanged }: Props) => 
       };
     }));
     setLoading(false);
-  }, [clubId, date]);
+  }, [clubId, date, courts]);
 
   useEffect(() => { load(); }, [load]);
   useEffect(() => {
@@ -163,6 +171,22 @@ const ClubCourtBoard = ({ clubId, date, courts, coaches, onChanged }: Props) => 
             </div>
             {courts.map((court) => {
               const g = groups.find((x) => x.court_id === court.id && x.time === time);
+              const slotEnd = addMin(time, DURATION);
+              const bk = !g ? booked.find((b) => b.court_id === court.id && b.start < slotEnd && b.end > time) : undefined;
+              if (bk) {
+                const bc = coaches.find((c) => c.id === bk.coach_id)?.color || "hsl(var(--primary))";
+                return (
+                  <div key={court.id} className="border-b border-l border-border p-2">
+                    <div className="rounded-md border-2 bg-secondary/70 min-h-[92px] p-2 flex flex-col justify-center gap-0.5"
+                      style={{ borderColor: `color-mix(in hsl, ${bc} 70%, transparent)` }}>
+                      <span className="font-display text-[10px] tracking-wider uppercase text-muted-foreground">Booked · Private</span>
+                      <span className="font-display text-xs text-foreground">{bk.start}–{bk.end}</span>
+                      <span className="font-body text-[11px] text-foreground truncate">{coachName(bk.coach_id)}</span>
+                      <span className="font-body text-[10px] text-muted-foreground truncate">{bk.player}</span>
+                    </div>
+                  </div>
+                );
+              }
               const color = g ? coaches.find((c) => c.id === g.coach_id)?.color || "hsl(var(--primary))" : undefined;
               return (
                 <div key={court.id} className="border-b border-l border-border p-2"
