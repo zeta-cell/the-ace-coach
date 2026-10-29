@@ -4,7 +4,7 @@ import PortalLayout from "@/components/portal/PortalLayout";
 import { useClub } from "@/hooks/useClub";
 import { Card } from "@/components/ui/card";
 import { toast } from "@/hooks/use-toast";
-import { ChevronLeft, ChevronRight, MapPin, Users, CalendarDays } from "lucide-react";
+import { ChevronLeft, ChevronRight, MapPin, Users, CalendarDays, LayoutGrid, X, Clock, User, Wallet, FileText } from "lucide-react";
 import {
   format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, eachDayOfInterval,
   addDays, addMonths, isSameDay, isSameMonth, isToday,
@@ -20,6 +20,9 @@ interface ClubBooking {
   court_id: string | null;
   coach_id: string;
   player_id: string;
+  total_price?: number | null;
+  currency?: string | null;
+  notes?: string | null;
   coach_name?: string;
   player_name?: string;
 }
@@ -31,7 +34,7 @@ type DayTab = "sessions" | "courts";
 
 const START_HOUR = 7;
 const END_HOUR = 22;
-const SLOT_H = 28; // px per 30 min
+const SLOT_H = 36; // px per 30 min
 const SLOTS = Array.from({ length: (END_HOUR - START_HOUR) * 2 }, (_, i) => START_HOUR * 60 + i * 30);
 
 const toMin = (t: string) => { const [h, m] = t.split(":").map(Number); return h * 60 + m; };
@@ -49,6 +52,7 @@ const ClubCalendar = () => {
   const [dayTab, setDayTab] = useState<DayTab>("sessions");
   const [cursor, setCursor] = useState(new Date());
   const [coachFilter, setCoachFilter] = useState("all");
+  const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const range = useMemo(() => {
     if (view === "day") return { from: cursor, to: cursor };
@@ -61,7 +65,7 @@ const ClubCalendar = () => {
     setLoading(true);
     const [{ data }, { data: courtRows }, { data: coachRows }] = await Promise.all([
       supabase.from("bookings")
-        .select("id, booking_date, start_time, end_time, status, court_number, court_id, coach_id, player_id")
+        .select("id, booking_date, start_time, end_time, status, court_number, court_id, coach_id, player_id, total_price, currency, notes")
         .eq("club_id", activeClubId)
         .gte("booking_date", ds(range.from)).lte("booking_date", ds(range.to))
         .neq("status", "cancelled")
@@ -88,6 +92,7 @@ const ClubCalendar = () => {
 
   const colorOf = (coachId: string) => coaches.find((c) => c.id === coachId)?.color || "hsl(var(--primary))";
   const visible = bookings.filter((b) => coachFilter === "all" || b.coach_id === coachFilter);
+  const selected = bookings.find((b) => b.id === selectedId) || null;
 
   const move = async (id: string, date: string, startMin: number, courtId?: string) => {
     const b = bookings.find((x) => x.id === id);
@@ -167,40 +172,57 @@ const ClubCalendar = () => {
           </div>
         </div>
 
-        {view === "day" && (
+        <div className="flex flex-wrap items-center gap-3">
           <div className="flex gap-1 p-1 rounded-xl bg-secondary/60 w-fit">
             {(["sessions", "courts"] as DayTab[]).map((t) => (
-              <button key={t} onClick={() => setDayTab(t)}
-                className={`px-4 py-1.5 rounded-lg font-display text-[11px] tracking-wider transition-colors ${dayTab === t ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"}`}
-              >{t.toUpperCase()}</button>
+              <button key={t} onClick={() => { setDayTab(t); if (t === "courts" && view !== "day") setView("day"); }}
+                className={`flex items-center gap-1.5 px-4 py-1.5 rounded-lg font-display text-[11px] tracking-wider transition-colors ${dayTab === t ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"}`}
+              >{t === "courts" ? <LayoutGrid size={12} /> : <CalendarDays size={12} />}{t.toUpperCase()}</button>
             ))}
           </div>
-        )}
-
-        <Card className="p-0 overflow-hidden">
-          {loading && bookings.length === 0 ? (
-            <p className="p-6 text-sm text-muted-foreground">Loading…</p>
-          ) : view === "month" ? (
-            <MonthGrid from={range.from} to={range.to} cursor={cursor} bookings={visible} colorOf={colorOf}
-              onPick={(d) => { setCursor(d); setView("day"); }} />
-          ) : view === "day" && dayTab === "courts" ? (
-            <TimeGrid
-              columns={courts.length ? courts.map((c) => ({ key: c.id, label: c.court_number, date: ds(cursor), courtId: c.id })) : [{ key: "none", label: "No courts set up", date: ds(cursor) }]}
-              bookings={visible}
-              match={(b, col) => b.booking_date === col.date && (b.court_id === col.courtId || (!b.court_id && b.court_number === col.label))}
-              colorOf={colorOf} onDrop={move}
-            />
-          ) : (
-            <TimeGrid
-              columns={(view === "day" ? [cursor] : eachDayOfInterval({ start: range.from, end: range.to })).map((d) => ({
-                key: ds(d), label: format(d, view === "day" ? "EEEE d" : "EEE d"), date: ds(d), today: isToday(d),
-              }))}
-              bookings={visible}
-              match={(b, col) => b.booking_date === col.date}
-              colorOf={colorOf} onDrop={move}
-            />
+          {dayTab === "courts" && (
+            <span className="text-[11px] font-body text-muted-foreground">One column per court · drag a session onto another court to move it</span>
           )}
-        </Card>
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_260px] items-start">
+          <Card className="p-0 overflow-hidden min-w-0">
+            {loading && bookings.length === 0 ? (
+              <p className="p-6 text-sm text-muted-foreground">Loading…</p>
+            ) : view === "month" ? (
+              <MonthGrid from={range.from} to={range.to} cursor={cursor} bookings={visible} colorOf={colorOf}
+                onPick={(d) => { setCursor(d); setView("day"); }} />
+            ) : view === "day" && dayTab === "courts" ? (
+              <TimeGrid
+                columns={courts.length ? courts.map((c) => ({ key: c.id, label: c.court_number, date: ds(cursor), courtId: c.id })) : [{ key: "none", label: "No courts set up", date: ds(cursor) }]}
+                bookings={visible}
+                match={(b, col) => b.booking_date === col.date && (b.court_id === col.courtId || (!b.court_id && b.court_number === col.label))}
+                colorOf={colorOf} onDrop={move} selectedId={selectedId} onSelect={setSelectedId} showCourt={false}
+              />
+            ) : (
+              <TimeGrid
+                columns={(view === "day" ? [cursor] : eachDayOfInterval({ start: range.from, end: range.to })).map((d) => ({
+                  key: ds(d), label: format(d, view === "day" ? "EEEE d" : "EEE d"), date: ds(d), today: isToday(d),
+                }))}
+                bookings={visible}
+                match={(b, col) => b.booking_date === col.date}
+                colorOf={colorOf} onDrop={move} selectedId={selectedId} onSelect={setSelectedId} showCourt
+              />
+            )}
+          </Card>
+
+          <DetailsPanel
+            selected={selected}
+            bookings={visible}
+            courts={courts}
+            coaches={coaches}
+            colorOf={colorOf}
+            periodLabel={title}
+            onClear={() => setSelectedId(null)}
+            onOpenCourts={() => { setDayTab("courts"); setView("day"); }}
+            onSelect={setSelectedId}
+          />
+        </div>
 
         {!loading && visible.length === 0 && (
           <p className="text-sm text-muted-foreground flex items-center gap-2"><CalendarDays size={16} /> No sessions in this period.</p>
@@ -212,20 +234,23 @@ const ClubCalendar = () => {
 
 interface Column { key: string; label: string; date: string; courtId?: string; today?: boolean }
 
-const TimeGrid = ({ columns, bookings, match, colorOf, onDrop }: {
+const TimeGrid = ({ columns, bookings, match, colorOf, onDrop, selectedId, onSelect, showCourt }: {
   columns: Column[];
   bookings: ClubBooking[];
   match: (b: ClubBooking, c: Column) => boolean;
   colorOf: (id: string) => string;
   onDrop: (id: string, date: string, startMin: number, courtId?: string) => void;
+  selectedId: string | null;
+  onSelect: (id: string | null) => void;
+  showCourt: boolean;
 }) => {
   const [over, setOver] = useState<string | null>(null);
   return (
     <div className="overflow-x-auto">
-      <div className="min-w-fit" style={{ display: "grid", gridTemplateColumns: `56px repeat(${columns.length}, minmax(140px, 1fr))` }}>
+      <div className="min-w-fit" style={{ display: "grid", gridTemplateColumns: `52px repeat(${columns.length}, minmax(${columns.length > 4 ? 96 : 140}px, 1fr))` }}>
         <div className="sticky left-0 z-20 bg-card border-b border-border" />
         {columns.map((c) => (
-          <div key={c.key} className={`px-2 py-3 text-center border-b border-l border-border font-display text-[11px] tracking-wider uppercase ${c.today ? "text-primary" : "text-muted-foreground"}`}>{c.label}</div>
+          <div key={c.key} className={`px-2 py-3 text-center border-b border-l border-border font-display text-[11px] tracking-wider uppercase truncate ${c.today ? "text-primary" : "text-muted-foreground"}`}>{c.label}</div>
         ))}
 
         <div className="sticky left-0 z-10 bg-card">
@@ -254,17 +279,24 @@ const TimeGrid = ({ columns, bookings, match, colorOf, onDrop }: {
               const top = ((s - START_HOUR * 60) / 30) * SLOT_H;
               const h = Math.max(((e - s) / 30) * SLOT_H - 3, 22);
               const color = colorOf(b.coach_id);
+              const isSel = selectedId === b.id;
               return (
-                <div key={b.id} draggable
+                <div key={b.id} draggable role="button" tabIndex={0}
+                  onClick={() => onSelect(isSel ? null : b.id)}
+                  onKeyDown={(ev) => { if (ev.key === "Enter") onSelect(b.id); }}
                   onDragStart={(ev) => { ev.dataTransfer.setData("text/plain", b.id); ev.dataTransfer.effectAllowed = "move"; }}
-                  className="absolute left-1 right-1 rounded-md px-2 py-1 overflow-hidden cursor-grab active:cursor-grabbing bg-card border border-border hover:brightness-110"
+                  className={`absolute left-1 right-1 rounded-md px-2 py-1 overflow-hidden cursor-grab active:cursor-grabbing border hover:brightness-110 ${isSel ? "border-primary ring-2 ring-primary/60 z-10" : "border-border"}`}
                   style={{ top: top + 1, height: h, borderLeft: `3px solid ${color}`, background: `color-mix(in hsl, ${color} 18%, hsl(var(--card)))` }}
-                  title={`${b.start_time.slice(0, 5)}–${b.end_time.slice(0, 5)} · ${b.coach_name} with ${b.player_name}`}
+                  title={`${b.start_time.slice(0, 5)}–${b.end_time.slice(0, 5)} · ${b.coach_name} with ${b.player_name}${b.court_number ? ` · ${b.court_number}` : ""}`}
                 >
-                  <div className="text-[11px] font-display tracking-wide text-foreground">{b.start_time.slice(0, 5)}–{b.end_time.slice(0, 5)}</div>
+                  <div className="text-[11px] font-display tracking-wide text-foreground truncate">{b.start_time.slice(0, 5)}–{b.end_time.slice(0, 5)}</div>
                   <div className="text-[11px] font-body text-foreground truncate">{b.coach_name || "Coach"}</div>
-                  {h > 50 && <div className="text-[10px] text-muted-foreground truncate flex items-center gap-1"><Users size={10} />{b.player_name || "Member"}</div>}
-                  {h > 66 && b.court_number && <div className="text-[10px] text-muted-foreground truncate flex items-center gap-1"><MapPin size={10} />Court {b.court_number}</div>}
+                  {h > 50 && <div className="text-[10px] text-muted-foreground truncate flex items-center gap-1"><Users size={10} className="shrink-0" />{b.player_name || "Member"}</div>}
+                  {showCourt && b.court_number && (
+                    <div className="mt-0.5 inline-flex max-w-full items-center gap-1 rounded bg-background/60 px-1.5 py-px text-[10px] text-foreground truncate">
+                      <MapPin size={9} className="shrink-0 text-primary" />{b.court_number}
+                    </div>
+                  )}
                 </div>
               );
             })}
@@ -272,6 +304,155 @@ const TimeGrid = ({ columns, bookings, match, colorOf, onDrop }: {
         ))}
       </div>
     </div>
+  );
+};
+
+const minsOf = (b: ClubBooking) => toMin(b.end_time) - toMin(b.start_time);
+const hrs = (m: number) => `${Math.round((m / 60) * 10) / 10}h`;
+
+const DetailsPanel = ({ selected, bookings, courts, coaches, colorOf, periodLabel, onClear, onOpenCourts, onSelect }: {
+  selected: ClubBooking | null;
+  bookings: ClubBooking[];
+  courts: Court[];
+  coaches: Coach[];
+  colorOf: (id: string) => string;
+  periodLabel: string;
+  onClear: () => void;
+  onOpenCourts: () => void;
+  onSelect: (id: string) => void;
+}) => {
+  if (selected) {
+    const color = colorOf(selected.coach_id);
+    const rows: { icon: typeof Clock; label: string; value: string }[] = [
+      { icon: CalendarDays, label: "Date", value: format(new Date(selected.booking_date + "T00:00"), "EEEE, d MMMM") },
+      { icon: Clock, label: "Time", value: `${selected.start_time.slice(0, 5)} – ${selected.end_time.slice(0, 5)} (${minsOf(selected)} min)` },
+      { icon: User, label: "Coach", value: selected.coach_name || "Coach" },
+      { icon: Users, label: "Member", value: selected.player_name || "Member" },
+      { icon: MapPin, label: "Court", value: selected.court_number || "Not assigned" },
+      { icon: Wallet, label: "Price", value: selected.total_price != null ? `${Number(selected.total_price).toFixed(2)} ${selected.currency || "EUR"}` : "—" },
+    ];
+    return (
+      <Card className="p-4 md:sticky md:top-4 space-y-4">
+        <div className="flex items-start justify-between gap-2">
+          <div>
+            <p className="text-[10px] font-display tracking-wider uppercase text-muted-foreground">Session details</p>
+            <p className="font-display text-base text-foreground mt-1">{selected.start_time.slice(0, 5)}–{selected.end_time.slice(0, 5)}</p>
+          </div>
+          <button onClick={onClear} aria-label="Close details" className="h-7 w-7 grid place-items-center rounded-md hover:bg-secondary text-muted-foreground"><X size={14} /></button>
+        </div>
+        <div className="h-1 rounded-full" style={{ background: color }} />
+        <dl className="space-y-3">
+          {rows.map(({ icon: Icon, label, value }) => (
+            <div key={label} className="flex items-start gap-3">
+              <Icon size={14} className="mt-0.5 text-primary shrink-0" />
+              <div className="min-w-0">
+                <dt className="text-[10px] font-display tracking-wider uppercase text-muted-foreground">{label}</dt>
+                <dd className="text-sm font-body text-foreground break-words">{value}</dd>
+              </div>
+            </div>
+          ))}
+          <div className="flex items-start gap-3">
+            <span className="mt-1 h-2.5 w-2.5 rounded-full shrink-0 bg-primary" />
+            <div>
+              <dt className="text-[10px] font-display tracking-wider uppercase text-muted-foreground">Status</dt>
+              <dd className="text-sm font-body text-foreground capitalize">{selected.status}</dd>
+            </div>
+          </div>
+          {selected.notes && (
+            <div className="flex items-start gap-3">
+              <FileText size={14} className="mt-0.5 text-primary shrink-0" />
+              <div className="min-w-0">
+                <dt className="text-[10px] font-display tracking-wider uppercase text-muted-foreground">Notes</dt>
+                <dd className="text-sm font-body text-foreground break-words">{selected.notes}</dd>
+              </div>
+            </div>
+          )}
+        </dl>
+        <p className="text-[11px] text-muted-foreground font-body">Drag the session in the calendar to move it to another time or court.</p>
+      </Card>
+    );
+  }
+
+  const totalMin = bookings.reduce((s, b) => s + minsOf(b), 0);
+  const revenue = bookings.reduce((s, b) => s + Number(b.total_price || 0), 0);
+  const courtUse = courts.map((c) => {
+    const list = bookings.filter((b) => b.court_id === c.id || (!b.court_id && b.court_number === c.court_number));
+    return { ...c, count: list.length, mins: list.reduce((s, b) => s + minsOf(b), 0) };
+  });
+  const maxCourt = Math.max(1, ...courtUse.map((c) => c.mins));
+  const coachUse = coaches.map((c) => {
+    const list = bookings.filter((b) => b.coach_id === c.id);
+    return { ...c, count: list.length, mins: list.reduce((s, b) => s + minsOf(b), 0) };
+  }).filter((c) => c.count > 0);
+  const upcoming = [...bookings].sort((a, b) => (a.booking_date + a.start_time).localeCompare(b.booking_date + b.start_time)).slice(0, 5);
+
+  return (
+    <Card className="p-4 md:sticky md:top-4 space-y-5">
+      <div>
+        <p className="text-[10px] font-display tracking-wider uppercase text-muted-foreground">Overview</p>
+        <p className="font-display text-sm text-foreground mt-1">{periodLabel}</p>
+      </div>
+      <div className="grid grid-cols-3 gap-2">
+        {[{ k: "Sessions", v: String(bookings.length) }, { k: "Hours", v: hrs(totalMin) }, { k: "Revenue", v: `€${Math.round(revenue)}` }].map((s) => (
+          <div key={s.k} className="rounded-lg bg-secondary/60 p-2">
+            <p className="font-display text-base text-foreground">{s.v}</p>
+            <p className="text-[9px] font-display tracking-wider uppercase text-muted-foreground">{s.k}</p>
+          </div>
+        ))}
+      </div>
+
+      <div>
+        <div className="flex items-center justify-between mb-2">
+          <p className="text-[10px] font-display tracking-wider uppercase text-muted-foreground">Courts</p>
+          <button onClick={onOpenCourts} className="text-[10px] font-display tracking-wider text-primary hover:underline">COURT VIEW</button>
+        </div>
+        {courtUse.length === 0 ? (
+          <p className="text-xs text-muted-foreground">No courts set up yet.</p>
+        ) : (
+          <ul className="space-y-1.5">
+            {courtUse.map((c) => (
+              <li key={c.id} className="text-xs font-body">
+                <div className="flex justify-between text-foreground"><span className="truncate">{c.court_number}</span><span className="text-muted-foreground">{c.count ? `${c.count} · ${hrs(c.mins)}` : "free"}</span></div>
+                <div className="h-1 mt-1 rounded-full bg-secondary overflow-hidden"><div className="h-full rounded-full bg-primary" style={{ width: `${(c.mins / maxCourt) * 100}%` }} /></div>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+
+      {coachUse.length > 0 && (
+        <div>
+          <p className="text-[10px] font-display tracking-wider uppercase text-muted-foreground mb-2">Coaches</p>
+          <ul className="space-y-1.5">
+            {coachUse.map((c) => (
+              <li key={c.id} className="flex items-center gap-2 text-xs font-body text-foreground">
+                <span className="h-2.5 w-2.5 rounded-full shrink-0" style={{ background: c.color }} />
+                <span className="truncate flex-1">{c.name}</span>
+                <span className="text-muted-foreground">{c.count} · {hrs(c.mins)}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {upcoming.length > 0 && (
+        <div>
+          <p className="text-[10px] font-display tracking-wider uppercase text-muted-foreground mb-2">Sessions</p>
+          <ul className="space-y-1">
+            {upcoming.map((b) => (
+              <li key={b.id}>
+                <button onClick={() => onSelect(b.id)} className="w-full text-left rounded-md px-2 py-1.5 hover:bg-secondary text-xs font-body flex items-center gap-2">
+                  <span className="h-2 w-2 rounded-full shrink-0" style={{ background: colorOf(b.coach_id) }} />
+                  <span className="text-muted-foreground shrink-0">{format(new Date(b.booking_date + "T00:00"), "EEE")} {b.start_time.slice(0, 5)}</span>
+                  <span className="truncate text-foreground">{b.player_name}</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+      <p className="text-[11px] text-muted-foreground font-body">Click a session to see its details here.</p>
+    </Card>
   );
 };
 
