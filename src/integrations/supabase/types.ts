@@ -3150,6 +3150,14 @@ export type Database = {
           is_coach: boolean
         }[]
       }
+      get_club_player_candidates: {
+        Args: { _club_id: string }
+        Returns: {
+          full_name: string
+          level: number
+          player_id: string
+        }[]
+      }
       get_coach_invite: {
         Args: { _token: string }
         Returns: {

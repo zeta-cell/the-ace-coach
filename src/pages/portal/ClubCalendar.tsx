@@ -9,6 +9,7 @@ import {
   format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, eachDayOfInterval,
   addDays, addMonths, isSameDay, isSameMonth, isToday,
 } from "date-fns";
+import ClubCourtBoard from "@/components/portal/ClubCourtBoard";
 import CalendarItemSheet, { type CalItem } from "@/components/portal/CalendarItemSheet";
 
 interface Court { id: string; court_number: string }
@@ -16,7 +17,7 @@ interface Coach { id: string; name: string; color: string }
 type ClubBooking = CalItem;
 
 type ViewMode = "day" | "week" | "month";
-type DayTab = "sessions" | "courts";
+type DayTab = "board" | "sessions" | "courts";
 
 const START_HOUR = 7;
 const END_HOUR = 22;
@@ -35,7 +36,7 @@ const ClubCalendar = () => {
   const [coaches, setCoaches] = useState<Coach[]>([]);
   const [loading, setLoading] = useState(true);
   const [view, setView] = useState<ViewMode>("week");
-  const [dayTab, setDayTab] = useState<DayTab>("sessions");
+  const [dayTab, setDayTab] = useState<DayTab>("board");
   const [cursor, setCursor] = useState(new Date());
   const [coachFilter, setCoachFilter] = useState("all");
   const [selected, setSelected] = useState<CalItem | null>(null);
@@ -192,10 +193,10 @@ const ClubCalendar = () => {
 
         {view === "day" && (
           <div className="flex gap-1 p-1 rounded-xl bg-secondary/60 w-fit">
-            {(["sessions", "courts"] as DayTab[]).map((t) => (
+            {(["board", "sessions", "courts"] as DayTab[]).map((t) => (
               <button key={t} onClick={() => setDayTab(t)}
                 className={`px-4 py-1.5 rounded-lg font-display text-[11px] tracking-wider transition-colors ${dayTab === t ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"}`}
-              >{t.toUpperCase()}</button>
+              >{t === "board" ? "COURT BOARD" : t.toUpperCase()}</button>
             ))}
           </div>
         )}
@@ -206,6 +207,8 @@ const ClubCalendar = () => {
           ) : view === "month" ? (
             <MonthGrid from={range.from} to={range.to} cursor={cursor} bookings={visible} colorOf={colorOf}
               onPick={(d) => { setCursor(d); setView("day"); }} />
+          ) : view === "day" && dayTab === "board" && activeClubId ? (
+            <ClubCourtBoard clubId={activeClubId} date={ds(cursor)} courts={courts} coaches={coaches} onChanged={load} />
           ) : view === "day" && dayTab === "courts" ? (
             <TimeGrid
               columns={courts.length ? courts.map((c) => ({ key: c.id, label: c.court_number, date: ds(cursor), courtId: c.id })) : [{ key: "none", label: "No courts set up", date: ds(cursor) }]}
