@@ -24,6 +24,8 @@ export function GradientBackdrop({ src, scrim, flip }: GradientBackdropProps) {
           backgroundImage: `url(${src})`,
           backgroundSize: "100% 100%",
           backgroundRepeat: "no-repeat",
+          filter: "saturate(1.28)",
+
           transform: flip ? "scaleY(-1)" : undefined,
         }}
       />
