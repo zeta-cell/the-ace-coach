@@ -119,7 +119,7 @@ const Index = () => {
 
       {/* Stats on orange horizon glow */}
       <section className="relative py-14 px-6">
-        <GradientBackdrop src={grad01.url} scrim="linear-gradient(180deg, hsl(var(--background)) 0%, hsl(var(--background) / 0.38) 28%, hsl(var(--background) / 0.46) 62%, hsl(var(--background)) 100%)" />
+        <GradientBackdrop src={grad01.url} />
         <div className="relative max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8">
           {stats.map((s) => (
             <div key={s.labelKey}>
@@ -159,7 +159,7 @@ const Index = () => {
 
       {/* How it works */}
       <section className="relative py-20 px-6 overflow-hidden">
-        <GradientBackdrop src={grad03.url} scrim="linear-gradient(180deg, hsl(var(--background)) 0%, hsl(var(--background) / 0.52) 24%, hsl(var(--background) / 0.68) 55%, hsl(var(--background) / 0.5) 82%, hsl(var(--background)) 100%)" />
+        <GradientBackdrop src={grad03.url} />
         <div className="relative max-w-6xl mx-auto">
           <h2 className="font-display text-4xl md:text-5xl mb-10">
             {t("how.h2.a")} <span className="text-accent">{t("how.h2.b")}</span>
@@ -204,7 +204,7 @@ const Index = () => {
 
       {/* SEO city cluster */}
       <section className="relative pt-12 pb-10 px-6">
-        <GradientBackdrop src={grad01.url} flip scrim="linear-gradient(180deg, hsl(var(--background)) 0%, hsl(var(--background) / 0.58) 26%, hsl(var(--background) / 0.7) 58%, hsl(var(--background) / 0.52) 84%, hsl(var(--background)) 100%)" />
+        <GradientBackdrop src={grad01.url} flip />
         <div className="relative max-w-5xl mx-auto">
           <h2 className="font-display text-2xl md:text-3xl mb-2">{t("seo.h2.a")} <span className="text-primary">{t("seo.h2.b")}</span></h2>
           <p className="font-body text-sm text-muted-foreground mb-8">{t("seo.lead")}</p>
