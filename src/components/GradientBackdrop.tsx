@@ -3,7 +3,7 @@
 // melts into the midnight-black page above and below.
 
 const DEFAULT_SCRIM =
-  "linear-gradient(180deg, hsl(var(--background)) 0%, hsl(207 77% 5% / 0.62) 12%, hsl(207 77% 5% / 0.62) 40%, hsl(207 73% 6% / 0.56) 55%, hsl(14 60% 7% / 0.42) 74%, hsl(14 60% 7% / 0.22) 92%, hsl(var(--background)) 100%)";
+  "linear-gradient(180deg, hsl(var(--background)) 0%, hsl(220 60% 13% / 0.6) 12%, hsl(220 60% 13% / 0.6) 40%, hsl(219 55% 15% / 0.54) 55%, hsl(14 55% 16% / 0.4) 74%, hsl(14 55% 16% / 0.2) 92%, hsl(var(--background)) 100%)";
 
 
 
