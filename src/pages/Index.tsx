@@ -140,7 +140,7 @@ const Index = () => {
               width={1920}
               height={1080}
               loading="lazy"
-              className="hidden lg:block w-full aspect-[16/10] object-cover rounded-2xl ring-1 ring-foreground/[0.08]"
+              className="mt-8 hidden lg:block w-full flex-1 min-h-[280px] object-cover rounded-2xl ring-1 ring-foreground/[0.08]"
             />
           </div>
           <div className="grid sm:grid-cols-2 gap-4">
