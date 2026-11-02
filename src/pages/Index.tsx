@@ -152,10 +152,11 @@ const Index = () => {
       </section>
 
       {/* How it works */}
-      <section className="relative py-28 px-6 overflow-hidden">
+      <section className="relative py-20 px-6 overflow-hidden">
         <div aria-hidden className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(50% 70% at 10% 50%, hsl(var(--primary) / 0.16), transparent 70%)" }} />
         <div className="relative max-w-6xl mx-auto">
-          <h2 className="font-display text-4xl md:text-5xl mb-14">
+          <h2 className="font-display text-4xl md:text-5xl mb-10">
+
             {t("how.h2.a")} <span className="text-accent">{t("how.h2.b")}</span>
           </h2>
           <div className="grid md:grid-cols-4 gap-4">
@@ -171,7 +172,7 @@ const Index = () => {
       </section>
 
       {/* CTA scene — night padel court with light trails */}
-      <section className="relative min-h-[70vh] flex items-center px-6 overflow-hidden">
+      <section className="relative min-h-[58vh] flex items-center px-6 overflow-hidden">
         <img
           src={ctaCourt}
           alt="Padel court at night with light trails sweeping over the net"
@@ -185,7 +186,7 @@ const Index = () => {
         <div className="relative z-10 max-w-7xl w-full mx-auto md:px-6">
           <div className="max-w-lg">
             <h2 className="font-display text-4xl md:text-6xl mb-4 leading-[1]">
-              {t("cta.h2.a")} <span className="text-primary">{t("cta.h2.b")}</span> {t("cta.h2.c")}
+              {t("cta.h2.a")} <span className="text-primary">{t("cta.h2.b")}</span>{t("cta.h2.c")}
             </h2>
             <p className="font-body text-foreground/75 mb-8">{t("cta.lead")}</p>
             <Link to="/login" className="inline-flex items-center gap-2 font-body font-medium text-base bg-accent text-accent-foreground px-7 py-3.5 rounded-full hover:bg-accent/90 transition-colors">
@@ -196,7 +197,8 @@ const Index = () => {
       </section>
 
       {/* SEO city cluster */}
-      <section className="relative py-16 px-6">
+      <section className="relative pt-14 pb-6 px-6">
+
         <div aria-hidden className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(50% 80% at 50% 0%, hsl(var(--primary) / 0.10), transparent 70%)" }} />
         <div className="relative max-w-5xl mx-auto">
           <h2 className="font-display text-2xl md:text-3xl mb-2">{t("seo.h2.a")} <span className="text-primary">{t("seo.h2.b")}</span></h2>
