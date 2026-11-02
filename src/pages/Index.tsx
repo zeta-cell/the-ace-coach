@@ -11,7 +11,7 @@ import { UsersIcon } from "@/components/ui/animated-icons/users";
 import { ShieldCheckIcon } from "@/components/ui/animated-icons/shield-check";
 import { ZapIcon } from "@/components/ui/animated-icons/zap";
 import { FeatureIconCard } from "@/components/ui/animated-icons/FeatureIconCard";
-import heroPadel from "@/assets/hero-padel.jpg";
+import tennisMotion from "@/assets/tennis-motion.jpg.asset.json";
 import featuresTennis from "@/assets/features-tennis.jpg";
 import ctaCourt from "@/assets/cta-court.jpg";
 import logoWhite from "@/assets/hi-volley-logo-white.png.asset.json";
