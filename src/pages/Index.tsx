@@ -81,10 +81,12 @@ const Index = () => {
             alt="Tennis player sliding on a clay court to reach a ball"
             width={1536}
             height={1024}
-            className="w-full h-full object-cover object-[25%_center]"
+            className="w-full h-full object-cover object-[25%_center] brightness-[1.25] saturate-[1.15]"
             loading="eager"
           />
           <div className="absolute inset-0 bg-background/55 md:hidden" />
+          {/* blue light column from the top + orange horizon glow, like the reference */}
+          <div aria-hidden className="absolute inset-0" style={{ background: "linear-gradient(180deg, hsl(var(--primary) / 0.45) 0%, hsl(var(--primary) / 0.12) 30%, transparent 55%), radial-gradient(80% 55% at 50% 100%, hsl(var(--accent) / 0.45), transparent 70%)" }} />
           <div className="absolute inset-y-0 left-0 w-2/3 bg-gradient-to-r from-background via-background/60 to-transparent" />
           <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-background to-transparent" />
         </div>
@@ -112,7 +114,7 @@ const Index = () => {
 
       {/* Stats on orange horizon glow */}
       <section className="relative py-14 px-6">
-        <div aria-hidden className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(50% 60% at 50% 50%, hsl(var(--accent) / 0.14), transparent 100%)" }} />
+        <div aria-hidden className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(70% 90% at 50% 100%, hsl(var(--accent) / 0.30), transparent 70%), radial-gradient(50% 60% at 50% 0%, hsl(var(--primary) / 0.18), transparent 70%)" }} />
         <div className="relative max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8">
           {stats.map((s) => (
             <div key={s.labelKey}>
@@ -125,7 +127,7 @@ const Index = () => {
 
       {/* Features with blue beam */}
       <section className="relative py-20 px-6 overflow-hidden">
-        <div aria-hidden className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(40% 60% at 85% 0%, hsl(var(--primary) / 0.28), transparent 70%), radial-gradient(35% 40% at 5% 70%, hsl(var(--accent) / 0.10), transparent 100%)" }} />
+        <div aria-hidden className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(45% 70% at 85% 0%, hsl(var(--primary) / 0.45), transparent 70%), radial-gradient(45% 55% at 5% 80%, hsl(var(--accent) / 0.28), transparent 70%)" }} />
         <div className="relative z-10 max-w-6xl mx-auto grid lg:grid-cols-[1fr_1.4fr] gap-16">
           <div className="flex flex-col">
             <BrandIcon className="h-11 w-11 mb-6" />
@@ -152,7 +154,7 @@ const Index = () => {
 
       {/* How it works */}
       <section className="relative py-20 px-6 overflow-hidden">
-        <div aria-hidden className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(50% 70% at 10% 50%, hsl(var(--primary) / 0.16), transparent 70%)" }} />
+        <div aria-hidden className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(55% 80% at 8% 50%, hsl(var(--primary) / 0.35), transparent 70%), radial-gradient(40% 60% at 95% 100%, hsl(var(--accent) / 0.22), transparent 70%)" }} />
         <div className="relative max-w-6xl mx-auto">
           <h2 className="font-display text-4xl md:text-5xl mb-10">
             {t("how.h2.a")} <span className="text-accent">{t("how.h2.b")}</span>
@@ -197,7 +199,7 @@ const Index = () => {
 
       {/* SEO city cluster */}
       <section className="relative pt-12 pb-10 px-6">
-        <div aria-hidden className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(50% 80% at 50% 0%, hsl(var(--primary) / 0.10), transparent 70%)" }} />
+        <div aria-hidden className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(60% 90% at 50% 0%, hsl(var(--primary) / 0.25), transparent 70%), radial-gradient(50% 70% at 50% 100%, hsl(var(--accent) / 0.15), transparent 70%)" }} />
         <div className="relative max-w-5xl mx-auto">
           <h2 className="font-display text-2xl md:text-3xl mb-2">{t("seo.h2.a")} <span className="text-primary">{t("seo.h2.b")}</span></h2>
           <p className="font-body text-sm text-muted-foreground mb-8">{t("seo.lead")}</p>
