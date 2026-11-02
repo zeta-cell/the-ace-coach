@@ -11,7 +11,7 @@ import { UsersIcon } from "@/components/ui/animated-icons/users";
 import { ShieldCheckIcon } from "@/components/ui/animated-icons/shield-check";
 import { ZapIcon } from "@/components/ui/animated-icons/zap";
 import { FeatureIconCard } from "@/components/ui/animated-icons/FeatureIconCard";
-import heroPadel from "@/assets/hero-padel.jpg";
+import tennisMotion from "@/assets/tennis-motion.jpg.asset.json";
 import featuresTennis from "@/assets/features-tennis.jpg";
 import ctaCourt from "@/assets/cta-court.jpg";
 import logoWhite from "@/assets/hi-volley-logo-white.png.asset.json";
@@ -74,52 +74,43 @@ const Index = () => {
       <PublicHeader />
 
       {/* Hero */}
-      <section className="relative min-h-[88svh] md:min-h-[100svh] flex items-end">
+      <section className="relative min-h-[92svh] md:min-h-[100svh] flex items-center hv-aurora overflow-hidden">
         <img
-          src={heroPadel}
-          alt="Padel player mid-swing on clay court"
-          className="absolute inset-0 w-full h-full object-cover"
+          src={tennisMotion.url}
+          alt="Tennis player in motion, blurred"
+          className="absolute inset-x-0 bottom-0 w-full h-[70%] object-cover opacity-35 mix-blend-screen [mask-image:linear-gradient(to_top,black_30%,transparent)]"
           loading="eager"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-background/20" />
-        <div className="absolute inset-0 bg-gradient-to-br from-background/30 via-transparent to-background/40" />
-
-        <div className="relative z-10 w-full max-w-5xl mx-auto px-6 pb-6 pt-20 md:pb-[6.18rem] md:pt-40">
-          <motion.div initial={false}>
-            <img
-              src={logoWhite.url}
-              alt="Hi Volley"
-              className="h-9 md:h-14 w-auto mb-5 md:mb-8 drop-shadow-[0_2px_18px_hsl(var(--navy)/0.5)]"
-              loading="eager"
-            />
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary text-primary-foreground font-body text-xs tracking-wider mb-5 md:mb-10 shadow-lg">
-              <MapPin size={14} /> {t("home.badge")}
-            </span>
-            <h1 className="font-display text-[2.25rem] md:text-6xl lg:text-7xl leading-[0.95] mb-4 md:mb-[1.618rem] [text-shadow:0_2px_20px_hsl(var(--navy)/0.35)]">
-              {t("home.h1.line1")}
-              <br />
-              <span className="text-primary">{t("home.h1.line2")}</span>
-              <br />
-              {t("home.h1.line3")}
-            </h1>
-            <p className="font-body text-sm md:text-xl text-foreground/90 max-w-2xl mb-5 md:mb-[2.618rem] [text-shadow:0_1px_10px_hsl(var(--navy)/0.3)]">
-              {t("home.lead")}
-            </p>
-            <div className="flex flex-row gap-3 sm:gap-4">
-              <Link
-                to="/find-a-coach"
-                className="inline-flex items-center justify-center gap-2 font-display text-sm tracking-widest bg-primary text-primary-foreground px-8 py-4 rounded-xl hover:bg-primary/90 transition-colors w-full sm:w-auto"
-              >
-                {t("home.cta.find")} <ArrowRight size={18} />
-              </Link>
-              <Link
-                to="/login"
-                className="hidden sm:inline-flex items-center justify-center gap-2 font-display text-sm tracking-widest bg-foreground/10 text-foreground px-8 py-4 rounded-xl hover:bg-foreground/20 transition-colors backdrop-blur-sm"
-              >
-                {t("home.cta.coach")}
-              </Link>
-            </div>
-          </motion.div>
+        <div className="relative z-10 w-full max-w-4xl mx-auto px-6 pt-28 pb-16 text-center">
+          <img
+            src={logoWhite.url}
+            alt="Hi Volley"
+            className="h-9 md:h-12 w-auto mx-auto mb-8"
+            loading="eager"
+          />
+          <p className="inline-flex items-center gap-2 font-body text-sm text-foreground/75 mb-6">
+            <span className="h-1.5 w-1.5 rounded-full bg-accent" /> {t("home.badge")}
+          </p>
+          <h1 className="font-display text-[2.25rem] md:text-6xl lg:text-7xl leading-[1] mb-6 font-medium">
+            {t("home.h1.line1")} <span className="text-primary">{t("home.h1.line2")}</span> {t("home.h1.line3")}
+          </h1>
+          <p className="font-body text-base md:text-lg text-foreground/80 max-w-xl mx-auto mb-10">
+            {t("home.lead")}
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <Link
+              to="/find-a-coach"
+              className="inline-flex items-center justify-center gap-2 font-body font-medium text-base bg-foreground text-background px-7 py-3.5 rounded-full hover:bg-foreground/90 transition-colors"
+            >
+              {t("home.cta.find")} <ArrowRight size={18} />
+            </Link>
+            <Link
+              to="/login"
+              className="inline-flex items-center justify-center gap-2 font-body font-medium text-base border border-foreground/25 text-foreground px-7 py-3.5 rounded-full hover:bg-foreground/10 transition-colors"
+            >
+              {t("home.cta.coach")}
+            </Link>
+          </div>
         </div>
       </section>
 

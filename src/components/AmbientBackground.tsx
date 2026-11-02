@@ -35,7 +35,7 @@ function compose(path: string): Glow[] {
       y: Math.round(r() * 100),
       w: 28 + Math.round(r() * 36),
       h: 20 + Math.round(r() * 30),
-      o: c === "black" ? 0.06 : 0.12 + r() * 0.14,
+      o: c === "black" ? 0 : 0.14 + r() * 0.16,
     };
   });
 }
