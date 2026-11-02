@@ -140,7 +140,7 @@ const Index = () => {
               width={1920}
               height={1080}
               loading="lazy"
-              className="mt-8 hidden lg:block w-full flex-1 min-h-[280px] object-cover rounded-2xl ring-1 ring-foreground/[0.08]"
+              className="mt-8 hidden lg:block w-full flex-1 min-h-[280px] object-cover rounded-2xl ring-1 ring-foreground/10 brightness-[1.35] saturate-[1.15]"
             />
           </div>
           <div className="grid sm:grid-cols-2 gap-4">
@@ -161,8 +161,9 @@ const Index = () => {
           </h2>
           <div className="grid md:grid-cols-4 gap-4">
             {steps.map((item) => (
-              <div key={item.step} className="rounded-2xl bg-card/60 p-6 ring-1 ring-foreground/[0.06]">
-                <span className="font-display text-sm text-accent tabular-nums">{item.step}</span>
+              <div key={item.step} className="relative overflow-hidden rounded-2xl bg-gradient-to-b from-card/90 to-card/30 p-6 ring-1 ring-foreground/[0.08]">
+                <span className="inline-flex items-center justify-center h-8 w-8 rounded-full ring-1 ring-accent/40 font-display text-sm text-accent tabular-nums">{item.step}</span>
+
                 <h3 className="font-display text-xl mt-6 mb-2">{t(item.titleKey)}</h3>
                 <p className="font-body text-sm text-muted-foreground">{t(item.descKey)}</p>
               </div>
@@ -181,8 +182,9 @@ const Index = () => {
           className="absolute inset-0 w-full h-full object-cover object-center"
           loading="lazy"
         />
-        <div className="absolute inset-0 bg-background/45" />
-        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/70 to-background/20" />
+        <div className="absolute inset-0 bg-background/20" />
+        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/55 to-background/10" />
+
         <div className="relative z-10 max-w-7xl w-full mx-auto md:px-6">
           <div className="max-w-lg">
             <h2 className="font-display text-4xl md:text-6xl mb-4 leading-[1]">
