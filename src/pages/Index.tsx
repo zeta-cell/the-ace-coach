@@ -10,6 +10,11 @@ import { UsersIcon } from "@/components/ui/animated-icons/users";
 import { ShieldCheckIcon } from "@/components/ui/animated-icons/shield-check";
 import { ZapIcon } from "@/components/ui/animated-icons/zap";
 import { FeatureIconCard } from "@/components/ui/animated-icons/FeatureIconCard";
+import GradientBackdrop from "@/components/GradientBackdrop";
+import grad01 from "@/assets/gradient-blue-coral-01.jpg.asset.json";
+import grad02 from "@/assets/gradient-blue-coral-02.jpg.asset.json";
+import grad03 from "@/assets/gradient-blue-coral-03.jpg.asset.json";
+
 import heroPadel from "@/assets/hero-padel.jpg";
 import featuresTennis from "@/assets/features-tennis.jpg";
 import ctaCourt from "@/assets/cta-court.jpg";
