@@ -74,19 +74,22 @@ const Index = () => {
 
       {/* Hero scene — yesterday's clay-court photo */}
       <section className="relative min-h-[100svh] flex items-center overflow-hidden">
-        <img
-          src={heroPadel}
-          alt="Tennis player sliding on a clay court to reach a ball"
-          width={1536}
-          height={1024}
-          className="absolute inset-0 w-full h-full object-cover object-[64%_center]"
-          loading="eager"
-        />
-        {/* keep the clay deep so white copy stays readable */}
-        <div className="absolute inset-0 bg-background/35" />
-        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/85 to-background/25" />
-        <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-background to-transparent" />
+        {/* photo panel: the player stays fully visible on the right */}
+        <div className="absolute inset-y-0 right-0 w-full md:w-[64%]">
+          <img
+            src={heroPadel}
+            alt="Tennis player sliding on a clay court to reach a ball"
+            width={1536}
+            height={1024}
+            className="w-full h-full object-cover object-[25%_center]"
+            loading="eager"
+          />
+          <div className="absolute inset-0 bg-background/55 md:hidden" />
+          <div className="absolute inset-y-0 left-0 w-2/3 bg-gradient-to-r from-background via-background/60 to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-background to-transparent" />
+        </div>
         <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12 pt-32 pb-20">
+
           <div className="max-w-xl">
             <img src={logoWhite.url} alt="Hi Volley" className="h-9 md:h-11 w-auto mb-10" loading="eager" />
             <p className="inline-flex items-center gap-2 font-body text-sm text-foreground/70 mb-5">
@@ -125,7 +128,7 @@ const Index = () => {
       <section className="relative py-28 px-6 overflow-hidden">
         <div aria-hidden className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(40% 60% at 85% 0%, hsl(var(--primary) / 0.28), transparent 70%), radial-gradient(35% 40% at 5% 70%, hsl(var(--accent) / 0.10), transparent 100%)" }} />
         <div className="relative z-10 max-w-6xl mx-auto grid lg:grid-cols-[1fr_1.4fr] gap-16">
-          <div className="lg:sticky lg:top-28 self-start">
+          <div className="flex flex-col">
             <BrandIcon className="h-11 w-11 mb-6" />
             <h2 className="font-display text-4xl md:text-5xl mb-4 leading-[1]">
               {t("features.h2.a")} <span className="text-primary">{t("features.h2.b")}</span>
