@@ -170,17 +170,18 @@ const Index = () => {
       </section>
 
       {/* CTA scene — night padel court with light trails */}
-      <section className="relative min-h-[58vh] flex items-center px-6 overflow-hidden">
+      <section className="relative min-h-[46vh] flex items-center px-6 overflow-hidden">
         <img
           src={ctaCourt}
           alt="Padel court at night with light trails sweeping over the net"
           width={1920}
           height={1080}
-          className="absolute inset-0 w-full h-full object-cover object-center"
+          className="absolute inset-0 w-full h-full object-cover object-center brightness-[1.3] saturate-[1.1]"
           loading="lazy"
         />
-        <div className="absolute inset-0 bg-background/20" />
-        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/55 to-background/10" />
+        <div className="absolute inset-0 bg-background/10" />
+        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/45 to-transparent" />
+
         <div className="relative z-10 max-w-7xl w-full mx-auto md:px-6">
           <div className="max-w-lg">
             <h2 className="font-display text-4xl md:text-6xl mb-4 leading-[1]">
@@ -195,7 +196,7 @@ const Index = () => {
       </section>
 
       {/* SEO city cluster */}
-      <section className="relative pt-16 pb-10 px-6">
+      <section className="relative pt-12 pb-10 px-6">
         <div aria-hidden className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(50% 80% at 50% 0%, hsl(var(--primary) / 0.10), transparent 70%)" }} />
         <div className="relative max-w-5xl mx-auto">
           <h2 className="font-display text-2xl md:text-3xl mb-2">{t("seo.h2.a")} <span className="text-primary">{t("seo.h2.b")}</span></h2>
