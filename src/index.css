@@ -171,7 +171,8 @@ img[alt="Hi Volley"] {
 /* Aurora: blue light column from above, warm orange horizon below. Smooth, no stripes */
 .hv-aurora {
   background:
-    radial-gradient(60% 55% at 50% 100%, hsl(13 97% 64% / 0.85) 0%, hsl(13 97% 64% / 0.25) 45%, transparent 75%),
+    radial-gradient(75% 60% at 50% 105%, hsl(13 97% 64%) 0%, hsl(13 97% 64% / 0.45) 40%, transparent 75%),
+    radial-gradient(45% 35% at 50% 85%, hsl(30 100% 85% / 0.5) 0%, transparent 70%),
     radial-gradient(30% 70% at 50% 20%, hsl(199 98% 60% / 0.55) 0%, transparent 70%),
     radial-gradient(70% 80% at 50% 0%, hsl(199 98% 44% / 0.65) 0%, hsl(215 90% 20% / 0.4) 45%, transparent 80%),
     hsl(203 67% 2%);
