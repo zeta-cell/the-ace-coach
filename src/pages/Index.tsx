@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import { useEffect } from "react";
 import PublicBottomNav from "@/components/PublicBottomNav";
 import PublicHeader from "@/components/PublicHeader";
-import { motion } from "framer-motion";
 import { MapPin, ArrowRight } from "@phosphor-icons/react";
 import { SearchIcon } from "@/components/ui/animated-icons/search";
 import { CalendarDaysIcon } from "@/components/ui/animated-icons/calendar-days";
@@ -11,9 +10,8 @@ import { UsersIcon } from "@/components/ui/animated-icons/users";
 import { ShieldCheckIcon } from "@/components/ui/animated-icons/shield-check";
 import { ZapIcon } from "@/components/ui/animated-icons/zap";
 import { FeatureIconCard } from "@/components/ui/animated-icons/FeatureIconCard";
-import tennisMotion from "@/assets/tennis-motion.jpg.asset.json";
-import featuresTennis from "@/assets/features-tennis.jpg";
-import ctaCourt from "@/assets/cta-court.jpg";
+import heroPlayer from "@/assets/hero-player-night.jpg";
+import ctaCoach from "@/assets/cta-coach-night.jpg";
 import logoWhite from "@/assets/hi-volley-logo-white.png.asset.json";
 import { BrandIcon, BrandLogo } from "@/components/BrandLogo";
 import { setSeo } from "@/lib/seo";
@@ -35,7 +33,7 @@ const Index = () => {
     { value: "500+", labelKey: "stats.coaches" },
     { value: "10K+", labelKey: "stats.sessions" },
     { value: "50+", labelKey: "stats.cities" },
-    { value: "4.9★", labelKey: "stats.rating" },
+    { value: "4.9", labelKey: "stats.rating" },
   ] as const;
 
   const steps = [
@@ -70,213 +68,141 @@ const Index = () => {
   }, [lang]);
 
   return (
-    <div className="min-h-screen text-foreground overflow-hidden">
+    <div className="min-h-screen bg-background text-foreground overflow-hidden">
       <PublicHeader />
 
-      {/* Hero */}
-      <section className="relative min-h-[92svh] md:min-h-[100svh] flex items-center hv-aurora overflow-hidden">
+      {/* Hero scene */}
+      <section className="relative min-h-[100svh] flex items-center overflow-hidden">
         <img
-          src={tennisMotion.url}
-          alt="Tennis player in motion, blurred"
-          className="absolute inset-x-0 bottom-0 w-full h-[70%] object-cover opacity-35 mix-blend-screen [mask-image:linear-gradient(to_top,black_30%,transparent)]"
+          src={heroPlayer}
+          alt="Padel player jumping for a smash under a blue spotlight"
+          width={1920}
+          height={1088}
+          className="absolute inset-0 w-full h-full object-cover object-[78%_center]"
           loading="eager"
         />
-        <div className="relative z-10 w-full max-w-4xl mx-auto px-6 pt-28 pb-16 text-center">
-          <img
-            src={logoWhite.url}
-            alt="Hi Volley"
-            className="h-9 md:h-12 w-auto mx-auto mb-8"
-            loading="eager"
-          />
-          <p className="inline-flex items-center gap-2 font-body text-sm text-foreground/75 mb-6">
-            <span className="h-1.5 w-1.5 rounded-full bg-accent" /> {t("home.badge")}
-          </p>
-          <h1 className="font-display text-[2.25rem] md:text-6xl lg:text-7xl leading-[1] mb-6 font-medium">
-            {t("home.h1.line1")} <span className="text-primary">{t("home.h1.line2")}</span> {t("home.h1.line3")}
-          </h1>
-          <p className="font-body text-base md:text-lg text-foreground/80 max-w-xl mx-auto mb-10">
-            {t("home.lead")}
-          </p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Link
-              to="/find-a-coach"
-              className="inline-flex items-center justify-center gap-2 font-body font-medium text-base bg-foreground text-background px-7 py-3.5 rounded-full hover:bg-foreground/90 transition-colors"
-            >
-              {t("home.cta.find")} <ArrowRight size={18} />
-            </Link>
-            <Link
-              to="/login"
-              className="inline-flex items-center justify-center gap-2 font-body font-medium text-base border border-foreground/25 text-foreground px-7 py-3.5 rounded-full hover:bg-foreground/10 transition-colors"
-            >
-              {t("home.cta.coach")}
-            </Link>
+        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/70 to-transparent md:via-background/40" />
+        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-background to-transparent" />
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12 pt-32 pb-20">
+          <div className="max-w-xl">
+            <img src={logoWhite.url} alt="Hi Volley" className="h-9 md:h-11 w-auto mb-10" loading="eager" />
+            <p className="inline-flex items-center gap-2 font-body text-sm text-foreground/70 mb-5">
+              <span className="h-1.5 w-1.5 rounded-full bg-accent" /> {t("home.badge")}
+            </p>
+            <h1 className="font-display text-[2.5rem] md:text-6xl lg:text-7xl leading-[0.95] mb-6 font-medium">
+              {t("home.h1.line1")} <span className="text-primary">{t("home.h1.line2")}</span> {t("home.h1.line3")}
+            </h1>
+            <p className="font-body text-base md:text-lg text-foreground/75 mb-10">{t("home.lead")}</p>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <Link to="/find-a-coach" className="inline-flex items-center justify-center gap-2 font-body font-medium text-base bg-foreground text-background px-7 py-3.5 rounded-full hover:bg-foreground/90 transition-colors">
+                {t("home.cta.find")} <ArrowRight size={18} />
+              </Link>
+              <Link to="/login" className="inline-flex items-center justify-center gap-2 font-body font-medium text-base border border-foreground/25 text-foreground px-7 py-3.5 rounded-full hover:bg-foreground/10 transition-colors">
+                {t("home.cta.coach")}
+              </Link>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Stats */}
-      <section className="border-y border-border bg-card/50">
-        <div className="max-w-5xl mx-auto px-6 py-8 grid grid-cols-2 md:grid-cols-4 gap-6">
-          {stats.map((s, i) => (
-            <motion.div
-              key={s.labelKey}
-              initial={false}
-              transition={{ delay: i * 0.1 }}
-              className="text-center"
-            >
-              <p className="font-display text-3xl md:text-4xl text-primary">{s.value}</p>
-              <p className="font-body text-xs text-muted-foreground tracking-wider mt-1">{t(s.labelKey)}</p>
-            </motion.div>
+      {/* Stats on orange horizon glow */}
+      <section className="relative py-16 px-6">
+        <div aria-hidden className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(50% 60% at 50% 50%, hsl(var(--accent) / 0.14), transparent 100%)" }} />
+        <div className="relative max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8">
+          {stats.map((s) => (
+            <div key={s.labelKey}>
+              <p className="font-display text-4xl md:text-5xl tabular-nums">{s.value}</p>
+              <p className="font-body text-sm text-muted-foreground mt-2">{t(s.labelKey)}</p>
+            </div>
           ))}
         </div>
       </section>
 
-      {/* Features */}
-      <section className="relative py-24 px-6 overflow-hidden">
-        <img
-          src={featuresTennis}
-          alt="Tennis racket close-up"
-          className="absolute inset-0 w-full h-full object-cover opacity-15"
-          loading="lazy"
-        />
-        <div className="absolute inset-0 bg-background/80" />
-
-        <div className="relative z-10 max-w-6xl mx-auto">
-          <motion.div
-            initial={false}
-            className="flex flex-col items-center text-center mb-16"
-          >
-            <BrandIcon className="h-12 w-12 mb-5 shadow-lg" />
-            <h2 className="font-display text-4xl md:text-5xl mb-4">
+      {/* Features with blue beam */}
+      <section className="relative py-28 px-6 overflow-hidden">
+        <div aria-hidden className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(40% 60% at 85% 0%, hsl(var(--primary) / 0.28), transparent 70%), radial-gradient(35% 40% at 5% 70%, hsl(var(--accent) / 0.10), transparent 100%)" }} />
+        <div className="relative z-10 max-w-6xl mx-auto grid lg:grid-cols-[1fr_1.4fr] gap-16">
+          <div className="lg:sticky lg:top-28 self-start">
+            <BrandIcon className="h-11 w-11 mb-6" />
+            <h2 className="font-display text-4xl md:text-5xl mb-4 leading-[1]">
               {t("features.h2.a")} <span className="text-primary">{t("features.h2.b")}</span>
             </h2>
-            <p className="font-body text-muted-foreground max-w-xl mx-auto">{t("features.lead")}</p>
-          </motion.div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+            <p className="font-body text-muted-foreground max-w-sm">{t("features.lead")}</p>
+          </div>
+          <div className="grid sm:grid-cols-2 gap-4">
             {features.map((f, i) => (
-              <FeatureIconCard
-                key={f.titleKey}
-                Icon={f.icon}
-                title={t(f.titleKey)}
-                description={t(f.descKey)}
-                index={i}
-              />
+              <FeatureIconCard key={f.titleKey} Icon={f.icon} title={t(f.titleKey)} description={t(f.descKey)} index={i} />
             ))}
           </div>
         </div>
       </section>
 
       {/* How it works */}
-      <section className="py-20 px-6 bg-card/30 border-y border-border">
-        <div className="max-w-4xl mx-auto">
-          <motion.h2
-            initial={false}
-            className="font-display text-4xl md:text-5xl text-center mb-16"
-          >
-            {t("how.h2.a")} <span className="text-primary">{t("how.h2.b")}</span>
-          </motion.h2>
-
-          <div className="space-y-0">
-            {steps.map((item, i) => (
-              <motion.div
-                key={item.step}
-                initial={false}
-                transition={{ delay: i * 0.1 }}
-                className="flex gap-6 py-8 border-b border-border last:border-0"
-              >
-                <span className="font-display text-4xl text-primary/30 shrink-0">{item.step}</span>
-                <div>
-                  <h3 className="font-display text-xl tracking-wider mb-1">{t(item.titleKey)}</h3>
-                  <p className="font-body text-sm text-muted-foreground">{t(item.descKey)}</p>
-                </div>
-              </motion.div>
+      <section className="relative py-28 px-6 overflow-hidden">
+        <div aria-hidden className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(50% 70% at 10% 50%, hsl(var(--primary) / 0.16), transparent 70%)" }} />
+        <div className="relative max-w-6xl mx-auto">
+          <h2 className="font-display text-4xl md:text-5xl mb-14">
+            {t("how.h2.a")} <span className="text-accent">{t("how.h2.b")}</span>
+          </h2>
+          <div className="grid md:grid-cols-4 gap-4">
+            {steps.map((item) => (
+              <div key={item.step} className="rounded-2xl bg-card/60 p-6 ring-1 ring-foreground/[0.06]">
+                <span className="font-display text-sm text-accent tabular-nums">{item.step}</span>
+                <h3 className="font-display text-xl mt-6 mb-2">{t(item.titleKey)}</h3>
+                <p className="font-body text-sm text-muted-foreground">{t(item.descKey)}</p>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="relative py-32 px-6 overflow-hidden">
-        <img
-          src={ctaCourt}
-          alt="Padel court at night with dramatic lighting"
-          className="absolute inset-0 w-full h-full object-cover"
-          loading="lazy"
-        />
-        <div className="absolute inset-0 bg-background/70 backdrop-blur-[2px]" />
-
-        <img
-          src={logoWhite.url}
-          alt=""
-          aria-hidden
-          className="pointer-events-none absolute left-1/2 top-1/2 w-[130%] max-w-none -translate-x-1/2 -translate-y-1/2 opacity-[0.06]"
-          loading="lazy"
-        />
-
-        <div className="relative z-10 max-w-3xl mx-auto text-center">
-          <motion.div initial={false}>
-            <BrandIcon className="h-12 w-12 mx-auto mb-6 shadow-lg" />
-            <h2 className="font-display text-4xl md:text-6xl mb-4">
+      {/* CTA scene */}
+      <section className="relative min-h-[70vh] flex items-center px-6 overflow-hidden">
+        <img src={ctaCoach} alt="Coach holding a tennis ball and racket at night" width={1920} height={1088} className="absolute inset-0 w-full h-full object-cover object-[75%_center]" loading="lazy" />
+        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/60 to-transparent" />
+        <div className="relative z-10 max-w-7xl w-full mx-auto md:px-6">
+          <div className="max-w-lg">
+            <h2 className="font-display text-4xl md:text-6xl mb-4 leading-[1]">
               {t("cta.h2.a")} <span className="text-primary">{t("cta.h2.b")}</span> {t("cta.h2.c")}
             </h2>
-            <p className="font-body text-muted-foreground mb-8 max-w-lg mx-auto">{t("cta.lead")}</p>
-            <Link
-              to="/login"
-              className="inline-flex items-center gap-2 font-display text-sm tracking-widest bg-primary text-primary-foreground px-10 py-4 rounded-xl hover:bg-primary/90 transition-colors"
-            >
+            <p className="font-body text-foreground/75 mb-8">{t("cta.lead")}</p>
+            <Link to="/login" className="inline-flex items-center gap-2 font-body font-medium text-base bg-accent text-accent-foreground px-7 py-3.5 rounded-full hover:bg-accent/90 transition-colors">
               {t("cta.btn")} <ArrowRight size={18} />
             </Link>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* SEO city cluster */}
-      <section className="border-t border-border py-14 px-6 bg-card/20">
-        <div className="max-w-5xl mx-auto">
-          <h2 className="font-display text-2xl md:text-3xl mb-2">{t("seo.h2.a")} <span className="text-primary">{t("seo.h2.b")}</span></h2>
-          <p className="font-body text-sm text-muted-foreground mb-6">{t("seo.lead")}</p>
-          <div className="grid md:grid-cols-2 gap-8">
-            <div>
-              <p className="font-display text-xs tracking-widest text-muted-foreground mb-3">{t("seo.padel")}</p>
-              <div className="flex flex-wrap gap-2">
-                {["madrid","barcelona","valencia","malaga","marbella","sevilla","palma","lisbon","milan","dubai"].map((c) => (
-                  <Link
-                    key={c}
-                    to={lang === "es" ? `/es/profesor-de-padel/${c}` : `/padel-coach/${c}`}
-                    className="px-3 py-1.5 text-xs font-body border border-border rounded-full hover:border-primary/50 capitalize"
-                  >
-                    {c}
-                  </Link>
-                ))}
-              </div>
-            </div>
-            <div>
-              <p className="font-display text-xs tracking-widest text-muted-foreground mb-3">{t("seo.tennis")}</p>
-              <div className="flex flex-wrap gap-2">
-                {["madrid","barcelona","paris","london","berlin","munich","milan","rome","miami","dubai"].map((c) => (
-                  <Link
-                    key={c}
-                    to={lang === "es" ? `/es/profesor-de-tenis/${c}` : `/tennis-coach/${c}`}
-                    className="px-3 py-1.5 text-xs font-body border border-border rounded-full hover:border-primary/50 capitalize"
-                  >
-                    {c}
-                  </Link>
-                ))}
-              </div>
-            </div>
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="border-t border-border py-8 px-6">
+      {/* SEO city cluster */}
+      <section className="relative py-16 px-6">
+        <div aria-hidden className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(50% 80% at 50% 0%, hsl(var(--primary) / 0.10), transparent 70%)" }} />
+        <div className="relative max-w-5xl mx-auto">
+          <h2 className="font-display text-2xl md:text-3xl mb-2">{t("seo.h2.a")} <span className="text-primary">{t("seo.h2.b")}</span></h2>
+          <p className="font-body text-sm text-muted-foreground mb-8">{t("seo.lead")}</p>
+          <div className="grid md:grid-cols-2 gap-8">
+            {([
+              ["seo.padel", ["madrid","barcelona","valencia","malaga","marbella","sevilla","palma","lisbon","milan","dubai"], "/es/profesor-de-padel/", "/padel-coach/"],
+              ["seo.tennis", ["madrid","barcelona","paris","london","berlin","munich","milan","rome","miami","dubai"], "/es/profesor-de-tenis/", "/tennis-coach/"],
+            ] as const).map(([key, cities, es, en]) => (
+              <div key={key}>
+                <p className="font-body text-sm text-muted-foreground mb-3">{t(key)}</p>
+                <div className="flex flex-wrap gap-2">
+                  {cities.map((c) => (
+                    <Link key={c} to={(lang === "es" ? es : en) + c} className="px-3 py-1.5 text-sm font-body bg-card/60 ring-1 ring-foreground/[0.06] rounded-full hover:ring-primary/50 transition-colors capitalize">
+                      {c}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <footer className="py-10 px-6">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <BrandLogo className="h-6" />
-
-          <p className="font-body text-xs text-muted-foreground">
-            © {new Date().getFullYear()} Hi Volley. {t("footer.tagline")}
-          </p>
+          <p className="font-body text-xs text-muted-foreground">© {new Date().getFullYear()} Hi Volley. {t("footer.tagline")}</p>
         </div>
       </footer>
       <PublicBottomNav />
