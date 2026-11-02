@@ -446,7 +446,7 @@ const Onboarding = () => {
               />
               {storedReferral ? (
                 <p className="text-xs text-primary mt-1 font-body">
-                  ✨ Referred by a friend — they'll earn €5 once you join.
+                  Referred by a friend. They earn €5 once you join
                 </p>
               ) : (
                 <p className="text-xs text-muted-foreground mt-1 font-body">

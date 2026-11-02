@@ -631,7 +631,7 @@ const CoachPlayerDetail = () => {
                   <div key={r.id} className="flex items-center gap-3 bg-secondary rounded-lg p-3">
                     <div className="flex-1">
                       <p className="font-body text-sm text-foreground">{r.brand} {r.model}</p>
-                      <p className="text-xs text-muted-foreground font-body">{r.type} {r.is_favorite ? "⭐" : ""}</p>
+                      <p className="text-xs text-muted-foreground font-body">{r.type} {r.is_favorite ? "· Favorite" : ""}</p>
                     </div>
                   </div>
                 ))}
