@@ -89,7 +89,6 @@ const Index = () => {
           <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-background to-transparent" />
         </div>
         <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12 pt-32 pb-20">
-
           <div className="max-w-xl">
             <img src={logoWhite.url} alt="Hi Volley" className="h-9 md:h-11 w-auto mb-10" loading="eager" />
             <p className="inline-flex items-center gap-2 font-body text-sm text-foreground/70 mb-5">
@@ -103,7 +102,7 @@ const Index = () => {
               <Link to="/find-a-coach" className="inline-flex items-center justify-center gap-2 font-body font-medium text-base bg-foreground text-background px-7 py-3.5 rounded-full hover:bg-foreground/90 transition-colors">
                 {t("home.cta.find")} <ArrowRight size={18} />
               </Link>
-              <Link to="/login" className="inline-flex items-center justify-center gap-2 font-body font-medium text-base border border-foreground/25 text-foreground px-7 py-3.5 rounded-full hover:bg-foreground/10 transition-colors">
+              <Link to="/login" className="inline-flex items-center justify-center gap-2 font-body font-medium text-base border border-foreground/35 text-foreground px-7 py-3.5 rounded-full hover:bg-foreground/10 transition-colors">
                 {t("home.cta.coach")}
               </Link>
             </div>
@@ -112,7 +111,7 @@ const Index = () => {
       </section>
 
       {/* Stats on orange horizon glow */}
-      <section className="relative py-16 px-6">
+      <section className="relative py-14 px-6">
         <div aria-hidden className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(50% 60% at 50% 50%, hsl(var(--accent) / 0.14), transparent 100%)" }} />
         <div className="relative max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8">
           {stats.map((s) => (
@@ -125,7 +124,7 @@ const Index = () => {
       </section>
 
       {/* Features with blue beam */}
-      <section className="relative py-28 px-6 overflow-hidden">
+      <section className="relative py-20 px-6 overflow-hidden">
         <div aria-hidden className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(40% 60% at 85% 0%, hsl(var(--primary) / 0.28), transparent 70%), radial-gradient(35% 40% at 5% 70%, hsl(var(--accent) / 0.10), transparent 100%)" }} />
         <div className="relative z-10 max-w-6xl mx-auto grid lg:grid-cols-[1fr_1.4fr] gap-16">
           <div className="flex flex-col">
@@ -133,7 +132,7 @@ const Index = () => {
             <h2 className="font-display text-4xl md:text-5xl mb-4 leading-[1]">
               {t("features.h2.a")} <span className="text-primary">{t("features.h2.b")}</span>
             </h2>
-            <p className="font-body text-muted-foreground max-w-sm mb-8">{t("features.lead")}</p>
+            <p className="font-body text-muted-foreground max-w-sm">{t("features.lead")}</p>
             <img
               src={featuresTennis}
               alt="Close-up of a tennis ball meeting the racquet strings"
@@ -156,14 +155,12 @@ const Index = () => {
         <div aria-hidden className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(50% 70% at 10% 50%, hsl(var(--primary) / 0.16), transparent 70%)" }} />
         <div className="relative max-w-6xl mx-auto">
           <h2 className="font-display text-4xl md:text-5xl mb-10">
-
             {t("how.h2.a")} <span className="text-accent">{t("how.h2.b")}</span>
           </h2>
           <div className="grid md:grid-cols-4 gap-4">
             {steps.map((item) => (
               <div key={item.step} className="relative overflow-hidden rounded-2xl bg-gradient-to-b from-card/90 to-card/30 p-6 ring-1 ring-foreground/[0.08]">
                 <span className="inline-flex items-center justify-center h-8 w-8 rounded-full ring-1 ring-accent/40 font-display text-sm text-accent tabular-nums">{item.step}</span>
-
                 <h3 className="font-display text-xl mt-6 mb-2">{t(item.titleKey)}</h3>
                 <p className="font-body text-sm text-muted-foreground">{t(item.descKey)}</p>
               </div>
@@ -184,7 +181,6 @@ const Index = () => {
         />
         <div className="absolute inset-0 bg-background/20" />
         <div className="absolute inset-0 bg-gradient-to-r from-background via-background/55 to-background/10" />
-
         <div className="relative z-10 max-w-7xl w-full mx-auto md:px-6">
           <div className="max-w-lg">
             <h2 className="font-display text-4xl md:text-6xl mb-4 leading-[1]">
@@ -199,22 +195,21 @@ const Index = () => {
       </section>
 
       {/* SEO city cluster */}
-      <section className="relative pt-14 pb-6 px-6">
-
+      <section className="relative pt-16 pb-10 px-6">
         <div aria-hidden className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(50% 80% at 50% 0%, hsl(var(--primary) / 0.10), transparent 70%)" }} />
         <div className="relative max-w-5xl mx-auto">
           <h2 className="font-display text-2xl md:text-3xl mb-2">{t("seo.h2.a")} <span className="text-primary">{t("seo.h2.b")}</span></h2>
           <p className="font-body text-sm text-muted-foreground mb-8">{t("seo.lead")}</p>
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid md:grid-cols-2 gap-4">
             {([
               ["seo.padel", ["madrid","barcelona","valencia","malaga","marbella","sevilla","palma","lisbon","milan","dubai"], "/es/profesor-de-padel/", "/padel-coach/"],
               ["seo.tennis", ["madrid","barcelona","paris","london","berlin","munich","milan","rome","miami","dubai"], "/es/profesor-de-tenis/", "/tennis-coach/"],
             ] as const).map(([key, cities, es, en]) => (
-              <div key={key}>
-                <p className="font-body text-sm text-muted-foreground mb-3">{t(key)}</p>
+              <div key={key} className="rounded-2xl bg-card/50 ring-1 ring-foreground/[0.08] p-5">
+                <p className="font-body text-sm text-muted-foreground mb-4">{t(key)}</p>
                 <div className="flex flex-wrap gap-2">
                   {cities.map((c) => (
-                    <Link key={c} to={(lang === "es" ? es : en) + c} className="px-3 py-1.5 text-sm font-body bg-card/60 ring-1 ring-foreground/[0.06] rounded-full hover:ring-primary/50 transition-colors capitalize">
+                    <Link key={c} to={(lang === "es" ? es : en) + c} className="px-3 py-1.5 text-sm font-body bg-background/60 ring-1 ring-foreground/[0.08] rounded-full hover:ring-primary/60 hover:bg-primary/[0.08] transition-colors capitalize">
                       {c}
                     </Link>
                   ))}
@@ -225,9 +220,14 @@ const Index = () => {
         </div>
       </section>
 
-      <footer className="py-10 px-6">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+      <footer className="border-t border-foreground/[0.08] py-8 px-6">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-5">
           <BrandLogo className="h-6" />
+          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 font-body text-sm text-muted-foreground">
+            <Link to="/find-a-coach" className="hover:text-foreground transition-colors">{t("home.cta.find")}</Link>
+            <Link to="/login" className="hover:text-foreground transition-colors">{t("home.cta.coach")}</Link>
+            <Link to="/events" className="hover:text-foreground transition-colors">{t("nav.events")}</Link>
+          </div>
           <p className="font-body text-xs text-muted-foreground">© {new Date().getFullYear()} Hi Volley. {t("footer.tagline")}</p>
         </div>
       </footer>
