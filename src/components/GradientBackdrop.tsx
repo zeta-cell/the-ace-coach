@@ -3,7 +3,8 @@
 // melts into the midnight-black page above and below.
 
 const DEFAULT_SCRIM =
-  "linear-gradient(180deg, hsl(var(--background)) 0%, hsl(var(--background) / 0.48) 20%, hsl(var(--background) / 0.66) 50%, hsl(var(--background) / 0.48) 80%, hsl(var(--background)) 100%)";
+  "linear-gradient(180deg, hsl(var(--background)) 0%, hsl(var(--background) / 0.6) 10%, hsl(var(--background) / 0.5) 32%, hsl(var(--background) / 0.52) 52%, hsl(var(--background) / 0.3) 74%, hsl(var(--background) / 0.1) 92%, hsl(var(--background)) 100%)";
+
 
 type GradientBackdropProps = {
   /** gradient image URL, e.g. grad01.url from an .asset.json pointer */
