@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useEffect } from "react";
 import PublicBottomNav from "@/components/PublicBottomNav";
 import PublicHeader from "@/components/PublicHeader";
-import { MapPin, ArrowRight } from "@phosphor-icons/react";
+import { ArrowRight } from "@phosphor-icons/react";
 import { SearchIcon } from "@/components/ui/animated-icons/search";
 import { CalendarDaysIcon } from "@/components/ui/animated-icons/calendar-days";
 import { TrendingUpIcon } from "@/components/ui/animated-icons/trending-up";
@@ -10,8 +10,9 @@ import { UsersIcon } from "@/components/ui/animated-icons/users";
 import { ShieldCheckIcon } from "@/components/ui/animated-icons/shield-check";
 import { ZapIcon } from "@/components/ui/animated-icons/zap";
 import { FeatureIconCard } from "@/components/ui/animated-icons/FeatureIconCard";
-import heroPlayer from "@/assets/hero-player-night.jpg";
-import ctaCoach from "@/assets/cta-coach-night.jpg";
+import heroPadel from "@/assets/hero-padel.jpg";
+import featuresTennis from "@/assets/features-tennis.jpg";
+import ctaCourt from "@/assets/cta-court.jpg";
 import logoWhite from "@/assets/hi-volley-logo-white.png.asset.json";
 import { BrandIcon, BrandLogo } from "@/components/BrandLogo";
 import { setSeo } from "@/lib/seo";
@@ -71,18 +72,20 @@ const Index = () => {
     <div className="min-h-screen bg-background text-foreground overflow-hidden">
       <PublicHeader />
 
-      {/* Hero scene */}
+      {/* Hero scene — yesterday's clay-court photo */}
       <section className="relative min-h-[100svh] flex items-center overflow-hidden">
         <img
-          src={heroPlayer}
-          alt="Padel player jumping for a smash under a blue spotlight"
-          width={1920}
-          height={1088}
-          className="absolute inset-0 w-full h-full object-cover object-[78%_center]"
+          src={heroPadel}
+          alt="Tennis player sliding on a clay court to reach a ball"
+          width={1536}
+          height={1024}
+          className="absolute inset-0 w-full h-full object-cover object-[64%_center]"
           loading="eager"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/70 to-transparent md:via-background/40" />
-        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-background to-transparent" />
+        {/* keep the clay deep so white copy stays readable */}
+        <div className="absolute inset-0 bg-background/35" />
+        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/85 to-background/25" />
+        <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-background to-transparent" />
         <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12 pt-32 pb-20">
           <div className="max-w-xl">
             <img src={logoWhite.url} alt="Hi Volley" className="h-9 md:h-11 w-auto mb-10" loading="eager" />
@@ -127,7 +130,15 @@ const Index = () => {
             <h2 className="font-display text-4xl md:text-5xl mb-4 leading-[1]">
               {t("features.h2.a")} <span className="text-primary">{t("features.h2.b")}</span>
             </h2>
-            <p className="font-body text-muted-foreground max-w-sm">{t("features.lead")}</p>
+            <p className="font-body text-muted-foreground max-w-sm mb-8">{t("features.lead")}</p>
+            <img
+              src={featuresTennis}
+              alt="Close-up of a tennis ball meeting the racquet strings"
+              width={1920}
+              height={1080}
+              loading="lazy"
+              className="hidden lg:block w-full aspect-[16/10] object-cover rounded-2xl ring-1 ring-foreground/[0.08]"
+            />
           </div>
           <div className="grid sm:grid-cols-2 gap-4">
             {features.map((f, i) => (
@@ -156,10 +167,18 @@ const Index = () => {
         </div>
       </section>
 
-      {/* CTA scene */}
+      {/* CTA scene — night padel court with light trails */}
       <section className="relative min-h-[70vh] flex items-center px-6 overflow-hidden">
-        <img src={ctaCoach} alt="Coach holding a tennis ball and racket at night" width={1920} height={1088} className="absolute inset-0 w-full h-full object-cover object-[75%_center]" loading="lazy" />
-        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/60 to-transparent" />
+        <img
+          src={ctaCourt}
+          alt="Padel court at night with light trails sweeping over the net"
+          width={1920}
+          height={1080}
+          className="absolute inset-0 w-full h-full object-cover object-center"
+          loading="lazy"
+        />
+        <div className="absolute inset-0 bg-background/45" />
+        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/70 to-background/20" />
         <div className="relative z-10 max-w-7xl w-full mx-auto md:px-6">
           <div className="max-w-lg">
             <h2 className="font-display text-4xl md:text-6xl mb-4 leading-[1]">
