@@ -191,7 +191,7 @@ const Marketplace = () => {
     (levelFilter !== "All" ? 1 : 0);
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen text-foreground">
       {/* Nav */}
       <PublicHeader />
 

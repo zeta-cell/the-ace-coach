@@ -294,7 +294,7 @@ const PublicCoachProfile = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="w-10 h-10 border-2 border-primary border-t-transparent rounded-full animate-spin" />
       </div>
     );
@@ -302,7 +302,7 @@ const PublicCoachProfile = () => {
 
   if (notFound || !coach || !profile) {
     return (
-      <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-4 px-4">
+      <div className="min-h-screen flex flex-col items-center justify-center gap-4 px-4">
         <h1 className="font-display text-4xl text-foreground">COACH NOT FOUND</h1>
         <p className="font-body text-muted-foreground">This profile doesn't exist or has been removed.</p>
         <Link to="/" className="mt-4 px-6 py-3 rounded-xl bg-primary text-primary-foreground font-display tracking-wider hover:bg-primary/90 transition-colors">
@@ -325,7 +325,7 @@ const PublicCoachProfile = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       {/* Top bar */}
       <div className="sticky top-0 z-40 bg-background/80 backdrop-blur-lg border-b border-border">
         <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">

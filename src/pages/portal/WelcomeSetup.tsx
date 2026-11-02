@@ -114,7 +114,7 @@ const WelcomeSetup = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background px-4 py-10">
+    <div className="min-h-screen px-4 py-10">
       <div className="mx-auto w-full max-w-md">
         <div className="mb-5 flex items-start gap-2 rounded-2xl bg-primary/10 p-4">
           <Sparkles size={18} className="mt-0.5 shrink-0 text-primary" />

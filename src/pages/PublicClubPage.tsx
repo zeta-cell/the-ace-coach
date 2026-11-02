@@ -103,7 +103,7 @@ const PublicClubPage = () => {
 
   if (notFound) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center space-y-3">
           <h1 className="font-display text-2xl text-foreground">Club not found</h1>
           <Link to="/" className="text-primary text-sm">← Back home</Link>
@@ -113,13 +113,13 @@ const PublicClubPage = () => {
   }
 
   if (loading || !club) {
-    return <div className="min-h-screen bg-background flex items-center justify-center"><div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" /></div>;
+    return <div className="min-h-screen flex items-center justify-center"><div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" /></div>;
   }
 
   const location = [club.city, club.country].filter(Boolean).join(", ");
 
   return (
-    <div className="min-h-screen bg-background pb-20 md:pb-0">
+    <div className="min-h-screen pb-20 md:pb-0">
       <PublicHeader />
 
       {/* Hero */}
