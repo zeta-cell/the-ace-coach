@@ -3,7 +3,8 @@
 // melts into the midnight-black page above and below.
 
 const DEFAULT_SCRIM =
-  "linear-gradient(180deg, hsl(var(--background)) 0%, hsl(var(--background) / 0.6) 10%, hsl(var(--background) / 0.5) 32%, hsl(var(--background) / 0.52) 52%, hsl(var(--background) / 0.3) 74%, hsl(var(--background) / 0.1) 92%, hsl(var(--background)) 100%)";
+  "linear-gradient(180deg, hsl(var(--background)) 0%, hsl(207 77% 5% / 0.62) 12%, hsl(207 77% 5% / 0.62) 40%, hsl(207 73% 6% / 0.56) 55%, hsl(14 60% 7% / 0.42) 74%, hsl(14 60% 7% / 0.22) 92%, hsl(var(--background)) 100%)";
+
 
 
 type GradientBackdropProps = {
