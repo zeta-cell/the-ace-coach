@@ -114,7 +114,7 @@ const Index = () => {
 
       {/* Stats on orange horizon glow */}
       <section className="relative py-14 px-6">
-        <div aria-hidden className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(70% 90% at 50% 100%, hsl(var(--accent) / 0.30), transparent 70%), radial-gradient(50% 60% at 50% 0%, hsl(var(--primary) / 0.18), transparent 70%)" }} />
+        <GradientBackdrop src={grad01.url} scrim="linear-gradient(180deg, hsl(var(--background)) 0%, hsl(var(--background) / 0.38) 28%, hsl(var(--background) / 0.46) 62%, hsl(var(--background)) 100%)" />
         <div className="relative max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8">
           {stats.map((s) => (
             <div key={s.labelKey}>
@@ -127,7 +127,7 @@ const Index = () => {
 
       {/* Features with blue beam */}
       <section className="relative py-20 px-6 overflow-hidden">
-        <div aria-hidden className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(45% 70% at 85% 0%, hsl(var(--primary) / 0.45), transparent 70%), radial-gradient(45% 55% at 5% 80%, hsl(var(--accent) / 0.28), transparent 70%)" }} />
+        <GradientBackdrop src={grad02.url} />
         <div className="relative z-10 max-w-6xl mx-auto grid lg:grid-cols-[1fr_1.4fr] gap-16">
           <div className="flex flex-col">
             <BrandIcon className="h-11 w-11 mb-6" />
@@ -154,7 +154,7 @@ const Index = () => {
 
       {/* How it works */}
       <section className="relative py-20 px-6 overflow-hidden">
-        <div aria-hidden className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(55% 80% at 8% 50%, hsl(var(--primary) / 0.35), transparent 70%), radial-gradient(40% 60% at 95% 100%, hsl(var(--accent) / 0.22), transparent 70%)" }} />
+        <GradientBackdrop src={grad03.url} scrim="linear-gradient(180deg, hsl(var(--background)) 0%, hsl(var(--background) / 0.52) 24%, hsl(var(--background) / 0.68) 55%, hsl(var(--background) / 0.5) 82%, hsl(var(--background)) 100%)" />
         <div className="relative max-w-6xl mx-auto">
           <h2 className="font-display text-4xl md:text-5xl mb-10">
             {t("how.h2.a")} <span className="text-accent">{t("how.h2.b")}</span>
@@ -199,7 +199,7 @@ const Index = () => {
 
       {/* SEO city cluster */}
       <section className="relative pt-12 pb-10 px-6">
-        <div aria-hidden className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(60% 90% at 50% 0%, hsl(var(--primary) / 0.25), transparent 70%), radial-gradient(50% 70% at 50% 100%, hsl(var(--accent) / 0.15), transparent 70%)" }} />
+        <GradientBackdrop src={grad01.url} flip scrim="linear-gradient(180deg, hsl(var(--background)) 0%, hsl(var(--background) / 0.58) 26%, hsl(var(--background) / 0.7) 58%, hsl(var(--background) / 0.52) 84%, hsl(var(--background)) 100%)" />
         <div className="relative max-w-5xl mx-auto">
           <h2 className="font-display text-2xl md:text-3xl mb-2">{t("seo.h2.a")} <span className="text-primary">{t("seo.h2.b")}</span></h2>
           <p className="font-body text-sm text-muted-foreground mb-8">{t("seo.lead")}</p>
