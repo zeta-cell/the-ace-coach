@@ -78,7 +78,7 @@ const Index = () => {
           alt="Padel player jumping for a smash under a blue spotlight"
           width={1920}
           height={1088}
-          className="absolute inset-0 w-full h-full object-cover object-[70%_center] md:object-center"
+          className="absolute inset-0 w-full h-full object-cover object-[78%_center]"
           loading="eager"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-background via-background/70 to-transparent md:via-background/40" />
@@ -107,7 +107,7 @@ const Index = () => {
 
       {/* Stats on orange horizon glow */}
       <section className="relative py-16 px-6">
-        <div aria-hidden className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(60% 100% at 50% 100%, hsl(var(--accent) / 0.18), transparent 70%)" }} />
+        <div aria-hidden className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(50% 60% at 50% 50%, hsl(var(--accent) / 0.14), transparent 100%)" }} />
         <div className="relative max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8">
           {stats.map((s) => (
             <div key={s.labelKey}>
@@ -120,7 +120,7 @@ const Index = () => {
 
       {/* Features with blue beam */}
       <section className="relative py-28 px-6 overflow-hidden">
-        <div aria-hidden className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(40% 60% at 85% 0%, hsl(var(--primary) / 0.28), transparent 70%), radial-gradient(35% 45% at 0% 100%, hsl(var(--accent) / 0.12), transparent 70%)" }} />
+        <div aria-hidden className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(40% 60% at 85% 0%, hsl(var(--primary) / 0.28), transparent 70%), radial-gradient(35% 40% at 5% 70%, hsl(var(--accent) / 0.10), transparent 100%)" }} />
         <div className="relative z-10 max-w-6xl mx-auto grid lg:grid-cols-[1fr_1.4fr] gap-16">
           <div className="lg:sticky lg:top-28 self-start">
             <BrandIcon className="h-11 w-11 mb-6" />
