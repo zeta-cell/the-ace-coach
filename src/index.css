@@ -27,54 +27,54 @@
 
 @layer base {
   :root, .light, .dark {
-    --background: 200 40% 99%;
-    --foreground: 203 67% 2%;
-    --card: 0 0% 100%;
-    --card-foreground: 203 67% 2%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 203 67% 2%;
+    --background: 203 67% 2%;
+    --foreground: 0 0% 100%;
+    --card: 210 35% 6%;
+    --card-foreground: 0 0% 100%;
+    --popover: 210 35% 7%;
+    --popover-foreground: 0 0% 100%;
     --coach-1: 199 98% 44%;
     --coach-2: 13 97% 64%;
-    --coach-3: 203 40% 18%;
+    --coach-3: 0 0% 92%;
     --coach-4: 199 70% 70%;
     --coach-5: 13 80% 78%;
     --coach-6: 203 20% 45%;
     --primary: 199 98% 44%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 199 70% 95%;
-    --secondary-foreground: 203 67% 8%;
-    --muted: 200 30% 96%;
-    --muted-foreground: 203 15% 40%;
+    --secondary: 210 30% 11%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 210 30% 10%;
+    --muted-foreground: 210 15% 68%;
     --accent: 13 97% 64%;
     --accent-foreground: 203 67% 2%;
     --destructive: 4 72% 50%;
     --destructive-foreground: 0 0% 100%;
-    --border: 203 30% 90%;
-    --input: 203 30% 88%;
+    --border: 210 25% 14%;
+    --input: 210 25% 16%;
     --ring: 199 98% 44%;
     --radius: 0.75rem;
-    --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 203 67% 2%;
+    --sidebar-background: 210 40% 4%;
+    --sidebar-foreground: 0 0% 100%;
     --sidebar-primary: 199 98% 44%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 199 70% 95%;
-    --sidebar-accent-foreground: 203 67% 2%;
-    --sidebar-border: 203 30% 90%;
+    --sidebar-accent: 210 30% 11%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 210 25% 14%;
     --sidebar-ring: 199 98% 44%;
     --coral: 13 97% 64%;
-    --coral-soft: 13 97% 94%;
-    --navy: 203 67% 2%;
-    --navy-soft: 203 30% 22%;
+    --coral-soft: 13 50% 14%;
+    --navy: 0 0% 100%;
+    --navy-soft: 210 15% 75%;
     --sky: 199 98% 44%;
-    --sky-soft: 199 70% 95%;
+    --sky-soft: 199 60% 12%;
     --mustard: 13 97% 64%;
-    --mustard-soft: 13 97% 94%;
-    --cream: 200 40% 99%;
-    --cream-deep: 200 30% 96%;
-    --maroon: 203 67% 2%;
-    --maroon-light: 203 30% 22%;
-    --cream-dark: 200 30% 96%;
-    --surface-elevated: 0 0% 100%;
+    --mustard-soft: 13 50% 14%;
+    --cream: 0 0% 100%;
+    --cream-deep: 210 15% 85%;
+    --maroon: 0 0% 100%;
+    --maroon-light: 210 15% 75%;
+    --cream-dark: 210 30% 10%;
+    --surface-elevated: 210 35% 8%;
     --gold: 13 97% 64%;
     --midnight: 203 67% 2%;
     --hero-gradient: radial-gradient(120% 80% at 50% 110%, hsl(13 97% 64% / 0.55), transparent 60%), radial-gradient(90% 70% at 50% 0%, hsl(199 98% 44% / 0.9), hsl(203 67% 2%) 75%);
@@ -155,7 +155,7 @@ img[alt="Hi Volley"] {
 /* Light mode: cards need clear separation */
 .light .group[class*="bg-card"],
 :root .group[class*="bg-card"] {
-  box-shadow: 0 2px 12px -2px hsla(213, 38%, 22%, 0.08);
+  box-shadow: none;
 }
 
 /* Light mode: bg images in cards stay subtle */
@@ -167,3 +167,12 @@ img[alt="Hi Volley"] {
 /* Ambient glow layer: soft blue/orange light, no stripes */
 .hv-ambient { position: fixed; inset: 0; z-index: -1; pointer-events: none; background: hsl(var(--background)); }
 .hv-ambient > span { position: absolute; border-radius: 9999px; filter: blur(80px); }
+
+/* Aurora: blue light column from above, warm orange horizon below. Smooth, no stripes */
+.hv-aurora {
+  background:
+    radial-gradient(60% 55% at 50% 100%, hsl(13 97% 64% / 0.85) 0%, hsl(13 97% 64% / 0.25) 45%, transparent 75%),
+    radial-gradient(30% 70% at 50% 20%, hsl(199 98% 60% / 0.55) 0%, transparent 70%),
+    radial-gradient(70% 80% at 50% 0%, hsl(199 98% 44% / 0.65) 0%, hsl(215 90% 20% / 0.4) 45%, transparent 80%),
+    hsl(203 67% 2%);
+}
