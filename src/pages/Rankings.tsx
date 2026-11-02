@@ -62,7 +62,7 @@ const Rankings = () => {
   const podiumLabels = ["2ND", "1ST", "3RD"];
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <div className="sticky top-0 z-40 bg-background/80 backdrop-blur-lg border-b border-border">
         <div className="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between">
           <Link to="/find-a-coach" className="flex items-center gap-2 font-display text-sm tracking-wider text-muted-foreground hover:text-foreground transition-colors">

@@ -121,7 +121,7 @@ const CitySportLanding = ({ locale, sport }: Props) => {
   const otherSport: Sport = sport === "padel" ? "tennis" : "padel";
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen text-foreground">
       <PublicHeader />
 
       {/* Hero */}

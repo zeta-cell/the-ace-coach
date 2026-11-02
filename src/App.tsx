@@ -1,4 +1,5 @@
 import SitePasswordGate from "@/components/SitePasswordGate";
+import AmbientBackground from "@/components/AmbientBackground";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -141,7 +142,7 @@ const WelcomeSetup = lazy(() => import("./pages/portal/WelcomeSetup"));
 const queryClient = new QueryClient();
 
 const PortalLoader = () => (
-  <div className="min-h-screen bg-background flex items-center justify-center">
+  <div className="min-h-screen flex items-center justify-center">
     <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
   </div>
 );
@@ -157,6 +158,7 @@ const App = () => (
           <Sonner />
         <BrowserRouter>
           <ScrollToTop />
+          <AmbientBackground />
           <Routes>
             {/* Public */}
             <Route path="/" element={<Index />} />

@@ -140,7 +140,7 @@ const ClassDetail = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen">
         <PublicHeader />
         <div className="flex justify-center py-24"><Loader2 className="animate-spin text-muted-foreground" /></div>
       </div>
@@ -149,7 +149,7 @@ const ClassDetail = () => {
 
   if (!cls) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen">
         <PublicHeader />
         <div className="px-4 py-24 text-center">
           <p className="font-display text-lg text-foreground">Class not found</p>
@@ -165,7 +165,7 @@ const ClassDetail = () => {
   const past = new Date(cls.end_datetime) < new Date();
 
   return (
-    <div className="min-h-screen bg-background pb-28 text-foreground">
+    <div className="min-h-screen pb-28 text-foreground">
       <PublicHeader />
 
       {/* Hero */}

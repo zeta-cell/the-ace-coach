@@ -134,7 +134,7 @@ const Community = () => {
   const podiumIcons = [Medal, Crown, Medal];
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen text-foreground">
       {/* Nav */}
       <PublicHeader />
 

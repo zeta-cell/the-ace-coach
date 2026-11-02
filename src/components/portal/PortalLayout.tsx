@@ -178,7 +178,7 @@ const PortalLayout = ({ children }: { children: React.ReactNode }) => {
   );
 
   return (
-    <div className="min-h-screen bg-background flex">
+    <div className="min-h-screen flex">
       {/* Desktop sidebar */}
       <aside className={`hidden md:flex flex-col border-r border-border bg-card transition-all duration-300 relative ${sidebarOpen ? "w-60" : "w-16"}`}>
         <NavContent />

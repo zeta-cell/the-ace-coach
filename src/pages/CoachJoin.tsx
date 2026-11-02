@@ -82,12 +82,12 @@ const CoachJoin = () => {
   };
 
   if (loading) {
-    return <div className="min-h-screen bg-background flex items-center justify-center font-body text-muted-foreground">Loading…</div>;
+    return <div className="min-h-screen flex items-center justify-center font-body text-muted-foreground">Loading…</div>;
   }
 
   if (!coach || !coach.is_valid) {
     return (
-      <div className="min-h-screen bg-background flex flex-col items-center justify-center px-4 text-center">
+      <div className="min-h-screen flex flex-col items-center justify-center px-4 text-center">
         <h1 className="font-display text-2xl text-foreground mb-2">LINK NOT AVAILABLE</h1>
         <p className="font-body text-sm text-muted-foreground mb-6 max-w-sm">
           This coach link is not valid. Ask your coach for a new one.
@@ -98,7 +98,7 @@ const CoachJoin = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background flex flex-col items-center justify-center px-4 py-10">
+    <div className="min-h-screen flex flex-col items-center justify-center px-4 py-10">
       <motion.div initial={false} animate={{ opacity: 1, y: 0 }} className="w-full max-w-md">
         <Link to="/" className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground text-sm font-body mb-6">
           <ArrowLeft size={16} /> Back to website

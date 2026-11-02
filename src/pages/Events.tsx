@@ -352,7 +352,7 @@ const Events = () => {
     }`;
 
   return (
-    <div className="min-h-screen bg-background pb-28 text-foreground">
+    <div className="min-h-screen pb-28 text-foreground">
       <PublicHeader />
 
       <div className="relative overflow-hidden border-b border-border bg-card px-4 py-12 text-center">
