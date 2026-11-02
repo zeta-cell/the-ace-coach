@@ -10,6 +10,11 @@ import { UsersIcon } from "@/components/ui/animated-icons/users";
 import { ShieldCheckIcon } from "@/components/ui/animated-icons/shield-check";
 import { ZapIcon } from "@/components/ui/animated-icons/zap";
 import { FeatureIconCard } from "@/components/ui/animated-icons/FeatureIconCard";
+import GradientBackdrop from "@/components/GradientBackdrop";
+import grad01 from "@/assets/gradient-blue-coral-01.jpg.asset.json";
+import grad02 from "@/assets/gradient-blue-coral-02.jpg.asset.json";
+import grad03 from "@/assets/gradient-blue-coral-03.jpg.asset.json";
+
 import heroPadel from "@/assets/hero-padel.jpg";
 import featuresTennis from "@/assets/features-tennis.jpg";
 import ctaCourt from "@/assets/cta-court.jpg";
@@ -114,12 +119,12 @@ const Index = () => {
 
       {/* Stats on orange horizon glow */}
       <section className="relative py-14 px-6">
-        <div aria-hidden className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(70% 90% at 50% 100%, hsl(var(--accent) / 0.30), transparent 70%), radial-gradient(50% 60% at 50% 0%, hsl(var(--primary) / 0.18), transparent 70%)" }} />
+        <GradientBackdrop src={grad01.url} scrim="linear-gradient(180deg, hsl(var(--background)) 0%, hsl(207 77% 5% / 0.7) 14%, hsl(207 77% 5% / 0.74) 45%, hsl(207 73% 6% / 0.7) 68%, hsl(14 60% 7% / 0.4) 86%, hsl(var(--background)) 100%)" />
         <div className="relative max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8">
           {stats.map((s) => (
             <div key={s.labelKey}>
               <p className="font-display text-4xl md:text-5xl tabular-nums">{s.value}</p>
-              <p className="font-body text-sm text-muted-foreground mt-2">{t(s.labelKey)}</p>
+              <p className="font-body text-sm text-foreground/75 mt-2">{t(s.labelKey)}</p>
             </div>
           ))}
         </div>
@@ -127,7 +132,7 @@ const Index = () => {
 
       {/* Features with blue beam */}
       <section className="relative py-20 px-6 overflow-hidden">
-        <div aria-hidden className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(45% 70% at 85% 0%, hsl(var(--primary) / 0.45), transparent 70%), radial-gradient(45% 55% at 5% 80%, hsl(var(--accent) / 0.28), transparent 70%)" }} />
+        <GradientBackdrop src={grad02.url} />
         <div className="relative z-10 max-w-6xl mx-auto grid lg:grid-cols-[1fr_1.4fr] gap-16">
           <div className="flex flex-col">
             <BrandIcon className="h-11 w-11 mb-6" />
@@ -154,7 +159,7 @@ const Index = () => {
 
       {/* How it works */}
       <section className="relative py-20 px-6 overflow-hidden">
-        <div aria-hidden className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(55% 80% at 8% 50%, hsl(var(--primary) / 0.35), transparent 70%), radial-gradient(40% 60% at 95% 100%, hsl(var(--accent) / 0.22), transparent 70%)" }} />
+        <GradientBackdrop src={grad03.url} />
         <div className="relative max-w-6xl mx-auto">
           <h2 className="font-display text-4xl md:text-5xl mb-10">
             {t("how.h2.a")} <span className="text-accent">{t("how.h2.b")}</span>
@@ -199,7 +204,7 @@ const Index = () => {
 
       {/* SEO city cluster */}
       <section className="relative pt-12 pb-10 px-6">
-        <div aria-hidden className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(60% 90% at 50% 0%, hsl(var(--primary) / 0.25), transparent 70%), radial-gradient(50% 70% at 50% 100%, hsl(var(--accent) / 0.15), transparent 70%)" }} />
+        <GradientBackdrop src={grad01.url} flip />
         <div className="relative max-w-5xl mx-auto">
           <h2 className="font-display text-2xl md:text-3xl mb-2">{t("seo.h2.a")} <span className="text-primary">{t("seo.h2.b")}</span></h2>
           <p className="font-body text-sm text-muted-foreground mb-8">{t("seo.lead")}</p>
