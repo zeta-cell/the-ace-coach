@@ -159,10 +159,10 @@ const Index = () => {
           </h2>
           <div className="grid md:grid-cols-4 gap-4">
             {steps.map((item) => (
-              <div key={item.step} className="relative overflow-hidden rounded-2xl bg-gradient-to-b from-card/90 to-card/30 p-6 ring-1 ring-foreground/[0.08]">
+              <div key={item.step} className="relative overflow-hidden rounded-2xl bg-gradient-to-b from-card/90 to-card/30 p-6 ring-1 ring-foreground/15">
                 <span className="inline-flex items-center justify-center h-8 w-8 rounded-full ring-1 ring-accent/40 font-display text-sm text-accent tabular-nums">{item.step}</span>
                 <h3 className="font-display text-xl mt-6 mb-2">{t(item.titleKey)}</h3>
-                <p className="font-body text-sm text-muted-foreground">{t(item.descKey)}</p>
+                <p className="font-body text-sm text-foreground/70">{t(item.descKey)}</p>
               </div>
             ))}
           </div>
@@ -187,7 +187,7 @@ const Index = () => {
             <h2 className="font-display text-4xl md:text-6xl mb-4 leading-[1]">
               {t("cta.h2.a")} <span className="text-primary">{t("cta.h2.b")}</span>{t("cta.h2.c")}
             </h2>
-            <p className="font-body text-foreground/75 mb-8">{t("cta.lead")}</p>
+            <p className="font-body text-foreground/90 mb-8">{t("cta.lead")}</p>
             <Link to="/login" className="inline-flex items-center gap-2 font-body font-medium text-base bg-accent text-accent-foreground px-7 py-3.5 rounded-full hover:bg-accent/90 transition-colors">
               {t("cta.btn")} <ArrowRight size={18} />
             </Link>
@@ -206,8 +206,9 @@ const Index = () => {
               ["seo.padel", ["madrid","barcelona","valencia","malaga","marbella","sevilla","palma","lisbon","milan","dubai"], "/es/profesor-de-padel/", "/padel-coach/"],
               ["seo.tennis", ["madrid","barcelona","paris","london","berlin","munich","milan","rome","miami","dubai"], "/es/profesor-de-tenis/", "/tennis-coach/"],
             ] as const).map(([key, cities, es, en]) => (
-              <div key={key} className="rounded-2xl bg-card/50 ring-1 ring-foreground/[0.08] p-5">
-                <p className="font-body text-sm text-muted-foreground mb-4">{t(key)}</p>
+              <div key={key} className="rounded-2xl bg-card/50 ring-1 ring-foreground/12 p-5">
+                <p className="font-body text-sm text-foreground/70 mb-4">{t(key)}</p>
+
                 <div className="flex flex-wrap gap-2">
                   {cities.map((c) => (
                     <Link key={c} to={(lang === "es" ? es : en) + c} className="px-3 py-1.5 text-sm font-body bg-background/60 ring-1 ring-foreground/[0.08] rounded-full hover:ring-primary/60 hover:bg-primary/[0.08] transition-colors capitalize">
