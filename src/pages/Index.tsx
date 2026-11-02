@@ -124,7 +124,7 @@ const Index = () => {
           {stats.map((s) => (
             <div key={s.labelKey}>
               <p className="font-display text-4xl md:text-5xl tabular-nums">{s.value}</p>
-              <p className="font-body text-sm text-muted-foreground mt-2">{t(s.labelKey)}</p>
+              <p className="font-body text-sm text-foreground/75 mt-2">{t(s.labelKey)}</p>
             </div>
           ))}
         </div>
