@@ -119,7 +119,7 @@ const Index = () => {
 
       {/* Stats on orange horizon glow */}
       <section className="relative py-14 px-6">
-        <GradientBackdrop src={grad01.url} scrim="linear-gradient(180deg, hsl(var(--background)) 0%, hsl(207 77% 5% / 0.7) 14%, hsl(207 77% 5% / 0.74) 45%, hsl(207 73% 6% / 0.7) 68%, hsl(14 60% 7% / 0.4) 86%, hsl(var(--background)) 100%)" />
+        <GradientBackdrop src={grad01.url} scrim="linear-gradient(180deg, hsl(var(--background)) 0%, hsl(220 60% 13% / 0.68) 14%, hsl(220 60% 13% / 0.72) 45%, hsl(219 55% 15% / 0.68) 68%, hsl(14 55% 16% / 0.38) 86%, hsl(var(--background)) 100%)" />
         <div className="relative max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8">
           {stats.map((s) => (
             <div key={s.labelKey}>

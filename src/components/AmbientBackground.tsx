@@ -5,7 +5,7 @@ type Glow = { c: "blue" | "orange" | "black"; x: number; y: number; w: number; h
 const COLOR = {
   blue: "hsl(199 98% 44%)",
   orange: "hsl(13 97% 64%)",
-  black: "hsl(203 67% 2%)",
+  black: "hsl(222 62% 11%)",
 };
 
 // Seeded variation so each page gets its own composition of soft light
