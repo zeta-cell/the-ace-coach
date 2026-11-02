@@ -77,24 +77,27 @@ const Index = () => {
     <div className="min-h-screen bg-background text-foreground overflow-hidden">
       <PublicHeader />
 
-      {/* Hero scene — yesterday's clay-court photo */}
-      <section className="relative min-h-[100svh] flex items-center overflow-hidden">
-        {/* photo panel: the player stays fully visible on the right */}
-        <div className="absolute inset-y-0 right-0 w-full md:w-[64%]">
-          <img
-            src={heroPadel}
-            alt="Tennis player sliding on a clay court to reach a ball"
-            width={1536}
-            height={1024}
-            className="w-full h-full object-cover object-[25%_center] brightness-[1.25] saturate-[1.15]"
-            loading="eager"
-          />
-          <div className="absolute inset-0 bg-background/55 md:hidden" />
-          {/* blue light column from the top + orange horizon glow, like the reference */}
-          <div aria-hidden className="absolute inset-0" style={{ background: "linear-gradient(180deg, hsl(var(--primary) / 0.45) 0%, hsl(var(--primary) / 0.12) 30%, transparent 55%), radial-gradient(80% 55% at 50% 100%, hsl(var(--accent) / 0.45), transparent 70%)" }} />
-          <div className="absolute inset-y-0 left-0 w-2/3 bg-gradient-to-r from-background via-background/60 to-transparent" />
-          <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-background to-transparent" />
-        </div>
+      {/* Hero scene — base clay-court photo full bleed, our gradient laid over it top -> bottom */}
+      <section className="relative min-h-[100svh] flex items-center overflow-hidden bg-background">
+        <img
+          src={heroPadel}
+          alt="Tennis player sliding on a clay court to reach a ball"
+          width={1536}
+          height={1024}
+          className="absolute inset-0 w-full h-full object-cover object-[25%_center] brightness-[1.2] saturate-[1.15]"
+          loading="eager"
+        />
+        {/* the blue -> coral gradient, top to bottom, blended into the photo */}
+        <GradientBackdrop
+          src={grad01.url}
+          blend="screen"
+          opacity={0.9}
+          scrim="linear-gradient(180deg, hsl(222 62% 11% / 0.42) 0%, transparent 42%, hsl(222 62% 11% / 0.35) 78%, hsl(222 62% 11% / 0.75) 100%)"
+        />
+        {/* soft blue veil on the left so the headline stays readable */}
+        <div className="absolute inset-y-0 left-0 w-3/4 bg-gradient-to-r from-background via-background/70 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-background to-transparent" />
+
         <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12 pt-32 pb-20">
           <div className="max-w-xl">
             <img src={logoWhite.url} alt="Hi Volley" className="h-9 md:h-11 w-auto mb-10" loading="eager" />
