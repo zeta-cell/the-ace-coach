@@ -7,6 +7,8 @@ import { format, subMonths, startOfMonth, endOfMonth } from "date-fns";
 import { toast } from "sonner";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import PortalLayout from "@/components/portal/PortalLayout";
+import CountUp from "@/components/reactbits/CountUp";
+import SpotlightCard from "@/components/reactbits/SpotlightCard";
 import type { Database } from "@/integrations/supabase/types";
 
 type PaymentType = Database["public"]["Enums"]["payment_type"];
@@ -154,26 +156,26 @@ const AdminPayments = () => {
 
         {/* Booking Revenue Metrics */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
-          <div className="bg-card border border-border rounded-xl p-4 text-center">
+          <SpotlightCard className="p-4 text-center">
             <TrendingUp size={18} className="text-primary mx-auto mb-1" />
-            <p className="font-display text-xl text-foreground">€{revenue.totalGMV.toLocaleString()}</p>
+            <p className="font-display text-xl text-foreground"><CountUp to={revenue.totalGMV} prefix="€" /></p>
             <p className="font-body text-[9px] text-muted-foreground tracking-wider">Total GMV</p>
-          </div>
-          <div className="bg-card border border-border rounded-xl p-4 text-center">
+          </SpotlightCard>
+          <SpotlightCard className="p-4 text-center">
             <DollarSign size={18} className="text-green-400 mx-auto mb-1" />
-            <p className="font-display text-xl text-foreground">€{revenue.platformRevenue.toLocaleString()}</p>
+            <p className="font-display text-xl text-foreground"><CountUp to={revenue.platformRevenue} prefix="€" /></p>
             <p className="font-body text-[9px] text-muted-foreground tracking-wider">Platform Revenue</p>
-          </div>
-          <div className="bg-card border border-border rounded-xl p-4 text-center">
+          </SpotlightCard>
+          <SpotlightCard className="p-4 text-center">
             <Users size={18} className="text-chart-2 mx-auto mb-1" />
-            <p className="font-display text-xl text-foreground">€{revenue.coachPayouts.toLocaleString()}</p>
+            <p className="font-display text-xl text-foreground"><CountUp to={revenue.coachPayouts} prefix="€" /></p>
             <p className="font-body text-[9px] text-muted-foreground tracking-wider">Coach Payouts</p>
-          </div>
-          <div className="bg-card border border-border rounded-xl p-4 text-center">
+          </SpotlightCard>
+          <SpotlightCard className="p-4 text-center">
             <Calendar size={18} className="text-chart-4 mx-auto mb-1" />
-            <p className="font-display text-xl text-foreground">€{revenue.thisMonth.toLocaleString()}</p>
+            <p className="font-display text-xl text-foreground"><CountUp to={revenue.thisMonth} prefix="€" /></p>
             <p className="font-body text-[9px] text-muted-foreground tracking-wider">This Month</p>
-          </div>
+          </SpotlightCard>
         </div>
 
         {/* Monthly GMV Chart */}

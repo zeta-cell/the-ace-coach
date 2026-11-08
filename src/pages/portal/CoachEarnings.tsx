@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import PortalLayout from "@/components/portal/PortalLayout";
+import CountUp from "@/components/reactbits/CountUp";
+import SpotlightCard from "@/components/reactbits/SpotlightCard";
 import { Card } from "@/components/ui/card";
 import { DollarSign, TrendingUp, Users, Calendar } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip } from "recharts";
@@ -92,10 +94,10 @@ const CoachEarnings = () => {
   if (loading) return <PortalLayout><div className="p-6 text-muted-foreground">Loading earnings…</div></PortalLayout>;
 
   const cards = [
-    { label: "YTD Payout", value: `€${totals.ytdPayout.toFixed(0)}`, icon: DollarSign, color: "text-primary" },
-    { label: "This Month", value: `€${totals.monthPayout.toFixed(0)}`, icon: TrendingUp, color: "text-emerald-400" },
-    { label: "Pending", value: `€${totals.pendingPayout.toFixed(0)}`, icon: Calendar, color: "text-amber-400" },
-    { label: "Avg / Session", value: `€${totals.avgPerSession.toFixed(0)}`, icon: Users, color: "text-foreground" },
+    { label: "YTD Payout", value: totals.ytdPayout, icon: DollarSign, color: "text-primary" },
+    { label: "This Month", value: totals.monthPayout, icon: TrendingUp, color: "text-emerald-400" },
+    { label: "Pending", value: totals.pendingPayout, icon: Calendar, color: "text-amber-400" },
+    { label: "Avg / Session", value: totals.avgPerSession, icon: Users, color: "text-foreground" },
   ];
 
   return (
@@ -110,11 +112,11 @@ const CoachEarnings = () => {
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {cards.map((c) => (
-            <Card key={c.label} className="p-5">
+            <SpotlightCard key={c.label} className="p-5">
               <c.icon className={`${c.color} mb-3`} size={22} />
-              <div className="text-2xl font-display text-foreground">{c.value}</div>
+              <div className="text-2xl font-display text-foreground"><CountUp to={c.value} prefix="€" /></div>
               <div className="text-[10px] font-body text-muted-foreground tracking-wider mt-1">{c.label}</div>
-            </Card>
+            </SpotlightCard>
           ))}
         </div>
 

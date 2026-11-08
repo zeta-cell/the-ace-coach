@@ -1,6 +1,8 @@
 import { useEffect, useState, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import PortalLayout from "@/components/portal/PortalLayout";
+import CountUp from "@/components/reactbits/CountUp";
+import SpotlightCard from "@/components/reactbits/SpotlightCard";
 import { useCrmOwner } from "@/hooks/useCrmOwner";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -92,16 +94,16 @@ const Crm = () => {
         {/* Stats */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
           {[
-            { label: "Total Clients", value: stats.total, icon: Users, color: "text-primary" },
-            { label: "Active", value: stats.active, icon: TrendingUp, color: "text-accent" },
-            { label: "Lifetime Value", value: `€${stats.ltv.toFixed(0)}`, icon: Euro, color: "text-foreground" },
-            { label: "Pipeline (est.)", value: `€${stats.pipelineValue}`, icon: Euro, color: "text-muted-foreground" },
+            { label: "Total Clients", value: stats.total, prefix: "", icon: Users, color: "text-primary" },
+            { label: "Active", value: stats.active, prefix: "", icon: TrendingUp, color: "text-accent" },
+            { label: "Lifetime Value", value: Math.round(stats.ltv), prefix: "€", icon: Euro, color: "text-foreground" },
+            { label: "Pipeline (est.)", value: stats.pipelineValue, prefix: "€", icon: Euro, color: "text-muted-foreground" },
           ].map((s) => (
-            <Card key={s.label} className="p-4">
+            <SpotlightCard key={s.label} className="p-4">
               <s.icon className={`${s.color} mb-2`} size={20} />
-              <div className="text-xl font-display text-foreground">{s.value}</div>
+              <div className="text-xl font-display text-foreground"><CountUp to={s.value} prefix={s.prefix} /></div>
               <div className="text-[10px] font-body text-muted-foreground tracking-wider mt-1">{s.label}</div>
-            </Card>
+            </SpotlightCard>
           ))}
         </div>
 
