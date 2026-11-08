@@ -20,9 +20,9 @@ type Props = {
  */
 const ChromaHalo = ({
   colors = ["#FF6574", "#9FC4E8"],
-  size = 56,
+  size = 90,
   intensity = 1,
-  trail = 0.6,
+  trail = 0.9,
   drift = 24,
   className,
 }: Props) => {
@@ -72,7 +72,7 @@ const ChromaHalo = ({
       const dt = Math.min((now - last) / 1000, 0.05);
       last = now;
 
-      if (pointer.active && now - lastSpawn > 28) {
+      if (pointer.active && now - lastSpawn > 16) {
         lastSpawn = now;
         blooms.push({
           x: pointer.x + (Math.random() - 0.5) * 8,
@@ -91,7 +91,7 @@ const ChromaHalo = ({
         b.life += dt;
         b.y -= drift * dt;
         const p = b.life / b.maxLife;
-        const alpha = Math.sin(Math.min(p, 1) * Math.PI) * 0.35 * intensity;
+        const alpha = Math.sin(Math.min(p, 1) * Math.PI) * 0.55 * intensity;
         const r = b.r * (0.6 + p * 0.9);
         const g = ctx.createRadialGradient(b.x, b.y, 0, b.x, b.y, r);
         g.addColorStop(0, hexA(b.color, alpha));
