@@ -26,6 +26,7 @@ export default function SpotlightCard({
   return (
     <div
       ref={ref}
+      data-spotlight
       onPointerMove={(e) => {
         const el = ref.current;
         if (!el) return;
