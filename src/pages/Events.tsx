@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
+import { eventImage } from "@/lib/sportImages";
 import PublicHeader from "@/components/PublicHeader";
 import PublicBottomNav from "@/components/PublicBottomNav";
 import { Link, useNavigate } from "react-router-dom";
@@ -246,18 +247,17 @@ const Events = () => {
         className={`group overflow-hidden rounded-2xl border border-border bg-card transition-all hover:border-primary/40 ${large ? "min-w-[300px] shrink-0" : ""}`}
       >
         <Link to={`/class/${event.id}`} className="block">
-          <div className={`relative flex h-28 items-end bg-gradient-to-br ${meta.gradient} p-4`}>
-            {event.cover_image_url && (
-              <img src={event.cover_image_url} alt={event.title} loading="lazy" className="absolute inset-0 h-full w-full object-cover opacity-70" />
-            )}
-            <span className={`absolute left-3 top-3 flex items-center gap-1 rounded-full px-2 py-0.5 font-display text-[10px] tracking-wider ${meta.color}`}>
+          <div className={`relative flex h-40 items-end bg-secondary p-4`}>
+            <img src={event.cover_image_url || eventImage(event)} alt={event.title} loading="lazy" width={1024} height={640} className="absolute inset-0 h-full w-full object-cover" />
+            <div className="absolute inset-0 bg-gradient-to-t from-foreground/60 via-transparent to-foreground/30" />
+            <span className={`absolute left-3 top-3 flex items-center gap-1 rounded-full px-2 py-0.5 bg-card/90 font-display text-[10px] tracking-wider text-foreground`}>
               <TypeIcon size={10} /> {fmtType(event.event_type).toUpperCase()}
             </span>
-            <span className="absolute right-3 top-3 rounded-full bg-card/60 px-2 py-0.5 font-display text-[10px] tracking-wider text-foreground backdrop-blur">
+            <span className="absolute right-3 top-3 rounded-full bg-card/90 px-2 py-0.5 font-display text-[10px] tracking-wider text-foreground backdrop-blur">
               {event.sport.toUpperCase()}
             </span>
             {event.is_online && (
-              <span className="absolute bottom-3 left-3 flex items-center gap-1 rounded-full bg-card/60 px-2 py-0.5 font-display text-[10px] tracking-wider text-sky-300 backdrop-blur">
+              <span className="absolute bottom-3 left-3 flex items-center gap-1 rounded-full bg-card/90 px-2 py-0.5 font-display text-[10px] tracking-wider text-foreground backdrop-blur">
                 <Globe size={10} /> Online
               </span>
             )}

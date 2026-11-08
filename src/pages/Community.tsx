@@ -41,9 +41,9 @@ interface EventPreview {
 
 const BADGE_CONFIG: Record<string, { icon: typeof Shield; color: string; label: string }> = {
   starter: { icon: Shield, color: "bg-muted text-muted-foreground", label: "Starter" },
-  pro: { icon: Star, color: "bg-blue-500/20 text-blue-400", label: "Pro" },
-  elite: { icon: Zap, color: "bg-amber-500/20 text-amber-400", label: "Elite" },
-  legend: { icon: Crown, color: "bg-purple-500/20 text-purple-400", label: "Legend" },
+  pro: { icon: Star, color: "bg-secondary text-foreground", label: "Pro" },
+  elite: { icon: Zap, color: "bg-primary text-primary-foreground", label: "Elite" },
+  legend: { icon: Crown, color: "bg-foreground text-background", label: "Legend" },
 };
 
 const currencySymbol = (c: string) => ({ EUR: "€", USD: "$", GBP: "£" }[c] || c);
@@ -130,7 +130,7 @@ const Community = () => {
   const top3 = topPlayers.slice(0, 3);
   const podiumOrder = top3.length === 3 ? [top3[1], top3[0], top3[2]] : top3;
   const podiumHeights = ["h-20", "h-28", "h-16"];
-  const podiumColors = ["#C0C0C0", "#FFD700", "#CD7F32"];
+  const podiumColors = ["hsl(var(--foreground) / 0.55)", "hsl(var(--primary))", "hsl(var(--foreground) / 0.35)"];
   const podiumIcons = [Medal, Crown, Medal];
 
   return (
@@ -139,10 +139,9 @@ const Community = () => {
       <PublicHeader />
 
       {/* Hero */}
-      <div className="bg-card border-b border-border py-12 px-4 text-center relative overflow-hidden">
-        <div className="absolute top-0 right-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
-        <h1 className="font-display text-3xl md:text-5xl text-foreground mb-3 relative">Community</h1>
-        <p className="font-body text-sm md:text-base text-muted-foreground max-w-2xl mx-auto relative">
+      <div className="bg-foreground py-16 px-4 text-center relative overflow-hidden">
+        <h1 className="font-display text-3xl md:text-5xl text-background mb-3 relative">Community</h1>
+        <p className="font-body text-sm md:text-base text-background/75 max-w-2xl mx-auto relative">
           See who's leading, what's trending, and join the global tennis & padel community
         </p>
       </div>
@@ -151,7 +150,7 @@ const Community = () => {
         {/* Leaderboard */}
         <section>
           <div className="flex items-center justify-between mb-6">
-            <h2 className="font-display text-sm tracking-wider text-muted-foreground flex items-center gap-2"><Trophy size={16} className="text-primary" /> Top players</h2>
+            <h2 className="font-display text-sm text-foreground flex items-center gap-2"><Trophy size={16} className="text-primary" /> Top players</h2>
             <Link to="/rankings" className="font-display text-xs tracking-wider text-primary flex items-center gap-1">View full rankings <ChevronRight size={14} /></Link>
           </div>
 
@@ -176,7 +175,7 @@ const Community = () => {
                     </div>
                     <p className="font-display text-xs text-foreground text-center truncate max-w-[80px]">{p.display_name || "Player"}</p>
                     <p className="font-body text-[10px] text-muted-foreground">{p.total_xp} XP</p>
-                    <div className={`${podiumHeights[i]} w-16 rounded-t-lg mt-2`} style={{ background: `${podiumColors[i]}33` }} />
+                    <div className={`${podiumHeights[i]} w-16 rounded-t-lg mt-2`} style={{ background: i === 1 ? "hsl(var(--primary))" : "hsl(var(--foreground) / 0.85)" }} />
                   </motion.div>
                 );
               })}
@@ -205,7 +204,7 @@ const Community = () => {
         {/* Recent Badges */}
         {badges.length > 0 && (
           <section>
-            <h2 className="font-display text-sm tracking-wider text-muted-foreground flex items-center gap-2 mb-4"><Award size={16} className="text-primary" /> Recent badges</h2>
+            <h2 className="font-display text-sm text-foreground flex items-center gap-2 mb-4"><Award size={16} className="text-primary" /> Recent badges</h2>
             <div className="space-y-2">
               {badges.map(b => (
                 <div key={b.id} className="flex items-center gap-3 p-3 bg-card border border-border rounded-xl">
@@ -232,7 +231,7 @@ const Community = () => {
         {trending.length > 0 && (
           <section>
             <div className="flex items-center justify-between mb-4">
-              <h2 className="font-display text-sm tracking-wider text-muted-foreground flex items-center gap-2"><ShoppingBag size={16} className="text-primary" /> Trending programs</h2>
+              <h2 className="font-display text-sm text-foreground flex items-center gap-2"><ShoppingBag size={16} className="text-primary" /> Trending programs</h2>
               <Link to="/marketplace" className="font-display text-xs tracking-wider text-primary flex items-center gap-1">View in marketplace <ChevronRight size={14} /></Link>
             </div>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -242,7 +241,7 @@ const Community = () => {
                   <p className="font-body text-xs text-muted-foreground mb-2">{t.author_name || "Coach"}</p>
                   <div className="flex items-center justify-between">
                     <span className="font-body text-[10px] text-muted-foreground">{t.times_used} uses</span>
-                    <span className={`font-display text-xs ${Number(t.price) === 0 ? "text-emerald-400" : "text-foreground"}`}>
+                    <span className={`font-display text-xs ${Number(t.price) === 0 ? "text-primary" : "text-foreground"}`}>
                       {Number(t.price) === 0 ? "Free" : `${currencySymbol(t.currency || "EUR")}${t.price}`}
                     </span>
                   </div>
@@ -256,7 +255,7 @@ const Community = () => {
         {events.length > 0 && (
           <section>
             <div className="flex items-center justify-between mb-4">
-              <h2 className="font-display text-sm tracking-wider text-muted-foreground flex items-center gap-2"><Calendar size={16} className="text-primary" /> Upcoming events</h2>
+              <h2 className="font-display text-sm text-foreground flex items-center gap-2"><Calendar size={16} className="text-primary" /> Upcoming events</h2>
               <Link to="/events" className="font-display text-xs tracking-wider text-primary flex items-center gap-1">View all events <ChevronRight size={14} /></Link>
             </div>
             <div className="grid sm:grid-cols-2 gap-3">
@@ -264,7 +263,7 @@ const Community = () => {
                 <Link to="/events" key={e.id} className="bg-card border border-border rounded-xl p-4 hover:border-primary/40 transition-colors">
                   <h3 className="font-display text-sm tracking-wider text-foreground mb-1">{e.title}</h3>
                   <p className="font-body text-xs text-muted-foreground">{new Date(e.start_datetime).toLocaleDateString()} · {e.location_city || "Online"}</p>
-                  <span className={`font-display text-xs ${Number(e.price_per_person) === 0 ? "text-emerald-400" : "text-foreground"}`}>
+                  <span className={`font-display text-xs ${Number(e.price_per_person) === 0 ? "text-primary" : "text-foreground"}`}>
                     {Number(e.price_per_person) === 0 ? "Free" : `${currencySymbol(e.currency)}${e.price_per_person}`}
                   </span>
                 </Link>
@@ -276,7 +275,7 @@ const Community = () => {
         {/* Top Coaches */}
         {topCoaches.length > 0 && (
           <section>
-            <h2 className="font-display text-sm tracking-wider text-muted-foreground flex items-center gap-2 mb-4"><Users size={16} className="text-primary" /> Top coaches</h2>
+            <h2 className="font-display text-sm text-foreground flex items-center gap-2 mb-4"><Users size={16} className="text-primary" /> Top coaches</h2>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
               {topCoaches.map(c => {
                 const badge = BADGE_CONFIG[c.badge_level] || BADGE_CONFIG.starter;
@@ -295,7 +294,7 @@ const Community = () => {
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-1.5">
                           <span className="font-display text-sm text-foreground truncate">{c.full_name}</span>
-                          {c.is_verified && <CheckCircle size={12} className="text-blue-400 shrink-0" />}
+                          {c.is_verified && <CheckCircle size={12} className="text-foreground shrink-0" />}
                         </div>
                         <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-display tracking-wider ${badge.color}`}>
                           <BadgeIcon size={10} /> {badge.label.toUpperCase()}
@@ -305,7 +304,7 @@ const Community = () => {
                     <div className="flex items-center justify-between text-xs font-body text-muted-foreground">
                       <span>{c.location_city || "—"}</span>
                       <div className="flex items-center gap-1">
-                        {c.avg_rating > 0 && <><Star size={10} className="text-amber-400 fill-amber-400" /><span>{c.avg_rating.toFixed(1)}</span></>}
+                        {c.avg_rating > 0 && <><Star size={10} className="text-primary fill-primary" /><span>{c.avg_rating.toFixed(1)}</span></>}
                       </div>
                     </div>
                     <p className="font-display text-xs text-primary mt-1">VIEW PROFILE →</p>
