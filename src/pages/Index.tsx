@@ -66,11 +66,11 @@ const Index = () => {
           alt="Tennis player sliding on a clay court to reach a ball"
           width={1536}
           height={1024}
-          className="absolute inset-y-0 right-0 h-full w-full md:w-[68%] object-cover object-[30%_center] saturate-[0.85]"
+          className="absolute inset-0 h-full w-full object-cover object-[70%_center] saturate-[0.85]"
           loading="eager"
         />
         <div className="absolute inset-0 bg-background/25 mix-blend-color" />
-        <div className="absolute inset-y-0 left-0 w-full md:w-[62%] bg-gradient-to-r from-background via-background/90 to-transparent" />
+        <div className="absolute inset-y-0 left-0 w-full md:w-[70%] bg-gradient-to-r from-background via-background/85 to-transparent" />
         <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-background to-transparent" />
 
         <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12 pt-32 pb-20">
