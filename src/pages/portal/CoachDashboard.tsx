@@ -193,12 +193,12 @@ const CoachDashboard = () => {
           <div className="bg-card border border-border rounded-xl p-4 text-center">
             <Users size={18} className="text-primary mx-auto mb-1" />
             <p className="font-display text-2xl text-foreground"><AnimatedNumber value={stats.players} /></p>
-            <p className="font-body text-[10px] text-muted-foreground uppercase tracking-wide">Players</p>
+            <p className="font-body text-[10px] text-muted-foreground tracking-wide">Players</p>
           </div>
           <div className="bg-card border border-border rounded-xl p-4 text-center">
             <Calendar size={18} className="text-primary mx-auto mb-1" />
             <p className="font-display text-2xl text-foreground"><AnimatedNumber value={stats.sessionsMonth} /></p>
-            <p className="font-body text-[10px] text-muted-foreground uppercase tracking-wide">Sessions</p>
+            <p className="font-body text-[10px] text-muted-foreground tracking-wide">Sessions</p>
             <p className={`text-[9px] font-body flex items-center justify-center gap-0.5 mt-0.5 ${sessionsTrend >= 0 ? "text-green-400" : "text-red-400"}`}>
               {sessionsTrend >= 0 ? <TrendingUp size={8} /> : <TrendingDown size={8} />} {sessionsTrend >= 0 ? "+" : ""}{sessionsTrend} vs last month
             </p>
@@ -206,7 +206,7 @@ const CoachDashboard = () => {
           <div className="bg-card border border-border rounded-xl p-4 text-center">
             <CreditCard size={18} className="text-primary mx-auto mb-1" />
             <p className="font-display text-2xl text-foreground"><AnimatedNumber value={Math.round(stats.revenueMonth)} prefix="€" /></p>
-            <p className="font-body text-[10px] text-muted-foreground uppercase tracking-wide">Revenue</p>
+            <p className="font-body text-[10px] text-muted-foreground tracking-wide">Revenue</p>
             <p className={`text-[9px] font-body flex items-center justify-center gap-0.5 mt-0.5 ${revenueTrend >= 0 ? "text-green-400" : "text-red-400"}`}>
               {revenueTrend >= 0 ? <TrendingUp size={8} /> : <TrendingDown size={8} />} €{Math.abs(Math.round(revenueTrend))}
             </p>
@@ -214,7 +214,7 @@ const CoachDashboard = () => {
           <div className="bg-card border border-border rounded-xl p-4 text-center">
             <Star size={18} className="text-amber-400 mx-auto mb-1" />
             <p className="font-display text-2xl text-foreground">{stats.avgRating > 0 ? stats.avgRating.toFixed(1) : "—"}</p>
-            <p className="font-body text-[10px] text-muted-foreground uppercase tracking-wide">Avg Rating</p>
+            <p className="font-body text-[10px] text-muted-foreground tracking-wide">Avg Rating</p>
           </div>
         </motion.div>
 
@@ -244,7 +244,7 @@ const CoachDashboard = () => {
         {playerCards.length > 0 && (
           <motion.div initial={false} className="mb-6">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="font-display text-sm tracking-wider text-muted-foreground">PLAYER PROGRESS</h3>
+              <h3 className="font-display text-sm tracking-wider text-muted-foreground">Player progress</h3>
               <Link to="/coach/players" className="text-xs font-display text-primary tracking-wider hover:underline">VIEW ALL →</Link>
             </div>
             <div className="flex gap-2 overflow-x-auto pb-2">
@@ -257,7 +257,7 @@ const CoachDashboard = () => {
                   <p className="font-display text-xs text-foreground truncate">{p.full_name}</p>
                   <div className="flex items-center justify-center gap-1 mt-0.5">
                     <span className="w-2 h-2 rounded-full" style={{ backgroundColor: LEVEL_COLORS[p.current_level || "bronze"] }} />
-                    <span className="text-[8px] font-body text-muted-foreground uppercase">{p.current_level}</span>
+                    <span className="text-[8px] font-body text-muted-foreground">{p.current_level}</span>
                   </div>
                   <p className="text-[9px] font-body text-muted-foreground mt-1">{p.sessions_this_month} sessions</p>
                 </Link>
@@ -270,22 +270,22 @@ const CoachDashboard = () => {
         <motion.div initial={false} className="mb-6">
           <div className="flex items-center justify-between mb-3">
             <h3 className="font-display text-sm tracking-wider text-muted-foreground flex items-center gap-2">
-              <ShoppingBag size={14} className="text-primary" /> MARKETPLACE
+              <ShoppingBag size={14} className="text-primary" /> Marketplace
             </h3>
             <Link to="/coach/marketplace" className="text-xs font-display text-primary tracking-wider hover:underline">MANAGE →</Link>
           </div>
           <div className="grid grid-cols-3 gap-3">
             <div className="bg-card border border-border rounded-xl p-3 text-center">
               <p className="font-display text-xl text-foreground">{marketplaceStats.published}</p>
-              <p className="font-body text-[9px] text-muted-foreground uppercase">Published</p>
+              <p className="font-body text-[9px] text-muted-foreground">Published</p>
             </div>
             <div className="bg-card border border-border rounded-xl p-3 text-center">
               <p className="font-display text-xl text-foreground">{marketplaceStats.sales}</p>
-              <p className="font-body text-[9px] text-muted-foreground uppercase">Sales</p>
+              <p className="font-body text-[9px] text-muted-foreground">Sales</p>
             </div>
             <div className="bg-card border border-border rounded-xl p-3 text-center">
               <p className="font-display text-xl text-foreground">€{marketplaceStats.revenue.toFixed(0)}</p>
-              <p className="font-body text-[9px] text-muted-foreground uppercase">Earnings</p>
+              <p className="font-body text-[9px] text-muted-foreground">Earnings</p>
             </div>
           </div>
         </motion.div>
@@ -293,7 +293,7 @@ const CoachDashboard = () => {
         {/* SECTION E — Week Strip */}
         <motion.div initial={false} className="mb-6">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="font-display text-sm tracking-wider text-muted-foreground">UPCOMING WEEK</h3>
+            <h3 className="font-display text-sm tracking-wider text-muted-foreground">Upcoming week</h3>
             <div className="flex items-center gap-1">
               <button onClick={() => setWeekOffset(w => w - 1)} className="p-1.5 rounded-lg hover:bg-secondary text-muted-foreground transition-colors">
                 <ChevronLeft size={14} />
@@ -391,7 +391,7 @@ const CoachDashboard = () => {
           <motion.div initial={false} className="mb-6">
             <div className="flex items-center justify-between mb-3">
               <h2 className="font-display text-sm tracking-wider text-foreground flex items-center gap-2">
-                <Mail size={16} className="text-primary" /> COACHING REQUESTS
+                <Mail size={16} className="text-primary" /> Coaching requests
               </h2>
               <span className="text-xs font-body text-primary">{requests.length} pending</span>
             </div>
@@ -415,13 +415,13 @@ const CoachDashboard = () => {
                       await supabase.from("coach_player_assignments").insert({ coach_id: user!.id, player_id: req.player_id });
                       toast.success("Request accepted!"); setRequests(prev => prev.filter(r => r.id !== req.id));
                     }} className="flex-1 py-2 rounded-lg bg-primary text-primary-foreground font-display text-[10px] tracking-wider flex items-center justify-center gap-1">
-                      <Check size={12} /> ACCEPT
+                      <Check size={12} /> Accept
                     </button>
                     <button onClick={async () => {
                       await supabase.from("coach_requests").update({ status: "declined", responded_at: new Date().toISOString() }).eq("id", req.id);
                       toast.success("Request declined"); setRequests(prev => prev.filter(r => r.id !== req.id));
                     }} className="flex-1 py-2 rounded-lg border border-border text-muted-foreground font-display text-[10px] tracking-wider flex items-center justify-center gap-1">
-                      <XIcon size={12} /> DECLINE
+                      <XIcon size={12} /> Decline
                     </button>
                   </div>
                 </div>

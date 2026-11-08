@@ -141,7 +141,7 @@ const WelcomeSetup = () => {
         <div className="rounded-2xl border border-border bg-card p-5">
           {step === 1 && (
             <div className="text-center">
-              <p className="font-display text-sm tracking-wider text-foreground">PROFILE PHOTO</p>
+              <p className="font-display text-sm tracking-wider text-foreground">Profile photo</p>
               <p className="mt-1 font-body text-sm text-muted-foreground">
                 So your coach recognises you from the court.
               </p>
@@ -168,7 +168,7 @@ const WelcomeSetup = () => {
           {step === 2 && (
             <div>
               <label className="flex items-center gap-1.5 font-display text-xs tracking-wider text-muted-foreground">
-                <User size={13} className="text-primary" /> FULL NAME
+                <User size={13} className="text-primary" /> Full name
               </label>
               <input
                 value={fullName}
@@ -229,7 +229,7 @@ const WelcomeSetup = () => {
               onClick={() => setStep((s) => (s + 1) as 1 | 2 | 3)}
               className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-primary py-3 font-display text-xs tracking-wider text-primary-foreground hover:bg-primary/90"
             >
-              CONTINUE <ChevronRight size={15} />
+              Continue <ChevronRight size={15} />
             </button>
           ) : (
             <button

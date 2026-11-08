@@ -114,14 +114,14 @@ const BestWorstShots = ({ best, weakest }: { best: string | null; weakest: strin
     <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-3 flex items-center gap-2">
       <Target size={16} className="text-green-400 shrink-0" />
       <div>
-        <p className="text-[10px] font-body text-green-400 uppercase">Best Shot</p>
+        <p className="text-[10px] font-body text-green-400">Best Shot</p>
         <p className="font-display text-sm text-foreground">{best || "—"}</p>
       </div>
     </div>
     <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-3 flex items-center gap-2">
       <TrendingDown size={16} className="text-destructive shrink-0" />
       <div>
-        <p className="text-[10px] font-body text-destructive uppercase">Weakest</p>
+        <p className="text-[10px] font-body text-destructive">Weakest</p>
         <p className="font-display text-sm text-foreground">{weakest || "—"}</p>
       </div>
     </div>
@@ -255,7 +255,7 @@ const UserDetailDrawer = ({ user, open, onClose, onUserUpdate }: Props) => {
                   <h2 className="font-display text-xl text-foreground truncate">{user.full_name}</h2>
                   <p className="text-sm font-body text-muted-foreground truncate">{user.email}</p>
                   <div className="flex items-center gap-2 mt-1">
-                    <span className={`px-2 py-0.5 rounded-md font-body text-[10px] uppercase tracking-wider ${ROLE_COLORS[user.role]}`}>
+                    <span className={`px-2 py-0.5 rounded-md font-body text-[10px] tracking-wider ${ROLE_COLORS[user.role]}`}>
                       {user.role}
                     </span>
                     <span className="text-[10px] font-body text-muted-foreground">
@@ -283,7 +283,7 @@ const UserDetailDrawer = ({ user, open, onClose, onUserUpdate }: Props) => {
                     onClick={handleMessage}
                     className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-lg bg-primary text-primary-foreground font-display text-xs tracking-wider hover:bg-primary/90 transition-colors"
                   >
-                    <MessageSquare size={14} /> MESSAGE
+                    <MessageSquare size={14} /> Message
                   </button>
                   {(coachProfile?.phone || userPhone) && (
                     <a
@@ -307,7 +307,7 @@ const UserDetailDrawer = ({ user, open, onClose, onUserUpdate }: Props) => {
                   onClick={() => { onClose(); navigate(`/admin/schedule/coach/${user.user_id}`); }}
                   className="w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-lg bg-secondary text-foreground font-display text-xs tracking-wider hover:bg-secondary/80 transition-colors"
                 >
-                  <CalendarDays size={14} /> VIEW SCHEDULE
+                  <CalendarDays size={14} /> View schedule
                 </button>
               )}
 
@@ -325,7 +325,7 @@ const UserDetailDrawer = ({ user, open, onClose, onUserUpdate }: Props) => {
                       {/* Bio & style */}
                       {coachProfile.bio && (
                         <div className="bg-secondary/50 rounded-lg p-3">
-                          <p className="text-[10px] font-body text-muted-foreground uppercase tracking-wider mb-1">BIO</p>
+                          <p className="text-[10px] font-body text-muted-foreground tracking-wider mb-1">BIO</p>
                           <p className="font-body text-sm text-foreground">{coachProfile.bio}</p>
                         </div>
                       )}
@@ -341,7 +341,7 @@ const UserDetailDrawer = ({ user, open, onClose, onUserUpdate }: Props) => {
                           { label: "Pref. Side", value: coachProfile.preferred_side || "—" },
                         ].map((item) => (
                           <div key={item.label} className="bg-secondary/50 rounded-lg p-3">
-                            <p className="text-[10px] font-body text-muted-foreground uppercase tracking-wider">{item.label}</p>
+                            <p className="text-[10px] font-body text-muted-foreground tracking-wider">{item.label}</p>
                             <p className="font-display text-foreground text-sm capitalize">{String(item.value)}</p>
                           </div>
                         ))}
@@ -350,7 +350,7 @@ const UserDetailDrawer = ({ user, open, onClose, onUserUpdate }: Props) => {
                       {/* Languages */}
                       {coachProfile.languages && coachProfile.languages.length > 0 && (
                         <div>
-                          <p className="text-[10px] font-body text-muted-foreground uppercase tracking-wider mb-2">LANGUAGES</p>
+                          <p className="text-[10px] font-body text-muted-foreground tracking-wider mb-2">Languages</p>
                           <div className="flex flex-wrap gap-1.5">
                             {coachProfile.languages.map((lang) => (
                               <span key={lang} className="px-2 py-1 rounded-md bg-secondary text-xs font-body text-foreground flex items-center gap-1">
@@ -364,7 +364,7 @@ const UserDetailDrawer = ({ user, open, onClose, onUserUpdate }: Props) => {
                       {/* Specializations */}
                       {coachProfile.specializations && coachProfile.specializations.length > 0 && (
                         <div>
-                          <p className="text-[10px] font-body text-muted-foreground uppercase tracking-wider mb-2">SPECIALIZATIONS</p>
+                          <p className="text-[10px] font-body text-muted-foreground tracking-wider mb-2">Specializations</p>
                           <div className="flex flex-wrap gap-1.5">
                             {coachProfile.specializations.map((s) => (
                               <span key={s} className="px-2 py-1 rounded-md bg-purple-500/10 text-purple-400 text-xs font-body flex items-center gap-1">
@@ -378,7 +378,7 @@ const UserDetailDrawer = ({ user, open, onClose, onUserUpdate }: Props) => {
                       {/* Certifications */}
                       {coachProfile.certifications && coachProfile.certifications.length > 0 && (
                         <div>
-                          <p className="text-[10px] font-body text-muted-foreground uppercase tracking-wider mb-2">CERTIFICATIONS</p>
+                          <p className="text-[10px] font-body text-muted-foreground tracking-wider mb-2">Certifications</p>
                           <div className="flex flex-wrap gap-1.5">
                             {coachProfile.certifications.map((c) => (
                               <span key={c} className="px-2 py-1 rounded-md bg-primary/10 text-primary text-xs font-body flex items-center gap-1">
@@ -391,7 +391,7 @@ const UserDetailDrawer = ({ user, open, onClose, onUserUpdate }: Props) => {
 
                       {/* Shot confidence */}
                       <div>
-                        <p className="text-[10px] font-body text-muted-foreground uppercase tracking-wider mb-2">PADEL STRENGTHS</p>
+                        <p className="text-[10px] font-body text-muted-foreground tracking-wider mb-2">Padel strengths</p>
                         <ShotBars shots={coachShots} />
                       </div>
 
@@ -400,7 +400,7 @@ const UserDetailDrawer = ({ user, open, onClose, onUserUpdate }: Props) => {
                       {/* Racket */}
                       {coachProfile.racket_brand && (
                         <div>
-                          <p className="text-[10px] font-body text-muted-foreground uppercase tracking-wider mb-2">RACKET</p>
+                          <p className="text-[10px] font-body text-muted-foreground tracking-wider mb-2">Racket</p>
                           <div className="bg-secondary/50 rounded-lg p-3 flex items-center gap-3">
                             <div className="w-9 h-9 rounded-lg bg-primary/20 flex items-center justify-center text-primary font-display text-xs shrink-0">
                               {coachProfile.racket_brand.substring(0, 2).toUpperCase()}
@@ -445,7 +445,7 @@ const UserDetailDrawer = ({ user, open, onClose, onUserUpdate }: Props) => {
                           { label: "Playtomic", value: playerProfile.playtomic_level ?? "—" },
                         ].map((item) => (
                           <div key={item.label} className="bg-secondary/50 rounded-lg p-3">
-                            <p className="text-[10px] font-body text-muted-foreground uppercase tracking-wider">{item.label}</p>
+                            <p className="text-[10px] font-body text-muted-foreground tracking-wider">{item.label}</p>
                             <p className="font-display text-foreground text-sm capitalize">{String(item.value)}</p>
                           </div>
                         ))}
@@ -453,7 +453,7 @@ const UserDetailDrawer = ({ user, open, onClose, onUserUpdate }: Props) => {
 
                       {/* Court tendency */}
                       <div>
-                        <p className="text-[10px] font-body text-muted-foreground uppercase tracking-wider mb-2">COURT TENDENCY</p>
+                        <p className="text-[10px] font-body text-muted-foreground tracking-wider mb-2">Court tendency</p>
                         <div className="relative h-8 rounded-lg overflow-hidden flex">
                           <div
                             className="h-full flex items-center justify-center text-xs font-display"
@@ -471,7 +471,7 @@ const UserDetailDrawer = ({ user, open, onClose, onUserUpdate }: Props) => {
                       </div>
 
                       <div>
-                        <p className="text-[10px] font-body text-muted-foreground uppercase tracking-wider mb-2">SHOT CONFIDENCE</p>
+                        <p className="text-[10px] font-body text-muted-foreground tracking-wider mb-2">Shot confidence</p>
                         <ShotBars shots={playerShots} />
                       </div>
 
@@ -479,7 +479,7 @@ const UserDetailDrawer = ({ user, open, onClose, onUserUpdate }: Props) => {
 
                       {rackets.length > 0 && (
                         <div>
-                          <p className="text-[10px] font-body text-muted-foreground uppercase tracking-wider mb-2">RACKETS</p>
+                          <p className="text-[10px] font-body text-muted-foreground tracking-wider mb-2">Rackets</p>
                           <div className="space-y-2">
                             {rackets.map((r) => (
                               <div key={r.id} className="bg-secondary/50 rounded-lg p-3 flex items-center gap-3">
@@ -518,14 +518,14 @@ const UserDetailDrawer = ({ user, open, onClose, onUserUpdate }: Props) => {
 
               {/* Admin actions */}
               <div className="border-t border-border pt-4 space-y-3">
-                <p className="text-[10px] font-body text-muted-foreground uppercase tracking-wider">ADMIN ACTIONS</p>
+                <p className="text-[10px] font-body text-muted-foreground tracking-wider">Admin actions</p>
 
                 <div className="flex items-center gap-3">
                   <label className="text-xs font-body text-muted-foreground w-16">Role</label>
                   <select
                     value={user.role}
                     onChange={(e) => changeRole(e.target.value as AppRole)}
-                    className="flex-1 px-3 py-2 rounded-lg font-body text-xs uppercase tracking-wider border border-border cursor-pointer bg-secondary text-foreground"
+                    className="flex-1 px-3 py-2 rounded-lg font-body text-xs tracking-wider border border-border cursor-pointer bg-secondary text-foreground"
                   >
                     <option value="player">Player</option>
                     <option value="coach">Coach</option>
@@ -537,7 +537,7 @@ const UserDetailDrawer = ({ user, open, onClose, onUserUpdate }: Props) => {
                   <label className="text-xs font-body text-muted-foreground w-16">Status</label>
                   <button
                     onClick={toggleActive}
-                    className={`flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg font-body text-xs uppercase tracking-wider transition-colors ${
+                    className={`flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg font-body text-xs tracking-wider transition-colors ${
                       user.is_active
                         ? "bg-green-500/10 text-green-400 hover:bg-green-500/20"
                         : "bg-destructive/10 text-destructive hover:bg-destructive/20"
@@ -554,7 +554,7 @@ const UserDetailDrawer = ({ user, open, onClose, onUserUpdate }: Props) => {
                   className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-secondary text-foreground font-display text-xs tracking-wider hover:bg-secondary/80 transition-colors"
                 >
                   <MessageSquare size={14} />
-                  SEND MESSAGE
+                  Send message
                 </button>
 
                 <button
@@ -562,7 +562,7 @@ const UserDetailDrawer = ({ user, open, onClose, onUserUpdate }: Props) => {
                   className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-primary text-primary-foreground font-display text-xs tracking-wider hover:bg-primary/90 transition-colors"
                 >
                   <Link2 size={14} />
-                  CREATE ASSIGNMENT
+                  Create assignment
                 </button>
               </div>
             </div>

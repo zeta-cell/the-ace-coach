@@ -102,8 +102,8 @@ const CoachEarnings = () => {
     <PortalLayout>
       <div className="space-y-6 max-w-6xl">
         <div>
-          <h1 className="font-display text-2xl tracking-wide text-foreground uppercase">Earnings</h1>
-          <p className="text-xs font-body text-muted-foreground uppercase tracking-wider mt-1">
+          <h1 className="font-display text-2xl tracking-wide text-foreground">Earnings</h1>
+          <p className="text-xs font-body text-muted-foreground tracking-wider mt-1">
             Your coaching revenue at a glance
           </p>
         </div>
@@ -113,14 +113,14 @@ const CoachEarnings = () => {
             <Card key={c.label} className="p-5">
               <c.icon className={`${c.color} mb-3`} size={22} />
               <div className="text-2xl font-display text-foreground">{c.value}</div>
-              <div className="text-[10px] font-body text-muted-foreground uppercase tracking-wider mt-1">{c.label}</div>
+              <div className="text-[10px] font-body text-muted-foreground tracking-wider mt-1">{c.label}</div>
             </Card>
           ))}
         </div>
 
         <Card className="p-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="font-display text-sm uppercase tracking-wider text-foreground">Last 6 Months</h2>
+            <h2 className="font-display text-sm tracking-wider text-foreground">Last 6 Months</h2>
             <span className="text-xs text-muted-foreground">{totals.sessionsYtd} sessions YTD</span>
           </div>
           <div className="h-64">
@@ -140,7 +140,7 @@ const CoachEarnings = () => {
         </Card>
 
         <Card className="p-6">
-          <h2 className="font-display text-sm uppercase tracking-wider text-foreground mb-4">Top Clients (YTD)</h2>
+          <h2 className="font-display text-sm tracking-wider text-foreground mb-4">Top Clients (YTD)</h2>
           {topClients.length === 0 ? (
             <p className="text-sm text-muted-foreground">No confirmed sessions yet this year.</p>
           ) : (

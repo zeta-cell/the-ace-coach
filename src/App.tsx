@@ -158,7 +158,7 @@ const App = () => (
           <Sonner />
         <BrowserRouter>
           <ScrollToTop />
-          <AmbientBackground />
+          {null}
           <Routes>
             {/* Public */}
             <Route path="/" element={<Index />} />

@@ -150,7 +150,7 @@ const AdminUsers = () => {
   return (
     <PortalLayout>
       <div className="max-w-5xl mx-auto">
-        <h1 className="font-display text-3xl text-foreground mb-4">USER MANAGEMENT</h1>
+        <h1 className="font-display text-3xl text-foreground mb-4">User management</h1>
 
         {/* Filters */}
         <div className="flex flex-col sm:flex-row gap-3 mb-6">
@@ -168,7 +168,7 @@ const AdminUsers = () => {
               <button
                 key={r}
                 onClick={() => setRoleFilter(r)}
-                className={`px-3 py-2 rounded-lg font-body text-xs uppercase tracking-wider transition-colors ${
+                className={`px-3 py-2 rounded-lg font-body text-xs tracking-wider transition-colors ${
                   roleFilter === r
                     ? "bg-primary text-primary-foreground"
                     : "bg-card border border-border text-muted-foreground hover:bg-secondary"
@@ -231,7 +231,7 @@ const AdminUsers = () => {
                       <select
                         value={u.badge_level || "starter"}
                         onChange={(e) => changeBadgeLevel(u.user_id, u.full_name, e.target.value as BadgeLevel)}
-                        className={`px-2 py-1 rounded-lg font-body text-xs uppercase tracking-wider border-0 cursor-pointer ${BADGE_COLORS[u.badge_level || "starter"]}`}
+                        className={`px-2 py-1 rounded-lg font-body text-xs tracking-wider border-0 cursor-pointer ${BADGE_COLORS[u.badge_level || "starter"]}`}
                       >
                         <option value="starter">Starter</option>
                         <option value="pro">Pro</option>
@@ -255,7 +255,7 @@ const AdminUsers = () => {
                   <select
                     value={u.role}
                     onChange={(e) => changeRole(u.user_id, e.target.value as AppRole)}
-                    className={`px-2 py-1 rounded-lg font-body text-xs uppercase tracking-wider border-0 cursor-pointer ${ROLE_COLORS[u.role]}`}
+                    className={`px-2 py-1 rounded-lg font-body text-xs tracking-wider border-0 cursor-pointer ${ROLE_COLORS[u.role]}`}
                   >
                     <option value="player">Player</option>
                     <option value="coach">Coach</option>

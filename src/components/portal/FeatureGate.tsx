@@ -48,7 +48,7 @@ export const ComingSoonOverlay = ({
       <div className="w-10 h-10 rounded-full bg-primary/15 flex items-center justify-center">
         <Lock size={18} className="text-primary" />
       </div>
-      <p className="font-display text-sm tracking-wider text-foreground uppercase">{title}</p>
+      <p className="font-display text-sm tracking-wider text-foreground">{title}</p>
       {subtitle && <p className="font-body text-xs text-muted-foreground max-w-xs">{subtitle}</p>}
     </div>
   </div>

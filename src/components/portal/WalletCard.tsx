@@ -78,7 +78,7 @@ const WalletCard = () => {
       <div className="bg-card border border-border rounded-xl p-5">
         <div className="flex items-center justify-between mb-3">
           <h3 className="font-display text-sm tracking-wider text-muted-foreground flex items-center gap-2">
-            <Wallet size={14} className="text-primary" /> WALLET
+            <Wallet size={14} className="text-primary" /> Wallet
           </h3>
           <span className="font-display text-2xl text-foreground">€{balance.toFixed(2)}</span>
         </div>
@@ -110,7 +110,7 @@ const WalletCard = () => {
       {/* Referral Card */}
       {referralCode && (
         <div className="bg-card border border-border rounded-xl p-5">
-          <h3 className="font-display text-sm tracking-wider text-muted-foreground mb-3">REFER & EARN</h3>
+          <h3 className="font-display text-sm tracking-wider text-muted-foreground mb-3">Refer & earn</h3>
 
           <div className="flex items-center gap-2 bg-secondary rounded-lg px-3 py-2 mb-3">
             <span className="font-body text-xs text-foreground flex-1 truncate">{window.location.origin}/login?ref={referralCode}</span>
@@ -121,25 +121,25 @@ const WalletCard = () => {
 
           <div className="flex gap-2 mb-3">
             <button onClick={shareWhatsApp} className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-orange-500/20 text-orange-400 font-display text-[10px] tracking-wider hover:bg-orange-500/30 transition-colors">
-              <MessageCircle size={12} /> WHATSAPP
+              <MessageCircle size={12} /> Whatsapp
             </button>
             <button onClick={copyReferralLink} className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-secondary text-muted-foreground font-display text-[10px] tracking-wider hover:text-foreground transition-colors">
-              <Copy size={12} /> COPY LINK
+              <Copy size={12} /> Copy link
             </button>
           </div>
 
           <div className="grid grid-cols-3 gap-2 text-center">
             <div>
               <p className="font-display text-lg text-foreground">{referralStats.signedUp}</p>
-              <p className="font-body text-[9px] text-muted-foreground">JOINED</p>
+              <p className="font-body text-[9px] text-muted-foreground">Joined</p>
             </div>
             <div>
               <p className="font-display text-lg text-foreground">{referralStats.booked}</p>
-              <p className="font-body text-[9px] text-muted-foreground">BOOKED</p>
+              <p className="font-body text-[9px] text-muted-foreground">Booked</p>
             </div>
             <div>
               <p className="font-display text-lg text-foreground">€{referralStats.earned}</p>
-              <p className="font-body text-[9px] text-muted-foreground">EARNED</p>
+              <p className="font-body text-[9px] text-muted-foreground">Earned</p>
             </div>
           </div>
 

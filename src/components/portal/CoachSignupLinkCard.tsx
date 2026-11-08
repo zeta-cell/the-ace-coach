@@ -76,7 +76,7 @@ const CoachSignupLinkCard = () => {
     <div ref={cardRef} className="mb-6 scroll-mt-20 rounded-2xl border border-primary/30 bg-card p-4">
       <div className="mb-1 flex items-center gap-2">
         <Link2 size={16} className="text-primary" />
-        <h2 className="font-display text-sm tracking-wider text-foreground">MY SIGN-UP LINK</h2>
+        <h2 className="font-display text-sm tracking-wider text-foreground">My sign-up link</h2>
       </div>
       <p className="mb-3 font-body text-xs text-muted-foreground">
         Share this link or let players scan your QR code. They sign up with email, Google or Apple
@@ -113,7 +113,7 @@ const CoachSignupLinkCard = () => {
             onClick={downloadQr}
             className="inline-flex items-center gap-2 rounded-lg bg-secondary px-3 py-2 font-display text-xs tracking-wider text-foreground hover:bg-secondary/80"
           >
-            <Download size={14} /> DOWNLOAD QR
+            <Download size={14} /> Download qr
           </button>
         </div>
       )}

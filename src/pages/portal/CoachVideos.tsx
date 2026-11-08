@@ -180,7 +180,7 @@ const CoachVideos = () => {
   return (
     <PortalLayout>
       <div className="max-w-4xl mx-auto">
-        <h1 className="font-display text-3xl text-foreground mb-4">PLAYER VIDEOS</h1>
+        <h1 className="font-display text-3xl text-foreground mb-4">Player videos</h1>
 
         {loading ? (
           <div className="flex justify-center py-12">
@@ -223,7 +223,7 @@ const CoachVideos = () => {
                       {v.player_name}
                     </span>
                     {v.shot_tag && (
-                      <span className="text-[10px] font-body text-muted-foreground uppercase">{v.shot_tag}</span>
+                      <span className="text-[10px] font-body text-muted-foreground">{v.shot_tag}</span>
                     )}
                   </div>
                   <p className="font-display text-foreground">{v.title}</p>
@@ -276,7 +276,7 @@ const CoachVideos = () => {
                   {/* Feedback area */}
                   <div className="mt-4">
                     <label className="font-display text-xs tracking-wider text-muted-foreground mb-2 block">
-                      YOUR FEEDBACK
+                      Your feedback
                     </label>
                     <textarea
                       value={feedback}

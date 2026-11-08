@@ -93,7 +93,7 @@ const AcademyRoster = ({ academyId, clubId, coaches, ownerId, onChanged }: Props
     <div className="space-y-4">
       <div className="grid gap-3 md:grid-cols-2">
         <div className="bg-card border border-border rounded-2xl p-4 space-y-3">
-          <h3 className="font-display text-xs tracking-wider text-foreground">INVITE A NEW COACH</h3>
+          <h3 className="font-display text-xs tracking-wider text-foreground">Invite a new coach</h3>
           <input
             value={inviteEmail}
             onChange={(e) => setInviteEmail(e.target.value)}
@@ -118,7 +118,7 @@ const AcademyRoster = ({ academyId, clubId, coaches, ownerId, onChanged }: Props
             disabled={busy}
             className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground font-display text-[11px] tracking-wider disabled:opacity-60"
           >
-            <UserPlus size={14} /> CREATE INVITE LINK
+            <UserPlus size={14} /> Create invite link
           </button>
           <p className="font-body text-[11px] text-muted-foreground">
             The invite adds the coach to your home club — add them to the academy roster once they signed up.
@@ -126,7 +126,7 @@ const AcademyRoster = ({ academyId, clubId, coaches, ownerId, onChanged }: Props
         </div>
 
         <div className="bg-card border border-border rounded-2xl p-4 space-y-3">
-          <h3 className="font-display text-xs tracking-wider text-foreground">ADD EXISTING COACH</h3>
+          <h3 className="font-display text-xs tracking-wider text-foreground">Add existing coach</h3>
           <input
             value={linkEmail}
             onChange={(e) => setLinkEmail(e.target.value)}
@@ -138,7 +138,7 @@ const AcademyRoster = ({ academyId, clubId, coaches, ownerId, onChanged }: Props
             disabled={busy}
             className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-secondary border border-border text-foreground font-display text-[11px] tracking-wider disabled:opacity-60"
           >
-            <Link2 size={14} /> ADD TO ACADEMY
+            <Link2 size={14} /> Add to academy
           </button>
         </div>
       </div>

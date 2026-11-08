@@ -288,7 +288,7 @@ const QuickAddTrainingDrawer = ({
                     <span className="font-display text-[9px] tracking-wider">BACK</span>
                   </button>
                 ) : (
-                  <h2 className="font-display text-sm tracking-wider text-foreground">CREATE TRAINING</h2>
+                  <h2 className="font-display text-sm tracking-wider text-foreground">Create training</h2>
                 )}
                 <button onClick={handleClose} className="p-1 rounded-lg hover:bg-secondary">
                   <X size={16} className="text-muted-foreground" />
@@ -403,7 +403,7 @@ const SelectionStep = ({
               assignType === type ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
             }`}
           >
-            {type === "block" ? <><Layers size={10} /> BLOCKS</> : <><BookOpen size={10} /> MODULES</>}
+            {type === "block" ? <><Layers size={10} /> Blocks</> : <><BookOpen size={10} /> Modules</>}
           </button>
         ))}
       </div>
@@ -550,7 +550,7 @@ const SelectionStep = ({
                           )}
                           {module.instructions && (
                             <div>
-                              <span className="text-[9px] font-display text-foreground/70 uppercase tracking-wider">Instructions</span>
+                              <span className="text-[9px] font-display text-foreground/70 tracking-wider">Instructions</span>
                               <p className="text-[10px] font-body text-muted-foreground mt-0.5 whitespace-pre-line">{module.instructions}</p>
                             </div>
                           )}
@@ -570,7 +570,7 @@ const SelectionStep = ({
           onClick={onClearSelection}
           className="w-full py-2 rounded-xl border border-border text-muted-foreground font-display text-[10px] tracking-wider hover:text-foreground hover:border-primary transition-colors"
         >
-          CLEAR STAGED PLAN
+          Clear staged plan
         </button>
       )}
 
@@ -579,7 +579,7 @@ const SelectionStep = ({
         disabled={!canProceed}
         className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-display text-sm tracking-wider hover:bg-primary/90 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
       >
-        REVIEW PLAN <ArrowRight size={16} />
+        Review plan <ArrowRight size={16} />
       </button>
     </>
   );
@@ -605,12 +605,12 @@ const ReviewStep = ({
 
   return (
     <>
-      <h2 className="font-display text-lg tracking-wider text-foreground">REVIEW PLAN</h2>
+      <h2 className="font-display text-lg tracking-wider text-foreground">Review plan</h2>
 
       <div className="grid grid-cols-3 gap-2">
         <div className="bg-secondary rounded-lg p-3 text-center">
           <User size={14} className="mx-auto mb-1 text-primary" />
-          <p className="font-display text-[9px] tracking-wider text-muted-foreground">PLAYER</p>
+          <p className="font-display text-[9px] tracking-wider text-muted-foreground">Player</p>
           <p className="font-body text-xs text-foreground truncate">{playerName}</p>
         </div>
         <div className="bg-secondary rounded-lg p-3 text-center">
@@ -620,7 +620,7 @@ const ReviewStep = ({
         </div>
         <div className="bg-secondary rounded-lg p-3 text-center">
           <Clock size={14} className="mx-auto mb-1 text-primary" />
-          <p className="font-display text-[9px] tracking-wider text-muted-foreground">DURATION</p>
+          <p className="font-display text-[9px] tracking-wider text-muted-foreground">Duration</p>
           <p className="font-body text-xs text-foreground">{totalDuration}min</p>
         </div>
       </div>
@@ -665,7 +665,7 @@ const ReviewStep = ({
         disabled={saving}
         className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-display text-sm tracking-wider hover:bg-primary/90 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
       >
-        {saving ? "CREATING..." : <><Check size={16} /> CONFIRM & CREATE</>}
+        {saving ? "CREATING..." : <><Check size={16} /> Confirm & create</>}
       </button>
     </>
   );

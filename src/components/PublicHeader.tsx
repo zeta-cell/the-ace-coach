@@ -35,7 +35,7 @@ const PublicHeader = () => {
     { label: t("nav.marketplace"), href: "/marketplace", flag: "marketplace", visible: showDiscovery },
     { label: t("nav.events"), href: "/events", flag: "events", visible: showDiscovery },
     { label: t("nav.community"), href: "/community", flag: "community", visible: showDiscovery },
-    { label: "FOR CLUBS", href: "/login", flag: "club_signup", visible: true },
+    { label: "For clubs", href: "/login", flag: "club_signup", visible: true },
   ].map((l) => ({ ...l, active: isEnabled(l.flag), soon: isComingSoon(l.flag) })).filter((l) => l.visible);
 
 
@@ -106,7 +106,7 @@ const PublicHeader = () => {
             >
               <Globe size={14} className="md:hidden" />
               <Globe size={16} className="hidden md:block" />
-              <span className="font-display text-[10px] md:text-xs tracking-wider uppercase">{lang}</span>
+              <span className="font-display text-[10px] md:text-xs tracking-wider">{lang}</span>
             </button>
             <button
               onClick={toggleTheme}

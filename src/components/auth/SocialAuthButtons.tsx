@@ -24,7 +24,7 @@ const SocialAuthButtons = ({ onSelect, className = "", label = "or continue with
           <path fill="#FBBC05" d="M10.4 28.2c-.5-1.4-.8-2.8-.8-4.2s.3-2.9.8-4.2l-7.8-6.1C.9 16.9 0 20.3 0 24s.9 7.1 2.6 10.3l7.8-6.1z" />
           <path fill="#34A853" d="M24 47.5c6.1 0 11.3-2 15.1-5.5l-7.6-5.9c-2.1 1.4-4.8 2.3-7.5 2.3-6.3 0-11.7-4.2-13.6-10.2l-7.8 6.1C6.5 42.1 14.6 47.5 24 47.5z" />
         </svg>
-        GOOGLE
+        Google
       </button>
       <button
         type="button"

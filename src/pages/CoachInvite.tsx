@@ -101,11 +101,11 @@ const CoachInvite = () => {
   if (!invite || !invite.is_valid) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center px-4 text-center">
-        <h1 className="font-display text-2xl text-foreground mb-2">INVITE NOT AVAILABLE</h1>
+        <h1 className="font-display text-2xl text-foreground mb-2">Invite not available</h1>
         <p className="font-body text-sm text-muted-foreground mb-6 max-w-sm">
           This invite link has already been used or has expired. Ask your coach for a new link.
         </p>
-        <Link to="/login" className="font-display text-sm tracking-wider text-primary">GO TO LOGIN</Link>
+        <Link to="/login" className="font-display text-sm tracking-wider text-primary">Go to login</Link>
       </div>
     );
   }
@@ -136,7 +136,7 @@ const CoachInvite = () => {
               <div className="grid grid-cols-2 gap-3 mb-3">
                 <div className="rounded-xl bg-secondary p-3">
                   <p className="flex items-center gap-1 font-display text-[10px] tracking-wider text-muted-foreground">
-                    <CalendarDays size={12} className="text-primary" /> ASSESSED
+                    <CalendarDays size={12} className="text-primary" /> Assessed
                   </p>
                   <p className="mt-1 font-display text-sm text-foreground">
                     {invite.assessment_date
@@ -146,11 +146,11 @@ const CoachInvite = () => {
                 </div>
                 <div className="rounded-xl bg-secondary p-3">
                   <p className="flex items-center gap-1 font-display text-[10px] tracking-wider text-muted-foreground">
-                    <Trophy size={12} className="text-primary" /> OVERALL LEVEL
+                    <Trophy size={12} className="text-primary" /> Overall level
                   </p>
                   <p className="mt-1 font-display text-sm text-foreground">
                     {invite.overall_level ?? "—"}
-                    {invite.level_system ? <span className="ml-1 text-[10px] text-muted-foreground uppercase">{invite.level_system}</span> : null}
+                    {invite.level_system ? <span className="ml-1 text-[10px] text-muted-foreground">{invite.level_system}</span> : null}
                   </p>
                 </div>
               </div>
@@ -170,7 +170,7 @@ const CoachInvite = () => {
                 <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 bg-card/40">
                   <Lock size={16} className="text-primary" />
                   <p className="font-display text-[11px] tracking-wider text-foreground">
-                    SET A PASSWORD TO UNLOCK
+                    Set a password to unlock
                   </p>
                 </div>
               </div>
@@ -206,7 +206,7 @@ const CoachInvite = () => {
 
         <form onSubmit={handleSignUp} className="space-y-4">
           <div>
-            <label className="block font-display text-xs tracking-wider text-muted-foreground mb-1.5">FULL NAME</label>
+            <label className="block font-display text-xs tracking-wider text-muted-foreground mb-1.5">Full name</label>
             <input
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
@@ -226,7 +226,7 @@ const CoachInvite = () => {
             />
           </div>
           <div>
-            <label className="block font-display text-xs tracking-wider text-muted-foreground mb-1.5">PASSWORD</label>
+            <label className="block font-display text-xs tracking-wider text-muted-foreground mb-1.5">Password</label>
             <div className="relative">
               <input
                 value={password}

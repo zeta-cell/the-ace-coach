@@ -55,8 +55,8 @@ const CourtUtilizationHeatmap = ({ clubId }: Props) => {
   return (
     <Card className="p-6">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="font-display text-sm uppercase tracking-wider text-foreground">Court Utilization</h2>
-        <span className="text-[10px] font-body text-muted-foreground uppercase tracking-wider">Last 4 weeks</span>
+        <h2 className="font-display text-sm tracking-wider text-foreground">Court Utilization</h2>
+        <span className="text-[10px] font-body text-muted-foreground tracking-wider">Last 4 weeks</span>
       </div>
 
       {loading ? (
@@ -76,7 +76,7 @@ const CourtUtilizationHeatmap = ({ clubId }: Props) => {
                 ))}
                 {DAYS.map((day, dIdx) => (
                   <>
-                    <div key={`d-${day}`} className="text-[10px] font-body text-muted-foreground uppercase tracking-wider pr-2 flex items-center">
+                    <div key={`d-${day}`} className="text-[10px] font-body text-muted-foreground tracking-wider pr-2 flex items-center">
                       {day}
                     </div>
                     {HOURS.map((_, hIdx) => {

@@ -192,14 +192,14 @@ const CreateTrainingBlockDrawer = ({ open, onClose, onCreated, editBlock }: Prop
 
               {/* Description */}
               <div>
-                <label className="font-display text-[10px] tracking-wider text-muted-foreground">DESCRIPTION</label>
+                <label className="font-display text-[10px] tracking-wider text-muted-foreground">Description</label>
                 <textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={2}
                   className="w-full mt-1 px-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary resize-none" />
               </div>
 
               {/* Category */}
               <div>
-                <label className="font-display text-[10px] tracking-wider text-muted-foreground mb-2 block">CATEGORY</label>
+                <label className="font-display text-[10px] tracking-wider text-muted-foreground mb-2 block">Category</label>
                 <div className="flex flex-wrap gap-1.5">
                   {CATEGORIES.map((c) => (
                     <button key={c} onClick={() => setCategory(c)}
@@ -233,7 +233,7 @@ const CreateTrainingBlockDrawer = ({ open, onClose, onCreated, editBlock }: Prop
                     className="w-full mt-1 px-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary" />
                 </div>
                 <div>
-                  <label className="font-display text-[10px] tracking-wider text-muted-foreground mb-2 block">DIFFICULTY</label>
+                  <label className="font-display text-[10px] tracking-wider text-muted-foreground mb-2 block">Difficulty</label>
                   <div className="flex flex-wrap gap-1">
                     {DIFFICULTIES.map((d) => (
                       <button key={d} onClick={() => setDifficulty(d)}
@@ -270,7 +270,7 @@ const CreateTrainingBlockDrawer = ({ open, onClose, onCreated, editBlock }: Prop
 
               {/* Exercises */}
               <div>
-                <label className="font-display text-[10px] tracking-wider text-muted-foreground mb-2 block">EXERCISES</label>
+                <label className="font-display text-[10px] tracking-wider text-muted-foreground mb-2 block">Exercises</label>
                 <div className="space-y-2">
                   {exercises.map((ex, idx) => (
                     <div key={idx} className="p-3 rounded-lg bg-secondary border border-border space-y-2">
@@ -302,13 +302,13 @@ const CreateTrainingBlockDrawer = ({ open, onClose, onCreated, editBlock }: Prop
                   ))}
                 </div>
                 <button onClick={addExercise} className="mt-2 w-full py-2 rounded-lg border border-dashed border-border text-muted-foreground font-display text-[10px] tracking-wider hover:border-primary hover:text-primary transition-colors flex items-center justify-center gap-1">
-                  <Plus size={12} /> ADD EXERCISE
+                  <Plus size={12} /> Add exercise
                 </button>
               </div>
 
               {/* Block Type */}
               <div>
-                <label className="font-display text-[10px] tracking-wider text-muted-foreground mb-2 block">BLOCK TYPE</label>
+                <label className="font-display text-[10px] tracking-wider text-muted-foreground mb-2 block">Block type</label>
                 <div className="flex flex-wrap gap-1.5">
                   {["session", "program", "nutrition", "mental", "template"].map((t) => (
                     <button key={t} onClick={() => setBlockType(t)}
@@ -322,7 +322,7 @@ const CreateTrainingBlockDrawer = ({ open, onClose, onCreated, editBlock }: Prop
               {/* Program fields */}
               {blockType === "program" && (
                 <div>
-                  <label className="font-display text-[10px] tracking-wider text-muted-foreground">NUMBER OF WEEKS</label>
+                  <label className="font-display text-[10px] tracking-wider text-muted-foreground">Number of weeks</label>
                   <input type="number" value={weekCount} onChange={(e) => setWeekCount(Number(e.target.value))} min={1} max={52}
                     className="w-full mt-1 px-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary" />
                 </div>
@@ -330,7 +330,7 @@ const CreateTrainingBlockDrawer = ({ open, onClose, onCreated, editBlock }: Prop
 
               {/* Target Level */}
               <div>
-                <label className="font-display text-[10px] tracking-wider text-muted-foreground mb-2 block">TARGET LEVEL</label>
+                <label className="font-display text-[10px] tracking-wider text-muted-foreground mb-2 block">Target level</label>
                 <div className="flex flex-wrap gap-1.5">
                   {DIFFICULTIES.map((d) => (
                     <button key={d} onClick={() => setTargetLevel(d)}
@@ -343,7 +343,7 @@ const CreateTrainingBlockDrawer = ({ open, onClose, onCreated, editBlock }: Prop
 
               {/* Visibility */}
               <div>
-                <label className="font-display text-[10px] tracking-wider text-muted-foreground mb-2 block">VISIBILITY</label>
+                <label className="font-display text-[10px] tracking-wider text-muted-foreground mb-2 block">Visibility</label>
                 <div className="space-y-1.5">
                   {([["private", "PRIVATE — Only I can use this"], ["public", "PUBLIC — Visible in Marketplace"], ["for_sale", "FOR SALE — Others can buy this"]] as const).map(([v, label]) => (
                     <button key={v} onClick={() => setVisibility(v)}
@@ -364,7 +364,7 @@ const CreateTrainingBlockDrawer = ({ open, onClose, onCreated, editBlock }: Prop
                         className="w-full mt-1 px-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-sm focus:outline-none" />
                     </div>
                     <div>
-                      <label className="font-display text-[10px] tracking-wider text-muted-foreground">CURRENCY</label>
+                      <label className="font-display text-[10px] tracking-wider text-muted-foreground">Currency</label>
                       <select value={currency} onChange={(e) => setCurrency(e.target.value)}
                         className="w-full mt-1 px-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-sm focus:outline-none">
                         <option>EUR</option><option>USD</option><option>GBP</option>
@@ -397,7 +397,7 @@ const CreateTrainingBlockDrawer = ({ open, onClose, onCreated, editBlock }: Prop
                   toast.success("Block deleted");
                   onCreated(); onClose();
                 }} className="w-full py-2.5 rounded-xl border border-destructive/30 text-destructive font-display text-[10px] tracking-wider hover:bg-destructive/10 transition-colors">
-                  DELETE BLOCK
+                  Delete block
                 </button>
               )}
             </div>

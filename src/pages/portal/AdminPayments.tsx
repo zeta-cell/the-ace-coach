@@ -146,9 +146,9 @@ const AdminPayments = () => {
     <PortalLayout>
       <div className="max-w-5xl mx-auto">
         <div className="flex items-center justify-between mb-4">
-          <h1 className="font-display text-3xl text-foreground">PAYMENTS</h1>
+          <h1 className="font-display text-3xl text-foreground">Payments</h1>
           <button onClick={() => setShowForm(true)} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground font-display text-xs tracking-wider hover:bg-primary/90 transition-colors">
-            <Plus size={16} /> NEW PAYMENT
+            <Plus size={16} /> New payment
           </button>
         </div>
 
@@ -157,29 +157,29 @@ const AdminPayments = () => {
           <div className="bg-card border border-border rounded-xl p-4 text-center">
             <TrendingUp size={18} className="text-primary mx-auto mb-1" />
             <p className="font-display text-xl text-foreground">€{revenue.totalGMV.toLocaleString()}</p>
-            <p className="font-body text-[9px] text-muted-foreground uppercase tracking-wider">Total GMV</p>
+            <p className="font-body text-[9px] text-muted-foreground tracking-wider">Total GMV</p>
           </div>
           <div className="bg-card border border-border rounded-xl p-4 text-center">
             <DollarSign size={18} className="text-green-400 mx-auto mb-1" />
             <p className="font-display text-xl text-foreground">€{revenue.platformRevenue.toLocaleString()}</p>
-            <p className="font-body text-[9px] text-muted-foreground uppercase tracking-wider">Platform Revenue</p>
+            <p className="font-body text-[9px] text-muted-foreground tracking-wider">Platform Revenue</p>
           </div>
           <div className="bg-card border border-border rounded-xl p-4 text-center">
             <Users size={18} className="text-chart-2 mx-auto mb-1" />
             <p className="font-display text-xl text-foreground">€{revenue.coachPayouts.toLocaleString()}</p>
-            <p className="font-body text-[9px] text-muted-foreground uppercase tracking-wider">Coach Payouts</p>
+            <p className="font-body text-[9px] text-muted-foreground tracking-wider">Coach Payouts</p>
           </div>
           <div className="bg-card border border-border rounded-xl p-4 text-center">
             <Calendar size={18} className="text-chart-4 mx-auto mb-1" />
             <p className="font-display text-xl text-foreground">€{revenue.thisMonth.toLocaleString()}</p>
-            <p className="font-body text-[9px] text-muted-foreground uppercase tracking-wider">This Month</p>
+            <p className="font-body text-[9px] text-muted-foreground tracking-wider">This Month</p>
           </div>
         </div>
 
         {/* Monthly GMV Chart */}
         {revenue.monthlyData.some(d => d.gmv > 0) && (
           <div className="bg-card border border-border rounded-xl p-4 mb-6">
-            <h3 className="font-display text-xs tracking-wider text-muted-foreground mb-3">MONTHLY GMV</h3>
+            <h3 className="font-display text-xs tracking-wider text-muted-foreground mb-3">Monthly gmv</h3>
             <div className="h-40">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={revenue.monthlyData}>
@@ -205,7 +205,7 @@ const AdminPayments = () => {
           </div>
           <div className="flex gap-2 overflow-x-auto">
             {(["all", ...PAYMENT_STATUSES] as const).map((s) => (
-              <button key={s} onClick={() => setStatusFilter(s)} className={`shrink-0 px-3 py-2 rounded-lg font-body text-xs uppercase tracking-wider transition-colors ${statusFilter === s ? "bg-primary text-primary-foreground" : "bg-card border border-border text-muted-foreground hover:bg-secondary"}`}>{s}</button>
+              <button key={s} onClick={() => setStatusFilter(s)} className={`shrink-0 px-3 py-2 rounded-lg font-body text-xs tracking-wider transition-colors ${statusFilter === s ? "bg-primary text-primary-foreground" : "bg-card border border-border text-muted-foreground hover:bg-secondary"}`}>{s}</button>
             ))}
           </div>
         </div>
@@ -237,8 +237,8 @@ const AdminPayments = () => {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
                     <span className="font-display text-foreground">€{Number(p.amount).toFixed(2)}</span>
-                    <span className="text-[10px] font-body font-semibold bg-primary/10 text-primary px-2 py-0.5 rounded-full uppercase">{p.type}</span>
-                    <span className={`text-[10px] font-body font-semibold px-2 py-0.5 rounded-full uppercase ${STATUS_COLORS[p.status]}`}>{p.status}</span>
+                    <span className="text-[10px] font-body font-semibold bg-primary/10 text-primary px-2 py-0.5 rounded-full">{p.type}</span>
+                    <span className={`text-[10px] font-body font-semibold px-2 py-0.5 rounded-full ${STATUS_COLORS[p.status]}`}>{p.status}</span>
                   </div>
                   <p className="text-xs font-body text-muted-foreground">{p.player_name} · {format(new Date(p.created_at), "d MMM yyyy HH:mm")}</p>
                   {p.description && <p className="text-xs font-body text-muted-foreground mt-0.5">{p.description}</p>}
@@ -257,7 +257,7 @@ const AdminPayments = () => {
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm p-4" onClick={() => setShowForm(false)}>
               <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.95, opacity: 0 }} onClick={(e) => e.stopPropagation()} className="w-full max-w-lg bg-card border border-border rounded-xl p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <h2 className="font-display text-xl text-foreground">NEW PAYMENT</h2>
+                  <h2 className="font-display text-xl text-foreground">New payment</h2>
                   <button onClick={() => setShowForm(false)}><X size={20} className="text-muted-foreground" /></button>
                 </div>
                 <div className="space-y-3">

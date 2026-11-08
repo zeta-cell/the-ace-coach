@@ -153,7 +153,7 @@ const PortalLayout = ({ children }: { children: React.ReactNode }) => {
               }`}
             >
               <item.icon size={20} />
-              {sidebarOpen && <span className="font-body uppercase tracking-wide text-xs">{item.label}</span>}
+              {sidebarOpen && <span className="font-body tracking-wide text-xs">{item.label}</span>}
             </Link>
           );
         })}
@@ -162,7 +162,7 @@ const PortalLayout = ({ children }: { children: React.ReactNode }) => {
       <div className="p-3 border-t border-border space-y-1">
         {profile && sidebarOpen && (
           <div className="px-3 py-2 mb-2">
-            <p className="text-xs font-body text-muted-foreground uppercase tracking-wide">{profile.full_name}</p>
+            <p className="text-xs font-body text-muted-foreground tracking-wide">{profile.full_name}</p>
             <p className="text-xs text-muted-foreground">{role}</p>
           </div>
         )}
@@ -171,7 +171,7 @@ const PortalLayout = ({ children }: { children: React.ReactNode }) => {
           className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors w-full"
         >
           <LogOut size={20} />
-          {sidebarOpen && <span className="font-body uppercase tracking-wide text-xs">Logout</span>}
+          {sidebarOpen && <span className="font-body tracking-wide text-xs">Logout</span>}
         </button>
       </div>
     </div>
@@ -214,7 +214,7 @@ const PortalLayout = ({ children }: { children: React.ReactNode }) => {
                 <div className="w-14 h-14 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg">
                   <PhBarbell size={24} weight="fill" />
                 </div>
-                <span className="text-[9px] font-display tracking-wider text-primary mt-1">CREATE</span>
+                <span className="text-[9px] font-display tracking-wider text-primary mt-1">Create</span>
               </button>
               {/* Right two: Library, Messages */}
               {[
@@ -327,7 +327,7 @@ const PortalLayout = ({ children }: { children: React.ReactNode }) => {
                         }`}
                       >
                         <item.icon size={22} />
-                        <span className="font-display text-xs tracking-wider uppercase">
+                        <span className="font-display text-xs tracking-wider">
                           {item.label}
                         </span>
                       </Link>
@@ -337,7 +337,7 @@ const PortalLayout = ({ children }: { children: React.ReactNode }) => {
 
                 {profile && (
                   <div className="mt-6 px-1">
-                    <p className="text-xs font-body text-muted-foreground uppercase tracking-wide">
+                    <p className="text-xs font-body text-muted-foreground tracking-wide">
                       {profile.full_name}
                     </p>
                     <p className="text-xs text-muted-foreground">{role}</p>
@@ -349,7 +349,7 @@ const PortalLayout = ({ children }: { children: React.ReactNode }) => {
                     setMobileOpen(false);
                     signOut();
                   }}
-                  className="mt-4 w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-border text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors font-display text-xs tracking-wider uppercase"
+                  className="mt-4 w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-border text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors font-display text-xs tracking-wider"
                 >
                   <LogOut size={18} />
                   Logout

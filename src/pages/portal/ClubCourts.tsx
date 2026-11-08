@@ -62,7 +62,7 @@ const ClubCourts = () => {
     <PortalLayout>
       <div className="space-y-6">
         <div className="flex items-center justify-between">
-          <h1 className="font-display text-2xl tracking-wide text-foreground uppercase">Courts</h1>
+          <h1 className="font-display text-2xl tracking-wide text-foreground">Courts</h1>
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
               <Button size="sm"><Plus size={14} className="mr-2" /> Add Court</Button>

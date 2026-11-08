@@ -26,7 +26,7 @@ const RaffleCard = () => {
     <div className="bg-gradient-to-br from-primary/10 to-card border border-primary/20 rounded-xl p-5">
       <div className="flex items-center justify-between mb-3">
         <h3 className="font-display text-sm tracking-wider text-foreground flex items-center gap-2">
-          <Ticket size={14} className="text-primary" /> MONTHLY RAFFLE
+          <Ticket size={14} className="text-primary" /> Monthly raffle
         </h3>
         <span className="font-body text-xs text-primary">{daysLeft} days left</span>
       </div>
@@ -34,7 +34,7 @@ const RaffleCard = () => {
       <div className="flex items-center gap-4 mb-3">
         <div className="text-center">
           <p className="font-display text-3xl text-foreground">{tickets}</p>
-          <p className="font-body text-[9px] text-muted-foreground uppercase tracking-wider">Your tickets</p>
+          <p className="font-body text-[9px] text-muted-foreground tracking-wider">Your tickets</p>
         </div>
         <div className="flex-1 bg-secondary/50 rounded-lg p-3">
           <div className="flex items-center gap-2 mb-1">

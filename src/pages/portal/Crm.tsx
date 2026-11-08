@@ -80,8 +80,8 @@ const Crm = () => {
       <div className="space-y-6">
         <div className="flex items-center justify-between flex-wrap gap-3">
           <div>
-            <h1 className="font-display text-2xl tracking-wide text-foreground uppercase">CRM</h1>
-            <p className="text-xs font-body text-muted-foreground uppercase tracking-wider mt-1">{ownerType === "club" ? "Club pipeline" : "Lead pipeline"}</p>
+            <h1 className="font-display text-2xl tracking-wide text-foreground">CRM</h1>
+            <p className="text-xs font-body text-muted-foreground tracking-wider mt-1">{ownerType === "club" ? "Club pipeline" : "Lead pipeline"}</p>
           </div>
           <div className="flex items-center gap-2">
             <Button variant="outline" onClick={() => setShowImport(true)}><Upload size={14} className="mr-1" /> Import CSV</Button>
@@ -100,7 +100,7 @@ const Crm = () => {
             <Card key={s.label} className="p-4">
               <s.icon className={`${s.color} mb-2`} size={20} />
               <div className="text-xl font-display text-foreground">{s.value}</div>
-              <div className="text-[10px] font-body text-muted-foreground uppercase tracking-wider mt-1">{s.label}</div>
+              <div className="text-[10px] font-body text-muted-foreground tracking-wider mt-1">{s.label}</div>
             </Card>
           ))}
         </div>
@@ -128,7 +128,7 @@ const Crm = () => {
                   <div className="flex items-center justify-between px-2">
                     <div className="flex items-center gap-2">
                       <span className="w-2 h-2 rounded-full" style={{ backgroundColor: stage.color || "hsl(var(--primary))" }} />
-                      <span className="text-xs font-display uppercase tracking-wider text-foreground">{stage.name}</span>
+                      <span className="text-xs font-display tracking-wider text-foreground">{stage.name}</span>
                     </div>
                     <span className="text-xs font-body text-muted-foreground">{stageClients.length}</span>
                   </div>
@@ -154,7 +154,7 @@ const Crm = () => {
           <Card className="overflow-hidden">
             <table className="w-full text-sm">
               <thead className="bg-secondary/50">
-                <tr className="text-left text-[10px] uppercase tracking-wider text-muted-foreground">
+                <tr className="text-left text-[10px] tracking-wider text-muted-foreground">
                   <th className="p-3">Name</th><th className="p-3">Stage</th><th className="p-3">Email</th><th className="p-3">LTV</th><th className="p-3">Last Contact</th>
                 </tr>
               </thead>

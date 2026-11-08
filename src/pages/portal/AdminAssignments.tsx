@@ -126,7 +126,7 @@ const AdminAssignments = () => {
               animate={{ opacity: 1, y: 0 }}
               className="bg-card border border-border rounded-xl p-6 mb-6"
             >
-              <h2 className="font-display text-sm tracking-wider text-muted-foreground mb-4">NEW ASSIGNMENT</h2>
+              <h2 className="font-display text-sm tracking-wider text-muted-foreground mb-4">New assignment</h2>
               <div className="flex flex-col sm:flex-row gap-3 items-end">
                 <div className="flex-1 w-full">
                   <label className="text-xs font-body text-muted-foreground mb-1 block">Coach</label>
@@ -192,7 +192,7 @@ const AdminAssignments = () => {
                         </div>
                         <div>
                           <p className="font-display text-sm text-foreground">{a.coach_name}</p>
-                          <p className="text-[10px] font-body text-purple-400 uppercase">Coach</p>
+                          <p className="text-[10px] font-body text-purple-400">Coach</p>
                         </div>
                       </div>
                       <ArrowRight size={16} className="text-muted-foreground shrink-0" />
@@ -202,7 +202,7 @@ const AdminAssignments = () => {
                         </div>
                         <div>
                           <p className="font-display text-sm text-foreground">{a.player_name}</p>
-                          <p className="text-[10px] font-body text-blue-400 uppercase">Player</p>
+                          <p className="text-[10px] font-body text-blue-400">Player</p>
                         </div>
                       </div>
                     </div>

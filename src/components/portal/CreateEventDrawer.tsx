@@ -318,7 +318,7 @@ const CreateEventDrawer = ({ open, onClose, event, onSaved }: Props) => {
 
           <Section icon={MapPin} title="WHERE" hint="Online sessions skip the address">
             <div className="flex items-center justify-between rounded-lg bg-secondary px-3 py-2.5">
-              <span className="font-display text-[10px] tracking-wider text-muted-foreground">ONLINE SESSION</span>
+              <span className="font-display text-[10px] tracking-wider text-muted-foreground">Online session</span>
               <Switch checked={isOnline} onCheckedChange={setIsOnline} />
             </div>
             {!isOnline && (
@@ -414,7 +414,7 @@ const CreateEventDrawer = ({ open, onClose, event, onSaved }: Props) => {
             </Field>
             <div className="flex items-center justify-between rounded-lg bg-secondary px-3 py-2.5">
               <span className="flex items-center gap-2 font-display text-[10px] tracking-wider text-muted-foreground">
-                <Eye size={12} /> SHOW ATTENDEE LIST PUBLICLY
+                <Eye size={12} /> Show attendee list publicly
               </span>
               <Switch checked={attendeesVisible} onCheckedChange={setAttendeesVisible} />
             </div>

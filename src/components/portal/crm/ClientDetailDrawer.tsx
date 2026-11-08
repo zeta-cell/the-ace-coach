@@ -103,7 +103,7 @@ const ClientDetailDrawer = ({ clientId, open, onClose, stages, onUpdated }: { cl
 
           {/* Stage */}
           <div>
-            <Label className="text-xs uppercase tracking-wider">Pipeline stage</Label>
+            <Label className="text-xs tracking-wider">Pipeline stage</Label>
             <Select value={client.pipeline_stage} onValueChange={(v) => updateField("pipeline_stage", v)}>
               <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
               <SelectContent>
@@ -114,13 +114,13 @@ const ClientDetailDrawer = ({ clientId, open, onClose, stages, onUpdated }: { cl
 
           {/* LTV */}
           <div>
-            <Label className="text-xs uppercase tracking-wider">Lifetime value (€)</Label>
+            <Label className="text-xs tracking-wider">Lifetime value (€)</Label>
             <Input type="number" defaultValue={client.lifetime_value} onBlur={(e) => updateField("lifetime_value", Number(e.target.value))} className="mt-1" />
           </div>
 
           {/* Notes */}
           <div>
-            <Label className="text-xs uppercase tracking-wider">Notes</Label>
+            <Label className="text-xs tracking-wider">Notes</Label>
             <Textarea defaultValue={client.notes || ""} onBlur={(e) => updateField("notes", e.target.value)} rows={3} className="mt-1" />
           </div>
 
@@ -134,7 +134,7 @@ const ClientDetailDrawer = ({ clientId, open, onClose, stages, onUpdated }: { cl
 
           {/* Activity timeline */}
           <div>
-            <Label className="text-xs uppercase tracking-wider mb-2 block">Activity</Label>
+            <Label className="text-xs tracking-wider mb-2 block">Activity</Label>
             <div className="flex gap-2 mb-3">
               <Select value={activityType} onValueChange={setActivityType}>
                 <SelectTrigger className="w-32"><SelectValue /></SelectTrigger>

@@ -73,7 +73,7 @@ const AdminFeatures = () => {
       <div className="max-w-3xl mx-auto">
         <div className="flex items-center gap-3 mb-2">
           <ToggleLeft className="text-primary" size={24} />
-          <h1 className="font-display text-3xl text-foreground">FEATURE CONTROL</h1>
+          <h1 className="font-display text-3xl text-foreground">Feature control</h1>
         </div>
         <p className="font-body text-sm text-muted-foreground mb-6">
           Switch platform features on or off for everyone. Admins always keep full access, so you can test
@@ -109,7 +109,7 @@ const AdminFeatures = () => {
                           <button
                             onClick={() => update(f.key, { coming_soon: !f.coming_soon })}
                             disabled={saving === f.key}
-                            className="mt-2 font-body text-[10px] uppercase tracking-wider text-muted-foreground hover:text-foreground transition-colors"
+                            className="mt-2 font-body text-[10px] tracking-wider text-muted-foreground hover:text-foreground transition-colors"
                           >
                             {f.coming_soon ? "Remove “coming soon” label" : "Mark as “coming soon”"}
                           </button>

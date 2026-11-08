@@ -203,7 +203,7 @@ const UpcomingBookings = () => {
   if (bookings.length === 0) {
     return (
       <div className="bg-card border border-border rounded-xl p-6 text-center space-y-3 mb-6">
-        <p className="font-display text-sm tracking-wider text-muted-foreground">UPCOMING SESSIONS</p>
+        <p className="font-display text-sm tracking-wider text-muted-foreground">Upcoming sessions</p>
         <p className="font-body text-sm text-muted-foreground">No upcoming sessions booked yet.</p>
         {discoveryEnabled && (
         <Link
@@ -221,7 +221,7 @@ const UpcomingBookings = () => {
     <motion.div initial={false} animate={{ opacity: 1, y: 0 }} className="mb-6">
       <div className="flex items-center justify-between mb-3">
         <h3 className="font-display text-sm tracking-wider text-foreground flex items-center gap-2">
-          <Calendar size={16} className="text-primary" /> UPCOMING SESSIONS
+          <Calendar size={16} className="text-primary" /> Upcoming sessions
         </h3>
       </div>
       <div className="space-y-2">
@@ -248,25 +248,25 @@ const UpcomingBookings = () => {
                   </div>
                   <div className="flex items-center gap-2 mt-1">
                     {b.type === "event" ? (
-                      <span className="text-[9px] font-display font-semibold bg-violet-500/20 text-violet-400 px-2 py-0.5 rounded-full uppercase tracking-wider">
+                      <span className="text-[9px] font-display font-semibold bg-violet-500/20 text-violet-400 px-2 py-0.5 rounded-full tracking-wider">
                         EVENT
                       </span>
                     ) : (
-                      <span className="text-[9px] font-body font-semibold bg-primary/10 text-primary px-2 py-0.5 rounded-full uppercase">
+                      <span className="text-[9px] font-body font-semibold bg-primary/10 text-primary px-2 py-0.5 rounded-full">
                         {b.package_title}
                       </span>
                     )}
                     {b.session_type === "group" && b.max_group_size && (
-                      <span className="text-[9px] font-display font-semibold bg-chart-2/10 text-chart-2 px-2 py-0.5 rounded-full uppercase flex items-center gap-0.5">
+                      <span className="text-[9px] font-display font-semibold bg-chart-2/10 text-chart-2 px-2 py-0.5 rounded-full flex items-center gap-0.5">
                         <Users size={8} /> GROUP
                       </span>
                     )}
                     {b.court_number && (
-                      <span className="text-[9px] font-display font-semibold bg-primary/15 text-primary px-2 py-0.5 rounded-full uppercase flex items-center gap-0.5">
+                      <span className="text-[9px] font-display font-semibold bg-primary/15 text-primary px-2 py-0.5 rounded-full flex items-center gap-0.5">
                         <Hash size={8} /> {b.court_number}
                       </span>
                     )}
-                    <span className={`text-[9px] font-body font-semibold px-2 py-0.5 rounded-full uppercase ${b.status === "confirmed" ? "bg-green-500/10 text-green-400" : "bg-yellow-500/10 text-yellow-400"}`}>
+                    <span className={`text-[9px] font-body font-semibold px-2 py-0.5 rounded-full ${b.status === "confirmed" ? "bg-green-500/10 text-green-400" : "bg-yellow-500/10 text-yellow-400"}`}>
                       {b.status === "confirmed" ? "CONFIRMED" : "PENDING PAYMENT"}
                     </span>
                   </div>
@@ -323,7 +323,7 @@ const UpcomingBookings = () => {
                     onClick={() => setExpanded(expanded === b.id ? null : b.id)}
                     className="w-full flex items-center justify-between text-[10px] font-display tracking-wider text-primary hover:text-primary/80 transition-colors"
                   >
-                    <span className="flex items-center gap-1.5"><Info size={11} /> HOW TO FIND US</span>
+                    <span className="flex items-center gap-1.5"><Info size={11} /> How to find us</span>
                     <ChevronDown size={11} className={`transition-transform ${expanded === b.id ? "rotate-180" : ""}`} />
                   </button>
                   {expanded === b.id && (

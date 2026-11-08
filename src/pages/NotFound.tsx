@@ -20,7 +20,7 @@ const NotFound = () => {
         </div>
         <h1 className="font-display text-6xl tracking-wider mb-3">404</h1>
         <p className="font-display text-lg tracking-wider text-muted-foreground mb-2">
-          PAGE NOT FOUND
+          Page not found
         </p>
         <p className="font-body text-sm text-muted-foreground mb-8">
           We couldn't find{" "}
@@ -43,14 +43,14 @@ const NotFound = () => {
             className="flex flex-col items-center gap-1.5 p-4 rounded-xl border border-border bg-card hover:border-primary/50 hover:bg-primary/5 transition-all"
           >
             <Search size={18} className="text-primary" />
-            <span className="font-display text-[10px] tracking-wider">FIND COACH</span>
+            <span className="font-display text-[10px] tracking-wider">Find coach</span>
           </Link>
           <button
             onClick={() => window.history.back()}
             className="flex flex-col items-center gap-1.5 p-4 rounded-xl border border-border bg-card hover:border-primary/50 hover:bg-primary/5 transition-all"
           >
             <ArrowLeft size={18} className="text-primary" />
-            <span className="font-display text-[10px] tracking-wider">GO BACK</span>
+            <span className="font-display text-[10px] tracking-wider">Go back</span>
           </button>
         </div>
 

@@ -94,7 +94,7 @@ const CoachMarketplace = () => {
       <div className="max-w-4xl mx-auto">
         <motion.h1 initial={false} animate={{ opacity: 1, y: 0 }}
           className="font-display text-2xl md:text-3xl text-foreground mb-6 tracking-wider">
-          MY PROGRAMS & BLOCKS
+          My programs & blocks
         </motion.h1>
 
         {/* Stats */}
@@ -102,17 +102,17 @@ const CoachMarketplace = () => {
           <div className="bg-card border border-border rounded-xl p-4 text-center">
             <Layers size={20} className="text-primary mx-auto mb-1" />
             <p className="font-display text-2xl text-foreground">{stats.published}</p>
-            <p className="font-body text-[10px] text-muted-foreground uppercase tracking-wide">Published</p>
+            <p className="font-body text-[10px] text-muted-foreground tracking-wide">Published</p>
           </div>
           <div className="bg-card border border-border rounded-xl p-4 text-center">
             <ShoppingBag size={20} className="text-primary mx-auto mb-1" />
             <p className="font-display text-2xl text-foreground">{stats.totalSales}</p>
-            <p className="font-body text-[10px] text-muted-foreground uppercase tracking-wide">Total Sales</p>
+            <p className="font-body text-[10px] text-muted-foreground tracking-wide">Total Sales</p>
           </div>
           <div className="bg-card border border-border rounded-xl p-4 text-center">
             <DollarSign size={20} className="text-primary mx-auto mb-1" />
             <p className="font-display text-2xl text-foreground">€{stats.totalRevenue.toFixed(0)}</p>
-            <p className="font-body text-[10px] text-muted-foreground uppercase tracking-wide">Revenue</p>
+            <p className="font-body text-[10px] text-muted-foreground tracking-wide">Revenue</p>
           </div>
         </div>
 
@@ -135,7 +135,7 @@ const CoachMarketplace = () => {
               {tab === "published" ? "No published programs yet." : "No draft programs."}
             </p>
             <Link to="/coach/calendar" className="inline-block mt-4 px-6 py-2.5 rounded-xl bg-primary text-primary-foreground font-display text-xs tracking-wider hover:bg-primary/90">
-              CREATE A PROGRAM
+              Create a program
             </Link>
           </div>
         ) : (
@@ -179,7 +179,7 @@ const CoachMarketplace = () => {
                   ) : (
                     <button onClick={() => togglePublish(block)}
                       className="px-4 py-2 rounded-lg bg-primary text-primary-foreground font-display text-[10px] tracking-wider hover:bg-primary/90">
-                      PUBLISH NOW
+                      Publish now
                     </button>
                   )}
                 </div>

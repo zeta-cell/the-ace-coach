@@ -61,14 +61,14 @@ const AssessmentHistory = ({ playerId, canEdit, onNew, onEdit, refreshKey = 0 }:
     <div>
       <div className="flex items-center justify-between mb-3">
         <h3 className="flex items-center gap-2 font-display text-xs tracking-wider text-muted-foreground">
-          <ClipboardCheck size={14} className="text-primary" /> ASSESSMENTS
+          <ClipboardCheck size={14} className="text-primary" /> Assessments
         </h3>
         {canEdit && (
           <button
             onClick={() => onNew?.(items[0] ?? null)}
             className="flex items-center gap-1 rounded-lg bg-primary px-3 py-1.5 font-display text-[10px] tracking-wider text-primary-foreground"
           >
-            <Plus size={12} /> NEW ASSESSMENT
+            <Plus size={12} /> New assessment
           </button>
         )}
       </div>
@@ -140,7 +140,7 @@ const AssessmentHistory = ({ playerId, canEdit, onNew, onEdit, refreshKey = 0 }:
 
                     {a.summary && (
                       <div>
-                        <p className="font-display text-[10px] tracking-wider text-muted-foreground mb-1">COACH NOTES</p>
+                        <p className="font-display text-[10px] tracking-wider text-muted-foreground mb-1">Coach notes</p>
                         <p className="font-body text-sm text-foreground whitespace-pre-line">{a.summary}</p>
                       </div>
                     )}

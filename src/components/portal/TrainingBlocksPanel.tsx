@@ -181,7 +181,7 @@ const TrainingBlocksPanel = ({ onApplyBlock, onSaveAsBlock, modules, isOpen = tr
                               <span>{resolvedCount}/{block.module_ids.length} modules</span>
                               <span>·</span>
                               <span>{totalDuration} min</span>
-                              {block.is_system && <span className="text-primary/60">SYSTEM</span>}
+                              {block.is_system && <span className="text-primary/60">System</span>}
                             </div>
                           </div>
                         );
@@ -203,7 +203,7 @@ const TrainingBlocksPanel = ({ onApplyBlock, onSaveAsBlock, modules, isOpen = tr
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Layers size={16} className="text-primary" />
-          <h3 className="font-display text-xs tracking-wider text-foreground">TRAINING BLOCKS</h3>
+          <h3 className="font-display text-xs tracking-wider text-foreground">Training blocks</h3>
         </div>
         {isSlideIn && (
           <button onClick={onClose} className="p-1 rounded-lg hover:bg-secondary transition-colors">
@@ -215,7 +215,7 @@ const TrainingBlocksPanel = ({ onApplyBlock, onSaveAsBlock, modules, isOpen = tr
       {onSaveAsBlock && (
         <button onClick={onSaveAsBlock}
           className="w-full py-2.5 rounded-xl border border-dashed border-border text-muted-foreground font-display text-[10px] tracking-wider hover:border-primary hover:text-primary transition-colors flex items-center justify-center gap-1.5">
-          <Save size={12} /> SAVE CURRENT PLAN AS BLOCK
+          <Save size={12} /> Save current plan as block
         </button>
       )}
 

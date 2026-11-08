@@ -152,25 +152,25 @@ const CitySportLanding = ({ locale, sport }: Props) => {
           <div className="flex flex-wrap gap-3">
             <Link
               to={`/find-a-coach?city=${encodeURIComponent(city.name)}&sport=${sport}`}
-              className="inline-flex items-center gap-2 font-display text-sm tracking-widest bg-primary text-primary-foreground px-6 py-3 rounded-xl hover:bg-primary/90 transition-colors"
+              className="inline-flex items-center gap-2 font-display text-sm bg-primary text-primary-foreground px-6 py-3 rounded-xl hover:bg-primary/90 transition-colors"
             >
               {copy.cta1} <ArrowRight size={16} />
             </Link>
             <Link
               to="/login"
-              className="inline-flex items-center gap-2 font-display text-sm tracking-widest border border-border text-foreground px-6 py-3 rounded-xl hover:bg-card transition-colors"
+              className="inline-flex items-center gap-2 font-display text-sm border border-border text-foreground px-6 py-3 rounded-xl hover:bg-card transition-colors"
             >
               {copy.cta2}
             </Link>
             <Link
               to={`${PATH_PREFIX[locale][otherSport]}/${city.slug}`}
-              className="inline-flex items-center gap-2 font-display text-xs tracking-widest text-muted-foreground px-4 py-3 hover:text-foreground"
+              className="inline-flex items-center gap-2 font-display text-xs text-muted-foreground px-4 py-3 hover:text-foreground"
             >
               {T.switchSport} →
             </Link>
             <Link
               to={altPath(locale === "en" ? "es" : "en")}
-              className="inline-flex items-center gap-2 font-display text-xs tracking-widest text-muted-foreground px-4 py-3 hover:text-foreground"
+              className="inline-flex items-center gap-2 font-display text-xs text-muted-foreground px-4 py-3 hover:text-foreground"
             >
               <Globe size={14} /> {T.switchLang}
             </Link>
@@ -204,7 +204,7 @@ const CitySportLanding = ({ locale, sport }: Props) => {
           {coaches.length === 0 ? (
             <div className="text-center py-10">
               <p className="font-body text-muted-foreground mb-4">{T.noCoaches}</p>
-              <Link to="/login" className="inline-flex items-center gap-2 font-display text-sm tracking-widest bg-primary text-primary-foreground px-5 py-2.5 rounded-lg">
+              <Link to="/login" className="inline-flex items-center gap-2 font-display text-sm bg-primary text-primary-foreground px-5 py-2.5 rounded-lg">
                 {copy.cta2} <ArrowRight size={14} />
               </Link>
             </div>

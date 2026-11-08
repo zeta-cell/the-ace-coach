@@ -81,7 +81,7 @@ const UpcomingSchedule = ({ playerId, linkPrefix = "training", daysAhead = 14, s
   if (loading) {
     return (
       <div className="bg-card border border-border rounded-xl p-6">
-        <h2 className="font-display text-sm tracking-wider text-muted-foreground mb-3">UPCOMING TRAINING</h2>
+        <h2 className="font-display text-sm tracking-wider text-muted-foreground mb-3">Upcoming training</h2>
         <div className="flex justify-center py-4">
           <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
         </div>
@@ -92,7 +92,7 @@ const UpcomingSchedule = ({ playerId, linkPrefix = "training", daysAhead = 14, s
   return (
     <div className="bg-card border border-border rounded-xl p-6">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="font-display text-sm tracking-wider text-muted-foreground">UPCOMING TRAINING</h2>
+        <h2 className="font-display text-sm tracking-wider text-muted-foreground">Upcoming training</h2>
         <span className="text-[10px] font-body text-muted-foreground">{plans.length} sessions</span>
       </div>
 
@@ -114,7 +114,7 @@ const UpcomingSchedule = ({ playerId, linkPrefix = "training", daysAhead = 14, s
               >
                 {/* Date block */}
                 <div className="w-12 h-12 rounded-lg bg-primary/10 flex flex-col items-center justify-center flex-shrink-0">
-                  <span className="text-[10px] font-body text-primary uppercase">
+                  <span className="text-[10px] font-body text-primary">
                     {format(new Date(plan.plan_date + "T00:00:00"), "EEE")}
                   </span>
                   <span className="font-display text-lg text-primary leading-none">

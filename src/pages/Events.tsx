@@ -258,7 +258,7 @@ const Events = () => {
             </span>
             {event.is_online && (
               <span className="absolute bottom-3 left-3 flex items-center gap-1 rounded-full bg-card/60 px-2 py-0.5 font-display text-[10px] tracking-wider text-sky-300 backdrop-blur">
-                <Globe size={10} /> ONLINE
+                <Globe size={10} /> Online
               </span>
             )}
           </div>
@@ -320,7 +320,7 @@ const Events = () => {
 
             {isRegistered ? (
               <Link to={`/class/${event.id}`} className="flex items-center gap-1 rounded-lg bg-emerald-500/20 px-3 py-1.5 font-display text-[10px] tracking-wider text-emerald-500">
-                <CheckCircle size={10} /> REGISTERED
+                <CheckCircle size={10} /> Registered
               </Link>
             ) : isFull ? (
               <Link to={`/class/${event.id}`} className="rounded-lg bg-muted px-3 py-1.5 font-display text-[10px] tracking-wider text-muted-foreground">
@@ -329,7 +329,7 @@ const Events = () => {
             ) : (
               <div className="flex items-center gap-1.5">
                 <Link to={`/class/${event.id}`} className="rounded-lg bg-secondary px-2.5 py-2 font-display text-[10px] tracking-wider text-foreground">
-                  DETAILS
+                  Details
                 </Link>
                 <button
                   onClick={() => handleRegister(event)}
@@ -357,7 +357,7 @@ const Events = () => {
 
       <div className="relative overflow-hidden border-b border-border bg-card px-4 py-12 text-center">
         <div className="absolute left-1/4 top-0 h-96 w-96 rounded-full bg-primary/5 blur-3xl" />
-        <h1 className="relative mb-3 font-display text-3xl text-foreground md:text-5xl">CLASSES & CLINICS</h1>
+        <h1 className="relative mb-3 font-display text-3xl text-foreground md:text-5xl">Classes & clinics</h1>
         <p className="relative mx-auto max-w-2xl font-body text-sm text-muted-foreground md:text-base">
           Clinics, camps, private lessons, academy programmes, tournaments and online sessions — filtered to your level.
         </p>
@@ -406,7 +406,7 @@ const Events = () => {
         {featured.length > 0 && format_ === "all" && !search && (
           <section>
             <h2 className="mb-4 flex items-center gap-2 font-display text-sm tracking-wider text-muted-foreground">
-              <Sparkles size={14} className="text-primary" /> HAPPENING THIS WEEK
+              <Sparkles size={14} className="text-primary" /> Happening this week
             </h2>
             <div className="-mx-4 flex gap-4 overflow-x-auto px-4 pb-4">
               {featured.map((e) => <EventCard key={e.id} event={e} large />)}
@@ -439,7 +439,7 @@ const Events = () => {
               <Calendar size={48} className="mx-auto mb-4 text-muted-foreground" />
               <p className="font-display text-lg text-foreground">Nothing matches those filters</p>
               <button onClick={resetFilters} className="mt-3 inline-flex items-center gap-1.5 font-display text-[11px] tracking-wider text-primary">
-                <RotateCcw size={12} /> RESET FILTERS
+                <RotateCcw size={12} /> Reset filters
               </button>
             </div>
           ) : (
@@ -466,7 +466,7 @@ const Events = () => {
             >
               <div className="mx-auto max-w-2xl space-y-5">
                 <div className="flex items-center justify-between">
-                  <h2 className="font-display text-base tracking-wider text-foreground">FILTERS</h2>
+                  <h2 className="font-display text-base tracking-wider text-foreground">Filters</h2>
                   <button onClick={() => setSheetOpen(false)} className="text-muted-foreground hover:text-foreground"><X size={18} /></button>
                 </div>
 
@@ -485,14 +485,14 @@ const Events = () => {
                 </div>
 
                 <div>
-                  <p className="mb-2 font-display text-[10px] tracking-wider text-muted-foreground">SETTING</p>
+                  <p className="mb-2 font-display text-[10px] tracking-wider text-muted-foreground">Setting</p>
                   <div className="flex flex-wrap gap-2">
                     {VENUES.map((v) => <button key={v} onClick={() => setVenue(v)} className={chip(venue === v)}>{v.toUpperCase()}</button>)}
                   </div>
                 </div>
 
                 <div>
-                  <p className="mb-2 font-display text-[10px] tracking-wider text-muted-foreground">AGE GROUP</p>
+                  <p className="mb-2 font-display text-[10px] tracking-wider text-muted-foreground">Age group</p>
                   <div className="flex flex-wrap gap-2">
                     {AGES.map((a) => <button key={a} onClick={() => setAge(a)} className={chip(age === a)}>{a.toUpperCase()}</button>)}
                   </div>
@@ -500,7 +500,7 @@ const Events = () => {
 
                 <div>
                   <div className="mb-2 flex items-center justify-between">
-                    <p className="font-display text-[10px] tracking-wider text-muted-foreground">MY LEVEL</p>
+                    <p className="font-display text-[10px] tracking-wider text-muted-foreground">My level</p>
                     <span className="font-body text-xs text-foreground">{playerLevel === 0 ? "Any" : playerLevel.toFixed(1)}</span>
                   </div>
                   <input
@@ -514,7 +514,7 @@ const Events = () => {
 
                 <div>
                   <div className="mb-2 flex items-center justify-between">
-                    <p className="font-display text-[10px] tracking-wider text-muted-foreground">MAX PRICE</p>
+                    <p className="font-display text-[10px] tracking-wider text-muted-foreground">Max price</p>
                     <span className="font-body text-xs text-foreground">{maxPrice >= 300 ? "Any" : `€${maxPrice}`}</span>
                   </div>
                   <input
@@ -526,8 +526,8 @@ const Events = () => {
                 </div>
 
                 <div className="flex flex-wrap gap-2">
-                  <button onClick={() => setFreeOnly((v) => !v)} className={chip(freeOnly)}>FREE ONLY</button>
-                  <button onClick={() => setAvailableOnly((v) => !v)} className={chip(availableOnly)}>SPOTS AVAILABLE</button>
+                  <button onClick={() => setFreeOnly((v) => !v)} className={chip(freeOnly)}>Free only</button>
+                  <button onClick={() => setAvailableOnly((v) => !v)} className={chip(availableOnly)}>Spots available</button>
                 </div>
 
                 <div className="flex gap-2 pt-1">

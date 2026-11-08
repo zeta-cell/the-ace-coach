@@ -198,7 +198,7 @@ const Marketplace = () => {
       {/* Hero */}
       <div className="bg-card border-b border-border py-12 px-4 text-center relative overflow-hidden">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
-        <h1 className="font-display text-3xl md:text-5xl text-foreground mb-3 relative">COACHING KNOWLEDGE MARKETPLACE</h1>
+        <h1 className="font-display text-3xl md:text-5xl text-foreground mb-3 relative">Coaching knowledge marketplace</h1>
         <p className="font-body text-sm md:text-base text-muted-foreground max-w-2xl mx-auto relative">
           Buy elite training programs from the world's best coaches. Insert directly into your training plan.
         </p>
@@ -218,7 +218,7 @@ const Marketplace = () => {
             className="relative shrink-0 flex items-center gap-2 bg-card border border-border rounded-xl px-3 py-2 font-display text-[10px] tracking-wider text-foreground hover:border-primary/60 transition-colors"
           >
             <SlidersHorizontal size={16} />
-            <span className="hidden sm:inline">FILTERS</span>
+            <span className="hidden sm:inline">Filters</span>
             {activeFilterCount > 0 && (
               <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-primary text-primary-foreground text-[9px] font-display flex items-center justify-center">
                 {activeFilterCount}
@@ -247,7 +247,7 @@ const Marketplace = () => {
               className="fixed inset-x-0 bottom-0 z-50 bg-card border-t border-border rounded-t-3xl max-h-[85vh] overflow-y-auto"
             >
               <div className="sticky top-0 bg-card border-b border-border px-5 py-4 flex items-center justify-between">
-                <h2 className="font-display text-sm tracking-wider text-foreground">FILTERS</h2>
+                <h2 className="font-display text-sm tracking-wider text-foreground">Filters</h2>
                 <button onClick={() => setFilterSheetOpen(false)} className="text-muted-foreground hover:text-foreground">
                   <X size={20} />
                 </button>
@@ -256,7 +256,7 @@ const Marketplace = () => {
               <div className="p-5 space-y-6 pb-10">
                 {/* Type */}
                 <div>
-                  <h3 className="font-display text-[11px] tracking-wider text-muted-foreground mb-3">PROGRAM TYPE</h3>
+                  <h3 className="font-display text-[11px] tracking-wider text-muted-foreground mb-3">Program type</h3>
                   <div className="grid grid-cols-2 gap-2">
                     {BLOCK_TYPE_FILTERS.map((t) => {
                       const cfg = t !== "All" ? BLOCK_TYPE_LABELS[t] : null;
@@ -317,7 +317,7 @@ const Marketplace = () => {
 
                 {/* Sort (mobile) */}
                 <div className="md:hidden">
-                  <h3 className="font-display text-[11px] tracking-wider text-muted-foreground mb-3">SORT BY</h3>
+                  <h3 className="font-display text-[11px] tracking-wider text-muted-foreground mb-3">Sort by</h3>
                   <div className="flex flex-wrap gap-2">
                     {SORT_OPTIONS.map((s) => (
                       <button key={s.key} onClick={() => setSortBy(s.key)}
@@ -352,7 +352,7 @@ const Marketplace = () => {
         {/* Featured section */}
         {featured.length > 0 && (
           <div className="mb-10">
-            <h2 className="font-display text-lg tracking-wider text-foreground mb-4">FEATURED PROGRAMS</h2>
+            <h2 className="font-display text-lg tracking-wider text-foreground mb-4">Featured programs</h2>
             <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-none">
               {featured.map((block) => (
                 <div key={block.id} onClick={() => setSelectedBlock(block)}
@@ -412,7 +412,7 @@ const Marketplace = () => {
                   <motion.div key={block.id} initial={false}
                     className="bg-popover border border-border/80 rounded-2xl overflow-hidden hover:border-primary/60 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/10 transition-all group">
                     {/* Thumbnail */}
-                    <div className="relative h-28 bg-gradient-to-br from-primary/25 via-accent/10 to-background/40 border-b border-border/60 p-3 flex flex-col justify-between cursor-pointer"
+                    <div className="relative h-28 bg-secondary border-b border-border/60 p-3 flex flex-col justify-between cursor-pointer"
                       onClick={() => setSelectedBlock(block)}>
                       <div className="flex items-start justify-between">
                         <span className={`px-2 py-0.5 rounded text-[9px] font-display tracking-wider ${typeConfig.color}`}>{typeConfig.label}</span>
@@ -480,12 +480,12 @@ const Marketplace = () => {
                       <div className="flex gap-2 pt-1">
                         <button onClick={() => setSelectedBlock(block)}
                           className="flex-1 py-2 rounded-xl border border-border font-display text-[10px] tracking-wider text-foreground hover:bg-secondary transition-colors">
-                          PREVIEW
+                          Preview
                         </button>
                         {isOwned ? (
                           <Link to="/dashboard"
                             className="flex-1 py-2 rounded-xl bg-green-500/20 text-green-400 font-display text-[10px] tracking-wider text-center hover:bg-green-500/30 transition-colors">
-                            GO TO PLAN
+                            Go to plan
                           </Link>
                         ) : (
                           <button onClick={() => handleGetProgram(block)}
@@ -510,7 +510,7 @@ const Marketplace = () => {
         {!loading && filtered.length === 0 && (
           <div className="text-center py-20">
             <ShoppingBag size={40} className="text-muted-foreground mx-auto mb-4" />
-            <h3 className="font-display text-xl text-foreground mb-2">NO PROGRAMS YET</h3>
+            <h3 className="font-display text-xl text-foreground mb-2">No programs yet</h3>
             <p className="font-body text-sm text-muted-foreground">Be the first to publish your coaching knowledge.</p>
           </div>
         )}

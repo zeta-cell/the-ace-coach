@@ -121,10 +121,10 @@ const NewPlayerAssessment = () => {
           onClick={() => navigate("/coach/players")}
           className="inline-flex items-center gap-1.5 font-display text-xs tracking-wider text-muted-foreground hover:text-foreground mb-4"
         >
-          <ArrowLeft size={14} /> PLAYERS
+          <ArrowLeft size={14} /> Players
         </button>
 
-        <h1 className="font-display text-3xl text-foreground mb-1">NEW PLAYER</h1>
+        <h1 className="font-display text-3xl text-foreground mb-1">New player</h1>
         <p className="font-body text-sm text-muted-foreground mb-5">
           Assess first, invite after — the player receives a finished report and only sets a password.
         </p>
@@ -135,7 +135,7 @@ const NewPlayerAssessment = () => {
           <div className="space-y-4 rounded-2xl border border-border bg-card p-5">
             <div>
               <label className="flex items-center gap-1.5 font-display text-xs tracking-wider text-muted-foreground">
-                <User size={13} className="text-primary" /> FULL NAME
+                <User size={13} className="text-primary" /> Full name
               </label>
               <input
                 value={fullName}
@@ -213,13 +213,13 @@ const NewPlayerAssessment = () => {
               onClick={() => setDrawerOpen(true)}
               className="mt-4 w-full rounded-xl bg-primary py-3 font-display text-xs tracking-wider text-primary-foreground hover:bg-primary/90"
             >
-              OPEN ASSESSMENT
+              Open assessment
             </button>
             <button
               onClick={() => setStep(3)}
               className="mt-2 w-full rounded-xl bg-secondary py-3 font-display text-xs tracking-wider text-muted-foreground hover:text-foreground"
             >
-              SKIP FOR NOW
+              Skip for now
             </button>
           </div>
         )}
@@ -258,7 +258,7 @@ const NewPlayerAssessment = () => {
               onClick={() => navigate("/coach/players")}
               className="mt-3 w-full rounded-xl border border-border py-3 font-display text-xs tracking-wider text-muted-foreground hover:text-foreground"
             >
-              BACK TO PLAYERS
+              Back to players
             </button>
           </div>
         )}

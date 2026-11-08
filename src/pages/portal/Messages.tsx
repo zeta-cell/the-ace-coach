@@ -220,7 +220,7 @@ const Messages = () => {
               exit={{ opacity: 0 }}
               className={`${activeContact ? "hidden md:flex" : "flex"} flex-col w-full md:w-72 shrink-0`}
             >
-              <h1 className="font-display text-2xl text-foreground mb-3">MESSAGES</h1>
+              <h1 className="font-display text-2xl text-foreground mb-3">Messages</h1>
               <div className="relative mb-3">
                 <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
                 <input

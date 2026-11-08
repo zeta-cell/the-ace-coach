@@ -161,14 +161,14 @@ const AcademySchedule = ({ coaches, selfId, selfName }: Props) => {
                 <div className="flex gap-3 pt-1">
                   {e.status === "draft" && (
                     <button onClick={() => setStatus(e.id, "published")} className="font-display text-[10px] tracking-wider text-primary">
-                      PUBLISH
+                      Publish
                     </button>
                   )}
                   <button onClick={() => setStatus(e.id, "completed")} className="flex items-center gap-1 font-display text-[10px] tracking-wider text-muted-foreground hover:text-foreground">
-                    <CheckCircle size={12} /> COMPLETE
+                    <CheckCircle size={12} /> Complete
                   </button>
                   <button onClick={() => setStatus(e.id, "cancelled")} className="flex items-center gap-1 font-display text-[10px] tracking-wider text-muted-foreground hover:text-destructive">
-                    <X size={12} /> CANCEL
+                    <X size={12} /> Cancel
                   </button>
                 </div>
               )}

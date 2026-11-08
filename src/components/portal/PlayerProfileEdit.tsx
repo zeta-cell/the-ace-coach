@@ -182,13 +182,13 @@ const PlayerProfileEdit = ({ open, onClose, playerData, phone, onSaved }: Props)
     <Sheet open={open} onOpenChange={(v) => !v && onClose()}>
       <SheetContent side="bottom" className="h-[90vh] overflow-y-auto rounded-t-2xl">
         <SheetHeader className="mb-4">
-          <SheetTitle className="font-display text-lg tracking-wider">EDIT PROFILE</SheetTitle>
+          <SheetTitle className="font-display text-lg tracking-wider">Edit profile</SheetTitle>
         </SheetHeader>
 
         <div className="space-y-5 pb-24">
           {/* Personal */}
           <section className="space-y-3">
-            <h3 className="font-display text-xs tracking-wider text-muted-foreground border-b border-border pb-2">PERSONAL</h3>
+            <h3 className="font-display text-xs tracking-wider text-muted-foreground border-b border-border pb-2">Personal</h3>
             <Field label="NATIONALITY" field="nationality" placeholder="e.g. Spanish" />
             <Field label="DATE OF BIRTH" field="date_of_birth" type="date" />
             <div>
@@ -198,7 +198,7 @@ const PlayerProfileEdit = ({ open, onClose, playerData, phone, onSaved }: Props)
             <Field label="YEARS PLAYING" field="years_playing" type="number" />
             <Field label="SHIRT SIZE" field="shirt_size" placeholder="e.g. M, L, XL" />
             <div>
-              <label className="font-display text-xs tracking-wider text-muted-foreground">DOMINANT HAND</label>
+              <label className="font-display text-xs tracking-wider text-muted-foreground">Dominant hand</label>
               <div className="flex gap-2 mt-1.5">
                 {["left", "right"].map((h) => (
                   <button key={h} type="button" onClick={() => set("dominant_hand", h)}
@@ -212,7 +212,7 @@ const PlayerProfileEdit = ({ open, onClose, playerData, phone, onSaved }: Props)
 
           {/* Sport Preferences */}
           <section className="space-y-3">
-            <h3 className="font-display text-xs tracking-wider text-muted-foreground border-b border-border pb-2">SPORT PREFERENCES</h3>
+            <h3 className="font-display text-xs tracking-wider text-muted-foreground border-b border-border pb-2">Sport preferences</h3>
             <ChipSelect
               label="PREFERRED SPORT"
               value={form.preferred_sport}
@@ -252,15 +252,15 @@ const PlayerProfileEdit = ({ open, onClose, playerData, phone, onSaved }: Props)
 
           {/* Club */}
           <section className="space-y-3">
-            <h3 className="font-display text-xs tracking-wider text-muted-foreground border-b border-border pb-2">MY CLUBS</h3>
+            <h3 className="font-display text-xs tracking-wider text-muted-foreground border-b border-border pb-2">My clubs</h3>
             <ClubListEditor value={clubs} onChange={setClubs} label="CLUBS I TRAIN AT" />
           </section>
 
           {/* Fitness & Goals */}
           <section className="space-y-3">
-            <h3 className="font-display text-xs tracking-wider text-muted-foreground border-b border-border pb-2">FITNESS & GOALS</h3>
+            <h3 className="font-display text-xs tracking-wider text-muted-foreground border-b border-border pb-2">Fitness & goals</h3>
             <div>
-              <label className="font-display text-xs tracking-wider text-muted-foreground">FITNESS LEVEL</label>
+              <label className="font-display text-xs tracking-wider text-muted-foreground">Fitness level</label>
               <div className="grid grid-cols-2 gap-2 mt-1.5">
                 {["beginner", "intermediate", "advanced", "elite"].map((l) => (
                   <button key={l} type="button" onClick={() => set("fitness_level", l)}
@@ -279,7 +279,7 @@ const PlayerProfileEdit = ({ open, onClose, playerData, phone, onSaved }: Props)
 
           {/* Ratings */}
           <section className="space-y-3">
-            <h3 className="font-display text-xs tracking-wider text-muted-foreground border-b border-border pb-2">RATINGS</h3>
+            <h3 className="font-display text-xs tracking-wider text-muted-foreground border-b border-border pb-2">Ratings</h3>
             <Field label="PLAYTOMIC LEVEL" field="playtomic_level" type="number" />
             <Field label="PLAYTOMIC URL" field="playtomic_url" placeholder="https://…" />
             <Field label="USTA/NTRP RATING" field="current_usta_ntrp" type="number" placeholder="e.g. 3.5" />
@@ -287,7 +287,7 @@ const PlayerProfileEdit = ({ open, onClose, playerData, phone, onSaved }: Props)
 
           {/* Play style */}
           <section className="space-y-3">
-            <h3 className="font-display text-xs tracking-wider text-muted-foreground border-b border-border pb-2">PLAY STYLE</h3>
+            <h3 className="font-display text-xs tracking-wider text-muted-foreground border-b border-border pb-2">Play style</h3>
             <Field label="BEST SHOT" field="best_shot" placeholder="e.g. Volley" />
             <Field label="WEAKEST SHOT" field="weakest_shot" placeholder="e.g. Lob" />
           </section>
@@ -295,7 +295,7 @@ const PlayerProfileEdit = ({ open, onClose, playerData, phone, onSaved }: Props)
 
         {/* Sticky save */}
         <div className="fixed bottom-0 left-0 right-0 p-4 bg-background border-t border-border">
-          <button onClick={handleSave} disabled={saving} className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-display text-sm tracking-widest hover:bg-primary/90 transition-colors disabled:opacity-50">
+          <button onClick={handleSave} disabled={saving} className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-display text-sm hover:bg-primary/90 transition-colors disabled:opacity-50">
             {saving ? "SAVING…" : "SAVE CHANGES"}
           </button>
         </div>

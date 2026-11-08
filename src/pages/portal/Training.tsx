@@ -877,11 +877,11 @@ const Training = () => {
                       <div className="flex items-center gap-3 border-b border-border">
                         <button onClick={() => setAddTab("blocks")}
                           className={`font-display text-xs tracking-wider pb-2 border-b-2 transition-colors ${addTab === "blocks" ? "border-primary text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"}`}>
-                          BLOCKS
+                          Blocks
                         </button>
                         <button onClick={() => setAddTab("modules")}
                           className={`font-display text-xs tracking-wider pb-2 border-b-2 transition-colors ${addTab === "modules" ? "border-primary text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"}`}>
-                          MODULES
+                          Modules
                         </button>
                       </div>
 
@@ -949,7 +949,7 @@ const Training = () => {
                                       <span className={`px-1.5 py-0.5 rounded font-display text-[8px] tracking-wider ${DIFFICULTY_COLORS[block.difficulty] || "bg-secondary text-muted-foreground"}`}>
                                         {block.difficulty?.toUpperCase() || "—"}
                                       </span>
-                                      <span className="px-1.5 py-0.5 rounded bg-secondary font-display text-[8px] tracking-wider text-muted-foreground uppercase">
+                                      <span className="px-1.5 py-0.5 rounded bg-secondary font-display text-[8px] tracking-wider text-muted-foreground">
                                         {block.sport}
                                       </span>
                                     </div>
@@ -1007,7 +1007,7 @@ const Training = () => {
                                 <span className="font-display text-sm text-foreground truncate">{item.module.title}</span>
                               </div>
                               <div className="flex items-center gap-2 mt-0.5 ml-4 flex-wrap">
-                                <span className="font-body text-[10px] text-muted-foreground uppercase">
+                                <span className="font-body text-[10px] text-muted-foreground">
                                   {item.module.category.replace("_", " ")}
                                 </span>
                                 <span className="text-muted-foreground text-[10px]">·</span>
@@ -1061,14 +1061,14 @@ const Training = () => {
                                 )}
                                 {item.coach_note && (
                                   <div className="bg-secondary rounded-lg p-2.5 mt-1">
-                                    <p className="text-[9px] font-display tracking-wider text-muted-foreground mb-0.5">COACH NOTE</p>
+                                    <p className="text-[9px] font-display tracking-wider text-muted-foreground mb-0.5">Coach note</p>
                                     <p className="text-xs font-body text-foreground">{item.coach_note}</p>
                                   </div>
                                 )}
                                 {(item.module as any).coach_video_url && (
                                   <button onClick={() => { setCoachVideoUrl((item.module as any).coach_video_url); setCoachVideoTitle(item.module.title); setCoachVideoOpen(true); }}
                                     className="mt-2 flex items-center gap-2 px-3 py-1.5 rounded-lg bg-primary/10 text-primary font-display text-[9px] tracking-wider hover:bg-primary/20 transition-colors">
-                                    <Video size={12} /> WATCH COACH DEMO
+                                    <Video size={12} /> Watch coach demo
                                   </button>
                                 )}
                               </motion.div>
@@ -1092,7 +1092,7 @@ const Training = () => {
                             <X size={14} className="text-destructive" />
                           </div>
                           <div className="flex-1">
-                            <p className="font-display text-xs tracking-wider text-foreground mb-1">CANCELLATION POLICY</p>
+                            <p className="font-display text-xs tracking-wider text-foreground mb-1">Cancellation policy</p>
                             <p className="font-body text-[11px] text-muted-foreground leading-relaxed">
                               Kostenlose Stornierung bis <span className="text-foreground font-semibold">48 Stunden</span> vor dem Training. 
                               Bei späterer Absage wird eine Stornogebühr erhoben.
@@ -1112,7 +1112,7 @@ const Training = () => {
                         )}
                         <button onClick={handlePlayerCancelDay}
                           className="w-full py-2.5 rounded-xl bg-destructive/10 text-destructive font-display text-xs tracking-wider hover:bg-destructive/20 transition-colors flex items-center justify-center gap-2">
-                          <Trash2 size={14} /> TRAINING ABSAGEN
+                          <Trash2 size={14} /> Training absagen
                         </button>
                       </div>
                     )}
@@ -1164,11 +1164,11 @@ const Training = () => {
                     <div className="flex items-center gap-3 border-b border-border">
                       <button onClick={() => setAddTab("blocks")}
                         className={`font-display text-xs tracking-wider pb-2 border-b-2 transition-colors ${addTab === "blocks" ? "border-primary text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"}`}>
-                        BLOCKS
+                        Blocks
                       </button>
                       <button onClick={() => setAddTab("modules")}
                         className={`font-display text-xs tracking-wider pb-2 border-b-2 transition-colors ${addTab === "modules" ? "border-primary text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"}`}>
-                        MODULES
+                        Modules
                       </button>
                     </div>
 
@@ -1236,7 +1236,7 @@ const Training = () => {
                                     <span className={`px-1.5 py-0.5 rounded font-display text-[8px] tracking-wider ${DIFFICULTY_COLORS[block.difficulty] || "bg-secondary text-muted-foreground"}`}>
                                       {block.difficulty?.toUpperCase() || "—"}
                                     </span>
-                                    <span className="px-1.5 py-0.5 rounded bg-secondary font-display text-[8px] tracking-wider text-muted-foreground uppercase">
+                                    <span className="px-1.5 py-0.5 rounded bg-secondary font-display text-[8px] tracking-wider text-muted-foreground">
                                       {block.sport}
                                     </span>
                                   </div>
@@ -1284,7 +1284,7 @@ const Training = () => {
                   <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-secondary flex items-center justify-center">
                     <Layers size={24} className="text-muted-foreground" />
                   </div>
-                  <p className="font-display text-lg text-muted-foreground mb-1">NO PLAN YET</p>
+                  <p className="font-display text-lg text-muted-foreground mb-1">No plan yet</p>
                   <p className="font-body text-sm text-muted-foreground">
                     Your coach hasn't assigned a plan yet.
                   </p>
@@ -1313,7 +1313,7 @@ const Training = () => {
               ) : savingPlan ? (
                 <><Save size={14} className="animate-pulse" /> SAVING...</>
               ) : (
-                <><Save size={14} /> SAVE PLAN</>
+                <><Save size={14} /> Save plan</>
               )}
             </button>
           </div>

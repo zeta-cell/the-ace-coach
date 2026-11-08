@@ -102,7 +102,7 @@ const NotificationBell = () => {
       {open && (
         <div className="absolute right-0 top-full mt-2 w-80 bg-card border border-border rounded-xl shadow-2xl overflow-hidden z-[100]">
           <div className="flex items-center justify-between px-4 py-3 border-b border-border">
-            <span className="font-display text-sm text-foreground">NOTIFICATIONS</span>
+            <span className="font-display text-sm text-foreground">Notifications</span>
             {unreadCount > 0 && (
               <button
                 onClick={markAllRead}

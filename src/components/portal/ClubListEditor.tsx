@@ -70,7 +70,7 @@ const ClubListEditor = ({ value, onChange, label = "MY CLUBS" }: Props) => {
           onClick={add}
           className="mt-2 inline-flex items-center gap-1.5 rounded-lg bg-primary/10 px-3 py-2 font-display text-[11px] tracking-wider text-primary hover:bg-primary/20"
         >
-          <Plus size={14} /> ADD CLUB
+          <Plus size={14} /> Add club
         </button>
       )}
     </div>

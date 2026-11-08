@@ -78,7 +78,7 @@ const MyCoachCard = () => {
 
   return (
     <div className="mb-6">
-      <h3 className="font-display text-sm tracking-wider text-muted-foreground mb-3">MY COACH</h3>
+      <h3 className="font-display text-sm tracking-wider text-muted-foreground mb-3">My coach</h3>
       <div className="space-y-3">
         {coaches.map((c) => (
           <div key={c.coach_id} className="bg-card border border-border rounded-xl p-4 flex items-center gap-4">

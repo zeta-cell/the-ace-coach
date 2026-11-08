@@ -49,14 +49,14 @@ const ClubMembers = () => {
     <PortalLayout>
       <div className="space-y-6">
         <div>
-          <h1 className="font-display text-2xl tracking-wide text-foreground uppercase">Members</h1>
-          <p className="text-xs font-body text-muted-foreground uppercase tracking-wider mt-1">Players connected to your club</p>
+          <h1 className="font-display text-2xl tracking-wide text-foreground">Members</h1>
+          <p className="text-xs font-body text-muted-foreground tracking-wider mt-1">Players connected to your club</p>
         </div>
 
         <Card className="p-5">
           <div className="flex items-center gap-2 mb-4">
             <Users size={18} className="text-primary" />
-            <h2 className="font-display text-xs uppercase tracking-wider text-muted-foreground">Active Members ({members.length})</h2>
+            <h2 className="font-display text-xs tracking-wider text-muted-foreground">Active Members ({members.length})</h2>
           </div>
           {loading ? <p className="text-sm text-muted-foreground">Loading…</p> : members.length === 0 ? (
             <p className="text-sm text-muted-foreground">No members yet.</p>

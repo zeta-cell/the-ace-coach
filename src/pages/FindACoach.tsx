@@ -106,7 +106,7 @@ const CoachCardComponent = ({ coach }: { coach: CoachCard }) => {
             </span>
             {coach.primary_sport && (
               <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-secondary text-[10px] font-display tracking-wider text-muted-foreground">
-                {coach.primary_sport === "tennis" ? <><Circle size={10} className="text-primary" /> TENNIS</> : coach.primary_sport === "padel" ? <><Grip size={10} className="text-accent-foreground" /> PADEL</> : <><Layers size={10} className="text-primary" /> BOTH</>}
+                {coach.primary_sport === "tennis" ? <><Circle size={10} className="text-primary" /> Tennis</> : coach.primary_sport === "padel" ? <><Grip size={10} className="text-accent-foreground" /> PADEL</> : <><Layers size={10} className="text-primary" /> BOTH</>}
               </span>
             )}
             {coach.location_city && (
@@ -165,13 +165,13 @@ const CoachCardComponent = ({ coach }: { coach: CoachCard }) => {
           to={coach.profile_slug ? `/coach/${coach.profile_slug}` : "#"}
           className="flex-1 text-center py-2.5 rounded-xl border border-border font-display text-xs tracking-wider text-foreground hover:bg-secondary transition-colors"
         >
-          VIEW PROFILE
+          View profile
         </Link>
         <Link
           to={`/book/${coach.profile_slug || coach.user_id}`}
           className="flex-1 text-center py-2.5 rounded-xl bg-primary font-display text-xs tracking-wider text-primary-foreground hover:bg-primary/90 transition-colors"
         >
-          BOOK NOW
+          Book now
         </Link>
       </div>
     </motion.div>
@@ -210,20 +210,20 @@ const FilterContent = ({
 }) => (
   <div className="space-y-6">
     <div className="flex items-center justify-between">
-      <h2 className="font-display text-sm tracking-wider text-foreground">FILTERS</h2>
+      <h2 className="font-display text-sm tracking-wider text-foreground">Filters</h2>
       <button onClick={resetFilters} className="text-xs font-body text-primary hover:underline">Reset</button>
     </div>
 
     {/* Price */}
     <div>
-      <p className="font-display text-xs tracking-wider text-muted-foreground mb-3">PRICE RANGE</p>
+      <p className="font-display text-xs tracking-wider text-muted-foreground mb-3">Price range</p>
       <Slider min={0} max={500} step={5} value={priceRange} onValueChange={setPriceRange} className="mb-2" />
       <p className="text-xs font-body text-muted-foreground">€{priceRange[0]} — €{priceRange[1]}/session</p>
     </div>
 
     {/* Languages */}
     <div>
-      <p className="font-display text-xs tracking-wider text-muted-foreground mb-2">LANGUAGES</p>
+      <p className="font-display text-xs tracking-wider text-muted-foreground mb-2">Languages</p>
       <div className="space-y-1.5">
         {LANGUAGES.map((l) => (
           <label key={l} className="flex items-center gap-2 cursor-pointer group">
@@ -236,7 +236,7 @@ const FilterContent = ({
 
     {/* Session type */}
     <div>
-      <p className="font-display text-xs tracking-wider text-muted-foreground mb-2">SESSION TYPE</p>
+      <p className="font-display text-xs tracking-wider text-muted-foreground mb-2">Session type</p>
       <div className="flex flex-wrap gap-1.5">
         {SESSION_TYPES.map((t) => (
           <button key={t} onClick={() => toggleSessionType(t)}
@@ -250,7 +250,7 @@ const FilterContent = ({
 
     {/* Availability */}
     <div>
-      <p className="font-display text-xs tracking-wider text-muted-foreground mb-2">AVAILABILITY</p>
+      <p className="font-display text-xs tracking-wider text-muted-foreground mb-2">Availability</p>
       <div className="flex flex-wrap gap-1.5">
         {AVAILABILITY_OPTIONS.map((a) => (
           <button key={a} onClick={() => setSelectedAvailability(a)}
@@ -264,7 +264,7 @@ const FilterContent = ({
 
     {/* Coaching style */}
     <div>
-      <p className="font-display text-xs tracking-wider text-muted-foreground mb-2">COACHING STYLE</p>
+      <p className="font-display text-xs tracking-wider text-muted-foreground mb-2">Coaching style</p>
       <input
         type="text" value={coachingStyleSearch} onChange={(e) => setCoachingStyleSearch(e.target.value)}
         placeholder="e.g. Technical, Tactical..."
@@ -274,7 +274,7 @@ const FilterContent = ({
 
     {/* Badge */}
     <div>
-      <p className="font-display text-xs tracking-wider text-muted-foreground mb-2">BADGE LEVEL</p>
+      <p className="font-display text-xs tracking-wider text-muted-foreground mb-2">Badge level</p>
       <div className="flex flex-wrap gap-1.5">
         {BADGE_LEVELS.map((b) => (
           <button key={b} onClick={() => setSelectedBadge(b)}
@@ -288,7 +288,7 @@ const FilterContent = ({
 
     {/* Rating */}
     <div>
-      <p className="font-display text-xs tracking-wider text-muted-foreground mb-2">RATING</p>
+      <p className="font-display text-xs tracking-wider text-muted-foreground mb-2">Rating</p>
       <div className="flex flex-wrap gap-1.5">
         {RATINGS.map((r) => (
           <button key={r} onClick={() => setSelectedRating(r)}
@@ -302,7 +302,7 @@ const FilterContent = ({
 
     {/* Experience */}
     <div>
-      <p className="font-display text-xs tracking-wider text-muted-foreground mb-2">EXPERIENCE</p>
+      <p className="font-display text-xs tracking-wider text-muted-foreground mb-2">Experience</p>
       <div className="flex flex-wrap gap-1.5">
         {EXPERIENCE.map((e) => (
           <button key={e} onClick={() => setSelectedExperience(e)}
@@ -587,7 +587,7 @@ const FindACoach = () => {
           desktopFiltersOpen ? "bg-primary border-primary text-primary-foreground" : "bg-card border-border text-muted-foreground hover:text-foreground"
         }`}>
           <SlidersHorizontal size={16} />
-          <span className="hidden md:inline font-display text-[10px] tracking-wider">FILTERS</span>
+          <span className="hidden md:inline font-display text-[10px] tracking-wider">Filters</span>
         </button>
       </div>
 
@@ -599,7 +599,7 @@ const FindACoach = () => {
             <motion.div initial={{ x: "-100%" }} animate={{ x: 0 }} exit={{ x: "-100%" }} transition={{ type: "spring", damping: 25 }}
               className="fixed left-0 top-0 bottom-0 w-[300px] bg-card border-r border-border z-50 overflow-y-auto p-5">
               <div className="flex items-center justify-between mb-4">
-                <span className="font-display text-sm tracking-wider">FILTERS</span>
+                <span className="font-display text-sm tracking-wider">Filters</span>
                 <button onClick={() => setMobileFiltersOpen(false)} className="p-1"><X size={18} /></button>
               </div>
               <FilterContent {...filterProps} />
@@ -659,16 +659,16 @@ const FindACoach = () => {
               <MapPin size={40} className="text-muted-foreground mx-auto mb-4" />
               <h3 className="font-display text-xl text-foreground mb-2">NO COACHES FOUND IN {citySearch.toUpperCase()} YET</h3>
               <p className="font-body text-sm text-muted-foreground mb-6">Want to coach in {citySearch}? Join as a coach →</p>
-              <Link to="/login" className="inline-flex items-center gap-2 font-display text-sm tracking-wider bg-primary text-primary-foreground px-6 py-3 rounded-xl hover:bg-primary/90 transition-colors">JOIN AS COACH</Link>
+              <Link to="/login" className="inline-flex items-center gap-2 font-display text-sm tracking-wider bg-primary text-primary-foreground px-6 py-3 rounded-xl hover:bg-primary/90 transition-colors">Join as coach</Link>
             </div>
           )}
 
           {!loading && filtered.length === 0 && !citySearch && coaches.length === 0 && (
             <div className="text-center py-20">
               <Shield size={40} className="text-primary mx-auto mb-4" />
-              <h3 className="font-display text-2xl text-foreground mb-2">BE THE FIRST COACH ON ACE</h3>
+              <h3 className="font-display text-2xl text-foreground mb-2">Be the first coach on ace</h3>
               <p className="font-body text-sm text-muted-foreground mb-6">Join the platform and start coaching today.</p>
-              <Link to="/login" className="inline-flex items-center gap-2 font-display text-sm tracking-wider bg-primary text-primary-foreground px-6 py-3 rounded-xl hover:bg-primary/90 transition-colors">JOIN AS COACH</Link>
+              <Link to="/login" className="inline-flex items-center gap-2 font-display text-sm tracking-wider bg-primary text-primary-foreground px-6 py-3 rounded-xl hover:bg-primary/90 transition-colors">Join as coach</Link>
             </div>
           )}
         </main>

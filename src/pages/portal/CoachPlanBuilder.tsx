@@ -116,11 +116,11 @@ const SortablePlanItem = ({
             <div className="flex-1 min-w-0">
               <p className="font-display text-foreground text-sm">{item.module.title}</p>
               <div className="flex items-center gap-2 mt-0.5">
-                <span className="font-body text-[10px] font-semibold bg-primary/10 text-primary px-2 py-0.5 rounded-full uppercase">
+                <span className="font-body text-[10px] font-semibold bg-primary/10 text-primary px-2 py-0.5 rounded-full">
                   {item.module.category.replace("_", " ")}
                 </span>
                 {item.module.difficulty && (
-                  <span className="font-body text-[10px] text-muted-foreground uppercase">{item.module.difficulty}</span>
+                  <span className="font-body text-[10px] text-muted-foreground">{item.module.difficulty}</span>
                 )}
               </div>
             </div>
@@ -177,7 +177,7 @@ const SortablePlanItem = ({
               )}
               {item.module.instructions && (
                 <div>
-                  <p className="text-[10px] font-display text-foreground tracking-wider mb-1">INSTRUCTIONS</p>
+                  <p className="text-[10px] font-display text-foreground tracking-wider mb-1">Instructions</p>
                   <p className="text-xs font-body text-muted-foreground whitespace-pre-line">{item.module.instructions}</p>
                 </div>
               )}
@@ -240,7 +240,7 @@ const InlineAddModule = ({
         onClick={() => setOpen(true)}
         className="w-full py-3 rounded-xl border-2 border-dashed border-border text-muted-foreground font-display text-xs tracking-wider hover:border-primary hover:text-primary transition-colors flex items-center justify-center gap-2"
       >
-        <Search size={14} /> SEARCH ALL MODULES
+        <Search size={14} /> Search all modules
       </button>
     );
   }
@@ -629,7 +629,7 @@ const CoachPlanBuilder = () => {
 
   const renderModuleBrowser = () => (
     <div className="mb-4">
-      <p className="font-display text-xs tracking-wider text-muted-foreground mb-2">ADD MODULES BY CATEGORY</p>
+      <p className="font-display text-xs tracking-wider text-muted-foreground mb-2">Add modules by category</p>
       <div className="flex gap-1.5 overflow-x-auto pb-2 scrollbar-none">
         {Object.entries(CATEGORY_LABELS).filter(([k]) => k !== "all").map(([key, label]) => (
           <button
@@ -681,7 +681,7 @@ const CoachPlanBuilder = () => {
         onClick={() => setShowModulePicker(true)}
         className="w-full py-3 mt-2 rounded-xl border-2 border-dashed border-border text-muted-foreground font-display text-sm tracking-wider hover:border-primary hover:text-primary transition-colors flex items-center justify-center gap-2"
       >
-        <Search size={16} /> SEARCH ALL MODULES
+        <Search size={16} /> Search all modules
       </button>
     </div>
   );
@@ -734,14 +734,14 @@ const CoachPlanBuilder = () => {
           )}
 
           <div className="mb-6">
-            <h1 className="font-display text-2xl md:text-3xl text-foreground">DAY PLAN</h1>
+            <h1 className="font-display text-2xl md:text-3xl text-foreground">Day plan</h1>
             <p className="font-body text-sm text-muted-foreground">for {playerName}</p>
           </div>
 
           {/* ─── Date Selector Section ─── */}
           <div className="bg-card border border-border rounded-2xl p-4 mb-4">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="font-display text-[10px] tracking-wider text-muted-foreground">SELECT DATE</h3>
+              <h3 className="font-display text-[10px] tracking-wider text-muted-foreground">Select date</h3>
               <button
                 onClick={() => setShowMonthCal(!showMonthCal)}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-display text-[10px] tracking-wider transition-colors ${
@@ -850,12 +850,12 @@ const CoachPlanBuilder = () => {
 
           {/* ─── Session Details Section ─── */}
           <div className="bg-card border border-border rounded-2xl p-4 mb-4 space-y-3">
-            <h3 className="font-display text-[10px] tracking-wider text-muted-foreground">SESSION DETAILS</h3>
+            <h3 className="font-display text-[10px] tracking-wider text-muted-foreground">Session details</h3>
 
             {/* Time row */}
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="font-display text-[10px] tracking-wider text-muted-foreground mb-1 block">START TIME <span className="text-destructive">*</span></label>
+                <label className="font-display text-[10px] tracking-wider text-muted-foreground mb-1 block">Start time <span className="text-destructive">*</span></label>
                 <input
                   type="time"
                   value={startTime}
@@ -864,7 +864,7 @@ const CoachPlanBuilder = () => {
                 />
               </div>
               <div>
-                <label className="font-display text-[10px] tracking-wider text-muted-foreground mb-1 block">END TIME <span className="text-destructive">*</span></label>
+                <label className="font-display text-[10px] tracking-wider text-muted-foreground mb-1 block">End time <span className="text-destructive">*</span></label>
                 <input
                   type="time"
                   value={endTime}
@@ -942,7 +942,7 @@ const CoachPlanBuilder = () => {
           {/* ─── Training Modules Section ─── */}
           <div className="bg-card border border-border rounded-2xl p-4 mb-4">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="font-display text-[10px] tracking-wider text-muted-foreground">TRAINING MODULES</h3>
+              <h3 className="font-display text-[10px] tracking-wider text-muted-foreground">Training modules</h3>
               {planItems.length > 0 && (
                 <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary/10">
                   <Clock size={10} className="text-primary" />
@@ -1022,7 +1022,7 @@ const CoachPlanBuilder = () => {
                       : "bg-primary text-primary-foreground hover:bg-primary/90 shadow-md"
                   }`}
                 >
-                  {saved ? <><Check size={16} /> SAVED</> : saving ? "SAVING..." : <><Save size={16} /> SAVE PLAN</>}
+                  {saved ? <><Check size={16} /> SAVED</> : saving ? "SAVING..." : <><Save size={16} /> Save plan</>}
                 </button>
               </div>
             </motion.div>
@@ -1044,7 +1044,7 @@ const CoachPlanBuilder = () => {
               >
                 <div className="p-4 border-b border-border">
                   <div className="flex items-center justify-between mb-3">
-                    <h3 className="font-display text-lg text-foreground">SEARCH MODULES</h3>
+                    <h3 className="font-display text-lg text-foreground">Search modules</h3>
                     <button onClick={() => { setShowModulePicker(false); setModuleSearch(""); setModuleCategory("all"); }} className="p-1.5 rounded-lg hover:bg-secondary">
                       <X size={18} className="text-muted-foreground" />
                     </button>
@@ -1086,7 +1086,7 @@ const CoachPlanBuilder = () => {
                           onClick={() => { setShowModulePicker(false); navigate("/coach/modules"); }}
                           className="px-4 py-2 rounded-xl bg-primary text-primary-foreground font-display text-xs tracking-wider"
                         >
-                          CREATE FIRST MODULE
+                          Create first module
                         </button>
                       )}
                     </div>
@@ -1128,7 +1128,7 @@ const CoachPlanBuilder = () => {
               onClick={(e) => e.stopPropagation()}
               className="w-full max-w-md bg-card border border-border rounded-2xl p-6 space-y-4"
             >
-              <h3 className="font-display text-lg text-foreground">SAVE AS TRAINING BLOCK</h3>
+              <h3 className="font-display text-lg text-foreground">Save as training block</h3>
               <input
                 placeholder="Block title..."
                 value={blockTitle}
@@ -1160,10 +1160,10 @@ const CoachPlanBuilder = () => {
               <p className="text-xs font-body text-muted-foreground">{planItems.length} modules will be saved in this block</p>
               <div className="flex gap-2">
                 <button onClick={() => setShowSaveBlock(false)} className="flex-1 py-2.5 rounded-xl border border-border font-display text-xs tracking-wider text-muted-foreground hover:text-foreground transition-colors">
-                  CANCEL
+                  Cancel
                 </button>
                 <button onClick={handleSaveAsBlock} className="flex-1 py-2.5 rounded-xl bg-primary font-display text-xs tracking-wider text-primary-foreground hover:bg-primary/90 transition-colors">
-                  SAVE BLOCK
+                  Save block
                 </button>
               </div>
             </motion.div>

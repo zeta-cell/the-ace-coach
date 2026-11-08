@@ -74,7 +74,7 @@
 
   <body>
     <script>
-      (function(){document.documentElement.classList.add('dark');localStorage.setItem('theme','dark')})();
+      (function(){document.documentElement.classList.remove('dark');document.documentElement.classList.add('light');localStorage.setItem('theme','light')})();
     </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>

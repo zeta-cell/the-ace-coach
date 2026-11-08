@@ -134,7 +134,7 @@ const PublicClubPage = () => {
               </div>
             )}
             <div className="flex-1 min-w-0">
-              <h1 className="font-display text-3xl md:text-4xl tracking-wide text-foreground uppercase">{club.name}</h1>
+              <h1 className="font-display text-3xl md:text-4xl tracking-wide text-foreground">{club.name}</h1>
               {location && (
                 <div className="flex items-center gap-1.5 text-sm text-muted-foreground mt-2">
                   <MapPin size={14} /> {location}
@@ -159,7 +159,7 @@ const PublicClubPage = () => {
 
       {/* Coaches */}
       <section className="max-w-5xl mx-auto px-4 md:px-6 py-10">
-        <h2 className="font-display text-sm uppercase tracking-wider text-foreground mb-4">Our Coaches</h2>
+        <h2 className="font-display text-sm tracking-wider text-foreground mb-4">Our Coaches</h2>
         {coaches.length === 0 ? (
           <p className="text-sm text-muted-foreground">No coaches listed yet.</p>
         ) : (
@@ -195,13 +195,13 @@ const PublicClubPage = () => {
       {/* Events */}
       {events.length > 0 && (
         <section className="max-w-5xl mx-auto px-4 md:px-6 py-10 border-t border-border">
-          <h2 className="font-display text-sm uppercase tracking-wider text-foreground mb-4">Upcoming Events</h2>
+          <h2 className="font-display text-sm tracking-wider text-foreground mb-4">Upcoming Events</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {events.map((e) => (
               <Link key={e.id} to="/events" className="block rounded-xl border border-border hover:border-primary overflow-hidden bg-card transition-colors">
                 {e.cover_image_url && <img src={e.cover_image_url} alt={e.title} className="w-full h-32 object-cover" />}
                 <div className="p-4">
-                  <div className="text-xs text-muted-foreground uppercase tracking-wider">{format(new Date(e.start_datetime), "MMM d · HH:mm")}</div>
+                  <div className="text-xs text-muted-foreground tracking-wider">{format(new Date(e.start_datetime), "MMM d · HH:mm")}</div>
                   <div className="font-body text-sm text-foreground mt-1 line-clamp-2">{e.title}</div>
                 </div>
               </Link>
@@ -213,7 +213,7 @@ const PublicClubPage = () => {
       {/* Contact */}
       {(club.contact_email || club.contact_phone || club.address) && (
         <section className="max-w-5xl mx-auto px-4 md:px-6 py-10 border-t border-border">
-          <h2 className="font-display text-sm uppercase tracking-wider text-foreground mb-4">Contact</h2>
+          <h2 className="font-display text-sm tracking-wider text-foreground mb-4">Contact</h2>
           <div className="space-y-2 text-sm text-muted-foreground">
             {club.address && <div className="flex items-center gap-2"><MapPin size={14} /> {club.address}</div>}
             {club.contact_email && <a href={`mailto:${club.contact_email}`} className="flex items-center gap-2 hover:text-primary"><Mail size={14} /> {club.contact_email}</a>}

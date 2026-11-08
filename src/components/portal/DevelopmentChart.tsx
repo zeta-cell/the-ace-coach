@@ -134,7 +134,7 @@ const DevelopmentChart = ({ playerId, refreshKey = 0 }: Props) => {
     <div className="bg-card border border-border rounded-xl p-5">
       <div className="mb-1 flex items-center justify-between gap-3">
         <h3 className="flex items-center gap-2 font-display text-xs tracking-wider text-muted-foreground">
-          <TrendingUp size={14} className="text-primary" /> DEVELOPMENT
+          <TrendingUp size={14} className="text-primary" /> Development
         </h3>
         {totalDelta !== null && (
           <span className={`font-display text-xs ${deltaColor(totalDelta)}`}>

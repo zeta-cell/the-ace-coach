@@ -175,12 +175,12 @@ const PlayerVideos = () => {
     <PortalLayout>
       <div className="max-w-4xl mx-auto">
         <div className="flex items-center justify-between mb-4">
-          <h1 className="font-display text-3xl text-foreground">MY VIDEOS</h1>
+          <h1 className="font-display text-3xl text-foreground">My videos</h1>
           <button
             onClick={() => setShowUpload(true)}
             className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground font-display text-xs tracking-wider hover:bg-primary/90 transition-colors"
           >
-            <Upload size={16} /> UPLOAD
+            <Upload size={16} /> Upload
           </button>
         </div>
 
@@ -218,7 +218,7 @@ const PlayerVideos = () => {
                   <div className="absolute top-2 right-2 flex items-center gap-1">
                     {hasCoachComments(v.id) && (
                       <span className="flex items-center gap-0.5 bg-green-500/90 text-white text-[8px] font-display px-1.5 py-0.5 rounded-full">
-                        FEEDBACK RECEIVED
+                        Feedback received
                       </span>
                     )}
                     {(commentCounts[v.id] || 0) > 0 && (
@@ -234,7 +234,7 @@ const PlayerVideos = () => {
                 <div className="p-3">
                   <div className="flex items-center gap-2 mb-1">
                     {v.shot_tag && (
-                      <span className="text-[10px] font-body font-semibold bg-primary/10 text-primary px-2 py-0.5 rounded-full uppercase">
+                      <span className="text-[10px] font-body font-semibold bg-primary/10 text-primary px-2 py-0.5 rounded-full">
                         {v.shot_tag}
                       </span>
                     )}
@@ -284,7 +284,7 @@ const PlayerVideos = () => {
                     </button>
                   </div>
                   {selectedVideo.shot_tag && (
-                    <span className="text-xs font-body font-semibold bg-primary/10 text-primary px-2 py-0.5 rounded-full uppercase">
+                    <span className="text-xs font-body font-semibold bg-primary/10 text-primary px-2 py-0.5 rounded-full">
                       {selectedVideo.shot_tag}
                     </span>
                   )}
@@ -293,7 +293,7 @@ const PlayerVideos = () => {
                   )}
                   {selectedVideo.coach_feedback && (
                     <div className="mt-4 bg-primary/5 border border-primary/20 rounded-lg p-3">
-                      <p className="text-xs font-display text-primary mb-1 uppercase tracking-wider">Coach Feedback</p>
+                      <p className="text-xs font-display text-primary mb-1 tracking-wider">Coach Feedback</p>
                       <p className="font-body text-sm text-foreground">{selectedVideo.coach_feedback}</p>
                     </div>
                   )}
@@ -301,7 +301,7 @@ const PlayerVideos = () => {
                   {/* Coach comments section */}
                   {(videoComments[selectedVideo.id]?.length || 0) > 0 && (
                     <div className="mt-4">
-                      <p className="text-xs font-display text-foreground mb-2 uppercase tracking-wider">COACH COMMENTS</p>
+                      <p className="text-xs font-display text-foreground mb-2 tracking-wider">Coach comments</p>
                       <div className="space-y-2">
                         {videoComments[selectedVideo.id]?.map(c => {
                           const isNew = isNewComment(selectedVideo.id, c.created_at);
@@ -354,7 +354,7 @@ const PlayerVideos = () => {
                 className="w-full max-w-lg bg-card border border-border rounded-xl p-6"
               >
                 <div className="flex items-center justify-between mb-4">
-                  <h2 className="font-display text-xl text-foreground">UPLOAD VIDEO</h2>
+                  <h2 className="font-display text-xl text-foreground">Upload video</h2>
                   <button onClick={() => !uploading && setShowUpload(false)}>
                     <X size={20} className="text-muted-foreground" />
                   </button>

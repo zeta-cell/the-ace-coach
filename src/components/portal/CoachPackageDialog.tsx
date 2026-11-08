@@ -119,7 +119,7 @@ const CoachPackageDialog = ({ open, onClose, onSave, editing, saving }: Props) =
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="font-display text-xs tracking-wider text-muted-foreground">TOTAL SESSIONS</label>
+              <label className="font-display text-xs tracking-wider text-muted-foreground">Total sessions</label>
               <Input
                 type="number"
                 value={form.total_sessions ?? ""}
@@ -130,7 +130,7 @@ const CoachPackageDialog = ({ open, onClose, onSave, editing, saving }: Props) =
               />
             </div>
             <div>
-              <label className="font-display text-xs tracking-wider text-muted-foreground">CURRENCY</label>
+              <label className="font-display text-xs tracking-wider text-muted-foreground">Currency</label>
               <div className="flex gap-1.5 mt-1.5">
                 {CURRENCIES.map((c) => (
                   <button
@@ -151,24 +151,24 @@ const CoachPackageDialog = ({ open, onClose, onSave, editing, saving }: Props) =
           {form.session_type === "group" && (
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="font-display text-xs tracking-wider text-muted-foreground">MAX GROUP SIZE</label>
+                <label className="font-display text-xs tracking-wider text-muted-foreground">Max group size</label>
                 <Input type="number" value={form.max_group_size ?? ""} onChange={(e) => set("max_group_size", e.target.value ? Number(e.target.value) : null)} placeholder="e.g. 6" className="mt-1.5 h-9 text-sm" min={2} />
               </div>
               <div>
-                <label className="font-display text-xs tracking-wider text-muted-foreground">MIN PARTICIPANTS</label>
+                <label className="font-display text-xs tracking-wider text-muted-foreground">Min participants</label>
                 <Input type="number" value={form.min_participants ?? ""} onChange={(e) => set("min_participants", e.target.value ? Number(e.target.value) : null)} placeholder="e.g. 2" className="mt-1.5 h-9 text-sm" min={1} />
               </div>
             </div>
           )}
 
           <div>
-            <label className="font-display text-xs tracking-wider text-muted-foreground">DESCRIPTION</label>
+            <label className="font-display text-xs tracking-wider text-muted-foreground">Description</label>
             <Textarea value={form.description} onChange={(e) => set("description", e.target.value)} placeholder="What's included in this package…" className="mt-1.5 text-sm min-h-[60px]" />
           </div>
 
           <DialogFooter>
             <button type="button" onClick={onClose} className="px-4 py-2 rounded-lg text-sm font-display tracking-wider bg-secondary text-foreground hover:bg-secondary/80 transition-colors">
-              CANCEL
+              Cancel
             </button>
             <button type="submit" disabled={saving || !form.title} className="px-4 py-2 rounded-lg text-sm font-display tracking-wider bg-primary text-primary-foreground hover:bg-primary/90 transition-colors disabled:opacity-50">
               {saving ? "SAVING…" : editing ? "UPDATE" : "CREATE"}

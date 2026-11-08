@@ -85,7 +85,7 @@ const ClassChat = ({ eventId, canManage, canPost }: Props) => {
       <div className="rounded-2xl border border-border bg-card/60">
         <div className="flex items-center gap-2 border-b border-border px-4 py-3">
           <MessageCircle size={14} className="text-primary" />
-          <span className="font-display text-[11px] tracking-wider text-foreground">GROUP CHAT</span>
+          <span className="font-display text-[11px] tracking-wider text-foreground">Group chat</span>
           <span className="ml-auto font-body text-[11px] text-muted-foreground">{thread.length} messages</span>
         </div>
 

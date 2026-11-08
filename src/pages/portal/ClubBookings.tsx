@@ -64,8 +64,8 @@ const ClubBookings = () => {
     <PortalLayout>
       <div className="space-y-6">
         <div>
-          <h1 className="font-display text-2xl tracking-wide text-foreground uppercase">Club Bookings</h1>
-          <p className="text-xs font-body text-muted-foreground uppercase tracking-wider mt-1">Across all coaches</p>
+          <h1 className="font-display text-2xl tracking-wide text-foreground">Club Bookings</h1>
+          <p className="text-xs font-body text-muted-foreground tracking-wider mt-1">Across all coaches</p>
         </div>
 
         {loading ? <p className="text-sm text-muted-foreground">Loading…</p> : Object.keys(grouped).length === 0 ? (
@@ -77,7 +77,7 @@ const ClubBookings = () => {
           <div className="space-y-6">
             {Object.entries(grouped).map(([date, list]) => (
               <div key={date}>
-                <h2 className="font-display text-xs uppercase tracking-wider text-muted-foreground mb-3">
+                <h2 className="font-display text-xs tracking-wider text-muted-foreground mb-3">
                   {format(new Date(date), "EEEE, MMM d")}
                 </h2>
                 <div className="space-y-2">

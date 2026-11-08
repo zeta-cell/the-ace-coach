@@ -298,7 +298,7 @@ const CoachAvailabilityGrid = ({ coachId }: AvailabilityGridProps) => {
     >
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="font-display text-sm tracking-wider text-foreground">MY AVAILABILITY</h2>
+          <h2 className="font-display text-sm tracking-wider text-foreground">My availability</h2>
           <p className="text-xs font-body text-muted-foreground mt-0.5">
             {viewMode === "week" ? "Click or drag to set your weekly available hours" : "Tap a date to customize availability"}
           </p>

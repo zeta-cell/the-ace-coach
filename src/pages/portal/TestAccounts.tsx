@@ -31,7 +31,7 @@ const TestAccounts = () => {
           Back to login
         </Link>
 
-        <h1 className="font-display text-2xl text-foreground tracking-wide mb-2">TEST ACCOUNTS</h1>
+        <h1 className="font-display text-2xl text-foreground tracking-wide mb-2">Test accounts</h1>
         <p className="text-muted-foreground text-sm font-body mb-6">Internal demo logins — one click to sign in.</p>
 
         {error && (

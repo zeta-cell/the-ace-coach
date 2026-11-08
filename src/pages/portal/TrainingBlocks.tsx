@@ -240,10 +240,10 @@ export const TrainingBlocksContent = ({ embedded = false }: { embedded?: boolean
   const content = (
       <div className="max-w-5xl mx-auto">
         <div className="flex items-center justify-between mb-6">
-          <h1 className="font-display text-3xl text-foreground">TRAINING BLOCKS</h1>
+          <h1 className="font-display text-3xl text-foreground">Training blocks</h1>
           <button onClick={openCreate}
             className="flex items-center gap-2 px-4 py-2 rounded-xl bg-primary text-primary-foreground font-display text-xs tracking-wider hover:bg-primary/90 transition-colors">
-            <Plus size={16} /> NEW BLOCK
+            <Plus size={16} /> New block
           </button>
         </div>
 
@@ -258,7 +258,7 @@ export const TrainingBlocksContent = ({ embedded = false }: { embedded?: boolean
                 onClick={e => e.stopPropagation()}
                 className="bg-card border border-border rounded-2xl w-full max-w-3xl mb-10 overflow-hidden">
                 <div className="p-5 border-b border-border flex items-center justify-between">
-                  <h2 className="font-display text-xl text-foreground">CREATE TRAINING BLOCK</h2>
+                  <h2 className="font-display text-xl text-foreground">Create training block</h2>
                   <button onClick={() => setShowCreate(false)} className="p-1 text-muted-foreground hover:text-foreground transition-colors">
                     <X size={18} />
                   </button>
@@ -277,7 +277,7 @@ export const TrainingBlocksContent = ({ embedded = false }: { embedded?: boolean
                         className="w-full px-3 py-2 rounded-lg bg-secondary text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-muted-foreground" />
                     </div>
                     <div>
-                      <label className="text-[10px] font-display tracking-wider text-muted-foreground mb-1 block">CATEGORY</label>
+                      <label className="text-[10px] font-display tracking-wider text-muted-foreground mb-1 block">Category</label>
                       <select value={newCategory} onChange={e => setNewCategory(e.target.value)}
                         className="w-full px-3 py-2 rounded-lg bg-secondary text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary">
                         {Object.entries(CATEGORY_LABELS).map(([key, label]) => (
@@ -286,7 +286,7 @@ export const TrainingBlocksContent = ({ embedded = false }: { embedded?: boolean
                       </select>
                     </div>
                     <div>
-                      <label className="text-[10px] font-display tracking-wider text-muted-foreground mb-1 block">DIFFICULTY</label>
+                      <label className="text-[10px] font-display tracking-wider text-muted-foreground mb-1 block">Difficulty</label>
                       <select value={newDifficulty} onChange={e => setNewDifficulty(e.target.value)}
                         className="w-full px-3 py-2 rounded-lg bg-secondary text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary">
                         <option value="beginner">Beginner</option>
@@ -298,7 +298,7 @@ export const TrainingBlocksContent = ({ embedded = false }: { embedded?: boolean
                   </div>
 
                   <div>
-                    <label className="text-[10px] font-display tracking-wider text-muted-foreground mb-1 block">DESCRIPTION</label>
+                    <label className="text-[10px] font-display tracking-wider text-muted-foreground mb-1 block">Description</label>
                     <textarea value={newDescription} onChange={e => setNewDescription(e.target.value)} placeholder="Brief description of the block..." rows={2}
                       className="w-full px-3 py-2 rounded-lg bg-secondary text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-muted-foreground resize-none" />
                   </div>
@@ -337,7 +337,7 @@ export const TrainingBlocksContent = ({ embedded = false }: { embedded?: boolean
 
                   {/* Module picker */}
                   <div className="border border-border rounded-xl p-3">
-                    <label className="text-[10px] font-display tracking-wider text-muted-foreground mb-2 block">ADD MODULES</label>
+                    <label className="text-[10px] font-display tracking-wider text-muted-foreground mb-2 block">Add modules</label>
                     <div className="flex gap-2 mb-2">
                       <div className="relative flex-1">
                         <Search size={12} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
@@ -370,7 +370,7 @@ export const TrainingBlocksContent = ({ embedded = false }: { embedded?: boolean
 
                 <div className="p-5 border-t border-border flex items-center justify-end gap-3">
                   <button onClick={() => setShowCreate(false)}
-                    className="px-4 py-2 rounded-lg bg-secondary text-foreground font-display text-xs tracking-wider hover:bg-secondary/80 transition-colors">CANCEL</button>
+                    className="px-4 py-2 rounded-lg bg-secondary text-foreground font-display text-xs tracking-wider hover:bg-secondary/80 transition-colors">Cancel</button>
                   <button onClick={createBlock} disabled={creating || !newTitle.trim() || selectedModules.length === 0}
                     className="px-5 py-2 rounded-lg bg-primary text-primary-foreground font-display text-xs tracking-wider hover:bg-primary/90 transition-colors disabled:opacity-50">
                     {creating ? "CREATING..." : "CREATE BLOCK"}
@@ -431,7 +431,7 @@ export const TrainingBlocksContent = ({ embedded = false }: { embedded?: boolean
         ) : filtered.length === 0 ? (
           <div className="text-center py-12">
             <Blocks size={40} className="mx-auto text-muted-foreground mb-3" />
-            <p className="font-display text-xl text-muted-foreground">NO BLOCKS FOUND</p>
+            <p className="font-display text-xl text-muted-foreground">No blocks found</p>
             <p className="font-body text-sm text-muted-foreground mt-2">Try adjusting your search or filters.</p>
           </div>
         ) : (
@@ -453,7 +453,7 @@ export const TrainingBlocksContent = ({ embedded = false }: { embedded?: boolean
                               {MAIN_CATEGORY_LABEL[main]}
                             </span>
                             {block.is_system && (
-                              <span className="text-[10px] font-body text-muted-foreground bg-secondary px-1.5 py-0.5 rounded">SYSTEM</span>
+                              <span className="text-[10px] font-body text-muted-foreground bg-secondary px-1.5 py-0.5 rounded">System</span>
                             )}
                           </div>
                           <h3 className="font-display text-lg text-foreground">{block.title}</h3>
@@ -474,7 +474,7 @@ export const TrainingBlocksContent = ({ embedded = false }: { embedded?: boolean
                           <Clock size={12} /> {block.duration_minutes} min
                         </span>
                         {block.difficulty && (
-                          <span className={`text-xs font-display tracking-wider uppercase ${DIFFICULTY_COLORS[block.difficulty] || "text-muted-foreground"}`}>
+                          <span className={`text-xs font-display tracking-wider ${DIFFICULTY_COLORS[block.difficulty] || "text-muted-foreground"}`}>
                             {block.difficulty}
                           </span>
                         )}
@@ -495,7 +495,7 @@ export const TrainingBlocksContent = ({ embedded = false }: { embedded?: boolean
                             onClick={() => { setAssignBlock(block); setAssignDialogOpen(true); }}
                             className="flex items-center gap-1 text-xs font-display tracking-wider text-foreground bg-primary/10 hover:bg-primary/20 px-2.5 py-1 rounded-lg transition-colors">
                             <CalendarDays size={12} className="text-primary" />
-                            ASSIGN
+                            Assign
                           </button>
                         )}
                       </div>

@@ -190,7 +190,7 @@ const AssignBlockToPlayerDialog = ({ open, onClose, block }: AssignBlockToPlayer
       </div>
 
       <div>
-        <label className="text-[10px] font-display tracking-wider text-muted-foreground mb-1.5 block">SELECT PLAYER</label>
+        <label className="text-[10px] font-display tracking-wider text-muted-foreground mb-1.5 block">Select player</label>
         {loadingPlayers ? (
           <div className="flex justify-center py-3">
             <Loader2 size={16} className="animate-spin text-muted-foreground" />
@@ -263,7 +263,7 @@ const AssignBlockToPlayerDialog = ({ open, onClose, block }: AssignBlockToPlayer
       </div>
 
       <div>
-        <label className="text-[10px] font-display tracking-wider text-muted-foreground mb-1.5 block">LOCATION</label>
+        <label className="text-[10px] font-display tracking-wider text-muted-foreground mb-1.5 block">Location</label>
         <div className="relative">
           <MapPin size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
           <input
@@ -291,7 +291,7 @@ const AssignBlockToPlayerDialog = ({ open, onClose, block }: AssignBlockToPlayer
       </div>
 
       <div>
-        <label className="text-[10px] font-display tracking-wider text-muted-foreground mb-1.5 block">ARRIVAL INSTRUCTIONS</label>
+        <label className="text-[10px] font-display tracking-wider text-muted-foreground mb-1.5 block">Arrival instructions</label>
         <div className="relative">
           <Info size={14} className="absolute left-3 top-3 text-muted-foreground" />
           <textarea
@@ -312,7 +312,7 @@ const AssignBlockToPlayerDialog = ({ open, onClose, block }: AssignBlockToPlayer
         onClick={onClose}
         className="flex-1 py-2.5 rounded-xl border border-border text-muted-foreground font-display text-[10px] tracking-wider hover:bg-secondary hover:text-foreground transition-colors"
       >
-        CANCEL
+        Cancel
       </button>
       <button
         onClick={handleAssign}
@@ -322,7 +322,7 @@ const AssignBlockToPlayerDialog = ({ open, onClose, block }: AssignBlockToPlayer
         {assigning ? (
           <><Loader2 size={12} className="animate-spin" /> ASSIGNING...</>
         ) : (
-          <><Layers size={12} /> ASSIGN TO PLAYER</>
+          <><Layers size={12} /> Assign to player</>
         )}
       </button>
     </div>
@@ -335,7 +335,7 @@ const AssignBlockToPlayerDialog = ({ open, onClose, block }: AssignBlockToPlayer
           <DrawerHeader className="pb-2">
             <DrawerTitle className="flex items-center gap-2 font-display text-sm tracking-wider text-foreground">
               <Layers size={16} className="text-primary" />
-              ASSIGN BLOCK
+              Assign block
             </DrawerTitle>
             <DrawerDescription className="sr-only">Assign a training block to a player</DrawerDescription>
           </DrawerHeader>
@@ -352,7 +352,7 @@ const AssignBlockToPlayerDialog = ({ open, onClose, block }: AssignBlockToPlayer
         <DialogHeader className="p-4 border-b border-border">
           <DialogTitle className="flex items-center gap-2 font-display text-sm tracking-wider text-foreground">
             <Layers size={16} className="text-primary" />
-            ASSIGN BLOCK
+            Assign block
           </DialogTitle>
           <DialogDescription className="sr-only">Assign a training block to a player</DialogDescription>
         </DialogHeader>

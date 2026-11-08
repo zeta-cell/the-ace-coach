@@ -200,13 +200,13 @@ const CoachProfileEdit = ({ open, onClose, coachData, onSaved }: Props) => {
     <Sheet open={open} onOpenChange={(v) => !v && onClose()}>
       <SheetContent side="bottom" className="h-[90vh] overflow-y-auto rounded-t-2xl">
         <SheetHeader className="mb-4">
-          <SheetTitle className="font-display text-lg tracking-wider">EDIT PROFILE</SheetTitle>
+          <SheetTitle className="font-display text-lg tracking-wider">Edit profile</SheetTitle>
         </SheetHeader>
 
         <div className="space-y-5 pb-24">
           {/* SPORT SELECTION */}
           <section className="space-y-3">
-            <h3 className="font-display text-xs tracking-wider text-muted-foreground border-b border-border pb-2">YOUR SPORT</h3>
+            <h3 className="font-display text-xs tracking-wider text-muted-foreground border-b border-border pb-2">Your sport</h3>
             <div className="grid grid-cols-2 gap-3">
               {(["padel", "tennis"] as const).map((sport) => (
                 <button
@@ -230,9 +230,9 @@ const CoachProfileEdit = ({ open, onClose, coachData, onSaved }: Props) => {
 
           {/* PUBLIC PROFILE */}
           <section className="space-y-3">
-            <h3 className="font-display text-xs tracking-wider text-muted-foreground border-b border-border pb-2">PUBLIC PROFILE</h3>
+            <h3 className="font-display text-xs tracking-wider text-muted-foreground border-b border-border pb-2">Public profile</h3>
             <div>
-              <label className="font-display text-xs tracking-wider text-muted-foreground">YOUR PUBLIC PROFILE URL</label>
+              <label className="font-display text-xs tracking-wider text-muted-foreground">Your public profile url</label>
               <div className="flex items-center mt-1.5">
                 <span className="h-9 px-3 flex items-center rounded-l-md border border-r-0 border-input bg-muted text-muted-foreground text-sm font-body whitespace-nowrap">
                   app.com/coach/
@@ -252,7 +252,7 @@ const CoachProfileEdit = ({ open, onClose, coachData, onSaved }: Props) => {
             <Field label="CITY" field="location_city" placeholder="e.g. Barcelona" />
             <Field label="COUNTRY" field="location_country" placeholder="e.g. Spain" />
             <div>
-              <label className="font-display text-xs tracking-wider text-muted-foreground">TYPICAL RESPONSE TIME</label>
+              <label className="font-display text-xs tracking-wider text-muted-foreground">Typical response time</label>
               <div className="flex gap-2 mt-1.5">
                 {RESPONSE_TIME_OPTIONS.map((h) => (
                   <button
@@ -272,12 +272,12 @@ const CoachProfileEdit = ({ open, onClose, coachData, onSaved }: Props) => {
 
           {/* Personal */}
           <section className="space-y-3">
-            <h3 className="font-display text-xs tracking-wider text-muted-foreground border-b border-border pb-2">PERSONAL</h3>
+            <h3 className="font-display text-xs tracking-wider text-muted-foreground border-b border-border pb-2">Personal</h3>
             <Field label="NATIONALITY" field="nationality" placeholder="e.g. Spanish" />
             <Field label="PHONE" field="phone" placeholder="+34 …" />
             <Field label="YEARS EXPERIENCE" field="years_experience" type="number" />
             <div>
-              <label className="font-display text-xs tracking-wider text-muted-foreground">DOMINANT HAND</label>
+              <label className="font-display text-xs tracking-wider text-muted-foreground">Dominant hand</label>
               <div className="flex gap-2 mt-1.5">
                 {["left", "right"].map((h) => (
                   <button
@@ -307,7 +307,7 @@ const CoachProfileEdit = ({ open, onClose, coachData, onSaved }: Props) => {
 
           {/* Tags */}
           <section className="space-y-3">
-            <h3 className="font-display text-xs tracking-wider text-muted-foreground border-b border-border pb-2">EXPERTISE</h3>
+            <h3 className="font-display text-xs tracking-wider text-muted-foreground border-b border-border pb-2">Expertise</h3>
             <TagInput label="CERTIFICATIONS" tags={form.certifications} onChange={(t) => set("certifications", t)} />
             <TagInput label="LANGUAGES" tags={form.languages} onChange={(t) => set("languages", t)} />
             <TagInput label="SPECIALIZATIONS" tags={form.specializations} onChange={(t) => set("specializations", t)} />
@@ -315,14 +315,14 @@ const CoachProfileEdit = ({ open, onClose, coachData, onSaved }: Props) => {
 
           {/* Playtomic */}
           <section className="space-y-3">
-            <h3 className="font-display text-xs tracking-wider text-muted-foreground border-b border-border pb-2">PLAYTOMIC</h3>
+            <h3 className="font-display text-xs tracking-wider text-muted-foreground border-b border-border pb-2">Playtomic</h3>
             <Field label="LEVEL" field="playtomic_level" type="number" />
             <Field label="PROFILE URL" field="playtomic_url" placeholder="https://…" />
           </section>
 
           {/* Racket */}
           <section className="space-y-3">
-            <h3 className="font-display text-xs tracking-wider text-muted-foreground border-b border-border pb-2">RACKET</h3>
+            <h3 className="font-display text-xs tracking-wider text-muted-foreground border-b border-border pb-2">Racket</h3>
             <Field label="BRAND" field="racket_brand" placeholder="e.g. Bullpadel" />
             <Field label="MODEL" field="racket_model" placeholder="e.g. Vertex 03" />
             <div>
@@ -346,7 +346,7 @@ const CoachProfileEdit = ({ open, onClose, coachData, onSaved }: Props) => {
 
           {/* Play style */}
           <section className="space-y-3">
-            <h3 className="font-display text-xs tracking-wider text-muted-foreground border-b border-border pb-2">PLAY STYLE</h3>
+            <h3 className="font-display text-xs tracking-wider text-muted-foreground border-b border-border pb-2">Play style</h3>
             <Field label="BEST SHOT" field="best_shot" placeholder="e.g. Volley" />
             <Field label="WEAKEST SHOT" field="weakest_shot" placeholder="e.g. Lob" />
           </section>
@@ -357,7 +357,7 @@ const CoachProfileEdit = ({ open, onClose, coachData, onSaved }: Props) => {
           <button
             onClick={handleSave}
             disabled={saving}
-            className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-display text-sm tracking-widest hover:bg-primary/90 transition-colors disabled:opacity-50"
+            className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-display text-sm hover:bg-primary/90 transition-colors disabled:opacity-50"
           >
             {saving ? "SAVING…" : "SAVE CHANGES"}
           </button>

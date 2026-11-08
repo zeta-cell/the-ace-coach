@@ -111,7 +111,7 @@ const ClassAttendees = ({ eventId, canManage, maxParticipants, minParticipants, 
     <div className="rounded-2xl border border-border bg-card/60">
       <div className="flex flex-wrap items-center gap-2 border-b border-border px-4 py-3">
         <Users size={14} className="text-primary" />
-        <span className="font-display text-[11px] tracking-wider text-foreground">WHO'S COMING</span>
+        <span className="font-display text-[11px] tracking-wider text-foreground">Who's coming</span>
         <span className="font-body text-[11px] text-muted-foreground">
           {count}{maxParticipants ? `/${maxParticipants}` : ""} in
         </span>
@@ -174,7 +174,7 @@ const ClassAttendees = ({ eventId, canManage, maxParticipants, minParticipants, 
           {!adding ? (
             <button onClick={openAdd}
               className="flex w-full items-center justify-center gap-2 rounded-xl bg-secondary py-2.5 font-display text-[10px] tracking-wider text-foreground hover:bg-secondary/70">
-              <UserPlus size={13} /> ADD A PLAYER
+              <UserPlus size={13} /> Add a player
             </button>
           ) : (
             <div className="space-y-2">

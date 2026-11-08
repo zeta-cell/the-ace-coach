@@ -566,7 +566,7 @@ const CoachCalendar = () => {
             <div className="bg-card border border-border rounded-2xl p-4 sticky top-20 max-h-[calc(100vh-120px)] overflow-y-auto scrollbar-none">
               <div className="flex items-center gap-2 mb-3">
                 <Layers size={16} className="text-primary" />
-                <h3 className="font-display text-xs tracking-wider text-foreground">TRAINING BLOCKS</h3>
+                <h3 className="font-display text-xs tracking-wider text-foreground">Training blocks</h3>
               </div>
 
               <div className="relative mb-3">
@@ -650,7 +650,7 @@ const CoachCalendar = () => {
 
               <button onClick={() => { setEditingBlock(null); setCreateBlockOpen(true); }}
                 className="mt-3 w-full py-2.5 rounded-xl border border-dashed border-border text-muted-foreground font-display text-[10px] tracking-wider hover:border-primary hover:text-primary transition-colors flex items-center justify-center gap-1.5">
-                <Plus size={12} /> CREATE CUSTOM BLOCK
+                <Plus size={12} /> Create custom block
               </button>
             </div>
           </aside>
@@ -760,7 +760,7 @@ const CoachCalendar = () => {
                   </div>
 
                   <div>
-                    <label className="font-display text-[10px] tracking-wider text-muted-foreground">PLAYER</label>
+                    <label className="font-display text-[10px] tracking-wider text-muted-foreground">Player</label>
                     <select value={selectedPlayerId || ""} onChange={(e) => setSelectedPlayerId(e.target.value || null)}
                       className="w-full mt-1 px-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary">
                       <option value="">Select player...</option>
@@ -770,7 +770,7 @@ const CoachCalendar = () => {
 
                   {selectedDayPlans.length > 0 && (
                     <div className="space-y-1.5">
-                      <p className="font-display text-[10px] tracking-wider text-muted-foreground">EXISTING SESSIONS</p>
+                      <p className="font-display text-[10px] tracking-wider text-muted-foreground">Existing sessions</p>
                       {selectedDayPlans.map((plan) => (
                         <div key={plan.id} className="rounded-lg bg-secondary overflow-hidden">
                           <button
@@ -818,7 +818,7 @@ const CoachCalendar = () => {
                                     onClick={() => navigate(`/coach/plan/${plan.player_id}?date=${selectedDay}`)}
                                     className="w-full mt-0.5 py-1 rounded border border-border text-[9px] font-display tracking-wider text-muted-foreground hover:text-foreground hover:border-primary/40 transition-colors"
                                   >
-                                    EDIT FULL PLAN
+                                    Edit full plan
                                   </button>
                                 </div>
                               </motion.div>
@@ -893,7 +893,7 @@ const CoachCalendar = () => {
 
                   {planBlocks.length > 0 && (
                     <div className="flex items-center justify-between py-2 border-t border-border">
-                      <span className="font-display text-[10px] tracking-wider text-muted-foreground">TOTAL DURATION</span>
+                      <span className="font-display text-[10px] tracking-wider text-muted-foreground">Total duration</span>
                       <span className="font-display text-sm text-primary">{totalDuration} MIN</span>
                     </div>
                   )}
@@ -907,17 +907,17 @@ const CoachCalendar = () => {
                       <div className="flex gap-2">
                         <button onClick={() => setCopyDateOpen(true)}
                           className="flex-1 py-2 rounded-xl border border-border font-display text-[10px] tracking-wider text-muted-foreground hover:text-foreground hover:border-primary/40 transition-colors flex items-center justify-center gap-1">
-                          <Copy size={12} /> COPY PLAN
+                          <Copy size={12} /> Copy plan
                         </button>
                         <button onClick={handleSaveAsBlock}
                           className="flex-1 py-2 rounded-xl border border-border font-display text-[10px] tracking-wider text-muted-foreground hover:text-foreground hover:border-primary/40 transition-colors flex items-center justify-center gap-1">
-                          <Save size={12} /> SAVE AS BLOCK
+                          <Save size={12} /> Save as block
                         </button>
                       </div>
 
                       {copyDateOpen && (
                         <div className="p-3 rounded-lg bg-secondary border border-border space-y-2">
-                          <p className="font-display text-[10px] tracking-wider text-muted-foreground">COPY TO DATE</p>
+                          <p className="font-display text-[10px] tracking-wider text-muted-foreground">Copy to date</p>
                           <input type="date" value={copyDate} onChange={(e) => setCopyDate(e.target.value)}
                             className="w-full px-3 py-2 rounded-lg bg-card border border-border text-foreground font-body text-sm focus:outline-none" />
                           <div className="flex gap-2">
@@ -978,7 +978,7 @@ const CoachCalendar = () => {
                       onClick={() => handleQuickAdd(selectedDay)}
                       className="mt-3 px-4 py-2 rounded-xl bg-primary text-primary-foreground font-display text-xs tracking-wider"
                     >
-                      ADD TRAINING
+                      Add training
                     </button>
                   </div>
                 ) : (
@@ -1045,7 +1045,7 @@ const CoachCalendar = () => {
                                   onClick={() => navigate(`/coach/plan/${plan.player_id}?date=${selectedDay}`)}
                                   className="w-full mt-1 py-1.5 rounded-lg border border-border text-[10px] font-display tracking-wider text-muted-foreground hover:text-foreground hover:border-primary/40 transition-colors"
                                 >
-                                  EDIT FULL PLAN
+                                  Edit full plan
                                 </button>
                               </div>
                             </motion.div>
@@ -1084,7 +1084,7 @@ const CoachCalendar = () => {
                     <span>{b.package_title}</span>
                   </div>
                   <div className="flex items-center gap-2 mt-0.5">
-                    <span className={`text-[9px] font-display px-2 py-0.5 rounded-full uppercase ${
+                    <span className={`text-[9px] font-display px-2 py-0.5 rounded-full ${
                       b.status === "confirmed" ? "bg-green-500/10 text-green-400" : "bg-yellow-500/10 text-yellow-400"
                     }`}>{b.status}</span>
                     {b.location_type && (

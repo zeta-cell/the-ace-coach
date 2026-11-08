@@ -261,7 +261,7 @@ const CoachProfile = () => {
         <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="bg-card border border-border rounded-xl p-4">
           <div className="flex items-center gap-2 mb-1">
             <Link2 size={14} className="text-primary shrink-0" />
-            <span className="font-display text-xs tracking-wider text-muted-foreground">PUBLIC PROFILE</span>
+            <span className="font-display text-xs tracking-wider text-muted-foreground">Public profile</span>
           </div>
           {coachData?.profile_slug ? (
             <div className="flex items-center gap-2 flex-wrap">
@@ -306,7 +306,7 @@ const CoachProfile = () => {
         <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12 }} className="bg-card border border-border rounded-xl p-6">
           <div className="flex items-center justify-between mb-3">
             <h2 className="font-display text-sm tracking-wider text-muted-foreground flex items-center gap-2">
-              <Award size={14} /> CERTIFICATIONS
+              <Award size={14} /> Certifications
             </h2>
             <button
               onClick={() => setShowCertForm(!showCertForm)}
@@ -357,7 +357,7 @@ const CoachProfile = () => {
                   onClick={() => setShowCertForm(false)}
                   className="px-4 py-2 rounded-lg border border-border text-muted-foreground text-xs font-display tracking-wider"
                 >
-                  CANCEL
+                  Cancel
                 </button>
               </div>
             </div>
@@ -393,7 +393,7 @@ const CoachProfile = () => {
             {coachData.languages && coachData.languages.length > 0 && (
               <div>
                 <h3 className="font-display text-xs tracking-wider text-muted-foreground mb-2 flex items-center gap-2">
-                  <Globe size={14} /> LANGUAGES
+                  <Globe size={14} /> Languages
                 </h3>
                 <div className="flex flex-wrap gap-2">
                   {coachData.languages.map((l) => (
@@ -404,7 +404,7 @@ const CoachProfile = () => {
             )}
             {coachData.specializations && coachData.specializations.length > 0 && (
               <div>
-                <h3 className="font-display text-xs tracking-wider text-muted-foreground mb-2">SPECIALIZATIONS</h3>
+                <h3 className="font-display text-xs tracking-wider text-muted-foreground mb-2">Specializations</h3>
                 <div className="flex flex-wrap gap-2">
                   {coachData.specializations.map((s) => (
                     <span key={s} className="px-3 py-1 rounded-full bg-secondary text-foreground text-xs font-body font-medium">{s}</span>
@@ -418,7 +418,7 @@ const CoachProfile = () => {
         {/* Playtomic */}
         {(coachData?.playtomic_level || coachData?.playtomic_url) && (
           <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="bg-card border border-border rounded-xl p-6">
-            <h2 className="font-display text-sm tracking-wider text-muted-foreground mb-3">PLAYTOMIC</h2>
+            <h2 className="font-display text-sm tracking-wider text-muted-foreground mb-3">Playtomic</h2>
             <div className="flex items-center justify-between">
               {coachData.playtomic_level && <span className="font-display text-4xl text-foreground">{coachData.playtomic_level}</span>}
               {coachData.playtomic_url && (
@@ -433,7 +433,7 @@ const CoachProfile = () => {
         {/* My Packages */}
         <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.22 }} className="bg-card border border-border rounded-xl p-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="font-display text-sm tracking-wider text-muted-foreground">MY PACKAGES</h2>
+            <h2 className="font-display text-sm tracking-wider text-muted-foreground">My packages</h2>
             <div className="flex items-center gap-2">
             <button
               onClick={() => setPromoteContent({
@@ -445,13 +445,13 @@ const CoachProfile = () => {
               })}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-primary/40 bg-primary/10 text-primary text-xs font-display tracking-wider hover:bg-primary/20 transition-colors"
             >
-              <Megaphone size={12} /> PROMOTE
+              <Megaphone size={12} /> Promote
             </button>
             <button
               onClick={() => { setEditingPkg(null); setPkgDialogOpen(true); }}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-display tracking-wider hover:bg-primary/90 transition-colors"
             >
-              <Plus size={12} /> CREATE
+              <Plus size={12} /> Create
             </button>
             </div>
           </div>
@@ -475,20 +475,20 @@ const CoachProfile = () => {
         {/* Shot confidence */}
         {coachData && (
           <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }} className="bg-card border border-border rounded-xl p-6">
-            <h2 className="font-display text-sm tracking-wider text-muted-foreground mb-4">PLAY STYLE</h2>
+            <h2 className="font-display text-sm tracking-wider text-muted-foreground mb-4">Play style</h2>
             <div className="grid grid-cols-2 gap-3 mb-6">
               <div className="bg-secondary rounded-lg p-4 text-center">
                 <Target size={24} className="text-primary mx-auto mb-2" />
                 <p className="font-display text-lg text-foreground">{coachData.best_shot || "—"}</p>
-                <p className="text-[10px] font-body text-muted-foreground uppercase">Best Shot</p>
+                <p className="text-[10px] font-body text-muted-foreground">Best Shot</p>
               </div>
               <div className="bg-secondary rounded-lg p-4 text-center">
                 <TrendingDown size={24} className="text-muted-foreground mx-auto mb-2" />
                 <p className="font-display text-lg text-foreground">{coachData.weakest_shot || "—"}</p>
-                <p className="text-[10px] font-body text-muted-foreground uppercase">Weakest Shot</p>
+                <p className="text-[10px] font-body text-muted-foreground">Weakest Shot</p>
               </div>
             </div>
-            <h3 className="font-display text-xs tracking-wider text-muted-foreground mb-3">SHOT CONFIDENCE</h3>
+            <h3 className="font-display text-xs tracking-wider text-muted-foreground mb-3">Shot confidence</h3>
             <div className="space-y-3">
               {shots.map((shot, i) => (
                 <div key={shot.name}>
@@ -511,7 +511,7 @@ const CoachProfile = () => {
         {/* Racket */}
         {coachData?.racket_brand && (
           <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="bg-card border border-border rounded-xl p-6">
-            <h2 className="font-display text-sm tracking-wider text-muted-foreground mb-3">MY RACKET</h2>
+            <h2 className="font-display text-sm tracking-wider text-muted-foreground mb-3">My racket</h2>
             <div className="flex items-center gap-3 bg-secondary rounded-lg p-3">
               <div className="w-10 h-10 rounded-full bg-background flex items-center justify-center font-display text-sm text-foreground">
                 {coachData.racket_brand.substring(0, 2).toUpperCase()}
@@ -526,7 +526,7 @@ const CoachProfile = () => {
 
         {/* Notification Preferences */}
         <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="bg-card border border-border rounded-xl p-6">
-          <h2 className="font-display text-sm tracking-wider text-muted-foreground mb-4">NOTIFICATION SETTINGS</h2>
+          <h2 className="font-display text-sm tracking-wider text-muted-foreground mb-4">Notification settings</h2>
           <div className="space-y-3">
             {([
               { key: "new_message" as const, label: "New Messages", desc: "When you receive a new message" },
@@ -556,10 +556,10 @@ const CoachProfile = () => {
         <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
           <button
             onClick={signOut}
-            className="w-full py-3 rounded-xl border border-destructive/30 text-destructive font-display text-sm tracking-widest hover:bg-destructive/10 transition-colors flex items-center justify-center gap-2"
+            className="w-full py-3 rounded-xl border border-destructive/30 text-destructive font-display text-sm hover:bg-destructive/10 transition-colors flex items-center justify-center gap-2"
           >
             <LogOut className="w-4 h-4" />
-            SIGN OUT
+            Sign out
           </button>
         </motion.div>
 

@@ -109,8 +109,8 @@ const CalendarItemSheet = ({ item, onClose, onSaved, coaches, courts }: Props) =
     <Sheet open={!!item} onOpenChange={(o) => !o && onClose()}>
       <SheetContent side="right" className="w-full sm:max-w-lg overflow-y-auto">
         <SheetHeader>
-          <p className="font-display text-[10px] tracking-[0.2em] text-primary">{isClass ? "GROUP CLASS" : "PRIVATE SESSION"}</p>
-          <SheetTitle className="font-display uppercase tracking-wide">{isClass ? item.title : item.sub || "Session"}</SheetTitle>
+          <p className="font-display text-[10px] text-primary">{isClass ? "GROUP CLASS" : "PRIVATE SESSION"}</p>
+          <SheetTitle className="font-display tracking-wide">{isClass ? item.title : item.sub || "Session"}</SheetTitle>
         </SheetHeader>
 
         <div className="mt-6 space-y-4">

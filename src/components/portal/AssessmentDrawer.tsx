@@ -157,7 +157,7 @@ const AssessmentDrawer = ({ open, onClose, playerId, inviteId, playerName, previ
                   </select>
                 </div>
                 <div>
-                  <label className="font-display text-[10px] tracking-wider text-muted-foreground">OVERALL LEVEL</label>
+                  <label className="font-display text-[10px] tracking-wider text-muted-foreground">Overall level</label>
                   <input
                     type="number"
                     step="0.05"
@@ -168,7 +168,7 @@ const AssessmentDrawer = ({ open, onClose, playerId, inviteId, playerName, previ
                   />
                 </div>
                 <div>
-                  <label className="font-display text-[10px] tracking-wider text-muted-foreground">LEVEL SYSTEM</label>
+                  <label className="font-display text-[10px] tracking-wider text-muted-foreground">Level system</label>
                   <select
                     value={form.level_system}
                     onChange={(e) => set("level_system", e.target.value)}
@@ -183,7 +183,7 @@ const AssessmentDrawer = ({ open, onClose, playerId, inviteId, playerName, previ
 
               {/* Shot sliders */}
               <div>
-                <h3 className="font-display text-xs tracking-wider text-muted-foreground mb-3">SHOT RATINGS</h3>
+                <h3 className="font-display text-xs tracking-wider text-muted-foreground mb-3">Shot ratings</h3>
                 <div className="space-y-4">
                   {SHOT_KEYS.map((s) => {
                     const value = Number(form[s.key]) || 0;

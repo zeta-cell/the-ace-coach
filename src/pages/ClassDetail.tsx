@@ -153,7 +153,7 @@ const ClassDetail = () => {
         <PublicHeader />
         <div className="px-4 py-24 text-center">
           <p className="font-display text-lg text-foreground">Class not found</p>
-          <Link to="/events" className="mt-3 inline-block font-display text-[11px] tracking-wider text-primary">BACK TO CLASSES</Link>
+          <Link to="/events" className="mt-3 inline-block font-display text-[11px] tracking-wider text-primary">Back to classes</Link>
         </div>
       </div>
     );
@@ -173,7 +173,7 @@ const ClassDetail = () => {
         {cls.cover_image_url ? (
           <img src={cls.cover_image_url} alt={cls.title} className="h-56 w-full object-cover md:h-72" />
         ) : (
-          <div className="h-40 w-full bg-gradient-to-br from-primary/30 via-primary/10 to-transparent md:h-52" />
+          <div className="h-40 w-full bg-secondary md:h-52" />
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-transparent" />
         <div className="absolute inset-x-0 bottom-0 mx-auto max-w-4xl px-4 pb-5">
@@ -185,7 +185,7 @@ const ClassDetail = () => {
             <span className="rounded-full bg-secondary px-2.5 py-0.5 font-display text-[10px] tracking-wider text-muted-foreground">{cls.sport.toUpperCase()}</span>
             {cls.is_online && (
               <span className="flex items-center gap-1 rounded-full bg-sky-500/15 px-2.5 py-0.5 font-display text-[10px] tracking-wider text-sky-400">
-                <Globe size={10} /> ONLINE
+                <Globe size={10} /> Online
               </span>
             )}
             {(cls.level_min != null || cls.level_max != null) && (
@@ -232,7 +232,7 @@ const ClassDetail = () => {
               <p className="font-body text-[11px] text-muted-foreground">Starts from {cls.min_participants}</p>
             </div>
             <div className="rounded-2xl border border-border bg-card/60 p-3.5">
-              <p className="mb-1 flex items-center gap-1.5 font-display text-[10px] tracking-wider text-muted-foreground"><ShieldCheck size={11} /> CANCELLATION</p>
+              <p className="mb-1 flex items-center gap-1.5 font-display text-[10px] tracking-wider text-muted-foreground"><ShieldCheck size={11} /> Cancellation</p>
               <p className="font-body text-sm text-foreground">
                 {cls.cancellation_hours === 0 ? "Non-refundable" : `Free until ${cls.cancellation_hours}h before`}
               </p>
@@ -251,7 +251,7 @@ const ClassDetail = () => {
 
           {cls.description && (
             <div className="rounded-2xl border border-border bg-card/60 p-4">
-              <p className="mb-1.5 font-display text-[11px] tracking-wider text-foreground">ABOUT THIS SESSION</p>
+              <p className="mb-1.5 font-display text-[11px] tracking-wider text-foreground">About this session</p>
               <p className="whitespace-pre-wrap font-body text-sm text-muted-foreground">{cls.description}</p>
             </div>
           )}
@@ -273,19 +273,19 @@ const ClassDetail = () => {
             <div className="space-y-3 rounded-2xl border border-border bg-card/60 p-4">
               {cls.what_to_bring && (
                 <div>
-                  <p className="mb-1 flex items-center gap-1.5 font-display text-[11px] tracking-wider text-foreground"><Backpack size={12} className="text-primary" /> WHAT TO BRING</p>
+                  <p className="mb-1 flex items-center gap-1.5 font-display text-[11px] tracking-wider text-foreground"><Backpack size={12} className="text-primary" /> What to bring</p>
                   <p className="whitespace-pre-wrap font-body text-sm text-muted-foreground">{cls.what_to_bring}</p>
                 </div>
               )}
               {cls.arrival_instructions && (
                 <div>
-                  <p className="mb-1 flex items-center gap-1.5 font-display text-[11px] tracking-wider text-foreground"><Info size={12} className="text-primary" /> ARRIVAL</p>
+                  <p className="mb-1 flex items-center gap-1.5 font-display text-[11px] tracking-wider text-foreground"><Info size={12} className="text-primary" /> Arrival</p>
                   <p className="whitespace-pre-wrap font-body text-sm text-muted-foreground">{cls.arrival_instructions}</p>
                 </div>
               )}
               {cls.cancellation_policy && (
                 <div>
-                  <p className="mb-1 flex items-center gap-1.5 font-display text-[11px] tracking-wider text-foreground"><Clock size={12} className="text-primary" /> POLICY</p>
+                  <p className="mb-1 flex items-center gap-1.5 font-display text-[11px] tracking-wider text-foreground"><Clock size={12} className="text-primary" /> Policy</p>
                   <p className="whitespace-pre-wrap font-body text-sm text-muted-foreground">{cls.cancellation_policy}</p>
                 </div>
               )}
@@ -295,7 +295,7 @@ const ClassDetail = () => {
           {/* Media */}
           {(cls.media_urls?.length > 0 || cls.video_urls?.length > 0) && (
             <div className="space-y-3 rounded-2xl border border-border bg-card/60 p-4">
-              <p className="font-display text-[11px] tracking-wider text-foreground">GALLERY</p>
+              <p className="font-display text-[11px] tracking-wider text-foreground">Gallery</p>
               {cls.media_urls?.length > 0 && (
                 <div className="grid grid-cols-3 gap-2">
                   {cls.media_urls.map((u, i) => (
@@ -331,7 +331,7 @@ const ClassDetail = () => {
             <div className="mt-3 space-y-2">
               {canManage ? (
                 <Link to="/coach/events" className="flex items-center justify-center gap-2 rounded-xl bg-secondary py-3 font-display text-[11px] tracking-wider text-foreground">
-                  <Pencil size={13} /> MANAGE THIS CLASS
+                  <Pencil size={13} /> Manage this class
                 </Link>
               ) : past ? (
                 <>
@@ -339,14 +339,14 @@ const ClassDetail = () => {
                   {registered && (
                     <button onClick={() => setRateOpen(true)}
                       className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary py-3 font-display text-[11px] tracking-wider text-primary-foreground">
-                      <Star size={13} /> RATE YOUR COACH
+                      <Star size={13} /> Rate your coach
                     </button>
                   )}
                 </>
               ) : registered ? (
                 <>
                   <span className="flex items-center justify-center gap-1.5 rounded-xl bg-emerald-500/15 py-3 font-display text-[11px] tracking-wider text-emerald-500">
-                    <CheckCircle2 size={13} /> YOU'RE REGISTERED
+                    <CheckCircle2 size={13} /> You're registered
                   </span>
                   <button onClick={cancel} disabled={busy} className="w-full font-body text-[11px] text-muted-foreground hover:text-destructive">
                     Cancel my spot

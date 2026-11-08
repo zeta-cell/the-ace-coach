@@ -490,7 +490,7 @@ const BookCoach = () => {
           {/* STEP 1 — Select Package */}
           {step === 1 && (
             <motion.div key="step1" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
-              <h1 className="font-display text-2xl text-foreground mb-4">SELECT PACKAGE</h1>
+              <h1 className="font-display text-2xl text-foreground mb-4">Select package</h1>
               {packages.length === 0 ? (
                 <div className="bg-card border border-dashed border-border rounded-xl p-8 text-center">
                   <p className="font-body text-sm text-muted-foreground">This coach has no packages available yet.</p>
@@ -506,8 +506,8 @@ const BookCoach = () => {
                       <div className="flex items-start justify-between">
                         <div>
                           <div className="flex flex-wrap gap-1.5 mb-1">
-                            <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase ${SESSION_COLORS[pkg.session_type] || "bg-secondary text-foreground"}`}>{pkg.session_type}</span>
-                            <span className="px-2 py-0.5 rounded-full bg-secondary text-muted-foreground text-[10px] font-semibold uppercase">{pkg.sport}</span>
+                            <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold ${SESSION_COLORS[pkg.session_type] || "bg-secondary text-foreground"}`}>{pkg.session_type}</span>
+                            <span className="px-2 py-0.5 rounded-full bg-secondary text-muted-foreground text-[10px] font-semibold">{pkg.sport}</span>
                             <span className="px-2 py-0.5 rounded-full bg-secondary text-muted-foreground text-[10px] font-semibold">{pkg.duration_minutes}min</span>
                             {pkg.session_type === "group" && pkg.max_group_size && (
                               <span className="px-2 py-0.5 rounded-full bg-chart-2/10 text-chart-2 text-[10px] font-semibold flex items-center gap-0.5">
@@ -537,7 +537,7 @@ const BookCoach = () => {
                 disabled={!selectedPackage}
                 className="w-full mt-6 py-3 rounded-xl bg-primary text-primary-foreground font-display tracking-wider hover:bg-primary/90 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
               >
-                CONTINUE <ArrowRight size={16} />
+                Continue <ArrowRight size={16} />
               </button>
             </motion.div>
           )}
@@ -545,7 +545,7 @@ const BookCoach = () => {
           {/* STEP 2 — Pick Date & Time */}
           {step === 2 && (
             <motion.div key="step2" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
-              <h1 className="font-display text-2xl text-foreground mb-1">PICK DATE & TIME</h1>
+              <h1 className="font-display text-2xl text-foreground mb-1">Pick date & time</h1>
               {selectedPackage && (
                 <p className="font-body text-xs text-muted-foreground mb-4">{selectedPackage.title} · {selectedPackage.duration_minutes}min · {currencySymbol(selectedPackage.currency)}{Number(selectedPackage.price_per_session).toFixed(0)}</p>
               )}
@@ -565,7 +565,7 @@ const BookCoach = () => {
                 <div className="bg-card border border-border rounded-xl p-4 mb-4">
                   <div className="flex items-center gap-2 mb-2">
                     <Users size={16} className="text-chart-2" />
-                    <span className="font-display text-sm tracking-wider text-foreground">GROUP SESSION</span>
+                    <span className="font-display text-sm tracking-wider text-foreground">Group session</span>
                   </div>
                   {groupSpotsLoading ? (
                     <div className="flex gap-1.5">
@@ -590,7 +590,7 @@ const BookCoach = () => {
                       </div>
                       {spotsLeft === 0 ? (
                         <div className="flex items-center gap-2">
-                          <span className="font-display text-xs tracking-wider text-destructive bg-destructive/10 px-3 py-1 rounded-full">SESSION FULL</span>
+                          <span className="font-display text-xs tracking-wider text-destructive bg-destructive/10 px-3 py-1 rounded-full">Session full</span>
                         </div>
                       ) : spotsLeft <= 2 ? (
                         <p className="font-body text-xs text-chart-4">Only {spotsLeft} spot{spotsLeft > 1 ? "s" : ""} left!</p>
@@ -645,7 +645,7 @@ const BookCoach = () => {
                   disabled={!selectedDate || !selectedTime}
                   className="w-full mt-4 py-3 rounded-xl bg-primary text-primary-foreground font-display tracking-wider hover:bg-primary/90 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
                 >
-                  CONTINUE <ArrowRight size={16} />
+                  Continue <ArrowRight size={16} />
                 </button>
               )}
             </motion.div>
@@ -654,7 +654,7 @@ const BookCoach = () => {
           {/* STEP 3 — Confirm & Pay */}
           {step === 3 && selectedPackage && selectedDate && selectedTime && (
             <motion.div key="step3" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
-              <h1 className="font-display text-2xl text-foreground mb-4">CONFIRM BOOKING</h1>
+              <h1 className="font-display text-2xl text-foreground mb-4">Confirm booking</h1>
 
               {/* Test mode banner */}
               <div className="flex items-center gap-2 bg-yellow-500/10 border border-yellow-500/30 rounded-xl px-4 py-3 mb-4">

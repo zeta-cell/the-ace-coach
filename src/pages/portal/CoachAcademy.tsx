@@ -132,7 +132,7 @@ const CoachAcademy = () => {
       <div className="p-4 md:p-6 max-w-5xl mx-auto space-y-6">
         {!academy && (
           <div>
-            <h1 className="font-display text-2xl md:text-3xl tracking-wider text-foreground">MY ACADEMY</h1>
+            <h1 className="font-display text-2xl md:text-3xl tracking-wider text-foreground">My academy</h1>
             <p className="font-body text-sm text-muted-foreground mt-1">
               An academy belongs to one club, but can train at several. Court rentals stay with the clubs.
             </p>
@@ -146,7 +146,7 @@ const CoachAcademy = () => {
         ) : !academy ? (
           canCreateAcademy ? (
             <div className="bg-card border border-border rounded-2xl p-5 space-y-3 max-w-xl">
-              <h2 className="font-display text-sm tracking-wider text-foreground">CREATE YOUR ACADEMY</h2>
+              <h2 className="font-display text-sm tracking-wider text-foreground">Create your academy</h2>
               <p className="font-body text-xs text-muted-foreground">
                 Pick the club that owns the academy — each club can own one academy. You can add more clubs and coaches right after.
               </p>
@@ -176,7 +176,7 @@ const CoachAcademy = () => {
             <div className="bg-card border border-border rounded-2xl p-5 space-y-3 max-w-xl">
               <div className="flex items-center gap-2">
                 <Lock size={16} className="text-primary" />
-                <h2 className="font-display text-sm tracking-wider text-foreground">AN ACADEMY NEEDS A CLUB</h2>
+                <h2 className="font-display text-sm tracking-wider text-foreground">An academy needs a club</h2>
               </div>
               <p className="font-body text-sm text-muted-foreground">
                 Only a club owner or club manager can create an academy. Without a club you can still run your own camps,
@@ -187,13 +187,13 @@ const CoachAcademy = () => {
                   to="/coach/calendar"
                   className="px-4 py-2 rounded-lg bg-primary text-primary-foreground font-display text-[11px] tracking-wider"
                 >
-                  MY CAMPS & CLINICS
+                  My camps & clinics
                 </Link>
                 <Link
                   to="/club/settings"
                   className="px-4 py-2 rounded-lg bg-secondary border border-border text-foreground font-display text-[11px] tracking-wider"
                 >
-                  REGISTER A CLUB
+                  Register a club
                 </Link>
               </div>
             </div>
@@ -261,7 +261,7 @@ const CoachAcademy = () => {
 
             {tab === "settings" && (
               <div className="bg-card border border-border rounded-2xl p-5 space-y-3 max-w-xl">
-                <h2 className="font-display text-sm tracking-wider text-foreground">ACADEMY DETAILS</h2>
+                <h2 className="font-display text-sm tracking-wider text-foreground">Academy details</h2>
                 <input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Academy name" className={inputCls} />
                 <textarea
                   value={form.description}
