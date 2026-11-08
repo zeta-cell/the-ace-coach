@@ -3,23 +3,12 @@ import { useEffect } from "react";
 import PublicBottomNav from "@/components/PublicBottomNav";
 import PublicHeader from "@/components/PublicHeader";
 import { ArrowRight } from "@phosphor-icons/react";
-import { SearchIcon } from "@/components/ui/animated-icons/search";
-import { CalendarDaysIcon } from "@/components/ui/animated-icons/calendar-days";
-import { TrendingUpIcon } from "@/components/ui/animated-icons/trending-up";
-import { UsersIcon } from "@/components/ui/animated-icons/users";
-import { ShieldCheckIcon } from "@/components/ui/animated-icons/shield-check";
-import { ZapIcon } from "@/components/ui/animated-icons/zap";
-import { FeatureIconCard } from "@/components/ui/animated-icons/FeatureIconCard";
-import GradientBackdrop from "@/components/GradientBackdrop";
-import grad01 from "@/assets/gradient-blue-coral-01.jpg.asset.json";
-import grad02 from "@/assets/gradient-blue-coral-02.jpg.asset.json";
-import grad03 from "@/assets/gradient-blue-coral-03.jpg.asset.json";
-
 import heroPadel from "@/assets/hero-padel.jpg";
 import featuresTennis from "@/assets/features-tennis.jpg";
 import ctaCourt from "@/assets/cta-court.jpg";
-import logoWhite from "@/assets/hi-volley-logo-white.png.asset.json";
-import { BrandIcon, BrandLogo } from "@/components/BrandLogo";
+import { BrandLogo } from "@/components/BrandLogo";
+import BlurText from "@/components/reactbits/BlurText";
+import SpotlightRow from "@/components/reactbits/SpotlightRow";
 import { setSeo } from "@/lib/seo";
 import { useI18n } from "@/lib/i18n";
 
@@ -27,19 +16,12 @@ const Index = () => {
   const { t, lang } = useI18n();
 
   const features = [
-    { icon: SearchIcon, titleKey: "feat.find.title", descKey: "feat.find.desc" },
-    { icon: CalendarDaysIcon, titleKey: "feat.book.title", descKey: "feat.book.desc" },
-    { icon: TrendingUpIcon, titleKey: "feat.track.title", descKey: "feat.track.desc" },
-    { icon: UsersIcon, titleKey: "feat.community.title", descKey: "feat.community.desc" },
-    { icon: ShieldCheckIcon, titleKey: "feat.verified.title", descKey: "feat.verified.desc" },
-    { icon: ZapIcon, titleKey: "feat.ai.title", descKey: "feat.ai.desc" },
-  ] as const;
-
-  const stats = [
-    { value: "500+", labelKey: "stats.coaches" },
-    { value: "10K+", labelKey: "stats.sessions" },
-    { value: "50+", labelKey: "stats.cities" },
-    { value: "4.9", labelKey: "stats.rating" },
+    { titleKey: "feat.find.title", descKey: "feat.find.desc" },
+    { titleKey: "feat.book.title", descKey: "feat.book.desc" },
+    { titleKey: "feat.track.title", descKey: "feat.track.desc" },
+    { titleKey: "feat.community.title", descKey: "feat.community.desc" },
+    { titleKey: "feat.verified.title", descKey: "feat.verified.desc" },
+    { titleKey: "feat.ai.title", descKey: "feat.ai.desc" },
   ] as const;
 
   const steps = [
@@ -77,42 +59,34 @@ const Index = () => {
     <div className="min-h-screen bg-background text-foreground overflow-hidden">
       <PublicHeader />
 
-      {/* Hero scene — base clay-court photo full bleed, our gradient laid over it top -> bottom */}
+      {/* Hero: clay-court photo graded into mist blue, headline on the calm left side */}
       <section className="relative min-h-[100svh] flex items-center overflow-hidden bg-background">
         <img
           src={heroPadel}
           alt="Tennis player sliding on a clay court to reach a ball"
           width={1536}
           height={1024}
-          className="absolute inset-0 w-full h-full object-cover object-[25%_center] brightness-[1.2] saturate-[1.15]"
+          className="absolute inset-y-0 right-0 h-full w-full md:w-[68%] object-cover object-[30%_center] saturate-[0.85]"
           loading="eager"
         />
-        {/* the blue -> coral gradient, top to bottom, blended into the photo */}
-        <GradientBackdrop
-          src={grad01.url}
-          blend="screen"
-          opacity={0.9}
-          scrim="linear-gradient(180deg, hsl(222 62% 11% / 0.42) 0%, transparent 42%, hsl(222 62% 11% / 0.35) 78%, hsl(222 62% 11% / 0.75) 100%)"
-        />
-        {/* soft blue veil on the left so the headline stays readable */}
-        <div className="absolute inset-y-0 left-0 w-3/4 bg-gradient-to-r from-background via-background/70 to-transparent" />
-        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-background to-transparent" />
+        <div className="absolute inset-0 bg-background/25 mix-blend-color" />
+        <div className="absolute inset-y-0 left-0 w-full md:w-[62%] bg-gradient-to-r from-background via-background/90 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-background to-transparent" />
 
         <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12 pt-32 pb-20">
           <div className="max-w-xl">
-            <img src={logoWhite.url} alt="Hi Volley" className="h-9 md:h-11 w-auto mb-10" loading="eager" />
-            <p className="inline-flex items-center gap-2 font-body text-sm text-foreground/70 mb-5">
-              <span className="h-1.5 w-1.5 rounded-full bg-accent" /> {t("home.badge")}
-            </p>
-            <h1 className="font-display text-[2.5rem] md:text-6xl lg:text-7xl leading-[0.95] mb-6 font-medium">
-              {t("home.h1.line1")} <span className="text-primary">{t("home.h1.line2")}</span> {t("home.h1.line3")}
+            <p className="font-body text-sm text-muted-foreground mb-3">{t("home.badge")}</p>
+            <span className="signature-bar mb-8" />
+            <h1 className="font-display text-[2.5rem] md:text-6xl leading-[1.02] mb-6 font-medium">
+              <BlurText text={`${t("home.h1.line1")} ${t("home.h1.line2")}`} />{" "}
+              <BlurText text={t("home.h1.line3")} delay={0.2} className="text-accent" />
             </h1>
-            <p className="font-body text-base md:text-lg text-foreground/75 mb-10">{t("home.lead")}</p>
+            <p className="font-body text-base md:text-lg text-muted-foreground mb-10 max-w-md">{t("home.lead")}</p>
             <div className="flex flex-col sm:flex-row gap-3">
-              <Link to="/find-a-coach" className="inline-flex items-center justify-center gap-2 font-body font-medium text-base bg-foreground text-background px-7 py-3.5 rounded-full hover:bg-foreground/90 transition-colors">
+              <Link to="/find-a-coach" className="inline-flex items-center justify-center gap-2 font-body font-medium text-base bg-primary text-primary-foreground px-6 h-12 rounded-[10px] hover:bg-primary/90 active:scale-[0.98] transition-[background-color,transform]">
                 {t("home.cta.find")} <ArrowRight size={18} />
               </Link>
-              <Link to="/login" className="inline-flex items-center justify-center gap-2 font-body font-medium text-base border border-foreground/35 text-foreground px-7 py-3.5 rounded-full hover:bg-foreground/10 transition-colors">
+              <Link to="/login" className="inline-flex items-center justify-center font-body font-medium text-base text-foreground px-6 h-12 rounded-[10px] ring-1 ring-foreground/15 hover:bg-card transition-colors">
                 {t("home.cta.coach")}
               </Link>
             </div>
@@ -120,27 +94,13 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Stats on orange horizon glow */}
-      <section className="relative py-14 px-6">
-        <GradientBackdrop src={grad01.url} scrim="linear-gradient(180deg, hsl(var(--background)) 0%, hsl(220 60% 13% / 0.68) 14%, hsl(220 60% 13% / 0.72) 45%, hsl(219 55% 15% / 0.68) 68%, hsl(14 55% 16% / 0.38) 86%, hsl(var(--background)) 100%)" />
-        <div className="relative max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8">
-          {stats.map((s) => (
-            <div key={s.labelKey}>
-              <p className="font-display text-4xl md:text-5xl tabular-nums">{s.value}</p>
-              <p className="font-body text-sm text-foreground/75 mt-2">{t(s.labelKey)}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Features with blue beam */}
-      <section className="relative py-20 px-6 overflow-hidden">
-        <GradientBackdrop src={grad02.url} />
-        <div className="relative z-10 max-w-6xl mx-auto grid lg:grid-cols-[1fr_1.4fr] gap-16">
-          <div className="flex flex-col">
-            <BrandIcon className="h-11 w-11 mb-6" />
-            <h2 className="font-display text-4xl md:text-5xl mb-4 leading-[1]">
-              {t("features.h2.a")} <span className="text-primary">{t("features.h2.b")}</span>
+      {/* Features: numbered list beside the racquet photo */}
+      <section className="relative py-24 px-6 bg-card">
+        <div className="max-w-6xl mx-auto grid lg:grid-cols-[1fr_1.3fr] gap-16">
+          <div>
+            <span className="signature-bar mb-6" />
+            <h2 className="font-display text-4xl md:text-5xl mb-4 leading-[1.05] font-medium">
+              {t("features.h2.a")} <span className="text-accent">{t("features.h2.b")}</span>
             </h2>
             <p className="font-body text-muted-foreground max-w-sm">{t("features.lead")}</p>
             <img
@@ -149,79 +109,82 @@ const Index = () => {
               width={1920}
               height={1080}
               loading="lazy"
-              className="mt-8 hidden lg:block w-full flex-1 min-h-[280px] object-cover rounded-2xl ring-1 ring-foreground/10 brightness-[1.35] saturate-[1.15]"
+              className="mt-10 hidden lg:block w-full h-[320px] object-cover rounded-2xl saturate-[0.8]"
             />
           </div>
-          <div className="grid sm:grid-cols-2 gap-4">
+          <ol className="divide-y divide-foreground/10 border-y border-foreground/10">
             {features.map((f, i) => (
-              <FeatureIconCard key={f.titleKey} Icon={f.icon} title={t(f.titleKey)} description={t(f.descKey)} index={i} />
+              <li key={f.titleKey}>
+                <SpotlightRow className="grid grid-cols-[48px_1fr] gap-4 py-6 px-2">
+                  <span className="font-body text-sm text-muted-foreground tabular-nums pt-1">{String(i + 1).padStart(2, "0")}</span>
+                  <div>
+                    <h3 className="font-display text-xl font-medium mb-1">{t(f.titleKey)}</h3>
+                    <p className="font-body text-sm text-muted-foreground">{t(f.descKey)}</p>
+                  </div>
+                </SpotlightRow>
+              </li>
             ))}
-          </div>
+          </ol>
         </div>
       </section>
 
-      {/* How it works */}
-      <section className="relative py-20 px-6 overflow-hidden">
-        <GradientBackdrop src={grad03.url} />
-        <div className="relative max-w-6xl mx-auto">
-          <h2 className="font-display text-4xl md:text-5xl mb-10">
-            {t("how.h2.a")} <span className="text-accent">{t("how.h2.b")}</span>
+      {/* How it works: one graphite contrast band */}
+      <section className="relative py-24 px-6 bg-foreground text-background">
+        <div className="max-w-6xl mx-auto">
+          <span className="signature-bar mb-6" />
+          <h2 className="font-display text-4xl md:text-5xl mb-12 font-medium">
+            {t("how.h2.a")} {t("how.h2.b")}
           </h2>
-          <div className="grid md:grid-cols-4 gap-4">
+          <div className="grid md:grid-cols-4 gap-8">
             {steps.map((item) => (
-              <div key={item.step} className="relative overflow-hidden rounded-2xl bg-gradient-to-b from-card/90 to-card/30 p-6 ring-1 ring-foreground/15">
-                <span className="inline-flex items-center justify-center h-8 w-8 rounded-full ring-1 ring-accent/40 font-display text-sm text-accent tabular-nums">{item.step}</span>
-                <h3 className="font-display text-xl mt-6 mb-2">{t(item.titleKey)}</h3>
-                <p className="font-body text-sm text-foreground/70">{t(item.descKey)}</p>
+              <div key={item.step} className="border-t border-background/15 pt-6">
+                <span className="font-body text-sm tabular-nums text-primary">{item.step}</span>
+                <h3 className="font-display text-xl mt-4 mb-2 font-medium">{t(item.titleKey)}</h3>
+                <p className="font-body text-sm text-background/70">{t(item.descKey)}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* CTA scene — night padel court with light trails */}
-      <section className="relative min-h-[46vh] flex items-center px-6 overflow-hidden">
-        <img
-          src={ctaCourt}
-          alt="Padel court at night with light trails sweeping over the net"
-          width={1920}
-          height={1080}
-          className="absolute inset-0 w-full h-full object-cover object-center brightness-[1.3] saturate-[1.1]"
-          loading="lazy"
-        />
-        <div className="absolute inset-0 bg-background/10" />
-        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/45 to-transparent" />
-
-        <div className="relative z-10 max-w-7xl w-full mx-auto md:px-6">
-          <div className="max-w-lg">
-            <h2 className="font-display text-4xl md:text-6xl mb-4 leading-[1]">
-              {t("cta.h2.a")} <span className="text-primary">{t("cta.h2.b")}</span>{t("cta.h2.c")}
+      {/* CTA scene: night court photo, mist blue panel */}
+      <section className="relative py-24 px-6">
+        <div className="max-w-6xl mx-auto grid md:grid-cols-2 rounded-2xl overflow-hidden bg-card">
+          <div className="p-10 md:p-14 flex flex-col justify-center">
+            <h2 className="font-display text-4xl md:text-5xl mb-4 leading-[1.05] font-medium">
+              {t("cta.h2.a")} <span className="text-accent">{t("cta.h2.b")}</span>{t("cta.h2.c")}
             </h2>
-            <p className="font-body text-foreground/90 mb-8">{t("cta.lead")}</p>
-            <Link to="/login" className="inline-flex items-center gap-2 font-body font-medium text-base bg-accent text-accent-foreground px-7 py-3.5 rounded-full hover:bg-accent/90 transition-colors">
+            <p className="font-body text-muted-foreground mb-8">{t("cta.lead")}</p>
+            <Link to="/login" className="self-start inline-flex items-center gap-2 font-body font-medium text-base bg-primary text-primary-foreground px-6 h-12 rounded-[10px] hover:bg-primary/90 transition-colors">
               {t("cta.btn")} <ArrowRight size={18} />
             </Link>
           </div>
+          <img
+            src={ctaCourt}
+            alt="Padel court at night with light trails sweeping over the net"
+            width={1920}
+            height={1080}
+            className="w-full h-64 md:h-full object-cover"
+            loading="lazy"
+          />
         </div>
       </section>
 
       {/* SEO city cluster */}
-      <section className="relative pt-12 pb-10 px-6">
-        <GradientBackdrop src={grad01.url} flip />
-        <div className="relative max-w-5xl mx-auto">
-          <h2 className="font-display text-2xl md:text-3xl mb-2">{t("seo.h2.a")} <span className="text-primary">{t("seo.h2.b")}</span></h2>
+      <section className="relative pb-16 px-6">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="font-display text-2xl md:text-3xl mb-2 font-medium">{t("seo.h2.a")} {t("seo.h2.b")}</h2>
           <p className="font-body text-sm text-muted-foreground mb-8">{t("seo.lead")}</p>
-          <div className="grid md:grid-cols-2 gap-4">
+          <div className="grid md:grid-cols-2 gap-8">
             {([
               ["seo.padel", ["madrid","barcelona","valencia","malaga","marbella","sevilla","palma","lisbon","milan","dubai"], "/es/profesor-de-padel/", "/padel-coach/"],
               ["seo.tennis", ["madrid","barcelona","paris","london","berlin","munich","milan","rome","miami","dubai"], "/es/profesor-de-tenis/", "/tennis-coach/"],
             ] as const).map(([key, cities, es, en]) => (
-              <div key={key} className="rounded-2xl bg-card/50 ring-1 ring-foreground/12 p-5">
-                <p className="font-body text-sm text-foreground/70 mb-4">{t(key)}</p>
-
+              <div key={key}>
+                <p className="font-body text-sm font-medium mb-3">{t(key)}</p>
                 <div className="flex flex-wrap gap-2">
                   {cities.map((c) => (
-                    <Link key={c} to={(lang === "es" ? es : en) + c} className="px-3 py-1.5 text-sm font-body bg-background/60 ring-1 ring-foreground/[0.08] rounded-full hover:ring-primary/60 hover:bg-primary/[0.08] transition-colors capitalize">
+                    <Link key={c} to={(lang === "es" ? es : en) + c} className="px-3 h-8 inline-flex items-center text-sm font-body bg-card rounded-lg hover:bg-secondary transition-colors capitalize">
                       {c}
                     </Link>
                   ))}
@@ -232,15 +195,15 @@ const Index = () => {
         </div>
       </section>
 
-      <footer className="border-t border-foreground/[0.08] py-8 px-6">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-5">
+      <footer className="border-t border-foreground/10 py-8 px-6">
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-5">
           <BrandLogo className="h-6" />
           <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 font-body text-sm text-muted-foreground">
             <Link to="/find-a-coach" className="hover:text-foreground transition-colors">{t("home.cta.find")}</Link>
             <Link to="/login" className="hover:text-foreground transition-colors">{t("home.cta.coach")}</Link>
             <Link to="/events" className="hover:text-foreground transition-colors">{t("nav.events")}</Link>
           </div>
-          <p className="font-body text-xs text-muted-foreground">© {new Date().getFullYear()} Hi Volley. {t("footer.tagline")}</p>
+          <p className="font-body text-xs text-muted-foreground">© {new Date().getFullYear()} Hi Volley · {t("footer.tagline")}</p>
         </div>
       </footer>
       <PublicBottomNav />
