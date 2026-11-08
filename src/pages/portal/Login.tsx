@@ -127,13 +127,13 @@ const Login = () => {
         {/* Logo */}
         <div className="flex items-center gap-3 mb-8">
           <div className="h-12 w-12 rounded-xl bg-primary flex items-center justify-center font-display text-xl text-primary-foreground">CA</div>
-          <span className="font-display text-2xl text-foreground tracking-wide">MEMBER PORTAL</span>
+          <span className="font-display text-2xl text-foreground tracking-wide">Member portal</span>
         </div>
 
         {/* Coming from a coach invite link: explain what happens next */}
         {getPendingInvite() && (
           <div className="mb-6 rounded-xl border border-primary/30 bg-primary/10 p-4">
-            <p className="font-display text-xs tracking-wider text-foreground">YOUR COACH INVITED YOU</p>
+            <p className="font-display text-xs tracking-wider text-foreground">Your coach invited you</p>
             <p className="mt-1.5 font-body text-sm text-muted-foreground">
               Create your account (or log in) with the email your coach used. You'll be linked to your
               coach automatically and your assessment — shot scores, notes and development — opens right
@@ -158,7 +158,7 @@ const Login = () => {
               mode === "register" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
             }`}
           >
-            REGISTER
+            Register
           </button>
         </div>
 
@@ -184,7 +184,7 @@ const Login = () => {
               )}
             </div>
             <div>
-              <label className="block font-display text-xs tracking-wider text-muted-foreground mb-1.5">PASSWORD</label>
+              <label className="block font-display text-xs tracking-wider text-muted-foreground mb-1.5">Password</label>
               <div className="relative">
                 <input
                   {...loginForm.register("password")}
@@ -211,7 +211,7 @@ const Login = () => {
         ) : (
           <form onSubmit={registerForm.handleSubmit(handleRegister)} className="space-y-4">
             <div>
-              <label className="block font-display text-xs tracking-wider text-muted-foreground mb-1.5">FULL NAME</label>
+              <label className="block font-display text-xs tracking-wider text-muted-foreground mb-1.5">Full name</label>
               <input
                 {...registerForm.register("full_name")}
                 className="w-full bg-card border border-border rounded-lg px-4 py-3 text-foreground font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-muted-foreground"
@@ -234,7 +234,7 @@ const Login = () => {
               )}
             </div>
             <div>
-              <label className="block font-display text-xs tracking-wider text-muted-foreground mb-1.5">PASSWORD</label>
+              <label className="block font-display text-xs tracking-wider text-muted-foreground mb-1.5">Password</label>
               <div className="relative">
                 <input
                   {...registerForm.register("password")}
@@ -251,7 +251,7 @@ const Login = () => {
               )}
             </div>
             <div>
-              <label className="block font-display text-xs tracking-wider text-muted-foreground mb-1.5">CONFIRM PASSWORD</label>
+              <label className="block font-display text-xs tracking-wider text-muted-foreground mb-1.5">Confirm password</label>
               <input
                 {...registerForm.register("confirm_password")}
                 type="password"

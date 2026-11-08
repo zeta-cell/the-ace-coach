@@ -150,7 +150,7 @@ const AdminUsers = () => {
   return (
     <PortalLayout>
       <div className="max-w-5xl mx-auto">
-        <h1 className="font-display text-3xl text-foreground mb-4">USER MANAGEMENT</h1>
+        <h1 className="font-display text-3xl text-foreground mb-4">User management</h1>
 
         {/* Filters */}
         <div className="flex flex-col sm:flex-row gap-3 mb-6">

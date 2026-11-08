@@ -12,7 +12,7 @@ const Library = () => {
   return (
     <PortalLayout>
       <div className="max-w-5xl mx-auto">
-        <h1 className="font-display text-3xl text-foreground mb-4">LIBRARY</h1>
+        <h1 className="font-display text-3xl text-foreground mb-4">Library</h1>
 
         {/* Tab switcher */}
         <div className="flex gap-1 p-1 bg-card border border-border rounded-xl mb-6">
@@ -25,7 +25,7 @@ const Library = () => {
             }`}
           >
             <BookOpen size={16} />
-            MODULES
+            Modules
           </button>
           <button
             onClick={() => setActiveTab("blocks")}
@@ -36,7 +36,7 @@ const Library = () => {
             }`}
           >
             <Blocks size={16} />
-            TRAINING BLOCKS
+            Training blocks
           </button>
         </div>
 

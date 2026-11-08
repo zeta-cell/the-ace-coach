@@ -262,7 +262,7 @@ const AdminDashboard = () => {
     <PortalLayout>
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center justify-between mb-6">
-          <h1 className="font-display text-3xl text-foreground">COMMAND CENTER</h1>
+          <h1 className="font-display text-3xl text-foreground">Command center</h1>
           <button onClick={handleSeed} disabled={seeding}
             className="flex items-center gap-2 px-4 py-2 rounded-lg bg-secondary border border-border text-foreground font-display text-xs tracking-wider hover:bg-secondary/80 transition-colors disabled:opacity-50">
             {seeding ? <Loader2 size={14} className="animate-spin" /> : <Database size={14} />}
@@ -302,7 +302,7 @@ const AdminDashboard = () => {
               {/* SECTION B — Revenue Charts */}
               <div className="grid md:grid-cols-2 gap-4 mb-6">
                 <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="bg-card border border-border rounded-xl p-5">
-                  <h2 className="font-display text-xs tracking-wider text-muted-foreground mb-3">MONTHLY GMV</h2>
+                  <h2 className="font-display text-xs tracking-wider text-muted-foreground mb-3">Monthly gmv</h2>
                   <div className="h-48">
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart data={gmvData}>
@@ -319,7 +319,7 @@ const AdminDashboard = () => {
                 </motion.div>
 
                 <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }} className="bg-card border border-border rounded-xl p-5">
-                  <h2 className="font-display text-xs tracking-wider text-muted-foreground mb-3">USER GROWTH</h2>
+                  <h2 className="font-display text-xs tracking-wider text-muted-foreground mb-3">User growth</h2>
                   <div className="h-48">
                     <ResponsiveContainer width="100%" height="100%">
                       <LineChart data={userGrowth}>
@@ -338,7 +338,7 @@ const AdminDashboard = () => {
               {/* SECTION C — Top Performers */}
               <div className="grid md:grid-cols-2 gap-4 mb-6">
                 <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="bg-card border border-border rounded-xl p-5">
-                  <h2 className="font-display text-xs tracking-wider text-muted-foreground mb-3">TOP COACHES BY REVENUE</h2>
+                  <h2 className="font-display text-xs tracking-wider text-muted-foreground mb-3">Top coaches by revenue</h2>
                   <div className="space-y-2">
                     {topCoaches.length === 0 ? <p className="font-body text-xs text-muted-foreground text-center py-4">No data yet</p> :
                       topCoaches.map((c, i) => (
@@ -352,7 +352,7 @@ const AdminDashboard = () => {
                 </motion.div>
 
                 <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45 }} className="bg-card border border-border rounded-xl p-5">
-                  <h2 className="font-display text-xs tracking-wider text-muted-foreground mb-3">TOP PLAYERS BY SESSIONS</h2>
+                  <h2 className="font-display text-xs tracking-wider text-muted-foreground mb-3">Top players by sessions</h2>
                   <div className="space-y-2">
                     {topPlayers.length === 0 ? <p className="font-body text-xs text-muted-foreground text-center py-4">No data yet</p> :
                       topPlayers.map((p, i) => (
@@ -370,7 +370,7 @@ const AdminDashboard = () => {
               {unverifiedCoaches.length > 0 && (
                 <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="bg-card border border-border rounded-xl p-5 mb-6">
                   <h2 className="font-display text-xs tracking-wider text-muted-foreground mb-3 flex items-center gap-2">
-                    <ShieldCheck size={14} className="text-primary" /> VERIFICATION QUEUE
+                    <ShieldCheck size={14} className="text-primary" /> Verification queue
                   </h2>
                   <div className="space-y-2">
                     {unverifiedCoaches.map(c => (
@@ -381,7 +381,7 @@ const AdminDashboard = () => {
                             {c.location_city || "No location"} · {c.packages_count} packages · Joined {format(new Date(c.created_at), "d MMM yyyy")}
                           </p>
                         </div>
-                        <button onClick={() => verifyCoach(c.user_id)} className="px-3 py-1.5 rounded-lg bg-primary text-primary-foreground font-display text-[9px] tracking-wider">VERIFY</button>
+                        <button onClick={() => verifyCoach(c.user_id)} className="px-3 py-1.5 rounded-lg bg-primary text-primary-foreground font-display text-[9px] tracking-wider">Verify</button>
                         <button onClick={() => skipCoach(c.user_id)} className="px-3 py-1.5 rounded-lg border border-border text-muted-foreground font-display text-[9px] tracking-wider">SKIP</button>
                       </div>
                     ))}
@@ -392,7 +392,7 @@ const AdminDashboard = () => {
               {/* SECTION — Events Overview */}
               <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.52 }} className="bg-card border border-border rounded-xl p-5 mb-6">
                 <h2 className="font-display text-xs tracking-wider text-muted-foreground mb-3 flex items-center gap-2">
-                  <Calendar size={14} className="text-primary" /> EVENTS
+                  <Calendar size={14} className="text-primary" /> Events
                 </h2>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
                   {[
@@ -450,7 +450,7 @@ const AdminDashboard = () => {
               className="hidden lg:block w-72 shrink-0">
               <div className="bg-card border border-border rounded-xl p-4 sticky top-20">
                 <div className="flex items-center justify-between mb-3">
-                  <h2 className="font-display text-xs tracking-wider text-muted-foreground">LIVE ACTIVITY</h2>
+                  <h2 className="font-display text-xs tracking-wider text-muted-foreground">Live activity</h2>
                   <RefreshCw size={10} className="text-muted-foreground animate-spin" style={{ animationDuration: "3s" }} />
                 </div>
                 <div className="space-y-2 max-h-[600px] overflow-y-auto">

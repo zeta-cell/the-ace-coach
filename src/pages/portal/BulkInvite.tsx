@@ -154,10 +154,10 @@ const BulkInvite = () => {
           onClick={() => navigate("/coach/players")}
           className="inline-flex items-center gap-1.5 font-display text-xs tracking-wider text-muted-foreground hover:text-foreground mb-4"
         >
-          <ArrowLeft size={14} /> PLAYERS
+          <ArrowLeft size={14} /> Players
         </button>
 
-        <h1 className="font-display text-2xl sm:text-3xl text-foreground mb-1">INVITE A GROUP</h1>
+        <h1 className="font-display text-2xl sm:text-3xl text-foreground mb-1">Invite a group</h1>
         <p className="font-body text-sm text-muted-foreground mb-5">
           Paste the email list of your camp or academy group. Everyone gets a personal link where they
           only set a password — then they land straight in your player list.
@@ -178,7 +178,7 @@ const BulkInvite = () => {
 
           <div>
             <label className="flex items-center gap-1.5 font-display text-xs tracking-wider text-muted-foreground">
-              <Mail size={13} className="text-primary" /> EMAIL ADDRESSES
+              <Mail size={13} className="text-primary" /> Email addresses
             </label>
             <textarea
               value={raw}
@@ -194,7 +194,7 @@ const BulkInvite = () => {
 
           <div>
             <label className="font-display text-xs tracking-wider text-muted-foreground">
-              PERSONAL MESSAGE
+              Personal message
             </label>
             <textarea
               value={message}

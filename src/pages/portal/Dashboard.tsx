@@ -316,7 +316,7 @@ const Dashboard = () => {
           <div className="bg-card border border-border rounded-xl p-3 text-center">
             <PhPulse size={20} weight="fill" className="text-rose-400 mx-auto mb-0.5" />
             <p className="font-display text-xl text-foreground">{estimatedCalories.toLocaleString()}</p>
-            <p className="font-body text-[9px] text-muted-foreground">KCAL BURNED</p>
+            <p className="font-body text-[9px] text-muted-foreground">Kcal burned</p>
           </div>
         </motion.div>
 
@@ -341,7 +341,7 @@ const Dashboard = () => {
         {activityData.length > 0 && (
           <motion.div initial={false} className="bg-card border border-border rounded-xl p-5 mb-6">
             <h3 className="font-display text-sm tracking-wider text-muted-foreground mb-3 flex items-center gap-2">
-              <TrendingUp size={14} className="text-primary" /> TRAINING ACTIVITY
+              <TrendingUp size={14} className="text-primary" /> Training activity
             </h3>
             <div className="h-40">
               <ResponsiveContainer width="100%" height="100%">
@@ -359,7 +359,7 @@ const Dashboard = () => {
 
         {/* Training Heatmap */}
         <motion.div initial={false} className="bg-card border border-border rounded-xl p-5 mb-6">
-          <h3 className="font-display text-sm tracking-wider text-muted-foreground mb-3">TRAINING HEATMAP</h3>
+          <h3 className="font-display text-sm tracking-wider text-muted-foreground mb-3">Training heatmap</h3>
           <div className="flex flex-wrap gap-[2px]">
             {heatmapDays.map(d => {
               const key = format(d, "yyyy-MM-dd");
@@ -387,7 +387,7 @@ const Dashboard = () => {
         {/* Badges */}
         <motion.div initial={false} className="mb-6">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="font-display text-sm tracking-wider text-muted-foreground flex items-center gap-2"><Award size={14} className="text-primary" /> BADGES</h3>
+            <h3 className="font-display text-sm tracking-wider text-muted-foreground flex items-center gap-2"><Award size={14} className="text-primary" /> Badges</h3>
           </div>
           {earnedBadges.length === 0 ? (
             <div className="bg-card border border-dashed border-border rounded-xl p-4 text-center">
@@ -423,7 +423,7 @@ const Dashboard = () => {
         {communityEnabled && (
         <motion.div initial={false} className="bg-card border border-border rounded-xl p-5 mb-6">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="font-display text-sm tracking-wider text-muted-foreground flex items-center gap-2"><Trophy size={14} className="text-primary" /> LEADERBOARD</h3>
+            <h3 className="font-display text-sm tracking-wider text-muted-foreground flex items-center gap-2"><Trophy size={14} className="text-primary" /> Leaderboard</h3>
             <Link to="/rankings" className="text-xs font-display text-primary tracking-wider hover:underline">VIEW ALL →</Link>
           </div>
           {myRank && <p className="font-body text-xs text-muted-foreground mb-3">Your rank: <span className="text-primary font-display">#{myRank}</span></p>}
@@ -449,7 +449,7 @@ const Dashboard = () => {
         {/* My Coaches */}
         {myCoaches.length > 0 && (
           <motion.div initial={false} className="mb-6">
-            <h3 className="font-display text-sm tracking-wider text-muted-foreground mb-3">MY COACHES</h3>
+            <h3 className="font-display text-sm tracking-wider text-muted-foreground mb-3">My coaches</h3>
             <div className="flex gap-2">
               {myCoaches.map(c => (
                 <Link key={c.user_id} to={c.profile_slug ? `/coach/${c.profile_slug}` : "#"} className="shrink-0 text-center">
@@ -496,17 +496,17 @@ const Dashboard = () => {
               {todayPlan && todayPlan.items.length > 0 ? (
                 <>
                   <div className="flex items-center justify-between mb-3">
-                    <h2 className="font-display text-xl text-foreground">TODAY'S TRAINING</h2>
+                    <h2 className="font-display text-xl text-foreground">Today's training</h2>
                     <span className="font-body text-xs text-muted-foreground">{todayPlan.items.length} modules · {totalDuration} min</span>
                   </div>
                   <p className="font-body text-sm text-muted-foreground mb-4">{todayPlan.items[0]?.module_title}{todayPlan.items.length > 1 && ` + ${todayPlan.items.length - 1} more`}</p>
                   <Link to="/training" className="inline-flex items-center gap-2 bg-primary text-primary-foreground font-display text-sm tracking-wider px-6 py-2.5 rounded-lg hover:bg-primary/90 transition-colors">
-                    <Play size={16} /> START TRAINING
+                    <Play size={16} /> Start training
                   </Link>
                 </>
               ) : (
                 <>
-                  <h2 className="font-display text-xl text-foreground mb-2">NO TRAINING TODAY</h2>
+                  <h2 className="font-display text-xl text-foreground mb-2">No training today</h2>
                   <p className="font-body text-sm text-muted-foreground">Rest day or your coach hasn't assigned a plan yet.</p>
                 </>
               )}
@@ -523,7 +523,7 @@ const Dashboard = () => {
         {upcomingEvents.length > 0 && (
           <motion.div initial={false} className="mb-6">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="font-display text-sm tracking-wider text-foreground flex items-center gap-2"><Calendar size={16} className="text-primary" /> UPCOMING EVENTS</h3>
+              <h3 className="font-display text-sm tracking-wider text-foreground flex items-center gap-2"><Calendar size={16} className="text-primary" /> Upcoming events</h3>
               <Link to="/events" className="text-xs font-body text-primary hover:underline">View all</Link>
             </div>
             <div className="space-y-2">
@@ -554,7 +554,7 @@ const Dashboard = () => {
 
         {/* Week strip */}
         <motion.div initial={false} className="mb-6">
-          <h3 className="font-display text-sm tracking-wider text-muted-foreground mb-3">THIS WEEK</h3>
+          <h3 className="font-display text-sm tracking-wider text-muted-foreground mb-3">This week</h3>
           <div className="flex gap-2">
             {weekDays.map(day => {
               const dayStr = format(day, "yyyy-MM-dd"); const hasPlan = weekPlans.includes(dayStr);

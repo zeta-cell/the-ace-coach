@@ -48,7 +48,7 @@ const MyClubsCard = () => {
     <div className="mb-6">
       <div className="flex items-center justify-between mb-3">
         <h3 className="font-display text-sm tracking-wider text-muted-foreground flex items-center gap-2">
-          <Building2 size={14} className="text-primary" /> MY CLUBS
+          <Building2 size={14} className="text-primary" /> My clubs
         </h3>
         <Link to="/find-a-coach" className="text-xs font-display text-primary tracking-wider hover:underline">
           DISCOVER →
@@ -63,7 +63,7 @@ const MyClubsCard = () => {
             to="/find-a-coach"
             className="inline-flex items-center gap-1.5 text-xs font-display tracking-wider text-primary hover:underline"
           >
-            <Plus size={12} /> FIND A CLUB
+            <Plus size={12} /> Find a club
           </Link>
         </div>
       ) : (

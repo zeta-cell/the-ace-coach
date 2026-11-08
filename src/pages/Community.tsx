@@ -141,7 +141,7 @@ const Community = () => {
       {/* Hero */}
       <div className="bg-card border-b border-border py-12 px-4 text-center relative overflow-hidden">
         <div className="absolute top-0 right-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
-        <h1 className="font-display text-3xl md:text-5xl text-foreground mb-3 relative">COMMUNITY</h1>
+        <h1 className="font-display text-3xl md:text-5xl text-foreground mb-3 relative">Community</h1>
         <p className="font-body text-sm md:text-base text-muted-foreground max-w-2xl mx-auto relative">
           See who's leading, what's trending, and join the global tennis & padel community
         </p>
@@ -151,8 +151,8 @@ const Community = () => {
         {/* Leaderboard */}
         <section>
           <div className="flex items-center justify-between mb-6">
-            <h2 className="font-display text-sm tracking-wider text-muted-foreground flex items-center gap-2"><Trophy size={16} className="text-primary" /> TOP PLAYERS</h2>
-            <Link to="/rankings" className="font-display text-xs tracking-wider text-primary flex items-center gap-1">VIEW FULL RANKINGS <ChevronRight size={14} /></Link>
+            <h2 className="font-display text-sm tracking-wider text-muted-foreground flex items-center gap-2"><Trophy size={16} className="text-primary" /> Top players</h2>
+            <Link to="/rankings" className="font-display text-xs tracking-wider text-primary flex items-center gap-1">View full rankings <ChevronRight size={14} /></Link>
           </div>
 
           {/* Podium */}
@@ -205,7 +205,7 @@ const Community = () => {
         {/* Recent Badges */}
         {badges.length > 0 && (
           <section>
-            <h2 className="font-display text-sm tracking-wider text-muted-foreground flex items-center gap-2 mb-4"><Award size={16} className="text-primary" /> RECENT BADGES</h2>
+            <h2 className="font-display text-sm tracking-wider text-muted-foreground flex items-center gap-2 mb-4"><Award size={16} className="text-primary" /> Recent badges</h2>
             <div className="space-y-2">
               {badges.map(b => (
                 <div key={b.id} className="flex items-center gap-3 p-3 bg-card border border-border rounded-xl">
@@ -232,8 +232,8 @@ const Community = () => {
         {trending.length > 0 && (
           <section>
             <div className="flex items-center justify-between mb-4">
-              <h2 className="font-display text-sm tracking-wider text-muted-foreground flex items-center gap-2"><ShoppingBag size={16} className="text-primary" /> TRENDING PROGRAMS</h2>
-              <Link to="/marketplace" className="font-display text-xs tracking-wider text-primary flex items-center gap-1">VIEW IN MARKETPLACE <ChevronRight size={14} /></Link>
+              <h2 className="font-display text-sm tracking-wider text-muted-foreground flex items-center gap-2"><ShoppingBag size={16} className="text-primary" /> Trending programs</h2>
+              <Link to="/marketplace" className="font-display text-xs tracking-wider text-primary flex items-center gap-1">View in marketplace <ChevronRight size={14} /></Link>
             </div>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
               {trending.map(t => (
@@ -256,8 +256,8 @@ const Community = () => {
         {events.length > 0 && (
           <section>
             <div className="flex items-center justify-between mb-4">
-              <h2 className="font-display text-sm tracking-wider text-muted-foreground flex items-center gap-2"><Calendar size={16} className="text-primary" /> UPCOMING EVENTS</h2>
-              <Link to="/events" className="font-display text-xs tracking-wider text-primary flex items-center gap-1">VIEW ALL EVENTS <ChevronRight size={14} /></Link>
+              <h2 className="font-display text-sm tracking-wider text-muted-foreground flex items-center gap-2"><Calendar size={16} className="text-primary" /> Upcoming events</h2>
+              <Link to="/events" className="font-display text-xs tracking-wider text-primary flex items-center gap-1">View all events <ChevronRight size={14} /></Link>
             </div>
             <div className="grid sm:grid-cols-2 gap-3">
               {events.map(e => (
@@ -276,7 +276,7 @@ const Community = () => {
         {/* Top Coaches */}
         {topCoaches.length > 0 && (
           <section>
-            <h2 className="font-display text-sm tracking-wider text-muted-foreground flex items-center gap-2 mb-4"><Users size={16} className="text-primary" /> TOP COACHES</h2>
+            <h2 className="font-display text-sm tracking-wider text-muted-foreground flex items-center gap-2 mb-4"><Users size={16} className="text-primary" /> Top coaches</h2>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
               {topCoaches.map(c => {
                 const badge = BADGE_CONFIG[c.badge_level] || BADGE_CONFIG.starter;

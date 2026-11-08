@@ -214,7 +214,7 @@ const PortalLayout = ({ children }: { children: React.ReactNode }) => {
                 <div className="w-14 h-14 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg">
                   <PhBarbell size={24} weight="fill" />
                 </div>
-                <span className="text-[9px] font-display tracking-wider text-primary mt-1">CREATE</span>
+                <span className="text-[9px] font-display tracking-wider text-primary mt-1">Create</span>
               </button>
               {/* Right two: Library, Messages */}
               {[

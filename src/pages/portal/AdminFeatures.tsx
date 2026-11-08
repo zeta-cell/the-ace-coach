@@ -73,7 +73,7 @@ const AdminFeatures = () => {
       <div className="max-w-3xl mx-auto">
         <div className="flex items-center gap-3 mb-2">
           <ToggleLeft className="text-primary" size={24} />
-          <h1 className="font-display text-3xl text-foreground">FEATURE CONTROL</h1>
+          <h1 className="font-display text-3xl text-foreground">Feature control</h1>
         </div>
         <p className="font-body text-sm text-muted-foreground mb-6">
           Switch platform features on or off for everyone. Admins always keep full access, so you can test

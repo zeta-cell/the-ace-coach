@@ -146,9 +146,9 @@ const AdminPayments = () => {
     <PortalLayout>
       <div className="max-w-5xl mx-auto">
         <div className="flex items-center justify-between mb-4">
-          <h1 className="font-display text-3xl text-foreground">PAYMENTS</h1>
+          <h1 className="font-display text-3xl text-foreground">Payments</h1>
           <button onClick={() => setShowForm(true)} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground font-display text-xs tracking-wider hover:bg-primary/90 transition-colors">
-            <Plus size={16} /> NEW PAYMENT
+            <Plus size={16} /> New payment
           </button>
         </div>
 
@@ -179,7 +179,7 @@ const AdminPayments = () => {
         {/* Monthly GMV Chart */}
         {revenue.monthlyData.some(d => d.gmv > 0) && (
           <div className="bg-card border border-border rounded-xl p-4 mb-6">
-            <h3 className="font-display text-xs tracking-wider text-muted-foreground mb-3">MONTHLY GMV</h3>
+            <h3 className="font-display text-xs tracking-wider text-muted-foreground mb-3">Monthly gmv</h3>
             <div className="h-40">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={revenue.monthlyData}>
@@ -257,7 +257,7 @@ const AdminPayments = () => {
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm p-4" onClick={() => setShowForm(false)}>
               <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.95, opacity: 0 }} onClick={(e) => e.stopPropagation()} className="w-full max-w-lg bg-card border border-border rounded-xl p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <h2 className="font-display text-xl text-foreground">NEW PAYMENT</h2>
+                  <h2 className="font-display text-xl text-foreground">New payment</h2>
                   <button onClick={() => setShowForm(false)}><X size={20} className="text-muted-foreground" /></button>
                 </div>
                 <div className="space-y-3">

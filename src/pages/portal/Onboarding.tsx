@@ -251,7 +251,7 @@ const Onboarding = () => {
             </div>
 
             <div>
-              <label className="block font-display text-xs tracking-wider text-muted-foreground mb-1.5">DATE OF BIRTH</label>
+              <label className="block font-display text-xs tracking-wider text-muted-foreground mb-1.5">Date of birth</label>
               <input
                 type="date"
                 value={dateOfBirth}
@@ -261,7 +261,7 @@ const Onboarding = () => {
             </div>
 
             <div>
-              <label className="block font-display text-xs tracking-wider text-muted-foreground mb-1.5">NATIONALITY</label>
+              <label className="block font-display text-xs tracking-wider text-muted-foreground mb-1.5">Nationality</label>
               <select
                 value={nationality}
                 onChange={(e) => setNationality(e.target.value)}
@@ -273,7 +273,7 @@ const Onboarding = () => {
             </div>
 
             <div>
-              <label className="block font-display text-xs tracking-wider text-muted-foreground mb-3">DOMINANT HAND</label>
+              <label className="block font-display text-xs tracking-wider text-muted-foreground mb-3">Dominant hand</label>
               <div className="grid grid-cols-2 gap-3">
                 {(["left", "right"] as const).map((hand) => (
                   <button
@@ -298,7 +298,7 @@ const Onboarding = () => {
         return (
           <div className="space-y-6">
             <div>
-              <label className="block font-display text-xs tracking-wider text-muted-foreground mb-3">YEARS PLAYING PADEL</label>
+              <label className="block font-display text-xs tracking-wider text-muted-foreground mb-3">Years playing padel</label>
               <div className="flex items-center gap-4">
                 <button
                   type="button"
@@ -319,7 +319,7 @@ const Onboarding = () => {
             </div>
 
             <div>
-              <label className="block font-display text-xs tracking-wider text-muted-foreground mb-3">FITNESS LEVEL</label>
+              <label className="block font-display text-xs tracking-wider text-muted-foreground mb-3">Fitness level</label>
               <div className="grid grid-cols-2 gap-3">
                 {(["beginner", "intermediate", "advanced", "elite"] as const).map((level) => (
                   <button
@@ -339,7 +339,7 @@ const Onboarding = () => {
             </div>
 
             <div>
-              <label className="block font-display text-xs tracking-wider text-muted-foreground mb-3">TRAINING GOALS</label>
+              <label className="block font-display text-xs tracking-wider text-muted-foreground mb-3">Training goals</label>
               <div className="flex flex-wrap gap-2">
                 {GOALS_OPTIONS.map((goal) => (
                   <button
@@ -364,7 +364,7 @@ const Onboarding = () => {
         return (
           <div className="space-y-6">
             <div>
-              <label className="block font-display text-xs tracking-wider text-muted-foreground mb-3">SIDE PREFERENCE</label>
+              <label className="block font-display text-xs tracking-wider text-muted-foreground mb-3">Side preference</label>
               {/* Visual bar */}
               <div className="h-10 rounded-full overflow-hidden flex mb-2">
                 <div
@@ -402,7 +402,7 @@ const Onboarding = () => {
             </div>
 
             <div>
-              <label className="block font-display text-xs tracking-wider text-muted-foreground mb-3">SHOT CONFIDENCE</label>
+              <label className="block font-display text-xs tracking-wider text-muted-foreground mb-3">Shot confidence</label>
               <p className="text-xs text-muted-foreground font-body mb-4">
                 Your coach will review and adjust these after your first session.
               </p>
@@ -456,7 +456,7 @@ const Onboarding = () => {
             </div>
 
             <div>
-              <label className="block font-display text-xs tracking-wider text-muted-foreground mb-1.5">PLAYTOMIC PROFILE</label>
+              <label className="block font-display text-xs tracking-wider text-muted-foreground mb-1.5">Playtomic profile</label>
               <input
                 type="url"
                 value={playtomicUrl}
@@ -470,7 +470,7 @@ const Onboarding = () => {
             </div>
 
             <div>
-              <label className="block font-display text-xs tracking-wider text-muted-foreground mb-1.5">YOUR CURRENT LEVEL</label>
+              <label className="block font-display text-xs tracking-wider text-muted-foreground mb-1.5">Your current level</label>
               <input
                 type="number"
                 step="0.1"
@@ -484,7 +484,7 @@ const Onboarding = () => {
             </div>
 
             <div>
-              <label className="block font-display text-xs tracking-wider text-muted-foreground mb-3">MY RACKETS</label>
+              <label className="block font-display text-xs tracking-wider text-muted-foreground mb-3">My rackets</label>
               {rackets.map((racket, index) => (
                 <div key={index} className="bg-card border border-border rounded-xl p-4 mb-3">
                   <div className="flex items-center justify-between mb-3">

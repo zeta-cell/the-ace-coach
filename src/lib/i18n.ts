@@ -10,13 +10,13 @@ const STORAGE_KEY = "ace_lang";
 // All UI strings live here. Add a key, add an ES translation. Done.
 const dict = {
   // Header / Nav
-  "nav.find": { en: "FIND A COACH", es: "BUSCAR PROFESOR" },
-  "nav.marketplace": { en: "MARKETPLACE", es: "MARKETPLACE" },
-  "nav.events": { en: "EVENTS", es: "EVENTOS" },
-  "nav.community": { en: "COMMUNITY", es: "COMUNIDAD" },
-  "nav.login": { en: "LOG IN", es: "ENTRAR" },
-  "nav.getStarted": { en: "GET STARTED", es: "EMPEZAR" },
-  "nav.account": { en: "ACCOUNT", es: "CUENTA" },
+  "nav.find": { en: "Find a coach", es: "Buscar profesor" },
+  "nav.marketplace": { en: "Marketplace", es: "Marketplace" },
+  "nav.events": { en: "Events", es: "Eventos" },
+  "nav.community": { en: "Community", es: "Comunidad" },
+  "nav.login": { en: "Log in", es: "Entrar" },
+  "nav.getStarted": { en: "Get started", es: "Empezar" },
+  "nav.account": { en: "Account", es: "Cuenta" },
 
   // Bottom nav
   "bn.home": { en: "Home", es: "Inicio" },

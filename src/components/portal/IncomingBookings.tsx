@@ -232,7 +232,7 @@ const IncomingBookings = () => {
     <motion.div initial={false} animate={{ opacity: 1, y: 0 }} className="mb-6">
       <div className="flex items-center justify-between mb-3">
         <h2 className="font-display text-xl text-foreground flex items-center gap-2">
-          <Calendar size={20} className="text-primary" /> INCOMING BOOKINGS
+          <Calendar size={20} className="text-primary" /> Incoming bookings
         </h2>
         <span className="text-xs font-body text-muted-foreground">
           This week: {weekSummary.count} sessions · €{weekSummary.income.toFixed(0)} incoming
@@ -248,7 +248,7 @@ const IncomingBookings = () => {
                 <div>
                   <div className="flex items-center gap-2 mb-1">
                     <Users size={14} className="text-chart-2" />
-                    <span className="font-display text-sm text-foreground">GROUP SESSION</span>
+                    <span className="font-display text-sm text-foreground">Group session</span>
                     <span className="font-display text-xs text-muted-foreground">
                       — {format(new Date(g.booking_date + "T00:00:00"), "EEE d MMM")} {g.start_time.slice(0, 5)}
                     </span>
@@ -262,7 +262,7 @@ const IncomingBookings = () => {
                     onClick={() => copyShareLink(g.package_id, g.booking_date)}
                     className="flex items-center gap-1 px-2 py-1 rounded-lg bg-primary/10 text-primary font-display text-[9px] tracking-wider hover:bg-primary/20 transition-colors"
                   >
-                    <Link2 size={10} /> SHARE LINK
+                    <Link2 size={10} /> Share link
                   </button>
                 )}
               </div>
@@ -303,7 +303,7 @@ const IncomingBookings = () => {
                       onClick={() => setFeedbackGroup(g)}
                       className="flex items-center gap-1 px-2 py-1 rounded text-[8px] font-display bg-chart-2/10 text-chart-2 hover:bg-chart-2/20 transition-colors"
                     >
-                      <MessageSquare size={9} /> FEEDBACK
+                      <MessageSquare size={9} /> Feedback
                     </button>
                   )}
                   <span className="font-body text-[9px] text-muted-foreground">
@@ -355,7 +355,7 @@ const IncomingBookings = () => {
                   {isPast && b.status === "confirmed" && (
                     <div className="flex gap-1">
                       <button onClick={() => markCompleted(b.id)} className="px-2 py-1 rounded text-[8px] font-display bg-green-500/10 text-green-400 hover:bg-green-500/20">DONE</button>
-                      <button onClick={() => markNoShow(b.id)} className="px-2 py-1 rounded text-[8px] font-display bg-destructive/10 text-destructive hover:bg-destructive/20">NO-SHOW</button>
+                      <button onClick={() => markNoShow(b.id)} className="px-2 py-1 rounded text-[8px] font-display bg-destructive/10 text-destructive hover:bg-destructive/20">No-show</button>
                     </div>
                   )}
                 </div>

@@ -58,7 +58,7 @@ const Rewards = () => {
     <PortalLayout>
       <div className="max-w-3xl mx-auto">
         <motion.h1 initial={false} animate={{ opacity: 1, y: 0 }} className="font-display text-3xl text-foreground mb-6">
-          REWARDS
+          Rewards
         </motion.h1>
 
         {/* Level Perks */}
@@ -92,7 +92,7 @@ const Rewards = () => {
                       </span>
                     )}
                     {isUnlocked && i === currentIdx && (
-                      <span className="text-[9px] font-display text-primary tracking-wider">CURRENT</span>
+                      <span className="text-[9px] font-display text-primary tracking-wider">Current</span>
                     )}
                   </div>
                   <div className="flex flex-wrap gap-1">
@@ -111,7 +111,7 @@ const Rewards = () => {
         {/* Partner Discounts — gated */}
         {discountsEnabled ? (
           <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="mb-6">
-            <h2 className="font-display text-sm tracking-wider text-muted-foreground mb-3">PARTNER DISCOUNTS</h2>
+            <h2 className="font-display text-sm tracking-wider text-muted-foreground mb-3">Partner discounts</h2>
             <div className="grid grid-cols-2 gap-3">
               {PARTNERS.map(partner => {
                 const discount = partner.baseDiscount + (LEVEL_DISCOUNT_BONUS[level] || 0);
@@ -124,7 +124,7 @@ const Rewards = () => {
                     <p className="font-display text-xl text-primary">{discount}% OFF</p>
                     <button onClick={() => getCode(partner)}
                       className="mt-2 w-full py-1.5 rounded-lg bg-secondary text-foreground font-display text-[10px] tracking-wider hover:bg-secondary/80 transition-colors flex items-center justify-center gap-1">
-                      <Copy size={10} /> GET CODE
+                      <Copy size={10} /> Get code
                     </button>
                   </div>
                 );
@@ -133,7 +133,7 @@ const Rewards = () => {
           </motion.div>
         ) : (
           <div className="mb-6">
-            <h2 className="font-display text-sm tracking-wider text-muted-foreground mb-3">PARTNER DISCOUNTS</h2>
+            <h2 className="font-display text-sm tracking-wider text-muted-foreground mb-3">Partner discounts</h2>
             <ComingSoonOverlay
               title="Coming soon"
               subtitle="Partner discounts on rackets, gear and merch are on the way. Collect XP now — your level decides how big your discount will be."

@@ -84,7 +84,7 @@ const HealthConnections = () => {
 
   return (
     <div className="bg-card border border-border rounded-xl p-5">
-      <h2 className="font-display text-sm tracking-wider text-muted-foreground mb-4">CONNECTED DEVICES</h2>
+      <h2 className="font-display text-sm tracking-wider text-muted-foreground mb-4">Connected devices</h2>
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
         {PROVIDERS.map((p) => {
           const conn = connections.find((c) => c.provider === p.key);
@@ -107,11 +107,11 @@ const HealthConnections = () => {
               </div>
 
               {isApple ? (
-                <span className="inline-block text-[9px] font-display text-muted-foreground bg-muted px-2 py-0.5 rounded-full">COMING SOON</span>
+                <span className="inline-block text-[9px] font-display text-muted-foreground bg-muted px-2 py-0.5 rounded-full">Coming soon</span>
               ) : isConnected ? (
                 <div className="space-y-1.5">
                   <span className="inline-flex items-center gap-1 text-[9px] font-display text-green-400 bg-green-500/10 px-2 py-0.5 rounded-full">
-                    <Wifi size={8} /> CONNECTED
+                    <Wifi size={8} /> Connected
                   </span>
                   {conn?.last_synced_at && (
                     <p className="text-[8px] font-body text-muted-foreground">

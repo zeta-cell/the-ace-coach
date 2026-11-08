@@ -64,7 +64,7 @@ const AssignCoachPrompt = () => {
     <div className="bg-card border border-primary/40 rounded-2xl p-5 mb-5">
       <div className="flex items-center gap-2 mb-1">
         <UserCheck size={18} className="text-primary" />
-        <h2 className="font-display text-lg text-foreground tracking-wide">CONNECT YOUR COACH</h2>
+        <h2 className="font-display text-lg text-foreground tracking-wide">Connect your coach</h2>
       </div>
       <p className="font-body text-sm text-muted-foreground mb-4">
         Choose the coach you train with. They will be able to see your profile and publish your assessments.

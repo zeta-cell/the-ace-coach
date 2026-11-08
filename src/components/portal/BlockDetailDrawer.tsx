@@ -185,7 +185,7 @@ const BlockDetailDrawer = ({ block, onClose, isOwned, onGetProgram, onToggleSave
                   )}
                   {(previewExercises || exercises) && (
                     <div>
-                      <p className="font-display text-[10px] tracking-wider text-muted-foreground mb-2">EXERCISES PREVIEW</p>
+                      <p className="font-display text-[10px] tracking-wider text-muted-foreground mb-2">Exercises preview</p>
                       <div className="space-y-1.5">
                         {((previewExercises || exercises) as any[])?.slice(0, 3).map((ex: any, i: number) => (
                           <div key={i} className="flex items-center gap-2 p-2 rounded-lg bg-secondary">
@@ -228,7 +228,7 @@ const BlockDetailDrawer = ({ block, onClose, isOwned, onGetProgram, onToggleSave
                 <div className="space-y-4">
                   {isOwned && user && (
                     <div className="p-4 rounded-xl bg-secondary border border-border space-y-3">
-                      <p className="font-display text-[10px] tracking-wider text-foreground">WRITE A REVIEW</p>
+                      <p className="font-display text-[10px] tracking-wider text-foreground">Write a review</p>
                       <div className="flex gap-1">
                         {[1,2,3,4,5].map((s) => <button key={s} onClick={() => setReviewRating(s)}><Star size={18} className={s <= reviewRating ? "text-amber-400 fill-amber-400" : "text-muted-foreground"} /></button>)}
                       </div>
@@ -268,12 +268,12 @@ const BlockDetailDrawer = ({ block, onClose, isOwned, onGetProgram, onToggleSave
                   {coachProfile.bio && <p className="text-sm font-body text-muted-foreground">{coachProfile.bio}</p>}
                   {coachProfile.profile_slug && (
                     <Link to={`/coach/${coachProfile.profile_slug}`} className="flex items-center gap-2 text-primary font-display text-xs tracking-wider hover:underline">
-                      VIEW FULL PROFILE <ExternalLink size={12} />
+                      View full profile <ExternalLink size={12} />
                     </Link>
                   )}
                   {coachOtherBlocks.length > 0 && (
                     <div>
-                      <p className="font-display text-[10px] tracking-wider text-muted-foreground mb-2">OTHER PROGRAMS BY THIS COACH</p>
+                      <p className="font-display text-[10px] tracking-wider text-muted-foreground mb-2">Other programs by this coach</p>
                       {coachOtherBlocks.map((b: any) => (
                         <div key={b.id} className="p-3 rounded-lg bg-secondary mb-1.5 flex items-center justify-between">
                           <span className="text-xs font-body text-foreground">{b.title}</span>
@@ -290,9 +290,9 @@ const BlockDetailDrawer = ({ block, onClose, isOwned, onGetProgram, onToggleSave
             <div className="sticky bottom-0 p-4 bg-card border-t border-border space-y-2">
               {isOwned ? (
                 <>
-                  <Link to="/dashboard" className="block w-full py-3 rounded-xl bg-primary text-primary-foreground font-display text-xs tracking-wider text-center hover:bg-primary/90 transition-colors">ADD TO MY PLAN</Link>
+                  <Link to="/dashboard" className="block w-full py-3 rounded-xl bg-primary text-primary-foreground font-display text-xs tracking-wider text-center hover:bg-primary/90 transition-colors">Add to my plan</Link>
                   <button onClick={() => setShowAssignFlow(true)} className="w-full py-3 rounded-xl border border-border font-display text-xs tracking-wider text-foreground hover:bg-secondary transition-colors flex items-center justify-center gap-2">
-                    <UserPlus size={14} /> ASSIGN A COACH
+                    <UserPlus size={14} /> Assign a coach
                   </button>
                 </>
               ) : (

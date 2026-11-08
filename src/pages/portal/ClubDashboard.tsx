@@ -57,7 +57,7 @@ const ClubDashboard = () => {
             You're not connected to a club. Create one to start managing coaches, courts, and centralized bookings.
           </p>
           <Link to="/club/settings" className="inline-block px-6 py-3 bg-primary text-primary-foreground rounded-lg font-display text-sm tracking-wide">
-            CREATE CLUB
+            Create club
           </Link>
         </div>
       </PortalLayout>

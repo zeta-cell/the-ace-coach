@@ -137,7 +137,7 @@ const CosmicPlayerCard = ({
             {/* Header */}
             <div className="flex items-start justify-between">
               <div>
-                <p className="font-display text-[10px] text-white/60">HI VOLLEY</p>
+                <p className="font-display text-[10px] text-white/60">Hi volley</p>
                 <p className="font-display text-[9px] text-white/40">
                   {sport} · cosmic series
                 </p>

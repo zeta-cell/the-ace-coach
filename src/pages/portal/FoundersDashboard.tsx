@@ -1181,7 +1181,7 @@ const FoundersDashboard = () => {
       {/* Sticky Header */}
       <div className="sticky top-14 z-30 bg-background/90 backdrop-blur-md border-b border-border -mx-4 md:-mx-6 px-4 md:px-6 py-3 mb-6 flex items-center justify-between">
         <div>
-          <h1 className="font-display text-2xl tracking-wide text-foreground">FOUNDERS INTELLIGENCE</h1>
+          <h1 className="font-display text-2xl tracking-wide text-foreground">Founders intelligence</h1>
           {lastUpdated && (
             <p className="text-[10px] text-muted-foreground font-body">
               Last updated: {lastUpdated.toLocaleTimeString()}
@@ -1200,10 +1200,10 @@ const FoundersDashboard = () => {
             variant="outline"
             size="sm"
           >
-            <Download className="w-3 h-3 mr-1" /> SYNC LIBRARY
+            <Download className="w-3 h-3 mr-1" /> Sync library
           </Button>
           <Button onClick={fetchAll} variant="outline" size="sm">
-            <RefreshCw className={`w-3 h-3 mr-1 ${loading ? "animate-spin" : ""}`} /> REFRESH ALL
+            <RefreshCw className={`w-3 h-3 mr-1 ${loading ? "animate-spin" : ""}`} /> Refresh all
           </Button>
         </div>
       </div>
@@ -1559,7 +1559,7 @@ const FoundersDashboard = () => {
         </Card>
         <Card className="border-destructive/20">
           <CardHeader className="pb-2"><CardTitle className="text-sm font-body flex items-center gap-2">
-            <Target className="w-4 h-4 text-destructive" /> WHERE WE'RE LOSING MONEY
+            <Target className="w-4 h-4 text-destructive" /> Where we're losing money
           </CardTitle></CardHeader>
           <CardContent className="space-y-3">
             <div className="p-3 rounded-lg bg-secondary/30 flex items-center justify-between">
@@ -1739,7 +1739,7 @@ const FoundersDashboard = () => {
             <CardTitle className="text-sm font-body">Expense Tracker</CardTitle>
             {!isReadOnly && (
               <Button size="sm" variant="outline" onClick={() => setShowSpendForm(!showSpendForm)}>
-                <Plus className="w-3 h-3 mr-1" /> ADD EXPENSE
+                <Plus className="w-3 h-3 mr-1" /> Add expense
               </Button>
             )}
           </CardHeader>
@@ -2100,22 +2100,22 @@ const FoundersDashboard = () => {
         <div className="sticky bottom-0 md:bottom-0 z-30 bg-card/95 backdrop-blur-md border-t border-border -mx-4 md:-mx-6 px-4 md:px-6 py-3 mb-20 md:mb-0">
           <div className="flex flex-wrap items-center gap-2">
             <Button onClick={handleExportFull} variant="outline" size="sm">
-              <Download className="w-3 h-3 mr-1" /> EXPORT FULL REPORT
+              <Download className="w-3 h-3 mr-1" /> Export full report
             </Button>
             <Button onClick={() => setInvestorModal(true)} variant="outline" size="sm">
-              <Crown className="w-3 h-3 mr-1" /> INVESTOR SNAPSHOT
+              <Crown className="w-3 h-3 mr-1" /> Investor snapshot
             </Button>
             <Button onClick={handleFindExpansion} variant="outline" size="sm">
-              <MapPin className="w-3 h-3 mr-1" /> EXPANSION TARGETS
+              <MapPin className="w-3 h-3 mr-1" /> Expansion targets
             </Button>
             <Button onClick={handleNudgeAllAtRisk} variant="outline" size="sm">
               <Send className="w-3 h-3 mr-1" /> NUDGE AT-RISK ({coach.atRiskCoaches.length})
             </Button>
             <Button onClick={() => { setShowSpendForm(true); document.getElementById("spend")?.scrollIntoView({ behavior: "smooth" }); }} variant="outline" size="sm">
-              <Plus className="w-3 h-3 mr-1" /> LOG EXPENSE
+              <Plus className="w-3 h-3 mr-1" /> Log expense
             </Button>
             <Button onClick={handleShareDashboard} variant="default" size="sm">
-              <Share2 className="w-3 h-3 mr-1" /> SHARE DASHBOARD
+              <Share2 className="w-3 h-3 mr-1" /> Share dashboard
             </Button>
           </div>
         </div>
@@ -2153,7 +2153,7 @@ const FoundersDashboard = () => {
             ))}
           </div>
           <Button onClick={copyInvestorSnapshot} className="w-full mt-2">
-            <Copy className="w-3 h-3 mr-1" /> COPY TO CLIPBOARD
+            <Copy className="w-3 h-3 mr-1" /> Copy to clipboard
           </Button>
         </DialogContent>
       </Dialog>

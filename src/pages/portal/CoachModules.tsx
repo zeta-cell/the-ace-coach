@@ -228,12 +228,12 @@ export const CoachModulesContent = ({ embedded = false }: { embedded?: boolean }
   const content = (
       <div className="max-w-4xl mx-auto">
         <div className="flex items-center justify-between mb-4">
-          <h1 className="font-display text-3xl text-foreground">TRAINING LIBRARY</h1>
+          <h1 className="font-display text-3xl text-foreground">Training library</h1>
           <button
             onClick={() => { setForm(emptyForm); setEditingId(null); setShowForm(true); }}
             className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground font-display text-xs tracking-wider hover:bg-primary/90 transition-colors"
           >
-            <Plus size={16} /> NEW MODULE
+            <Plus size={16} /> New module
           </button>
         </div>
 
@@ -356,13 +356,13 @@ export const CoachModulesContent = ({ embedded = false }: { embedded?: boolean }
                                 onClick={() => setDescView({ ...descView, [mod.id]: "player" })}
                                 className={`flex-1 px-2 py-1 rounded-md font-display text-[9px] tracking-wider transition-colors ${(descView[mod.id] || "player") === "player" ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground"}`}
                               >
-                                PLAYER VIEW
+                                Player view
                               </button>
                               <button
                                 onClick={() => setDescView({ ...descView, [mod.id]: "coach" })}
                                 className={`flex-1 px-2 py-1 rounded-md font-display text-[9px] tracking-wider transition-colors ${descView[mod.id] === "coach" ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground"}`}
                               >
-                                COACH VIEW
+                                Coach view
                               </button>
                             </div>
                             <p className="text-xs font-body text-foreground whitespace-pre-line">

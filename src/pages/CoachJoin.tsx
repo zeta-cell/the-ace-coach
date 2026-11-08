@@ -88,11 +88,11 @@ const CoachJoin = () => {
   if (!coach || !coach.is_valid) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center px-4 text-center">
-        <h1 className="font-display text-2xl text-foreground mb-2">LINK NOT AVAILABLE</h1>
+        <h1 className="font-display text-2xl text-foreground mb-2">Link not available</h1>
         <p className="font-body text-sm text-muted-foreground mb-6 max-w-sm">
           This coach link is not valid. Ask your coach for a new one.
         </p>
-        <Link to="/login" className="font-display text-sm tracking-wider text-primary">GO TO LOGIN</Link>
+        <Link to="/login" className="font-display text-sm tracking-wider text-primary">Go to login</Link>
       </div>
     );
   }
@@ -133,7 +133,7 @@ const CoachJoin = () => {
 
         <form onSubmit={handleSignUp} className="space-y-4">
           <div>
-            <label className="block font-display text-xs tracking-wider text-muted-foreground mb-1.5">FULL NAME</label>
+            <label className="block font-display text-xs tracking-wider text-muted-foreground mb-1.5">Full name</label>
             <input
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
@@ -153,7 +153,7 @@ const CoachJoin = () => {
             />
           </div>
           <div>
-            <label className="block font-display text-xs tracking-wider text-muted-foreground mb-1.5">PASSWORD</label>
+            <label className="block font-display text-xs tracking-wider text-muted-foreground mb-1.5">Password</label>
             <div className="relative">
               <input
                 value={password}

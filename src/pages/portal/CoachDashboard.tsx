@@ -244,7 +244,7 @@ const CoachDashboard = () => {
         {playerCards.length > 0 && (
           <motion.div initial={false} className="mb-6">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="font-display text-sm tracking-wider text-muted-foreground">PLAYER PROGRESS</h3>
+              <h3 className="font-display text-sm tracking-wider text-muted-foreground">Player progress</h3>
               <Link to="/coach/players" className="text-xs font-display text-primary tracking-wider hover:underline">VIEW ALL →</Link>
             </div>
             <div className="flex gap-2 overflow-x-auto pb-2">
@@ -270,7 +270,7 @@ const CoachDashboard = () => {
         <motion.div initial={false} className="mb-6">
           <div className="flex items-center justify-between mb-3">
             <h3 className="font-display text-sm tracking-wider text-muted-foreground flex items-center gap-2">
-              <ShoppingBag size={14} className="text-primary" /> MARKETPLACE
+              <ShoppingBag size={14} className="text-primary" /> Marketplace
             </h3>
             <Link to="/coach/marketplace" className="text-xs font-display text-primary tracking-wider hover:underline">MANAGE →</Link>
           </div>
@@ -293,7 +293,7 @@ const CoachDashboard = () => {
         {/* SECTION E — Week Strip */}
         <motion.div initial={false} className="mb-6">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="font-display text-sm tracking-wider text-muted-foreground">UPCOMING WEEK</h3>
+            <h3 className="font-display text-sm tracking-wider text-muted-foreground">Upcoming week</h3>
             <div className="flex items-center gap-1">
               <button onClick={() => setWeekOffset(w => w - 1)} className="p-1.5 rounded-lg hover:bg-secondary text-muted-foreground transition-colors">
                 <ChevronLeft size={14} />
@@ -391,7 +391,7 @@ const CoachDashboard = () => {
           <motion.div initial={false} className="mb-6">
             <div className="flex items-center justify-between mb-3">
               <h2 className="font-display text-sm tracking-wider text-foreground flex items-center gap-2">
-                <Mail size={16} className="text-primary" /> COACHING REQUESTS
+                <Mail size={16} className="text-primary" /> Coaching requests
               </h2>
               <span className="text-xs font-body text-primary">{requests.length} pending</span>
             </div>
@@ -415,13 +415,13 @@ const CoachDashboard = () => {
                       await supabase.from("coach_player_assignments").insert({ coach_id: user!.id, player_id: req.player_id });
                       toast.success("Request accepted!"); setRequests(prev => prev.filter(r => r.id !== req.id));
                     }} className="flex-1 py-2 rounded-lg bg-primary text-primary-foreground font-display text-[10px] tracking-wider flex items-center justify-center gap-1">
-                      <Check size={12} /> ACCEPT
+                      <Check size={12} /> Accept
                     </button>
                     <button onClick={async () => {
                       await supabase.from("coach_requests").update({ status: "declined", responded_at: new Date().toISOString() }).eq("id", req.id);
                       toast.success("Request declined"); setRequests(prev => prev.filter(r => r.id !== req.id));
                     }} className="flex-1 py-2 rounded-lg border border-border text-muted-foreground font-display text-[10px] tracking-wider flex items-center justify-center gap-1">
-                      <XIcon size={12} /> DECLINE
+                      <XIcon size={12} /> Decline
                     </button>
                   </div>
                 </div>

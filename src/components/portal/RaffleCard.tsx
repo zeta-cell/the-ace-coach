@@ -26,7 +26,7 @@ const RaffleCard = () => {
     <div className="bg-gradient-to-br from-primary/10 to-card border border-primary/20 rounded-xl p-5">
       <div className="flex items-center justify-between mb-3">
         <h3 className="font-display text-sm tracking-wider text-foreground flex items-center gap-2">
-          <Ticket size={14} className="text-primary" /> MONTHLY RAFFLE
+          <Ticket size={14} className="text-primary" /> Monthly raffle
         </h3>
         <span className="font-body text-xs text-primary">{daysLeft} days left</span>
       </div>

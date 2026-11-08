@@ -229,7 +229,7 @@ const CoachPlayerDetail = () => {
           {activePrograms.length > 0 && (
             <div className="mb-6 space-y-2">
               <h3 className="font-display text-sm tracking-wider text-muted-foreground flex items-center gap-2">
-                <BookOpen size={14} className="text-primary" /> ACTIVE PROGRAMS
+                <BookOpen size={14} className="text-primary" /> Active programs
               </h3>
               {activePrograms.map((prog) => {
                 const progress = prog.week_count > 1 ? Math.round((prog.current_week / prog.week_count) * 100) : 100;
@@ -264,11 +264,11 @@ const CoachPlayerDetail = () => {
                         </button>
                         <button onClick={() => navigate(`/coach/plan/${playerId}?week=${prog.current_week}&block_id=${prog.block_id}`)}
                           className="flex-1 py-2 rounded-lg border border-border font-display text-[10px] tracking-wider text-foreground hover:bg-secondary transition-colors text-center">
-                          ADJUST THIS WEEK
+                          Adjust this week
                         </button>
                         <button onClick={() => markWeekComplete(prog)}
                           className="py-2 px-3 rounded-lg bg-primary text-primary-foreground font-display text-[10px] tracking-wider hover:bg-primary/90 transition-colors flex items-center gap-1">
-                          <CheckCircle size={12} /> COMPLETE WEEK
+                          <CheckCircle size={12} /> Complete week
                         </button>
                       </div>
                     </div>
@@ -302,7 +302,7 @@ const CoachPlayerDetail = () => {
             <button onClick={() => setInfoOpen(!infoOpen)} className="w-full flex items-center justify-between p-4 hover:bg-secondary/50 transition-colors">
               <div className="flex items-center gap-2">
                 <User size={16} className="text-muted-foreground" />
-                <h3 className="font-display text-sm tracking-wider text-muted-foreground">PLAYER INFO</h3>
+                <h3 className="font-display text-sm tracking-wider text-muted-foreground">Player info</h3>
               </div>
               {infoOpen ? <ChevronUp size={16} className="text-muted-foreground" /> : <ChevronDown size={16} className="text-muted-foreground" />}
             </button>
@@ -386,7 +386,7 @@ const CoachPlayerDetail = () => {
                     onClick={() => navigate(`/training?player=${playerId}&date=${format(quickDate, "yyyy-MM-dd")}`)}
                     className="inline-flex items-center gap-2 px-5 py-2 rounded-xl bg-primary text-primary-foreground font-display text-xs hover:bg-primary/90 transition-colors"
                   >
-                    <Plus size={14} /> CREATE PLAN
+                    <Plus size={14} /> Create plan
                   </button>
                 </div>
               )}
@@ -397,11 +397,11 @@ const CoachPlayerDetail = () => {
           <div className="grid grid-cols-2 gap-2 mb-6">
             <button onClick={() => navigate(`/messages?to=${playerId}`)}
               className="py-2.5 rounded-xl bg-card border border-border text-foreground font-display text-xs hover:bg-secondary transition-colors flex items-center justify-center gap-2">
-              <MessageCircle size={14} /> MESSAGE
+              <MessageCircle size={14} /> Message
             </button>
             <Link to={`/coach/videos`}
               className="py-2.5 rounded-xl bg-card border border-border text-foreground font-display text-xs hover:bg-secondary transition-colors flex items-center justify-center gap-2">
-              <Video size={14} /> VIDEOS
+              <Video size={14} /> Videos
             </Link>
           </div>
 
@@ -414,7 +414,7 @@ const CoachPlayerDetail = () => {
               >
                 <div className="flex items-center gap-2">
                   <CalendarDays size={14} className="text-primary" />
-                  <span className="font-display text-[10px] tracking-wider text-muted-foreground">UPCOMING TRAINING</span>
+                  <span className="font-display text-[10px] tracking-wider text-muted-foreground">Upcoming training</span>
                   <span className="ml-1 px-2 py-0.5 rounded-full bg-primary/10 font-display text-[10px] text-primary">{upcomingPlans.length}</span>
                 </div>
                 {upcomingOpen ? <ChevronUp size={14} className="text-muted-foreground" /> : <ChevronDown size={14} className="text-muted-foreground" />}
@@ -457,7 +457,7 @@ const CoachPlayerDetail = () => {
 
           {/* Edit / View toggle for abilities */}
           <div className="flex items-center justify-between mb-3">
-            <h3 className="font-display text-sm tracking-wider text-muted-foreground">ABILITIES & LEVELS</h3>
+            <h3 className="font-display text-sm tracking-wider text-muted-foreground">Abilities & levels</h3>
             {!editMode ? (
               <button onClick={() => { setEditMode(true); setEditData({ ...playerData }); }}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border text-muted-foreground hover:text-foreground hover:border-primary/40 font-display text-[10px] tracking-wider transition-colors">
@@ -467,7 +467,7 @@ const CoachPlayerDetail = () => {
               <div className="flex items-center gap-2">
                 <button onClick={() => setEditMode(false)}
                   className="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-border text-muted-foreground hover:text-foreground font-display text-[10px] tracking-wider transition-colors">
-                  <X size={12} /> CANCEL
+                  <X size={12} /> Cancel
                 </button>
                 <button onClick={handleSaveAbilities} disabled={saving}
                   className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-primary text-primary-foreground font-display text-[10px] tracking-wider hover:bg-primary/90 disabled:opacity-50 transition-colors">
@@ -482,7 +482,7 @@ const CoachPlayerDetail = () => {
             <div className="bg-card border border-border rounded-xl p-4 mb-4 space-y-4">
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="font-display text-[10px] tracking-wider text-muted-foreground">FITNESS LEVEL</label>
+                  <label className="font-display text-[10px] tracking-wider text-muted-foreground">Fitness level</label>
                   <select value={editData.fitness_level || ""} onChange={(e) => setEditData({ ...editData, fitness_level: e.target.value })}
                     className="w-full mt-1 px-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary">
                     <option value="beginner">Beginner</option>
@@ -492,12 +492,12 @@ const CoachPlayerDetail = () => {
                   </select>
                 </div>
                 <div>
-                  <label className="font-display text-[10px] tracking-wider text-muted-foreground">PLAYTOMIC LEVEL</label>
+                  <label className="font-display text-[10px] tracking-wider text-muted-foreground">Playtomic level</label>
                   <input type="number" step="0.1" min="1" max="10" value={editData.playtomic_level ?? ""} onChange={(e) => setEditData({ ...editData, playtomic_level: e.target.value ? parseFloat(e.target.value) : null })}
                     className="w-full mt-1 px-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary" />
                 </div>
                 <div>
-                  <label className="font-display text-[10px] tracking-wider text-muted-foreground">DOMINANT HAND</label>
+                  <label className="font-display text-[10px] tracking-wider text-muted-foreground">Dominant hand</label>
                   <select value={editData.dominant_hand || ""} onChange={(e) => setEditData({ ...editData, dominant_hand: e.target.value })}
                     className="w-full mt-1 px-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary">
                     <option value="">—</option>
@@ -507,7 +507,7 @@ const CoachPlayerDetail = () => {
                   </select>
                 </div>
                 <div>
-                  <label className="font-display text-[10px] tracking-wider text-muted-foreground">PREFERRED SPORT</label>
+                  <label className="font-display text-[10px] tracking-wider text-muted-foreground">Preferred sport</label>
                   <select value={editData.preferred_sport || ""} onChange={(e) => setEditData({ ...editData, preferred_sport: e.target.value })}
                     className="w-full mt-1 px-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary">
                     <option value="padel">Padel</option>
@@ -518,7 +518,7 @@ const CoachPlayerDetail = () => {
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="font-display text-[10px] tracking-wider text-muted-foreground">BEST SHOT</label>
+                  <label className="font-display text-[10px] tracking-wider text-muted-foreground">Best shot</label>
                   <select value={editData.best_shot || ""} onChange={(e) => setEditData({ ...editData, best_shot: e.target.value })}
                     className="w-full mt-1 px-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary">
                     <option value="">—</option>
@@ -526,7 +526,7 @@ const CoachPlayerDetail = () => {
                   </select>
                 </div>
                 <div>
-                  <label className="font-display text-[10px] tracking-wider text-muted-foreground">WEAKEST SHOT</label>
+                  <label className="font-display text-[10px] tracking-wider text-muted-foreground">Weakest shot</label>
                   <select value={editData.weakest_shot || ""} onChange={(e) => setEditData({ ...editData, weakest_shot: e.target.value })}
                     className="w-full mt-1 px-3 py-2 rounded-lg bg-secondary border border-border text-foreground font-body text-sm focus:outline-none focus:ring-1 focus:ring-primary">
                     <option value="">—</option>
@@ -556,7 +556,7 @@ const CoachPlayerDetail = () => {
 
           {/* Shot confidence */}
           <div className="bg-card border border-border rounded-xl p-4 mb-6">
-            <h3 className="font-display text-sm tracking-wider text-muted-foreground mb-3">SHOT CONFIDENCE</h3>
+            <h3 className="font-display text-sm tracking-wider text-muted-foreground mb-3">Shot confidence</h3>
             {editMode && editData ? (
               <div className="space-y-3">
                 {["Volley", "Forehand", "Serve", "Smash", "Backhand", "Lob"].map((shotName) => {
@@ -595,7 +595,7 @@ const CoachPlayerDetail = () => {
           {/* Side tendency */}
           {playerData && (
             <div className="bg-card border border-border rounded-xl p-4 mb-6">
-              <h3 className="font-display text-sm tracking-wider text-muted-foreground mb-3">SIDE PREFERENCE</h3>
+              <h3 className="font-display text-sm tracking-wider text-muted-foreground mb-3">Side preference</h3>
               {editMode && editData ? (
                 <div>
                   <div className="flex justify-between mb-1">
@@ -625,7 +625,7 @@ const CoachPlayerDetail = () => {
           {/* Rackets */}
           {rackets.length > 0 && (
             <div className="bg-card border border-border rounded-xl p-4 mb-6">
-              <h3 className="font-display text-sm tracking-wider text-muted-foreground mb-3">RACKETS</h3>
+              <h3 className="font-display text-sm tracking-wider text-muted-foreground mb-3">Rackets</h3>
               <div className="space-y-2">
                 {rackets.map((r) => (
                   <div key={r.id} className="flex items-center gap-3 bg-secondary rounded-lg p-3">
@@ -643,7 +643,7 @@ const CoachPlayerDetail = () => {
           {/* Quick plan link */}
           <Link to={`/training?player=${playerId}`}
             className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-primary text-primary-foreground font-display text-sm hover:bg-primary/90 transition-colors">
-            <Plus size={16} /> CREATE DAY PLAN
+            <Plus size={16} /> Create day plan
           </Link>
         </motion.div>
 

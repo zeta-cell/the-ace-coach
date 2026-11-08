@@ -105,7 +105,7 @@ const AcademyHostClubs = ({ academyId, homeClubId }: Props) => {
   return (
     <div className="space-y-4">
       <div className="bg-card border border-border rounded-2xl p-4 space-y-3">
-        <h3 className="font-display text-xs tracking-wider text-foreground">ADD A CLUB YOU TRAIN AT</h3>
+        <h3 className="font-display text-xs tracking-wider text-foreground">Add a club you train at</h3>
         <p className="font-body text-[11px] text-muted-foreground">
           Your academy can run trainings and camps at several clubs. Courts are rented out by the clubs themselves.
         </p>
@@ -165,7 +165,7 @@ const AcademyHostClubs = ({ academyId, homeClubId }: Props) => {
               <div className="flex items-center gap-3 shrink-0">
                 {r.club_id === homeClubId && (
                   <span className="font-display text-[10px] tracking-wider px-2 py-1 rounded-full bg-secondary text-muted-foreground">
-                    OWNER CLUB
+                    Owner club
                   </span>
                 )}
                 {r.is_primary ? (
@@ -177,7 +177,7 @@ const AcademyHostClubs = ({ academyId, homeClubId }: Props) => {
                     onClick={() => makePrimary(r.id)}
                     className="font-display text-[10px] tracking-wider text-muted-foreground hover:text-primary"
                   >
-                    SET MAIN
+                    Set main
                   </button>
                 )}
                 {r.club_id !== homeClubId && (

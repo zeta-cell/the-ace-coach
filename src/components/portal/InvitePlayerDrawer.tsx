@@ -87,7 +87,7 @@ const InvitePlayerDrawer = ({ open, onClose }: { open: boolean; onClose: () => v
           >
             <div className="max-w-lg mx-auto p-5 pb-10">
               <div className="flex items-center justify-between mb-5">
-                <h2 className="font-display text-xl text-foreground tracking-wide">INVITE A PLAYER</h2>
+                <h2 className="font-display text-xl text-foreground tracking-wide">Invite a player</h2>
                 <button onClick={onClose} className="text-muted-foreground"><X size={20} /></button>
               </div>
 
@@ -117,7 +117,7 @@ const InvitePlayerDrawer = ({ open, onClose }: { open: boolean; onClose: () => v
 
               {invites.length > 0 && (
                 <div className="mt-6 space-y-2">
-                  <p className="font-display text-xs tracking-wider text-muted-foreground">RECENT INVITES</p>
+                  <p className="font-display text-xs tracking-wider text-muted-foreground">Recent invites</p>
                   {invites.map((i) => (
                     <div key={i.id} className="bg-background border border-border rounded-xl p-3">
                       <div className="flex items-center justify-between gap-3">

@@ -159,7 +159,7 @@ const AdminSchedule = () => {
         {/* Header */}
         <div className="space-y-4">
           <h1 className="font-display text-2xl md:text-3xl text-foreground tracking-wider">
-            COACH SCHEDULE
+            Coach schedule
           </h1>
           <div className="flex items-center gap-3">
             <button
@@ -190,7 +190,7 @@ const AdminSchedule = () => {
                 : "bg-card border border-border text-muted-foreground hover:bg-secondary"
             }`}
           >
-            ALL COACHES
+            All coaches
           </button>
           {coaches.map((coach, i) => (
             <button

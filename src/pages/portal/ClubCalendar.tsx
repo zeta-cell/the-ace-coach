@@ -158,7 +158,7 @@ const ClubCalendar = () => {
           <button
             onClick={() => setCoachFilter("all")}
             className={`px-3 py-1.5 rounded-full text-xs font-display tracking-wider border transition-colors ${coachFilter === "all" ? "bg-primary text-primary-foreground border-primary" : "border-border text-muted-foreground hover:text-foreground"}`}
-          >ALL COACHES</button>
+          >All coaches</button>
           {coaches.map((c) => {
             const active = coachFilter === c.id;
             return (

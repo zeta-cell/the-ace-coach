@@ -214,7 +214,7 @@ const PlayerProfile = () => {
               onClick={() => navigate("/messages")}
               className="mt-2 w-full py-2.5 rounded-xl bg-primary text-primary-foreground font-display text-sm hover:bg-primary/90 transition-colors flex items-center justify-center gap-2"
             >
-              <MessageCircle size={16} /> MESSAGE MY COACH
+              <MessageCircle size={16} /> Message my coach
             </button>
           </div>
         </ProfileHero>
@@ -223,7 +223,7 @@ const PlayerProfile = () => {
         {/* Sport Preferences */}
         {playerData && (playerData.favourite_players?.length > 0 || playerData.preferred_court_surface || playerData.training_freq) && (
           <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="bg-card border border-border rounded-xl p-6">
-            <h2 className="font-display text-sm tracking-wider text-muted-foreground mb-4">SPORT PREFERENCES</h2>
+            <h2 className="font-display text-sm tracking-wider text-muted-foreground mb-4">Sport preferences</h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-4">
               {playerData.preferred_court_surface && (
                 <div className="bg-secondary rounded-lg p-3 text-center">
@@ -248,7 +248,7 @@ const PlayerProfile = () => {
             </div>
             {playerData.favourite_players?.length > 0 && (
               <div>
-                <h3 className="font-display text-xs tracking-wider text-muted-foreground mb-2">FAVOURITE PLAYERS</h3>
+                <h3 className="font-display text-xs tracking-wider text-muted-foreground mb-2">Favourite players</h3>
                 <div className="flex flex-wrap gap-2">
                   {playerData.favourite_players.map((p) => (
                     <span key={p} className="px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-body font-medium">{p}</span>
@@ -262,7 +262,7 @@ const PlayerProfile = () => {
         {/* My Club */}
         {playerData?.club_name && (
           <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }} className="bg-card border border-border rounded-xl p-6">
-            <h2 className="font-display text-sm tracking-wider text-muted-foreground mb-3">MY CLUB</h2>
+            <h2 className="font-display text-sm tracking-wider text-muted-foreground mb-3">My club</h2>
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-xl bg-secondary flex items-center justify-center">
                 <MapPin size={20} className="text-primary" />
@@ -278,7 +278,7 @@ const PlayerProfile = () => {
         {/* Playtomic */}
         {(playerData?.playtomic_level || playerData?.playtomic_url) && (
           <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="bg-card border border-border rounded-xl p-6">
-            <h2 className="font-display text-sm tracking-wider text-muted-foreground mb-3">PLAYTOMIC</h2>
+            <h2 className="font-display text-sm tracking-wider text-muted-foreground mb-3">Playtomic</h2>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
                 {playerData?.playtomic_level && (
@@ -303,7 +303,7 @@ const PlayerProfile = () => {
         {/* Cosmic Player Card */}
         {playerData && profile && (
           <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
-            <h2 className="font-display text-sm tracking-wider text-muted-foreground mb-3">MY PLAYER CARD</h2>
+            <h2 className="font-display text-sm tracking-wider text-muted-foreground mb-3">My player card</h2>
             <CosmicPlayerCard
               name={profile.full_name}
               avatarUrl={profile.avatar_url}
@@ -340,7 +340,7 @@ const PlayerProfile = () => {
         {playerData && (
           <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="bg-card border border-border rounded-xl p-6">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="font-display text-sm tracking-wider text-muted-foreground">PLAY STYLE</h2>
+              <h2 className="font-display text-sm tracking-wider text-muted-foreground">Play style</h2>
               {playerData.shot_data_source === "coach" && (
                 <span className="flex items-center gap-1 text-[10px] font-body font-semibold text-primary bg-primary/10 px-2 py-0.5 rounded-full">
                   ★ Coach assessed
@@ -391,7 +391,7 @@ const PlayerProfile = () => {
             </div>
 
             {/* Shot bars */}
-            <h3 className="font-display text-xs tracking-wider text-muted-foreground mb-3">SHOT CONFIDENCE</h3>
+            <h3 className="font-display text-xs tracking-wider text-muted-foreground mb-3">Shot confidence</h3>
             <div className="space-y-3">
               {shots.map((shot, i) => (
                 <div key={shot.name}>
@@ -412,7 +412,7 @@ const PlayerProfile = () => {
         {rackets.length > 0 && (
           <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="bg-card border border-border rounded-xl p-6">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="font-display text-sm tracking-wider text-muted-foreground">MY RACKETS</h2>
+              <h2 className="font-display text-sm tracking-wider text-muted-foreground">My rackets</h2>
               {favoriteRacket && <span className="text-xs font-body text-muted-foreground">Favorite: {favoriteRacket.brand}</span>}
             </div>
             <div className="space-y-3">
@@ -477,7 +477,7 @@ const PlayerProfile = () => {
         {/* Goals */}
         {playerData && playerData.goals.length > 0 && (
           <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="bg-card border border-border rounded-xl p-6">
-            <h2 className="font-display text-sm tracking-wider text-muted-foreground mb-3">GOALS & FITNESS</h2>
+            <h2 className="font-display text-sm tracking-wider text-muted-foreground mb-3">Goals & fitness</h2>
             <div className="flex flex-wrap gap-2 mb-3">
               {playerData.goals.map((goal) => (
                 <span key={goal} className="px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-body font-medium">{goal}</span>
@@ -498,7 +498,7 @@ const PlayerProfile = () => {
 
         {/* Notifications */}
         <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="bg-card border border-border rounded-xl p-6">
-          <h2 className="font-display text-sm tracking-wider text-muted-foreground mb-4">NOTIFICATION SETTINGS</h2>
+          <h2 className="font-display text-sm tracking-wider text-muted-foreground mb-4">Notification settings</h2>
           <div className="space-y-3">
             {([
               { key: "new_message" as const, label: "New Messages", desc: "When you receive a new message" },
@@ -527,7 +527,7 @@ const PlayerProfile = () => {
             onClick={signOut}
             className="w-full py-3 rounded-xl border border-destructive/30 text-destructive font-display text-sm hover:bg-destructive/10 transition-colors flex items-center justify-center gap-2"
           >
-            <LogOut className="w-4 h-4" /> SIGN OUT
+            <LogOut className="w-4 h-4" /> Sign out
           </button>
         </motion.div>
 

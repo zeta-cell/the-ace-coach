@@ -68,7 +68,7 @@ const Rankings = () => {
           <Link to="/find-a-coach" className="flex items-center gap-2 font-display text-sm tracking-wider text-muted-foreground hover:text-foreground transition-colors">
             <ArrowLeft size={16} /> BACK
           </Link>
-          <h1 className="font-display text-xl text-foreground">RANKINGS</h1>
+          <h1 className="font-display text-xl text-foreground">Rankings</h1>
           <div className="w-16" />
         </div>
       </div>

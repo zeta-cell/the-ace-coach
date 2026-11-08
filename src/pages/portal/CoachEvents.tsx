@@ -130,12 +130,12 @@ const CoachEvents = () => {
     <PortalLayout>
       <div className="p-4 md:p-6 max-w-5xl mx-auto space-y-6">
         <div className="flex items-center justify-between">
-          <h1 className="font-display text-2xl tracking-wider text-foreground">MY EVENTS</h1>
+          <h1 className="font-display text-2xl tracking-wider text-foreground">My events</h1>
           <button
             onClick={() => { setEditingEvent(null); setDrawerOpen(true); }}
             className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground font-display text-xs tracking-wider hover:bg-primary/90 transition-colors"
           >
-            <Plus size={16} /> CREATE EVENT
+            <Plus size={16} /> Create event
           </button>
         </div>
 
@@ -148,7 +148,7 @@ const CoachEvents = () => {
           })}
           className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-primary/40 bg-primary/10 text-primary font-display text-[11px] hover:bg-primary/20 transition-colors"
         >
-          <Megaphone size={14} /> PROMOTE MY FREE SLOTS FOR PRIVATE SESSIONS
+          <Megaphone size={14} /> Promote my free slots for private sessions
         </button>
 
         <div className="flex gap-1 bg-card border border-border rounded-xl p-1">
@@ -211,7 +211,7 @@ const CoachEvents = () => {
                     </button>
                     <button onClick={() => promoteEvent(event)}
                       className="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-primary/40 bg-primary/10 text-[10px] font-display tracking-wider text-primary hover:bg-primary/20 transition-colors">
-                      <Megaphone size={12} /> PROMOTE
+                      <Megaphone size={12} /> Promote
                     </button>
                     <button onClick={() => fetchRegistrations(event.id)}
                       className="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-border text-[10px] font-display tracking-wider text-muted-foreground hover:text-foreground transition-colors">
@@ -220,13 +220,13 @@ const CoachEvents = () => {
                     {event.status === "published" && (
                       <button onClick={() => cancelEvent(event)}
                         className="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-destructive/30 text-[10px] font-display tracking-wider text-destructive hover:bg-destructive/10 transition-colors">
-                        <X size={12} /> CANCEL
+                        <X size={12} /> Cancel
                       </button>
                     )}
                     {event.status !== "completed" && event.status !== "cancelled" && (
                       <button onClick={() => completeEvent(event)}
                         className="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-border text-[10px] font-display tracking-wider text-emerald-400 hover:bg-emerald-500/10 transition-colors">
-                        <CheckCircle size={12} /> COMPLETE
+                        <CheckCircle size={12} /> Complete
                       </button>
                     )}
                   </div>

@@ -50,7 +50,7 @@ const Unsubscribe = () => {
         {state === "valid" && (
           <>
             <Mail size={28} className="mx-auto mb-3 text-primary" />
-            <h1 className="font-display text-xl text-foreground mb-2">UNSUBSCRIBE</h1>
+            <h1 className="font-display text-xl text-foreground mb-2">Unsubscribe</h1>
             <p className="font-body text-sm text-muted-foreground mb-6">
               {email ? `Stop sending emails to ${email}?` : "Stop sending emails to this address?"}
             </p>
@@ -67,7 +67,7 @@ const Unsubscribe = () => {
         {state === "done" && (
           <>
             <Check size={28} className="mx-auto mb-3 text-emerald-500" />
-            <h1 className="font-display text-xl text-foreground mb-2">YOU'RE UNSUBSCRIBED</h1>
+            <h1 className="font-display text-xl text-foreground mb-2">You're unsubscribed</h1>
             <p className="font-body text-sm text-muted-foreground">
               You won't receive further emails from Hi Volley at this address.
             </p>
@@ -77,7 +77,7 @@ const Unsubscribe = () => {
         {state === "used" && (
           <>
             <Check size={28} className="mx-auto mb-3 text-emerald-500" />
-            <h1 className="font-display text-xl text-foreground mb-2">ALREADY DONE</h1>
+            <h1 className="font-display text-xl text-foreground mb-2">Already done</h1>
             <p className="font-body text-sm text-muted-foreground">This address is already unsubscribed.</p>
           </>
         )}
@@ -85,7 +85,7 @@ const Unsubscribe = () => {
         {state === "invalid" && (
           <>
             <AlertTriangle size={28} className="mx-auto mb-3 text-amber-500" />
-            <h1 className="font-display text-xl text-foreground mb-2">LINK NOT VALID</h1>
+            <h1 className="font-display text-xl text-foreground mb-2">Link not valid</h1>
             <p className="font-body text-sm text-muted-foreground">
               This unsubscribe link is invalid or has expired.
             </p>

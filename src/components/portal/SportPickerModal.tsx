@@ -147,7 +147,7 @@ const SportPickerModal = ({ userId, onComplete }: SportPickerModalProps) => {
               className="flex flex-col items-center gap-2 p-6 rounded-2xl border-2 border-border bg-card hover:border-primary/60 hover:bg-primary/5 transition-all disabled:opacity-50"
             >
               <Circle size={32} className="text-primary" />
-              <span className="font-display text-sm tracking-wider text-foreground">TENNIS</span>
+              <span className="font-display text-sm tracking-wider text-foreground">Tennis</span>
             </button>
             <button
               onClick={() => handleSelect("padel")}
@@ -165,7 +165,7 @@ const SportPickerModal = ({ userId, onComplete }: SportPickerModalProps) => {
             className="w-full flex items-center justify-center gap-2 p-4 rounded-2xl border-2 border-border bg-card hover:border-primary/60 hover:bg-primary/5 transition-all disabled:opacity-50"
           >
             <Layers size={20} className="text-primary" />
-            <span className="font-display text-sm tracking-wider text-foreground">BOTH SPORTS</span>
+            <span className="font-display text-sm tracking-wider text-foreground">Both sports</span>
           </button>
 
           <p className="font-body text-xs text-muted-foreground italic">

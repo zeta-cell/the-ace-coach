@@ -73,7 +73,7 @@ const GroupFeedbackDrawer = ({ open, onClose, participants, sessionTitle, sessio
       <SheetContent side="bottom" className="max-h-[85vh] overflow-y-auto rounded-t-2xl">
         <SheetHeader>
           <SheetTitle className="font-display text-lg tracking-wider">
-            SESSION FEEDBACK
+            Session feedback
           </SheetTitle>
           <p className="font-body text-xs text-muted-foreground">
             {sessionTitle} · {sessionDate}

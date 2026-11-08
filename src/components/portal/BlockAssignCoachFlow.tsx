@@ -132,7 +132,7 @@ const BlockAssignCoachFlow = ({ block, coachProfile, onClose, onBack }: Props) =
           <>
             {coachProfile && (
               <div className="border border-border rounded-xl p-4 space-y-3">
-                <p className="font-display text-[10px] tracking-wider text-muted-foreground">THE PROGRAM AUTHOR</p>
+                <p className="font-display text-[10px] tracking-wider text-muted-foreground">The program author</p>
                 <div className="flex items-center gap-3">
                   {coachProfile.avatar_url ? <img src={coachProfile.avatar_url} className="w-12 h-12 rounded-full border-2 border-border" /> : (
                     <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-primary font-display">{coachProfile.full_name?.charAt(0)}</div>
@@ -152,7 +152,7 @@ const BlockAssignCoachFlow = ({ block, coachProfile, onClose, onBack }: Props) =
                 {coachProfile.bio && <p className="text-xs font-body text-muted-foreground line-clamp-2">{coachProfile.bio}</p>}
                 <button onClick={() => selectCoach(coachProfile)}
                   className="w-full py-2.5 rounded-xl bg-primary text-primary-foreground font-display text-[10px] tracking-wider hover:bg-primary/90 transition-colors">
-                  SELECT THIS COACH
+                  Select this coach
                 </button>
               </div>
             )}
@@ -160,7 +160,7 @@ const BlockAssignCoachFlow = ({ block, coachProfile, onClose, onBack }: Props) =
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 rounded-xl bg-secondary flex items-center justify-center"><Search size={20} className="text-muted-foreground" /></div>
                 <div>
-                  <p className="font-display text-xs text-foreground">FIND ANY COACH</p>
+                  <p className="font-display text-xs text-foreground">Find any coach</p>
                   <p className="text-[10px] font-body text-muted-foreground">Any coach gets instant access to this program's full structure</p>
                 </div>
               </div>
@@ -187,7 +187,7 @@ const BlockAssignCoachFlow = ({ block, coachProfile, onClose, onBack }: Props) =
                       </div>
                       <button onClick={() => selectCoach(c)}
                         className="px-3 py-1.5 rounded-lg bg-primary text-primary-foreground font-display text-[9px] tracking-wider shrink-0">
-                        SELECT
+                        Select
                       </button>
                     </div>
                   ))}
@@ -209,7 +209,7 @@ const BlockAssignCoachFlow = ({ block, coachProfile, onClose, onBack }: Props) =
                 <p className="text-xs font-body text-foreground truncate">{selectedCoach.full_name}</p>
                 <p className="text-[9px] font-body text-muted-foreground capitalize">{selectedCoach.badge_level}</p>
               </div>
-              <button onClick={() => setStep(1)} className="text-[9px] font-display text-primary">CHANGE</button>
+              <button onClick={() => setStep(1)} className="text-[9px] font-display text-primary">Change</button>
             </div>
 
             <div className="flex items-center gap-3 p-3 rounded-xl bg-secondary">
@@ -221,7 +221,7 @@ const BlockAssignCoachFlow = ({ block, coachProfile, onClose, onBack }: Props) =
             </div>
 
             <div>
-              <p className="font-display text-[10px] tracking-wider text-muted-foreground mb-2">REQUEST TYPE</p>
+              <p className="font-display text-[10px] tracking-wider text-muted-foreground mb-2">Request type</p>
               <div className="space-y-1.5">
                 {REQUEST_TYPES.map((rt) => (
                   <button key={rt.key} onClick={() => setRequestType(rt.key)}
@@ -235,7 +235,7 @@ const BlockAssignCoachFlow = ({ block, coachProfile, onClose, onBack }: Props) =
 
             {coachPackages.length > 0 && (
               <div>
-                <p className="font-display text-[10px] tracking-wider text-muted-foreground mb-2">SELECT PACKAGE</p>
+                <p className="font-display text-[10px] tracking-wider text-muted-foreground mb-2">Select package</p>
                 <div className="space-y-1.5">
                   {coachPackages.map((pkg) => (
                     <button key={pkg.id} onClick={() => setSelectedPackage(pkg.id === selectedPackage ? null : pkg.id)}
@@ -255,7 +255,7 @@ const BlockAssignCoachFlow = ({ block, coachProfile, onClose, onBack }: Props) =
             )}
 
             <div>
-              <p className="font-display text-[10px] tracking-wider text-muted-foreground mb-2">PROPOSED START DATE</p>
+              <p className="font-display text-[10px] tracking-wider text-muted-foreground mb-2">Proposed start date</p>
               <Popover>
                 <PopoverTrigger asChild>
                   <button className="w-full px-3 py-2.5 rounded-xl border border-border text-left font-body text-sm text-foreground hover:bg-secondary transition-colors flex items-center gap-2">
@@ -271,14 +271,14 @@ const BlockAssignCoachFlow = ({ block, coachProfile, onClose, onBack }: Props) =
 
             {requestType === "book_session" && (
               <div>
-                <p className="font-display text-[10px] tracking-wider text-muted-foreground mb-1">NUMBER OF SESSIONS</p>
+                <p className="font-display text-[10px] tracking-wider text-muted-foreground mb-1">Number of sessions</p>
                 <input type="number" value={proposedSessions} onChange={(e) => setProposedSessions(Number(e.target.value))} min={1}
                   className="w-full px-3 py-2 rounded-xl bg-secondary border border-border text-foreground font-body text-sm focus:outline-none" />
               </div>
             )}
 
             <div>
-              <p className="font-display text-[10px] tracking-wider text-muted-foreground mb-1">MESSAGE TO COACH</p>
+              <p className="font-display text-[10px] tracking-wider text-muted-foreground mb-1">Message to coach</p>
               <textarea value={requestMessage} onChange={(e) => setRequestMessage(e.target.value)} rows={3}
                 className="w-full px-3 py-2 rounded-xl bg-secondary border border-border text-foreground font-body text-sm focus:outline-none resize-none" />
             </div>
@@ -303,7 +303,7 @@ const BlockAssignCoachFlow = ({ block, coachProfile, onClose, onBack }: Props) =
               <p className="text-xs font-body text-muted-foreground">They typically respond within {selectedCoach.response_time_hours || 24} hours</p>
             </div>
             <div className="text-left space-y-2 bg-secondary rounded-xl p-4">
-              <p className="font-display text-[10px] tracking-wider text-muted-foreground mb-2">WHAT HAPPENS NEXT</p>
+              <p className="font-display text-[10px] tracking-wider text-muted-foreground mb-2">What happens next</p>
               {["Coach reviews your request and program", "Coach accepts and you get notified", "Your program plan is shared with the coach", "Coach can add notes, adjust timing and book sessions"].map((s, i) => (
                 <div key={i} className="flex items-start gap-2">
                   <span className="w-5 h-5 rounded-full bg-primary/20 flex items-center justify-center text-primary font-display text-[9px] shrink-0 mt-0.5">{i + 1}</span>
@@ -312,8 +312,8 @@ const BlockAssignCoachFlow = ({ block, coachProfile, onClose, onBack }: Props) =
               ))}
             </div>
             <div className="flex gap-2">
-              <Link to="/dashboard" onClick={onClose} className="flex-1 py-3 rounded-xl bg-primary text-primary-foreground font-display text-[10px] tracking-wider text-center hover:bg-primary/90">VIEW MY PROGRAMS</Link>
-              <Link to="/marketplace" onClick={onClose} className="flex-1 py-3 rounded-xl border border-border font-display text-[10px] tracking-wider text-foreground text-center hover:bg-secondary">BROWSE MORE</Link>
+              <Link to="/dashboard" onClick={onClose} className="flex-1 py-3 rounded-xl bg-primary text-primary-foreground font-display text-[10px] tracking-wider text-center hover:bg-primary/90">View my programs</Link>
+              <Link to="/marketplace" onClick={onClose} className="flex-1 py-3 rounded-xl border border-border font-display text-[10px] tracking-wider text-foreground text-center hover:bg-secondary">Browse more</Link>
             </div>
           </div>
         )}

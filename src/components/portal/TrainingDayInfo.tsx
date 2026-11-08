@@ -199,14 +199,14 @@ const TrainingDayInfo = ({ playerId, date }: TrainingDayInfoProps) => {
 
   return (
     <div className="bg-card border border-border rounded-xl p-5 space-y-4">
-      <h2 className="font-display text-sm tracking-wider text-muted-foreground">SESSION INFO</h2>
+      <h2 className="font-display text-sm tracking-wider text-muted-foreground">Session info</h2>
 
       <div className="grid grid-cols-2 gap-3">
         {/* Location */}
         <div className="bg-secondary rounded-xl p-3.5 space-y-1.5">
           <div className="flex items-center gap-1.5">
             <MapPin size={14} className="text-primary shrink-0" />
-            <span className="font-display text-[10px] tracking-wider text-muted-foreground">LOCATION</span>
+            <span className="font-display text-[10px] tracking-wider text-muted-foreground">Location</span>
           </div>
           {plan.location_name ? (
             <>
@@ -221,7 +221,7 @@ const TrainingDayInfo = ({ playerId, date }: TrainingDayInfoProps) => {
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-1 text-primary text-[10px] font-display tracking-wider hover:underline mt-1"
                 >
-                  <ExternalLink size={10} /> OPEN MAP
+                  <ExternalLink size={10} /> Open map
                 </a>
               )}
             </>
@@ -234,7 +234,7 @@ const TrainingDayInfo = ({ playerId, date }: TrainingDayInfoProps) => {
         <div className="bg-secondary rounded-xl p-3.5 space-y-1.5">
           <div className="flex items-center gap-1.5">
             <Cloud size={14} className="text-primary shrink-0" />
-            <span className="font-display text-[10px] tracking-wider text-muted-foreground">WEATHER</span>
+            <span className="font-display text-[10px] tracking-wider text-muted-foreground">Weather</span>
           </div>
           {weather ? (
             <>

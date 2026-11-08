@@ -303,10 +303,10 @@ const PublicCoachProfile = () => {
   if (notFound || !coach || !profile) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center gap-4 px-4">
-        <h1 className="font-display text-4xl text-foreground">COACH NOT FOUND</h1>
+        <h1 className="font-display text-4xl text-foreground">Coach not found</h1>
         <p className="font-body text-muted-foreground">This profile doesn't exist or has been removed.</p>
         <Link to="/" className="mt-4 px-6 py-3 rounded-xl bg-primary text-primary-foreground font-display tracking-wider hover:bg-primary/90 transition-colors">
-          BACK TO HOME
+          Back to home
         </Link>
       </div>
     );
@@ -336,7 +336,7 @@ const PublicCoachProfile = () => {
             onClick={shareProfile}
             className="flex items-center gap-2 px-4 py-2 rounded-lg bg-secondary text-foreground text-xs font-display tracking-wider hover:bg-secondary/80 transition-colors"
           >
-            <Share2 size={14} /> SHARE PROFILE
+            <Share2 size={14} /> Share profile
           </button>
         </div>
       </div>
@@ -417,7 +417,7 @@ const PublicCoachProfile = () => {
                   to={`/book/${coach.profile_slug}`}
                   className="inline-flex items-center gap-2 mt-3 px-6 py-2.5 rounded-xl bg-primary text-primary-foreground font-display text-sm tracking-wider hover:bg-primary/90 transition-colors"
                 >
-                  BOOK NOW <ArrowRight size={14} />
+                  Book now <ArrowRight size={14} />
                 </Link>
               </div>
             )}
@@ -490,7 +490,7 @@ const PublicCoachProfile = () => {
                 className="bg-card border border-border rounded-2xl p-6"
               >
                 <h2 className="font-display text-sm tracking-wider text-muted-foreground mb-3 flex items-center gap-2">
-                  <Award size={14} /> CERTIFICATIONS
+                  <Award size={14} /> Certifications
                 </h2>
                 <div className="space-y-2">
                   {certifications.map(cert => (
@@ -514,7 +514,7 @@ const PublicCoachProfile = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.25 }}
             >
-              <h2 className="font-display text-sm tracking-wider text-muted-foreground mb-4">PACKAGES & PRICING</h2>
+              <h2 className="font-display text-sm tracking-wider text-muted-foreground mb-4">Packages & pricing</h2>
               {packages.length === 0 ? (
                 <div className="bg-card border border-border rounded-2xl p-8 text-center">
                   <p className="font-body text-sm text-muted-foreground">No packages available yet.</p>
@@ -587,7 +587,7 @@ const PublicCoachProfile = () => {
             {coachEvents.length > 0 && (
               <motion.section initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
                 <div className="flex items-center justify-between mb-4">
-                  <h2 className="font-display text-sm tracking-wider text-muted-foreground">UPCOMING EVENTS</h2>
+                  <h2 className="font-display text-sm tracking-wider text-muted-foreground">Upcoming events</h2>
                   <Link to="/events" className="font-display text-xs tracking-wider text-primary">VIEW ALL EVENTS →</Link>
                 </div>
                 <div className="space-y-3">
@@ -608,7 +608,7 @@ const PublicCoachProfile = () => {
                           {ev.max_participants && ` · ${ev.max_participants - ev.current_participants} spots left`}
                         </p>
                       </div>
-                      <Link to="/events" className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-xs font-display tracking-wider hover:bg-primary/90 transition-colors">REGISTER</Link>
+                      <Link to="/events" className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-xs font-display tracking-wider hover:bg-primary/90 transition-colors">Register</Link>
                     </div>
                   ))}
                 </div>
@@ -628,7 +628,7 @@ const PublicCoachProfile = () => {
               {/* Review Form */}
               {user && coach && user.id !== coach.user_id && !hasReviewed && (
                 <div className="bg-card border border-border rounded-xl p-5 mb-4 space-y-3">
-                  <p className="font-display text-xs tracking-wider text-muted-foreground">LEAVE A REVIEW</p>
+                  <p className="font-display text-xs tracking-wider text-muted-foreground">Leave a review</p>
                   <div className="flex gap-1">
                     {[1, 2, 3, 4, 5].map((s) => (
                       <button
@@ -716,7 +716,7 @@ const PublicCoachProfile = () => {
               transition={{ delay: 0.3 }}
               className="bg-card border border-border rounded-2xl p-6"
             >
-              <h2 className="font-display text-sm tracking-wider text-muted-foreground mb-2">SHOT PROFILE</h2>
+              <h2 className="font-display text-sm tracking-wider text-muted-foreground mb-2">Shot profile</h2>
               <div className="w-full aspect-square">
                 <ResponsiveContainer width="100%" height="100%">
                   <RadarChart data={radarData} cx="50%" cy="50%" outerRadius="70%">
@@ -748,7 +748,7 @@ const PublicCoachProfile = () => {
                 className="bg-card border border-border rounded-2xl p-6"
               >
                 <h2 className="font-display text-sm tracking-wider text-muted-foreground mb-3 flex items-center gap-2">
-                  <Award size={14} /> CERTIFICATIONS
+                  <Award size={14} /> Certifications
                 </h2>
                 <div className="space-y-2">
                   {coach.certifications.map((cert) => (
@@ -772,7 +772,7 @@ const PublicCoachProfile = () => {
                 to={`/book/${coach.profile_slug}`}
                 className="w-full flex items-center justify-center gap-2 py-4 rounded-xl bg-primary text-primary-foreground font-display text-sm hover:bg-primary/90 transition-colors"
               >
-                BOOK A SESSION <ArrowRight size={16} />
+                Book a session <ArrowRight size={16} />
               </Link>
             </motion.div>
           </div>

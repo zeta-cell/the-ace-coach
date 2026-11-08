@@ -129,7 +129,7 @@ const BookingSuccess = () => {
             transition={{ delay: 0.65 }}
             className="bg-primary/5 border border-primary/30 rounded-xl p-5 text-left space-y-2.5"
           >
-            <p className="font-display text-xs tracking-wider text-primary mb-1">HOW TO FIND US</p>
+            <p className="font-display text-xs tracking-wider text-primary mb-1">How to find us</p>
             {booking.court_number && (
               <div className="flex items-center gap-2 text-sm font-body text-foreground">
                 <Hash size={14} className="text-primary shrink-0" />
@@ -167,13 +167,13 @@ const BookingSuccess = () => {
             to="/dashboard"
             className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-display tracking-wider hover:bg-primary/90 transition-colors flex items-center justify-center gap-2"
           >
-            VIEW MY SESSIONS <ArrowRight size={16} />
+            View my sessions <ArrowRight size={16} />
           </Link>
           <Link
             to="/find-a-coach"
             className="w-full py-3 rounded-xl bg-card border border-border text-foreground font-display tracking-wider hover:bg-secondary transition-colors flex items-center justify-center gap-2"
           >
-            FIND MORE COACHES <ArrowRight size={16} />
+            Find more coaches <ArrowRight size={16} />
           </Link>
         </motion.div>
       </div>

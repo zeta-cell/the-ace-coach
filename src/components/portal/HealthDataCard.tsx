@@ -113,7 +113,7 @@ const HealthDataCard = () => {
     return (
       <div className="bg-card border border-border rounded-xl p-5 text-center">
         <Activity size={24} className="mx-auto text-muted-foreground mb-2" />
-        <h3 className="font-display text-sm text-foreground mb-1">HEALTH & RECOVERY</h3>
+        <h3 className="font-display text-sm text-foreground mb-1">Health & recovery</h3>
         <p className="font-body text-xs text-muted-foreground mb-3">Connect your health devices to see recovery data</p>
         <div className="flex justify-center gap-1.5">
           {[
@@ -139,7 +139,7 @@ const HealthDataCard = () => {
     <div className="bg-card border border-border rounded-xl p-5">
       <div className="flex items-center justify-between mb-4">
         <h3 className="font-display text-sm tracking-wider text-muted-foreground flex items-center gap-2">
-          <Activity size={14} className="text-primary" /> HEALTH & RECOVERY
+          <Activity size={14} className="text-primary" /> Health & recovery
         </h3>
         <button onClick={syncAll} disabled={syncing} className="text-xs font-display text-primary flex items-center gap-1 hover:underline disabled:opacity-50">
           {syncing ? <Loader2 size={10} className="animate-spin" /> : <RefreshCw size={10} />} SYNC
@@ -153,7 +153,7 @@ const HealthDataCard = () => {
           <p className={`font-display text-lg ${recoveryColor(latest?.recovery_score ?? null)}`}>
             {latest?.recovery_score ?? "—"}
           </p>
-          <p className="text-[8px] font-body text-muted-foreground">RECOVERY</p>
+          <p className="text-[8px] font-body text-muted-foreground">Recovery</p>
           <span className="text-[7px] font-display text-muted-foreground bg-muted px-1 rounded">
             {data.find(d => d.recovery_score)?.provider?.toUpperCase() || "—"}
           </span>
@@ -161,7 +161,7 @@ const HealthDataCard = () => {
         <div className="text-center">
           <Moon size={14} className="mx-auto mb-0.5 text-blue-400" />
           <p className="font-display text-lg text-blue-400">{latest?.sleep_hours ? Number(latest.sleep_hours).toFixed(1) : "—"}</p>
-          <p className="text-[8px] font-body text-muted-foreground">SLEEP HRS</p>
+          <p className="text-[8px] font-body text-muted-foreground">Sleep hrs</p>
         </div>
         <div className="text-center">
           <Zap size={14} className="mx-auto mb-0.5 text-purple-400" />
@@ -171,7 +171,7 @@ const HealthDataCard = () => {
         <div className="text-center">
           <Heart size={14} className="mx-auto mb-0.5 text-rose-400" />
           <p className="font-display text-lg text-rose-400">{latest?.resting_hr ?? "—"}</p>
-          <p className="text-[8px] font-body text-muted-foreground">REST HR</p>
+          <p className="text-[8px] font-body text-muted-foreground">Rest hr</p>
         </div>
         {garminConnected && (
           <div className="text-center">
@@ -179,8 +179,8 @@ const HealthDataCard = () => {
             <p className={`font-display text-lg ${bodyBatteryColor(latestBodyBattery)}`}>
               {latestBodyBattery ?? "—"}
             </p>
-            <p className="text-[8px] font-body text-muted-foreground">BODY BATTERY</p>
-            <span className="text-[7px] font-display text-muted-foreground bg-muted px-1 rounded">GARMIN</span>
+            <p className="text-[8px] font-body text-muted-foreground">Body battery</p>
+            <span className="text-[7px] font-display text-muted-foreground bg-muted px-1 rounded">Garmin</span>
           </div>
         )}
       </div>
