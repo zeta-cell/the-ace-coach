@@ -13,20 +13,8 @@ import {
 import { format, subMonths, startOfMonth, endOfMonth, formatDistanceToNow } from "date-fns";
 import { toast } from "sonner";
 import PortalLayout from "@/components/portal/PortalLayout";
-
-const AnimatedNumber = ({ value, prefix = "" }: { value: number; prefix?: string }) => {
-  const [display, setDisplay] = useState(0);
-  useEffect(() => {
-    const dur = 800; const start = Date.now();
-    const animate = () => {
-      const p = Math.min((Date.now() - start) / dur, 1);
-      setDisplay(Math.round(value * p));
-      if (p < 1) requestAnimationFrame(animate);
-    };
-    animate();
-  }, [value]);
-  return <>{prefix}{display}</>;
-};
+import CountUp from "@/components/reactbits/CountUp";
+import SpotlightCard from "@/components/reactbits/SpotlightCard";
 
 interface PlatformStats {
   totalGMV: number; mrr: number; platformRevenue: number;
@@ -279,22 +267,24 @@ const AdminDashboard = () => {
               {/* SECTION A — Platform Metrics */}
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-6">
                 {[
-                  { label: "Total GMV", value: `€${stats.totalGMV.toLocaleString()}`, icon: DollarSign },
-                  { label: "MRR", value: `€${stats.mrr.toLocaleString()}`, icon: TrendingUp },
-                  { label: "Platform Rev", value: `€${stats.platformRevenue.toLocaleString()}`, icon: CreditCard },
-                  { label: "Total Users", value: stats.totalUsers, icon: Users },
-                  { label: "Coaches", value: stats.activeCoaches, icon: UserCheck },
-                  { label: "Players", value: stats.activePlayers, icon: Activity },
+                  { label: "Total GMV", value: stats.totalGMV, prefix: "€", icon: DollarSign },
+                  { label: "MRR", value: stats.mrr, prefix: "€", icon: TrendingUp },
+                  { label: "Platform Rev", value: stats.platformRevenue, prefix: "€", icon: CreditCard },
+                  { label: "Total Users", value: stats.totalUsers, prefix: "", icon: Users },
+                  { label: "Coaches", value: stats.activeCoaches, prefix: "", icon: UserCheck },
+                  { label: "Players", value: stats.activePlayers, prefix: "", icon: Activity },
                 ].map((s, i) => (
                   <motion.div key={s.label} initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
-                    className="bg-card border border-border rounded-xl p-4 flex items-start gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                      <s.icon size={18} className="text-primary" />
-                    </div>
-                    <div>
-                      <p className="font-display text-xl text-foreground leading-none">{s.value}</p>
-                      <p className="text-[9px] font-body text-muted-foreground tracking-wider mt-1">{s.label}</p>
-                    </div>
+                    className="h-full">
+                    <SpotlightCard className="h-full p-4 flex items-start gap-3">
+                      <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                        <s.icon size={18} className="text-primary" />
+                      </div>
+                      <div>
+                        <p className="font-display text-xl text-foreground leading-none"><CountUp to={s.value} prefix={s.prefix} /></p>
+                        <p className="text-[9px] font-body text-muted-foreground tracking-wider mt-1">{s.label}</p>
+                      </div>
+                    </SpotlightCard>
                   </motion.div>
                 ))}
               </div>
@@ -432,15 +422,15 @@ const AdminDashboard = () => {
               {/* SECTION F — Platform Health */}
               <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55 }} className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
                 {[
-                  { label: "Avg Booking", value: `€${Math.round(stats.avgBookingValue)}` },
-                  { label: "Coach Retention", value: `${stats.coachRetention}%` },
-                  { label: "Player Retention", value: `${stats.playerRetention}%` },
-                  { label: "Referral Conv.", value: `${stats.referralConversion}%` },
+                  { label: "Avg Booking", value: Math.round(stats.avgBookingValue), prefix: "€", suffix: "" },
+                  { label: "Coach Retention", value: stats.coachRetention, prefix: "", suffix: "%" },
+                  { label: "Player Retention", value: stats.playerRetention, prefix: "", suffix: "%" },
+                  { label: "Referral Conv.", value: stats.referralConversion, prefix: "", suffix: "%" },
                 ].map(s => (
-                  <div key={s.label} className="bg-card border border-border rounded-xl p-3 text-center">
-                    <p className="font-display text-lg text-foreground">{s.value}</p>
+                  <SpotlightCard key={s.label} className="p-3 text-center">
+                    <p className="font-display text-lg text-foreground"><CountUp to={s.value} prefix={s.prefix} suffix={s.suffix} /></p>
                     <p className="text-[9px] font-body text-muted-foreground tracking-wider">{s.label}</p>
-                  </div>
+                  </SpotlightCard>
                 ))}
               </motion.div>
             </div>
