@@ -91,7 +91,7 @@ const ChromaHalo = ({
         b.life += dt;
         b.y -= drift * dt;
         const p = b.life / b.maxLife;
-        const alpha = Math.sin(Math.min(p, 1) * Math.PI) * 0.55 * intensity;
+        const alpha = Math.sin(Math.min(p, 1) * Math.PI) * 0.42 * intensity;
         const r = b.r * (0.6 + p * 0.9);
         const g = ctx.createRadialGradient(b.x, b.y, 0, b.x, b.y, r);
         g.addColorStop(0, hexA(b.color, alpha));
