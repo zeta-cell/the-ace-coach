@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
+import { programImage } from "@/lib/sportImages";
 import PublicHeader from "@/components/PublicHeader";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -357,14 +358,16 @@ const Marketplace = () => {
               {featured.map((block) => (
                 <div key={block.id} onClick={() => setSelectedBlock(block)}
                   className="min-w-[300px] bg-card border border-border rounded-2xl overflow-hidden cursor-pointer hover:border-primary/40 transition-all group">
-                  <div className="h-32 bg-gradient-to-br from-primary/20 to-primary/5 flex items-end p-4">
-                    <div className="flex items-center gap-2">
+                  <div className="relative h-36 bg-secondary flex items-end p-4">
+                    <img src={programImage(block)} alt="" loading="lazy" width={1024} height={640} className="absolute inset-0 h-full w-full object-cover" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-foreground/70 to-transparent" />
+                    <div className="relative flex items-center gap-2">
                       {block.author_avatar_url ? (
                         <img src={block.author_avatar_url} className="w-8 h-8 rounded-full border border-border" />
                       ) : (
                         <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-display text-xs">{block.author_name?.charAt(0) || "C"}</div>
                       )}
-                      <span className="text-xs font-body text-foreground">{block.author_name || "ACE Coach"}</span>
+                      <span className="text-xs font-body text-background">{block.author_name || "Hi Volley coach"}</span>
                     </div>
                   </div>
                   <div className="p-4">
@@ -412,12 +415,14 @@ const Marketplace = () => {
                   <motion.div key={block.id} initial={false}
                     className="bg-popover border border-border/80 rounded-2xl overflow-hidden hover:border-primary/60 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/10 transition-all group">
                     {/* Thumbnail */}
-                    <div className="relative h-28 bg-secondary border-b border-border/60 p-3 flex flex-col justify-between cursor-pointer"
+                    <div className="relative h-36 bg-secondary border-b border-border/60 p-3 flex flex-col justify-between cursor-pointer"
                       onClick={() => setSelectedBlock(block)}>
-                      <div className="flex items-start justify-between">
-                        <span className={`px-2 py-0.5 rounded text-[9px] font-display tracking-wider ${typeConfig.color}`}>{typeConfig.label}</span>
+                      <img src={programImage(block)} alt="" loading="lazy" width={1024} height={640} className="absolute inset-0 h-full w-full object-cover" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-foreground/70 via-transparent to-foreground/20" />
+                      <div className="relative flex items-start justify-between">
+                        <span className="px-2 py-0.5 rounded bg-card/90 text-foreground text-[9px] font-display tracking-wider">{typeConfig.label}</span>
                         <span className={`px-2 py-0.5 rounded font-display text-[10px] ${
-                          block.price > 0 ? "bg-amber-500/20 text-amber-400" : "bg-green-500/20 text-green-400"
+                          block.price > 0 ? "bg-card/90 text-foreground" : "bg-primary text-primary-foreground"
                         }`}>
                           {block.price > 0 ? `€${block.price}` : "FREE"}
                         </span>
@@ -425,13 +430,13 @@ const Marketplace = () => {
                       {isOwned && (
                         <span className="absolute top-3 right-14 px-2 py-0.5 rounded bg-green-500/20 text-green-400 font-display text-[9px]">OWNED</span>
                       )}
-                      <div className="flex items-center gap-2">
+                      <div className="relative flex items-center gap-2">
                         {block.author_avatar_url ? (
                           <img src={block.author_avatar_url} className="w-6 h-6 rounded-full border border-border" />
                         ) : (
                           <div className="w-6 h-6 rounded-full bg-primary/30 flex items-center justify-center text-primary font-display text-[9px]">{block.author_name?.charAt(0) || "C"}</div>
                         )}
-                        <span className="text-[10px] font-body text-foreground">{block.author_name || "ACE System"}</span>
+                        <span className="text-[10px] font-body text-background">{block.author_name || "Hi Volley"}</span>
                       </div>
                     </div>
 
