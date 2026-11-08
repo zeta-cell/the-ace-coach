@@ -263,18 +263,18 @@ const CoachDashboard = () => {
             <Link to="/coach/marketplace" className="text-xs font-display text-primary tracking-wider hover:underline">MANAGE →</Link>
           </div>
           <div className="grid grid-cols-3 gap-3">
-            <div className="bg-card border border-border rounded-xl p-3 text-center">
-              <p className="font-display text-xl text-foreground">{marketplaceStats.published}</p>
+            <SpotlightCard className="p-3 text-center">
+              <p className="font-display text-xl text-foreground"><CountUp to={marketplaceStats.published} /></p>
               <p className="font-body text-[9px] text-muted-foreground">Published</p>
-            </div>
-            <div className="bg-card border border-border rounded-xl p-3 text-center">
-              <p className="font-display text-xl text-foreground">{marketplaceStats.sales}</p>
+            </SpotlightCard>
+            <SpotlightCard className="p-3 text-center">
+              <p className="font-display text-xl text-foreground"><CountUp to={marketplaceStats.sales} /></p>
               <p className="font-body text-[9px] text-muted-foreground">Sales</p>
-            </div>
-            <div className="bg-card border border-border rounded-xl p-3 text-center">
-              <p className="font-display text-xl text-foreground">€{marketplaceStats.revenue.toFixed(0)}</p>
+            </SpotlightCard>
+            <SpotlightCard className="p-3 text-center">
+              <p className="font-display text-xl text-foreground"><CountUp to={Math.round(marketplaceStats.revenue)} prefix="€" /></p>
               <p className="font-body text-[9px] text-muted-foreground">Earnings</p>
-            </div>
+            </SpotlightCard>
           </div>
         </motion.div>
 
