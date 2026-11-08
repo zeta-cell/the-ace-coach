@@ -9,6 +9,7 @@ import ctaCourt from "@/assets/cta-court.jpg";
 import { BrandLogo } from "@/components/BrandLogo";
 import BlurText from "@/components/reactbits/BlurText";
 import SpotlightRow from "@/components/reactbits/SpotlightRow";
+import ChromaHalo from "@/components/reactbits/ChromaHalo";
 import { setSeo } from "@/lib/seo";
 import { useI18n } from "@/lib/i18n";
 
@@ -73,6 +74,7 @@ const Index = () => {
         <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 75% 85% at 100% 0%, hsl(var(--background)) 0%, hsl(var(--background) / 0.75) 35%, transparent 70%)" }} />
         <div className="absolute inset-y-0 left-0 w-full md:w-[48%] bg-gradient-to-r from-background/80 via-background/40 to-transparent" />
         <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-background to-transparent" />
+        <ChromaHalo />
 
         <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12 pt-32 pb-20">
           <div className="max-w-xl">
