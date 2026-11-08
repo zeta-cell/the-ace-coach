@@ -6,6 +6,8 @@ import { Card } from "@/components/ui/card";
 import { Building2, Users, Calendar, Euro, Square, Heart } from "lucide-react";
 import { Link } from "react-router-dom";
 import CourtUtilizationHeatmap from "@/components/portal/CourtUtilizationHeatmap";
+import CountUp from "@/components/reactbits/CountUp";
+import SpotlightCard from "@/components/reactbits/SpotlightCard";
 
 const ClubDashboard = () => {
   const { activeClub, activeClubId, loading: clubLoading } = useClub();
@@ -64,11 +66,11 @@ const ClubDashboard = () => {
     );
   }
 
-  const cards = [
+  const cards: { label: string; value: number; prefix?: string; icon: typeof Users; href: string; color: string }[] = [
     { label: "Coaches", value: stats.coaches, icon: Users, href: "/club/coaches", color: "text-primary" },
     { label: "Courts", value: stats.courts, icon: Square, href: "/club/courts", color: "text-accent" },
     { label: "Bookings This Week", value: stats.bookingsThisWeek, icon: Calendar, href: "/club/bookings", color: "text-foreground" },
-    { label: "Revenue (Month)", value: `€${stats.revenueThisMonth.toFixed(0)}`, icon: Euro, href: "/club/bookings", color: "text-foreground" },
+    { label: "Revenue (Month)", value: Math.round(stats.revenueThisMonth), prefix: "€", icon: Euro, href: "/club/bookings", color: "text-foreground" },
     { label: "Followers", value: stats.followers, icon: Heart, href: "/club/coaches", color: "text-rose-400" },
   ];
 
@@ -86,11 +88,11 @@ const ClubDashboard = () => {
         <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
           {cards.map((c) => (
             <Link key={c.label} to={c.href}>
-              <Card className="p-5 hover:border-primary transition-colors">
+              <SpotlightCard className="p-5 transition-colors hover:border-primary">
                 <c.icon className={`${c.color} mb-3`} size={24} />
-                <div className="text-2xl font-display text-foreground">{c.value}</div>
+                <div className="text-2xl font-display text-foreground"><CountUp to={c.value} prefix={c.prefix} /></div>
                 <div className="text-[10px] font-body text-muted-foreground tracking-wider mt-1">{c.label}</div>
-              </Card>
+              </SpotlightCard>
             </Link>
           ))}
         </div>
