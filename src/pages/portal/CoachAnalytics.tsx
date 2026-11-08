@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import PortalLayout from "@/components/portal/PortalLayout";
+import CountUp from "@/components/reactbits/CountUp";
+import SpotlightCard from "@/components/reactbits/SpotlightCard";
 import { Card } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import {
@@ -262,7 +264,8 @@ const CoachAnalytics = () => {
     () => [
       {
         label: "Sessions · 30d",
-        value: String(kpi.sessions30),
+        value: kpi.sessions30,
+        prefix: "",
         sub: `${kpi.activePlayers} active players`,
         icon: Activity,
         delta: trend(kpi.sessions30, kpi.sessions30Prev),
@@ -270,7 +273,8 @@ const CoachAnalytics = () => {
       },
       {
         label: "Payout · 30d",
-        value: nfEur(kpi.revenue30),
+        value: kpi.revenue30,
+        prefix: "€",
         sub: "after platform fee",
         icon: Euro,
         delta: trend(kpi.revenue30, kpi.revenue30Prev),
@@ -278,7 +282,8 @@ const CoachAnalytics = () => {
       },
       {
         label: "Assessments",
-        value: String(kpi.assessments),
+        value: kpi.assessments,
+        prefix: "",
         sub: kpi.avgImprovement
           ? `${kpi.avgImprovement > 0 ? "+" : ""}${kpi.avgImprovement.toFixed(2)} avg level gain`
           : "no progression data yet",
@@ -288,7 +293,8 @@ const CoachAnalytics = () => {
       },
       {
         label: "Roster",
-        value: String(kpi.players),
+        value: kpi.players,
+        prefix: "",
         sub: `${kpi.invitesClaimed}/${kpi.invitesSent || 0} invites claimed`,
         icon: Users,
         delta: null,
@@ -367,7 +373,7 @@ const CoachAnalytics = () => {
                 <div className="flex items-center gap-1.5" style={{ color: "hsl(var(--mustard))" }}>
                   <Star size={16} />
                   <span className="font-display text-2xl text-foreground">
-                    {kpi.avgRating ? kpi.avgRating.toFixed(1) : "—"}
+                    {kpi.avgRating ? <CountUp to={kpi.avgRating} decimals={1} /> : "—"}
                   </span>
                 </div>
                 <div className="text-[10px] font-body text-muted-foreground tracking-wider mt-1">
@@ -377,7 +383,7 @@ const CoachAnalytics = () => {
               <div>
                 <div className="flex items-center gap-1.5 text-primary">
                   <Flame size={16} />
-                  <span className="font-display text-2xl text-foreground">{kpi.upcoming}</span>
+                  <span className="font-display text-2xl text-foreground"><CountUp to={kpi.upcoming} /></span>
                 </div>
                 <div className="text-[10px] font-body text-muted-foreground tracking-wider mt-1">
                   Upcoming events
@@ -392,20 +398,19 @@ const CoachAnalytics = () => {
           {kpiCards.map((c) => {
             const up = (c.delta ?? 0) >= 0;
             return (
-              <Card key={c.label} className="relative overflow-hidden p-5">
-                <div
-                  className="absolute -right-10 -top-10 h-24 w-24 rounded-full blur-2xl"
-                  style={{
-                    background:
-                      c.tone === "sky"
-                        ? "hsl(var(--sky) / 0.35)"
-                        : c.tone === "mustard"
-                          ? "hsl(var(--mustard) / 0.35)"
-                          : "hsl(var(--primary) / 0.30)",
-                  }}
-                />
+              <SpotlightCard key={c.label} className="p-5">
                 <div className="flex items-start justify-between">
-                  <c.icon size={20} className="text-primary" />
+                  <c.icon
+                    size={20}
+                    style={{
+                      color:
+                        c.tone === "sky"
+                          ? "hsl(var(--sky))"
+                          : c.tone === "mustard"
+                            ? "hsl(var(--mustard))"
+                            : "hsl(var(--primary))",
+                    }}
+                  />
                   {c.delta !== null && (
                     <span
                       className={`flex items-center gap-1 text-[10px] font-body tracking-wider ${
@@ -417,12 +422,12 @@ const CoachAnalytics = () => {
                     </span>
                   )}
                 </div>
-                <div className="font-display text-3xl text-foreground mt-3">{c.value}</div>
+                <div className="font-display text-3xl text-foreground mt-3"><CountUp to={c.value} prefix={c.prefix} /></div>
                 <div className="text-[10px] font-body text-muted-foreground tracking-wider mt-1">
                   {c.label}
                 </div>
                 <div className="text-[10px] font-body text-muted-foreground/80 mt-2">{c.sub}</div>
-              </Card>
+              </SpotlightCard>
             );
           })}
         </div>
