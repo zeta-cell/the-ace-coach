@@ -28,6 +28,8 @@ import HealthDataCard from "@/components/portal/HealthDataCard";
 import HealthConnections from "@/components/portal/HealthConnections";
 import MyClubsCard from "@/components/portal/MyClubsCard";
 import MyCoachCard from "@/components/portal/MyCoachCard";
+import CountUp from "@/components/reactbits/CountUp";
+import SpotlightCard from "@/components/reactbits/SpotlightCard";
 
 import { Progress } from "@/components/ui/progress";
 import { LEVEL_CONFIG, BADGE_DEFINITIONS, getNextLevel } from "@/lib/gamification";
@@ -57,21 +59,6 @@ interface UserStats {
 interface EarnedBadge { badge_key: string; badge_name: string; earned_at: string; }
 
 interface CoachInfo { user_id: string; full_name: string; avatar_url: string | null; profile_slug: string | null; }
-
-const AnimatedNumber = ({ value }: { value: number }) => {
-  const [display, setDisplay] = useState(0);
-  useEffect(() => {
-    const duration = 800; const start = Date.now();
-    const animate = () => {
-      const elapsed = Date.now() - start;
-      const progress = Math.min(elapsed / duration, 1);
-      setDisplay(Math.round(value * progress));
-      if (progress < 1) requestAnimationFrame(animate);
-    };
-    animate();
-  }, [value]);
-  return <>{display}</>;
-};
 
 const Dashboard = () => {
   const { user, profile } = useAuth();
