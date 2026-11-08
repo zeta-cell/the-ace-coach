@@ -15,43 +15,25 @@ import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "@/components/ui/sonner";
+import CountUp from "@/components/reactbits/CountUp";
+import SpotlightCard from "@/components/reactbits/SpotlightCard";
 import {
   BarChart, Bar, LineChart, Line, PieChart, Pie, Cell,
   XAxis, YAxis, Tooltip, ResponsiveContainer, Legend
 } from "recharts";
 
 // ─── Animated Counter ────────────────────────────────────
-const AnimatedNumber = ({ value, prefix = "", suffix = "", decimals = 0 }: {
-  value: number; prefix?: string; suffix?: string; decimals?: number;
-}) => {
-  const [display, setDisplay] = useState(0);
-  useEffect(() => {
-    const duration = 800;
-    const start = performance.now();
-    const tick = (now: number) => {
-      const p = Math.min((now - start) / duration, 1);
-      setDisplay(value * p);
-      if (p < 1) requestAnimationFrame(tick);
-    };
-    requestAnimationFrame(tick);
-  }, [value]);
-  return (
-    <span className="font-display text-2xl text-foreground tabular-nums">
-      {prefix}{decimals > 0 ? display.toFixed(decimals) : Math.round(display).toLocaleString()}{suffix}
-    </span>
-  );
-};
-
 // ─── Metric Card ─────────────────────────────────────────
 const MetricCard = ({ label, value, prefix, suffix, decimals, highlight, color }: {
   label: string; value: number; prefix?: string; suffix?: string; decimals?: number; highlight?: boolean; color?: string;
 }) => (
-  <Card className={`${highlight ? "border-destructive/50" : ""}`} style={color ? { borderColor: color } : undefined}>
-    <CardContent className="p-4">
-      <p className="text-[10px] font-body tracking-wider text-muted-foreground mb-1">{label}</p>
-      <AnimatedNumber value={value} prefix={prefix} suffix={suffix} decimals={decimals} />
-    </CardContent>
-  </Card>
+  <SpotlightCard
+    className={`p-4 ${highlight ? "border-destructive/50" : ""}`}
+    style={color ? { borderColor: color } : undefined}
+  >
+    <p className="text-[10px] font-body tracking-wider text-muted-foreground mb-1">{label}</p>
+    <CountUp to={value} prefix={prefix} suffix={suffix} decimals={decimals} className="font-display text-2xl text-foreground" />
+  </SpotlightCard>
 );
 
 // ─── Collapsible Section ─────────────────────────────────

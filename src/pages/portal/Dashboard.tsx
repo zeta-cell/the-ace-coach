@@ -28,6 +28,8 @@ import HealthDataCard from "@/components/portal/HealthDataCard";
 import HealthConnections from "@/components/portal/HealthConnections";
 import MyClubsCard from "@/components/portal/MyClubsCard";
 import MyCoachCard from "@/components/portal/MyCoachCard";
+import CountUp from "@/components/reactbits/CountUp";
+import SpotlightCard from "@/components/reactbits/SpotlightCard";
 
 import { Progress } from "@/components/ui/progress";
 import { LEVEL_CONFIG, BADGE_DEFINITIONS, getNextLevel } from "@/lib/gamification";
@@ -57,21 +59,6 @@ interface UserStats {
 interface EarnedBadge { badge_key: string; badge_name: string; earned_at: string; }
 
 interface CoachInfo { user_id: string; full_name: string; avatar_url: string | null; profile_slug: string | null; }
-
-const AnimatedNumber = ({ value }: { value: number }) => {
-  const [display, setDisplay] = useState(0);
-  useEffect(() => {
-    const duration = 800; const start = Date.now();
-    const animate = () => {
-      const elapsed = Date.now() - start;
-      const progress = Math.min(elapsed / duration, 1);
-      setDisplay(Math.round(value * progress));
-      if (progress < 1) requestAnimationFrame(animate);
-    };
-    animate();
-  }, [value]);
-  return <>{display}</>;
-};
 
 const Dashboard = () => {
   const { user, profile } = useAuth();
@@ -285,39 +272,39 @@ const Dashboard = () => {
 
         {/* Hero Stats Bar — 6 metrics */}
         <motion.div initial={false} className="grid grid-cols-3 md:grid-cols-6 gap-2 mb-6">
-          <div className="bg-card border border-border rounded-xl p-3 text-center">
+          <SpotlightCard className="p-3 text-center">
             <PhLightning size={20} weight="fill" className="mx-auto mb-0.5" style={{ color: lvl.color }} />
-            <p className="font-display text-xl text-foreground"><AnimatedNumber value={userStats.total_xp} /></p>
+            <p className="font-display text-xl text-foreground"><CountUp to={userStats.total_xp} /></p>
             <div className="flex items-center justify-center gap-1">
               <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: lvl.color }} />
               <p className="font-body text-[9px] text-muted-foreground">{lvl.label}</p>
             </div>
-          </div>
-          <div className="bg-card border border-border rounded-xl p-3 text-center">
+          </SpotlightCard>
+          <SpotlightCard className="p-3 text-center">
             <PhFire size={20} weight="fill" className="text-orange-400 mx-auto mb-0.5" />
-            <p className="font-display text-xl text-foreground"><AnimatedNumber value={userStats.current_streak_days} /></p>
+            <p className="font-display text-xl text-foreground"><CountUp to={userStats.current_streak_days} /></p>
             <p className="font-body text-[9px] text-muted-foreground">Streak</p>
-          </div>
-          <div className="bg-card border border-border rounded-xl p-3 text-center">
+          </SpotlightCard>
+          <SpotlightCard className="p-3 text-center">
             <PhCheck size={20} weight="fill" className="text-green-400 mx-auto mb-0.5" />
-            <p className="font-display text-xl text-foreground"><AnimatedNumber value={userStats.total_sessions} /></p>
+            <p className="font-display text-xl text-foreground"><CountUp to={userStats.total_sessions} /></p>
             <p className="font-body text-[9px] text-muted-foreground">Sessions</p>
-          </div>
-          <div className="bg-card border border-border rounded-xl p-3 text-center">
+          </SpotlightCard>
+          <SpotlightCard className="p-3 text-center">
             <PhWallet size={20} weight="fill" className="text-primary mx-auto mb-0.5" />
-            <p className="font-display text-xl text-foreground">€<AnimatedNumber value={Math.round(Number(userStats.wallet_balance))} /></p>
+            <p className="font-display text-xl text-foreground"><CountUp to={Math.round(Number(userStats.wallet_balance))} prefix="€" /></p>
             <p className="font-body text-[9px] text-muted-foreground">Wallet</p>
-          </div>
-          <div className="bg-card border border-border rounded-xl p-3 text-center">
+          </SpotlightCard>
+          <SpotlightCard className="p-3 text-center">
             <PhTrendUp size={20} weight="fill" className="text-cyan-400 mx-auto mb-0.5" />
-            <p className="font-display text-xl text-foreground"><AnimatedNumber value={improvementScore} /></p>
+            <p className="font-display text-xl text-foreground"><CountUp to={improvementScore} /></p>
             <p className="font-body text-[9px] text-muted-foreground">Improvement</p>
-          </div>
-          <div className="bg-card border border-border rounded-xl p-3 text-center">
+          </SpotlightCard>
+          <SpotlightCard className="p-3 text-center">
             <PhPulse size={20} weight="fill" className="text-rose-400 mx-auto mb-0.5" />
-            <p className="font-display text-xl text-foreground">{estimatedCalories.toLocaleString()}</p>
+            <p className="font-display text-xl text-foreground"><CountUp to={estimatedCalories} /></p>
             <p className="font-body text-[9px] text-muted-foreground">Kcal burned</p>
-          </div>
+          </SpotlightCard>
         </motion.div>
 
         {/* Level Progress */}

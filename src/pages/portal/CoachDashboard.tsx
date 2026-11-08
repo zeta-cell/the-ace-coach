@@ -13,6 +13,8 @@ import PortalLayout from "@/components/portal/PortalLayout";
 import IncomingBookings from "@/components/portal/IncomingBookings";
 import SportPickerModal from "@/components/portal/SportPickerModal";
 import { toast } from "sonner";
+import CountUp from "@/components/reactbits/CountUp";
+import SpotlightCard from "@/components/reactbits/SpotlightCard";
 
 interface CoachRequest {
   id: string; player_id: string; player_name: string;
@@ -24,20 +26,6 @@ interface PlayerCard {
   player_id: string; full_name: string; avatar_url: string | null;
   current_level: string | null; sessions_this_month: number; last_session: string | null;
 }
-
-const AnimatedNumber = ({ value, prefix = "" }: { value: number; prefix?: string }) => {
-  const [display, setDisplay] = useState(0);
-  useEffect(() => {
-    const dur = 800; const start = Date.now();
-    const animate = () => {
-      const p = Math.min((Date.now() - start) / dur, 1);
-      setDisplay(Math.round(value * p));
-      if (p < 1) requestAnimationFrame(animate);
-    };
-    animate();
-  }, [value]);
-  return <>{prefix}{display}</>;
-};
 
 const CoachDashboard = () => {
   const { user, profile } = useAuth();
@@ -190,32 +178,32 @@ const CoachDashboard = () => {
 
         {/* SECTION A — Hero Stats */}
         <motion.div initial={false} className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
-          <div className="bg-card border border-border rounded-xl p-4 text-center">
+          <SpotlightCard className="p-4 text-center">
             <Users size={18} className="text-primary mx-auto mb-1" />
-            <p className="font-display text-2xl text-foreground"><AnimatedNumber value={stats.players} /></p>
+            <p className="font-display text-2xl text-foreground"><CountUp to={stats.players} /></p>
             <p className="font-body text-[10px] text-muted-foreground tracking-wide">Players</p>
-          </div>
-          <div className="bg-card border border-border rounded-xl p-4 text-center">
+          </SpotlightCard>
+          <SpotlightCard className="p-4 text-center">
             <Calendar size={18} className="text-primary mx-auto mb-1" />
-            <p className="font-display text-2xl text-foreground"><AnimatedNumber value={stats.sessionsMonth} /></p>
+            <p className="font-display text-2xl text-foreground"><CountUp to={stats.sessionsMonth} /></p>
             <p className="font-body text-[10px] text-muted-foreground tracking-wide">Sessions</p>
             <p className={`text-[9px] font-body flex items-center justify-center gap-0.5 mt-0.5 ${sessionsTrend >= 0 ? "text-green-400" : "text-red-400"}`}>
               {sessionsTrend >= 0 ? <TrendingUp size={8} /> : <TrendingDown size={8} />} {sessionsTrend >= 0 ? "+" : ""}{sessionsTrend} vs last month
             </p>
-          </div>
-          <div className="bg-card border border-border rounded-xl p-4 text-center">
+          </SpotlightCard>
+          <SpotlightCard className="p-4 text-center">
             <CreditCard size={18} className="text-primary mx-auto mb-1" />
-            <p className="font-display text-2xl text-foreground"><AnimatedNumber value={Math.round(stats.revenueMonth)} prefix="€" /></p>
+            <p className="font-display text-2xl text-foreground"><CountUp to={Math.round(stats.revenueMonth)} prefix="€" /></p>
             <p className="font-body text-[10px] text-muted-foreground tracking-wide">Revenue</p>
             <p className={`text-[9px] font-body flex items-center justify-center gap-0.5 mt-0.5 ${revenueTrend >= 0 ? "text-green-400" : "text-red-400"}`}>
               {revenueTrend >= 0 ? <TrendingUp size={8} /> : <TrendingDown size={8} />} €{Math.abs(Math.round(revenueTrend))}
             </p>
-          </div>
-          <div className="bg-card border border-border rounded-xl p-4 text-center">
+          </SpotlightCard>
+          <SpotlightCard className="p-4 text-center">
             <Star size={18} className="text-amber-400 mx-auto mb-1" />
-            <p className="font-display text-2xl text-foreground">{stats.avgRating > 0 ? stats.avgRating.toFixed(1) : "—"}</p>
+            <p className="font-display text-2xl text-foreground">{stats.avgRating > 0 ? <CountUp to={stats.avgRating} decimals={1} /> : "—"}</p>
             <p className="font-body text-[10px] text-muted-foreground tracking-wide">Avg Rating</p>
-          </div>
+          </SpotlightCard>
         </motion.div>
 
         {/* SECTION B — Revenue Chart */}
@@ -275,18 +263,18 @@ const CoachDashboard = () => {
             <Link to="/coach/marketplace" className="text-xs font-display text-primary tracking-wider hover:underline">MANAGE →</Link>
           </div>
           <div className="grid grid-cols-3 gap-3">
-            <div className="bg-card border border-border rounded-xl p-3 text-center">
-              <p className="font-display text-xl text-foreground">{marketplaceStats.published}</p>
+            <SpotlightCard className="p-3 text-center">
+              <p className="font-display text-xl text-foreground"><CountUp to={marketplaceStats.published} /></p>
               <p className="font-body text-[9px] text-muted-foreground">Published</p>
-            </div>
-            <div className="bg-card border border-border rounded-xl p-3 text-center">
-              <p className="font-display text-xl text-foreground">{marketplaceStats.sales}</p>
+            </SpotlightCard>
+            <SpotlightCard className="p-3 text-center">
+              <p className="font-display text-xl text-foreground"><CountUp to={marketplaceStats.sales} /></p>
               <p className="font-body text-[9px] text-muted-foreground">Sales</p>
-            </div>
-            <div className="bg-card border border-border rounded-xl p-3 text-center">
-              <p className="font-display text-xl text-foreground">€{marketplaceStats.revenue.toFixed(0)}</p>
+            </SpotlightCard>
+            <SpotlightCard className="p-3 text-center">
+              <p className="font-display text-xl text-foreground"><CountUp to={Math.round(marketplaceStats.revenue)} prefix="€" /></p>
               <p className="font-body text-[9px] text-muted-foreground">Earnings</p>
-            </div>
+            </SpotlightCard>
           </div>
         </motion.div>
 

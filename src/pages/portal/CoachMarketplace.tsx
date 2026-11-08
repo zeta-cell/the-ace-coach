@@ -5,6 +5,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { motion } from "framer-motion";
 import { ShoppingBag, Star, ChevronRight, BarChart3, DollarSign, TrendingUp, Eye, EyeOff, Share, Layers } from "lucide-react";
 import PortalLayout from "@/components/portal/PortalLayout";
+import CountUp from "@/components/reactbits/CountUp";
+import SpotlightCard from "@/components/reactbits/SpotlightCard";
 import { toast } from "sonner";
 
 interface PublishedBlock {
@@ -99,21 +101,21 @@ const CoachMarketplace = () => {
 
         {/* Stats */}
         <div className="grid grid-cols-3 gap-3 mb-6">
-          <div className="bg-card border border-border rounded-xl p-4 text-center">
+          <SpotlightCard className="p-4 text-center">
             <Layers size={20} className="text-primary mx-auto mb-1" />
-            <p className="font-display text-2xl text-foreground">{stats.published}</p>
+            <p className="font-display text-2xl text-foreground"><CountUp to={stats.published} /></p>
             <p className="font-body text-[10px] text-muted-foreground tracking-wide">Published</p>
-          </div>
-          <div className="bg-card border border-border rounded-xl p-4 text-center">
+          </SpotlightCard>
+          <SpotlightCard className="p-4 text-center">
             <ShoppingBag size={20} className="text-primary mx-auto mb-1" />
-            <p className="font-display text-2xl text-foreground">{stats.totalSales}</p>
+            <p className="font-display text-2xl text-foreground"><CountUp to={stats.totalSales} /></p>
             <p className="font-body text-[10px] text-muted-foreground tracking-wide">Total Sales</p>
-          </div>
-          <div className="bg-card border border-border rounded-xl p-4 text-center">
+          </SpotlightCard>
+          <SpotlightCard className="p-4 text-center">
             <DollarSign size={20} className="text-primary mx-auto mb-1" />
-            <p className="font-display text-2xl text-foreground">€{stats.totalRevenue.toFixed(0)}</p>
+            <p className="font-display text-2xl text-foreground"><CountUp to={Math.round(stats.totalRevenue)} prefix="€" /></p>
             <p className="font-body text-[10px] text-muted-foreground tracking-wide">Revenue</p>
-          </div>
+          </SpotlightCard>
         </div>
 
         {/* Tabs */}
