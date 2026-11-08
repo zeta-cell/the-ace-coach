@@ -173,7 +173,7 @@ const ClassDetail = () => {
         {cls.cover_image_url ? (
           <img src={cls.cover_image_url} alt={cls.title} className="h-56 w-full object-cover md:h-72" />
         ) : (
-          <div className="h-40 w-full bg-gradient-to-br from-primary/30 via-primary/10 to-transparent md:h-52" />
+          <div className="h-40 w-full bg-secondary md:h-52" />
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-transparent" />
         <div className="absolute inset-x-0 bottom-0 mx-auto max-w-4xl px-4 pb-5">

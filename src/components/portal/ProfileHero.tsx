@@ -198,7 +198,7 @@ const ProfileHero = ({
           </>
         ) : (
           <>
-            <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary/80 to-mustard" />
+            <div className="absolute inset-0 bg-secondary" />
             <div className="absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_20%_20%,hsl(var(--background)/0.5),transparent_55%)]" />
             {/* court lines motif */}
             <svg
