@@ -146,7 +146,7 @@ const CoachEvents = () => {
             ctaLabel: "Book a session",
             ctaUrl: `${window.location.origin}/my-coach`,
           })}
-          className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-primary/40 bg-primary/10 text-primary font-display text-[11px] tracking-widest hover:bg-primary/20 transition-colors"
+          className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-primary/40 bg-primary/10 text-primary font-display text-[11px] hover:bg-primary/20 transition-colors"
         >
           <Megaphone size={14} /> PROMOTE MY FREE SLOTS FOR PRIVATE SESSIONS
         </button>

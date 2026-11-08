@@ -102,17 +102,17 @@ const CoachMarketplace = () => {
           <div className="bg-card border border-border rounded-xl p-4 text-center">
             <Layers size={20} className="text-primary mx-auto mb-1" />
             <p className="font-display text-2xl text-foreground">{stats.published}</p>
-            <p className="font-body text-[10px] text-muted-foreground uppercase tracking-wide">Published</p>
+            <p className="font-body text-[10px] text-muted-foreground tracking-wide">Published</p>
           </div>
           <div className="bg-card border border-border rounded-xl p-4 text-center">
             <ShoppingBag size={20} className="text-primary mx-auto mb-1" />
             <p className="font-display text-2xl text-foreground">{stats.totalSales}</p>
-            <p className="font-body text-[10px] text-muted-foreground uppercase tracking-wide">Total Sales</p>
+            <p className="font-body text-[10px] text-muted-foreground tracking-wide">Total Sales</p>
           </div>
           <div className="bg-card border border-border rounded-xl p-4 text-center">
             <DollarSign size={20} className="text-primary mx-auto mb-1" />
             <p className="font-display text-2xl text-foreground">€{stats.totalRevenue.toFixed(0)}</p>
-            <p className="font-body text-[10px] text-muted-foreground uppercase tracking-wide">Revenue</p>
+            <p className="font-body text-[10px] text-muted-foreground tracking-wide">Revenue</p>
           </div>
         </div>
 

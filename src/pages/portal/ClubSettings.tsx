@@ -48,7 +48,7 @@ const ClubSettings = () => {
   return (
     <PortalLayout>
       <div className="space-y-6 max-w-2xl">
-        <h1 className="font-display text-2xl tracking-wide text-foreground uppercase">{createMode ? "Create Club" : "Club Settings"}</h1>
+        <h1 className="font-display text-2xl tracking-wide text-foreground">{createMode ? "Create Club" : "Club Settings"}</h1>
 
         <Card className="p-6 space-y-4">
           <div>

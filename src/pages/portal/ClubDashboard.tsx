@@ -78,8 +78,8 @@ const ClubDashboard = () => {
         <div className="flex items-center gap-4">
           {activeClub.logo_url && <img src={activeClub.logo_url} alt={activeClub.club_name} className="w-12 h-12 rounded-lg" />}
           <div>
-            <h1 className="font-display text-2xl tracking-wide text-foreground uppercase">{activeClub.club_name}</h1>
-            <p className="text-xs font-body text-muted-foreground uppercase tracking-wider">Club Command Center</p>
+            <h1 className="font-display text-2xl tracking-wide text-foreground">{activeClub.club_name}</h1>
+            <p className="text-xs font-body text-muted-foreground tracking-wider">Club Command Center</p>
           </div>
         </div>
 
@@ -89,7 +89,7 @@ const ClubDashboard = () => {
               <Card className="p-5 hover:border-primary transition-colors">
                 <c.icon className={`${c.color} mb-3`} size={24} />
                 <div className="text-2xl font-display text-foreground">{c.value}</div>
-                <div className="text-[10px] font-body text-muted-foreground uppercase tracking-wider mt-1">{c.label}</div>
+                <div className="text-[10px] font-body text-muted-foreground tracking-wider mt-1">{c.label}</div>
               </Card>
             </Link>
           ))}
@@ -98,7 +98,7 @@ const ClubDashboard = () => {
         <CourtUtilizationHeatmap clubId={activeClubId!} />
 
         <Card className="p-6">
-          <h2 className="font-display text-sm uppercase tracking-wider text-foreground mb-4">Quick Actions</h2>
+          <h2 className="font-display text-sm tracking-wider text-foreground mb-4">Quick Actions</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             <Link to="/club/coaches" className="px-4 py-3 bg-secondary rounded-lg text-sm font-body text-foreground hover:bg-secondary/70 transition-colors">
               + Invite Coach

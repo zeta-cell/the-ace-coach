@@ -474,7 +474,7 @@ export const TrainingBlocksContent = ({ embedded = false }: { embedded?: boolean
                           <Clock size={12} /> {block.duration_minutes} min
                         </span>
                         {block.difficulty && (
-                          <span className={`text-xs font-display tracking-wider uppercase ${DIFFICULTY_COLORS[block.difficulty] || "text-muted-foreground"}`}>
+                          <span className={`text-xs font-display tracking-wider ${DIFFICULTY_COLORS[block.difficulty] || "text-muted-foreground"}`}>
                             {block.difficulty}
                           </span>
                         )}

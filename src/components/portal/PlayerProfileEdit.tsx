@@ -295,7 +295,7 @@ const PlayerProfileEdit = ({ open, onClose, playerData, phone, onSaved }: Props)
 
         {/* Sticky save */}
         <div className="fixed bottom-0 left-0 right-0 p-4 bg-background border-t border-border">
-          <button onClick={handleSave} disabled={saving} className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-display text-sm tracking-widest hover:bg-primary/90 transition-colors disabled:opacity-50">
+          <button onClick={handleSave} disabled={saving} className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-display text-sm hover:bg-primary/90 transition-colors disabled:opacity-50">
             {saving ? "SAVING…" : "SAVE CHANGES"}
           </button>
         </div>

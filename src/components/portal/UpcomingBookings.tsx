@@ -248,25 +248,25 @@ const UpcomingBookings = () => {
                   </div>
                   <div className="flex items-center gap-2 mt-1">
                     {b.type === "event" ? (
-                      <span className="text-[9px] font-display font-semibold bg-violet-500/20 text-violet-400 px-2 py-0.5 rounded-full uppercase tracking-wider">
+                      <span className="text-[9px] font-display font-semibold bg-violet-500/20 text-violet-400 px-2 py-0.5 rounded-full tracking-wider">
                         EVENT
                       </span>
                     ) : (
-                      <span className="text-[9px] font-body font-semibold bg-primary/10 text-primary px-2 py-0.5 rounded-full uppercase">
+                      <span className="text-[9px] font-body font-semibold bg-primary/10 text-primary px-2 py-0.5 rounded-full">
                         {b.package_title}
                       </span>
                     )}
                     {b.session_type === "group" && b.max_group_size && (
-                      <span className="text-[9px] font-display font-semibold bg-chart-2/10 text-chart-2 px-2 py-0.5 rounded-full uppercase flex items-center gap-0.5">
+                      <span className="text-[9px] font-display font-semibold bg-chart-2/10 text-chart-2 px-2 py-0.5 rounded-full flex items-center gap-0.5">
                         <Users size={8} /> GROUP
                       </span>
                     )}
                     {b.court_number && (
-                      <span className="text-[9px] font-display font-semibold bg-primary/15 text-primary px-2 py-0.5 rounded-full uppercase flex items-center gap-0.5">
+                      <span className="text-[9px] font-display font-semibold bg-primary/15 text-primary px-2 py-0.5 rounded-full flex items-center gap-0.5">
                         <Hash size={8} /> {b.court_number}
                       </span>
                     )}
-                    <span className={`text-[9px] font-body font-semibold px-2 py-0.5 rounded-full uppercase ${b.status === "confirmed" ? "bg-green-500/10 text-green-400" : "bg-yellow-500/10 text-yellow-400"}`}>
+                    <span className={`text-[9px] font-body font-semibold px-2 py-0.5 rounded-full ${b.status === "confirmed" ? "bg-green-500/10 text-green-400" : "bg-yellow-500/10 text-yellow-400"}`}>
                       {b.status === "confirmed" ? "CONFIRMED" : "PENDING PAYMENT"}
                     </span>
                   </div>

@@ -137,8 +137,8 @@ const CosmicPlayerCard = ({
             {/* Header */}
             <div className="flex items-start justify-between">
               <div>
-                <p className="font-display text-[10px] tracking-[0.25em] text-white/60">HI VOLLEY</p>
-                <p className="font-display text-[9px] tracking-[0.2em] text-white/40 uppercase">
+                <p className="font-display text-[10px] text-white/60">HI VOLLEY</p>
+                <p className="font-display text-[9px] text-white/40">
                   {sport} · cosmic series
                 </p>
               </div>
@@ -149,7 +149,7 @@ const CosmicPlayerCard = ({
                 <span className="font-display text-lg leading-none" style={{ color: lvl.color }}>
                   {overall}
                 </span>
-                <span className="font-display text-[7px] tracking-widest" style={{ color: lvl.color }}>
+                <span className="font-display text-[7px]" style={{ color: lvl.color }}>
                   OVR
                 </span>
               </div>
@@ -182,7 +182,7 @@ const CosmicPlayerCard = ({
 
             {/* Name */}
             <div className="relative mt-1 text-center">
-              <p className="font-display text-xl leading-tight text-white uppercase tracking-wide">{name}</p>
+              <p className="font-display text-xl leading-tight text-white tracking-wide">{name}</p>
               <p className="font-body text-[10px] text-white/55">
                 {city ? `${city} · ` : ""}
                 {lvl.label.toUpperCase()}
@@ -195,7 +195,7 @@ const CosmicPlayerCard = ({
               {values.map((v) => (
                 <div key={v.label} className="text-center">
                   <p className="font-display text-sm text-white leading-none">{v.value}</p>
-                  <p className="font-body text-[8px] uppercase tracking-wider text-white/50">{v.label}</p>
+                  <p className="font-body text-[8px] tracking-wider text-white/50">{v.label}</p>
                 </div>
               ))}
             </div>

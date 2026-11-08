@@ -410,7 +410,7 @@ const PublicCoachProfile = () => {
             {/* Quick price CTA */}
             {coach.hourly_rate_from != null && (
               <div className="text-center md:text-right shrink-0">
-                <p className="font-body text-xs text-muted-foreground uppercase">From</p>
+                <p className="font-body text-xs text-muted-foreground">From</p>
                 <p className="font-display text-4xl text-foreground">€{Number(coach.hourly_rate_from).toFixed(0)}</p>
                 <p className="font-body text-xs text-muted-foreground">/session</p>
                 <Link
@@ -433,22 +433,22 @@ const PublicCoachProfile = () => {
         >
           <div className="bg-card border border-border rounded-xl p-4 text-center">
             <p className="font-display text-2xl text-foreground">{coach.total_sessions_coached}</p>
-            <p className="font-body text-[10px] text-muted-foreground uppercase tracking-wider">Sessions Coached</p>
+            <p className="font-body text-[10px] text-muted-foreground tracking-wider">Sessions Coached</p>
           </div>
           <div className="bg-card border border-border rounded-xl p-4 text-center">
             <div className="flex items-center justify-center gap-1">
               <Star size={16} className="text-chart-4 fill-chart-4" />
               <p className="font-display text-2xl text-foreground">{avgRating > 0 ? avgRating.toFixed(1) : "—"}</p>
             </div>
-            <p className="font-body text-[10px] text-muted-foreground uppercase tracking-wider">{reviews.length} Reviews</p>
+            <p className="font-body text-[10px] text-muted-foreground tracking-wider">{reviews.length} Reviews</p>
           </div>
           <div className="bg-card border border-border rounded-xl p-4 text-center">
             <p className="font-display text-2xl text-foreground">{coach.playtomic_level || "—"}</p>
-            <p className="font-body text-[10px] text-muted-foreground uppercase tracking-wider">Playtomic Level</p>
+            <p className="font-body text-[10px] text-muted-foreground tracking-wider">Playtomic Level</p>
           </div>
           <div className="bg-card border border-border rounded-xl p-4 text-center">
             <p className="font-display text-2xl text-foreground">{packages.length}</p>
-            <p className="font-body text-[10px] text-muted-foreground uppercase tracking-wider">Packages Available</p>
+            <p className="font-body text-[10px] text-muted-foreground tracking-wider">Packages Available</p>
           </div>
         </motion.section>
 
@@ -525,10 +525,10 @@ const PublicCoachProfile = () => {
                     <Card key={pkg.id} className="group hover:border-primary/50 transition-colors">
                       <CardContent className="p-5">
                         <div className="flex flex-wrap gap-1.5 mb-2">
-                          <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase ${SESSION_COLORS[pkg.session_type] || "bg-secondary text-foreground"}`}>
+                          <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold ${SESSION_COLORS[pkg.session_type] || "bg-secondary text-foreground"}`}>
                             {pkg.session_type}
                           </span>
-                          <span className="px-2 py-0.5 rounded-full bg-secondary text-muted-foreground text-[10px] font-semibold uppercase">
+                          <span className="px-2 py-0.5 rounded-full bg-secondary text-muted-foreground text-[10px] font-semibold">
                             {pkg.sport}
                           </span>
                           <span className="px-2 py-0.5 rounded-full bg-secondary text-muted-foreground text-[10px] font-semibold">
@@ -770,7 +770,7 @@ const PublicCoachProfile = () => {
             >
               <Link
                 to={`/book/${coach.profile_slug}`}
-                className="w-full flex items-center justify-center gap-2 py-4 rounded-xl bg-primary text-primary-foreground font-display text-sm tracking-widest hover:bg-primary/90 transition-colors"
+                className="w-full flex items-center justify-center gap-2 py-4 rounded-xl bg-primary text-primary-foreground font-display text-sm hover:bg-primary/90 transition-colors"
               >
                 BOOK A SESSION <ArrowRight size={16} />
               </Link>

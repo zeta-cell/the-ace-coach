@@ -106,7 +106,7 @@ const PublicHeader = () => {
             >
               <Globe size={14} className="md:hidden" />
               <Globe size={16} className="hidden md:block" />
-              <span className="font-display text-[10px] md:text-xs tracking-wider uppercase">{lang}</span>
+              <span className="font-display text-[10px] md:text-xs tracking-wider">{lang}</span>
             </button>
             <button
               onClick={toggleTheme}

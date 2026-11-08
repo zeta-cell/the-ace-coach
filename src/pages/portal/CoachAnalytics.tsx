@@ -353,12 +353,12 @@ const CoachAnalytics = () => {
             <div>
               <div className="flex items-center gap-2 text-primary">
                 <Sparkles size={16} />
-                <span className="text-[10px] font-body uppercase tracking-[0.2em]">Coach intelligence</span>
+                <span className="text-[10px] font-body">Coach intelligence</span>
               </div>
-              <h1 className="font-display text-3xl sm:text-4xl tracking-wide text-foreground uppercase mt-2">
+              <h1 className="font-display text-3xl sm:text-4xl tracking-wide text-foreground mt-2">
                 Analytics
               </h1>
-              <p className="text-xs font-body text-muted-foreground uppercase tracking-wider mt-2 max-w-md">
+              <p className="text-xs font-body text-muted-foreground tracking-wider mt-2 max-w-md">
                 Sessions, revenue, player development and funnel conversion — all in one place
               </p>
             </div>
@@ -370,7 +370,7 @@ const CoachAnalytics = () => {
                     {kpi.avgRating ? kpi.avgRating.toFixed(1) : "—"}
                   </span>
                 </div>
-                <div className="text-[10px] font-body text-muted-foreground uppercase tracking-wider mt-1">
+                <div className="text-[10px] font-body text-muted-foreground tracking-wider mt-1">
                   {kpi.reviewCount} reviews
                 </div>
               </div>
@@ -379,7 +379,7 @@ const CoachAnalytics = () => {
                   <Flame size={16} />
                   <span className="font-display text-2xl text-foreground">{kpi.upcoming}</span>
                 </div>
-                <div className="text-[10px] font-body text-muted-foreground uppercase tracking-wider mt-1">
+                <div className="text-[10px] font-body text-muted-foreground tracking-wider mt-1">
                   Upcoming events
                 </div>
               </div>
@@ -408,7 +408,7 @@ const CoachAnalytics = () => {
                   <c.icon size={20} className="text-primary" />
                   {c.delta !== null && (
                     <span
-                      className={`flex items-center gap-1 text-[10px] font-body uppercase tracking-wider ${
+                      className={`flex items-center gap-1 text-[10px] font-body tracking-wider ${
                         up ? "text-emerald-500" : "text-destructive"
                       }`}
                     >
@@ -418,7 +418,7 @@ const CoachAnalytics = () => {
                   )}
                 </div>
                 <div className="font-display text-3xl text-foreground mt-3">{c.value}</div>
-                <div className="text-[10px] font-body text-muted-foreground uppercase tracking-wider mt-1">
+                <div className="text-[10px] font-body text-muted-foreground tracking-wider mt-1">
                   {c.label}
                 </div>
                 <div className="text-[10px] font-body text-muted-foreground/80 mt-2">{c.sub}</div>
@@ -432,8 +432,8 @@ const CoachAnalytics = () => {
           <Card className="lg:col-span-2 p-5">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h2 className="font-display text-lg text-foreground uppercase tracking-wide">Session momentum</h2>
-                <p className="text-[10px] font-body text-muted-foreground uppercase tracking-wider">Last 12 weeks</p>
+                <h2 className="font-display text-lg text-foreground tracking-wide">Session momentum</h2>
+                <p className="text-[10px] font-body text-muted-foreground tracking-wider">Last 12 weeks</p>
               </div>
               <Activity size={18} className="text-primary" />
             </div>
@@ -467,8 +467,8 @@ const CoachAnalytics = () => {
           <Card className="p-5">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h2 className="font-display text-lg text-foreground uppercase tracking-wide">Revenue</h2>
-                <p className="text-[10px] font-body text-muted-foreground uppercase tracking-wider">Gross vs payout</p>
+                <h2 className="font-display text-lg text-foreground tracking-wide">Revenue</h2>
+                <p className="text-[10px] font-body text-muted-foreground tracking-wider">Gross vs payout</p>
               </div>
               <Euro size={18} style={{ color: "hsl(var(--sky))" }} />
             </div>
@@ -490,13 +490,13 @@ const CoachAnalytics = () => {
         {/* Funnel + radar + package mix */}
         <div className="grid lg:grid-cols-3 gap-4">
           <Card className="p-5">
-            <h2 className="font-display text-lg text-foreground uppercase tracking-wide">Conversion funnel</h2>
-            <p className="text-[10px] font-body text-muted-foreground uppercase tracking-wider">Invite → repeat client</p>
+            <h2 className="font-display text-lg text-foreground tracking-wide">Conversion funnel</h2>
+            <p className="text-[10px] font-body text-muted-foreground tracking-wider">Invite → repeat client</p>
             <div className="mt-5 space-y-3">
               {funnel.map((f, i) => (
                 <div key={f.label}>
                   <div className="flex items-center justify-between text-[11px] font-body">
-                    <span className="uppercase tracking-wider text-muted-foreground">{f.label}</span>
+                    <span className="tracking-wider text-muted-foreground">{f.label}</span>
                     <span className="text-foreground font-display">{f.value}</span>
                   </div>
                   <div className="mt-1.5 h-2.5 rounded-full bg-muted overflow-hidden">
@@ -515,8 +515,8 @@ const CoachAnalytics = () => {
           </Card>
 
           <Card className="p-5">
-            <h2 className="font-display text-lg text-foreground uppercase tracking-wide">Squad shot profile</h2>
-            <p className="text-[10px] font-body text-muted-foreground uppercase tracking-wider">
+            <h2 className="font-display text-lg text-foreground tracking-wide">Squad shot profile</h2>
+            <p className="text-[10px] font-body text-muted-foreground tracking-wider">
               Average of latest assessments
             </p>
             <div className="h-56 mt-2">
@@ -538,8 +538,8 @@ const CoachAnalytics = () => {
           </Card>
 
           <Card className="p-5">
-            <h2 className="font-display text-lg text-foreground uppercase tracking-wide">Package mix</h2>
-            <p className="text-[10px] font-body text-muted-foreground uppercase tracking-wider">Sessions by product</p>
+            <h2 className="font-display text-lg text-foreground tracking-wide">Package mix</h2>
+            <p className="text-[10px] font-body text-muted-foreground tracking-wider">Sessions by product</p>
             {packageMix.length === 0 ? (
               <p className="text-xs font-body text-muted-foreground mt-6">No confirmed sessions yet.</p>
             ) : (
@@ -586,14 +586,14 @@ const CoachAnalytics = () => {
         <Card className="p-5">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h2 className="font-display text-lg text-foreground uppercase tracking-wide">Player breakdown</h2>
-              <p className="text-[10px] font-body text-muted-foreground uppercase tracking-wider">
+              <h2 className="font-display text-lg text-foreground tracking-wide">Player breakdown</h2>
+              <p className="text-[10px] font-body text-muted-foreground tracking-wider">
                 Sessions, payout and level development
               </p>
             </div>
             <Link
               to="/coach/players"
-              className="flex items-center gap-1 text-[10px] font-body uppercase tracking-wider text-primary"
+              className="flex items-center gap-1 text-[10px] font-body tracking-wider text-primary"
             >
               All players <ArrowUpRight size={12} />
             </Link>
@@ -605,7 +605,7 @@ const CoachAnalytics = () => {
             <div className="overflow-x-auto -mx-2">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="text-[9px] font-body uppercase tracking-[0.15em] text-muted-foreground">
+                  <tr className="text-[9px] font-body tracking-[0.15em] text-muted-foreground">
                     <th className="px-2 py-2">Player</th>
                     <th className="px-2 py-2 text-right">Sessions</th>
                     <th className="px-2 py-2 text-right">Payout</th>

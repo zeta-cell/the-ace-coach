@@ -293,7 +293,7 @@ const AdminDashboard = () => {
                     </div>
                     <div>
                       <p className="font-display text-xl text-foreground leading-none">{s.value}</p>
-                      <p className="text-[9px] font-body text-muted-foreground uppercase tracking-wider mt-1">{s.label}</p>
+                      <p className="text-[9px] font-body text-muted-foreground tracking-wider mt-1">{s.label}</p>
                     </div>
                   </motion.div>
                 ))}
@@ -403,7 +403,7 @@ const AdminDashboard = () => {
                   ].map(s => (
                     <div key={s.label} className="bg-muted/20 rounded-lg p-3 text-center">
                       <p className="font-display text-lg text-foreground">{s.value}</p>
-                      <p className="text-[9px] font-body text-muted-foreground uppercase tracking-wider">{s.label}</p>
+                      <p className="text-[9px] font-body text-muted-foreground tracking-wider">{s.label}</p>
                     </div>
                   ))}
                 </div>
@@ -439,7 +439,7 @@ const AdminDashboard = () => {
                 ].map(s => (
                   <div key={s.label} className="bg-card border border-border rounded-xl p-3 text-center">
                     <p className="font-display text-lg text-foreground">{s.value}</p>
-                    <p className="text-[9px] font-body text-muted-foreground uppercase tracking-wider">{s.label}</p>
+                    <p className="text-[9px] font-body text-muted-foreground tracking-wider">{s.label}</p>
                   </div>
                 ))}
               </motion.div>

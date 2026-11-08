@@ -98,7 +98,7 @@ const PromoteDrawer = ({ open, onClose, initial }: Props) => {
         </div>
 
         {/* Audience */}
-        <p className="font-display text-[10px] tracking-widest text-muted-foreground mb-2">AUDIENCE</p>
+        <p className="font-display text-[10px] text-muted-foreground mb-2">AUDIENCE</p>
         <div className="space-y-2 mb-5">
           {AUDIENCES.map(a => {
             const active = audiences.includes(a.key);
@@ -136,7 +136,7 @@ const PromoteDrawer = ({ open, onClose, initial }: Props) => {
         )}
 
         {/* Channels */}
-        <p className="font-display text-[10px] tracking-widest text-muted-foreground mb-2">CHANNELS</p>
+        <p className="font-display text-[10px] text-muted-foreground mb-2">CHANNELS</p>
         <div className="grid grid-cols-2 gap-2 mb-5">
           {([
             { on: dm, set: setDm, icon: MessageSquare, label: "DIRECT MESSAGE" },
@@ -158,7 +158,7 @@ const PromoteDrawer = ({ open, onClose, initial }: Props) => {
         {/* Content */}
         <div className="space-y-3 mb-6">
           <div>
-            <label className="font-display text-[10px] tracking-widest text-muted-foreground">HEADLINE</label>
+            <label className="font-display text-[10px] text-muted-foreground">HEADLINE</label>
             <input
               value={headline}
               onChange={e => setHeadline(e.target.value)}
@@ -168,7 +168,7 @@ const PromoteDrawer = ({ open, onClose, initial }: Props) => {
             />
           </div>
           <div>
-            <label className="font-display text-[10px] tracking-widest text-muted-foreground">MESSAGE</label>
+            <label className="font-display text-[10px] text-muted-foreground">MESSAGE</label>
             <textarea
               value={message}
               onChange={e => setMessage(e.target.value)}
@@ -179,7 +179,7 @@ const PromoteDrawer = ({ open, onClose, initial }: Props) => {
             />
           </div>
           <div>
-            <label className="font-display text-[10px] tracking-widest text-muted-foreground">LINK</label>
+            <label className="font-display text-[10px] text-muted-foreground">LINK</label>
             <input
               value={ctaUrl}
               onChange={e => setCtaUrl(e.target.value)}
@@ -192,7 +192,7 @@ const PromoteDrawer = ({ open, onClose, initial }: Props) => {
         <button
           onClick={send}
           disabled={sending}
-          className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-primary text-primary-foreground font-display text-xs tracking-widest disabled:opacity-60"
+          className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-primary text-primary-foreground font-display text-xs disabled:opacity-60"
         >
           {sending ? <Loader2 size={15} className="animate-spin" /> : <Send size={15} />}
           {sending ? "SENDING..." : "SEND ANNOUNCEMENT"}

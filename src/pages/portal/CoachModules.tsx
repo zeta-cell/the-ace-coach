@@ -377,7 +377,7 @@ export const CoachModulesContent = ({ embedded = false }: { embedded?: boolean }
                         )}
                         {mod.instructions && (
                           <div>
-                            <span className="text-[10px] font-display text-foreground/70 uppercase tracking-wider">Instructions</span>
+                            <span className="text-[10px] font-display text-foreground/70 tracking-wider">Instructions</span>
                             <p className="text-xs font-body text-muted-foreground mt-0.5 whitespace-pre-line">{mod.instructions}</p>
                           </div>
                         )}

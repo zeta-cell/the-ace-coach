@@ -109,7 +109,7 @@ const AdminFeatures = () => {
                           <button
                             onClick={() => update(f.key, { coming_soon: !f.coming_soon })}
                             disabled={saving === f.key}
-                            className="mt-2 font-body text-[10px] uppercase tracking-wider text-muted-foreground hover:text-foreground transition-colors"
+                            className="mt-2 font-body text-[10px] tracking-wider text-muted-foreground hover:text-foreground transition-colors"
                           >
                             {f.coming_soon ? "Remove “coming soon” label" : "Mark as “coming soon”"}
                           </button>

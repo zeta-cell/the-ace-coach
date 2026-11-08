@@ -114,7 +114,7 @@ const UpcomingSchedule = ({ playerId, linkPrefix = "training", daysAhead = 14, s
               >
                 {/* Date block */}
                 <div className="w-12 h-12 rounded-lg bg-primary/10 flex flex-col items-center justify-center flex-shrink-0">
-                  <span className="text-[10px] font-body text-primary uppercase">
+                  <span className="text-[10px] font-body text-primary">
                     {format(new Date(plan.plan_date + "T00:00:00"), "EEE")}
                   </span>
                   <span className="font-display text-lg text-primary leading-none">

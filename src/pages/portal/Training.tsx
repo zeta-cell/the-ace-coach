@@ -949,7 +949,7 @@ const Training = () => {
                                       <span className={`px-1.5 py-0.5 rounded font-display text-[8px] tracking-wider ${DIFFICULTY_COLORS[block.difficulty] || "bg-secondary text-muted-foreground"}`}>
                                         {block.difficulty?.toUpperCase() || "—"}
                                       </span>
-                                      <span className="px-1.5 py-0.5 rounded bg-secondary font-display text-[8px] tracking-wider text-muted-foreground uppercase">
+                                      <span className="px-1.5 py-0.5 rounded bg-secondary font-display text-[8px] tracking-wider text-muted-foreground">
                                         {block.sport}
                                       </span>
                                     </div>
@@ -1007,7 +1007,7 @@ const Training = () => {
                                 <span className="font-display text-sm text-foreground truncate">{item.module.title}</span>
                               </div>
                               <div className="flex items-center gap-2 mt-0.5 ml-4 flex-wrap">
-                                <span className="font-body text-[10px] text-muted-foreground uppercase">
+                                <span className="font-body text-[10px] text-muted-foreground">
                                   {item.module.category.replace("_", " ")}
                                 </span>
                                 <span className="text-muted-foreground text-[10px]">·</span>
@@ -1236,7 +1236,7 @@ const Training = () => {
                                     <span className={`px-1.5 py-0.5 rounded font-display text-[8px] tracking-wider ${DIFFICULTY_COLORS[block.difficulty] || "bg-secondary text-muted-foreground"}`}>
                                       {block.difficulty?.toUpperCase() || "—"}
                                     </span>
-                                    <span className="px-1.5 py-0.5 rounded bg-secondary font-display text-[8px] tracking-wider text-muted-foreground uppercase">
+                                    <span className="px-1.5 py-0.5 rounded bg-secondary font-display text-[8px] tracking-wider text-muted-foreground">
                                       {block.sport}
                                     </span>
                                   </div>

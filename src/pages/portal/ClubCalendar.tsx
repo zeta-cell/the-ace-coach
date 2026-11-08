@@ -149,8 +149,8 @@ const ClubCalendar = () => {
     <PortalLayout>
       <div className="space-y-5">
         <div>
-          <h1 className="font-display text-2xl tracking-wide text-foreground uppercase">Coach Calendar</h1>
-          <p className="text-xs font-body text-muted-foreground uppercase tracking-wider mt-1">All coaches, members, courts and bookings · drag to move · click to edit</p>
+          <h1 className="font-display text-2xl tracking-wide text-foreground">Coach Calendar</h1>
+          <p className="text-xs font-body text-muted-foreground tracking-wider mt-1">All coaches, members, courts and bookings · drag to move · click to edit</p>
         </div>
 
         {/* Coach filter */}
@@ -180,7 +180,7 @@ const ClubCalendar = () => {
             <button onClick={() => step(-1)} aria-label="Previous" className="h-9 w-9 grid place-items-center rounded-lg border border-border hover:bg-secondary"><ChevronLeft size={16} /></button>
             <button onClick={() => setCursor(new Date())} className="h-9 px-3 rounded-lg border border-border text-xs font-display tracking-wider hover:bg-secondary">TODAY</button>
             <button onClick={() => step(1)} aria-label="Next" className="h-9 w-9 grid place-items-center rounded-lg border border-border hover:bg-secondary"><ChevronRight size={16} /></button>
-            <h2 className="font-display text-sm uppercase tracking-wider text-foreground ml-2">{title}</h2>
+            <h2 className="font-display text-sm tracking-wider text-foreground ml-2">{title}</h2>
           </div>
           <div className="flex gap-1 p-1 rounded-xl bg-secondary/60">
             {(["day", "week", "month"] as ViewMode[]).map((m) => (
@@ -253,7 +253,7 @@ const TimeGrid = ({ columns, bookings, match, colorOf, onDrop, onOpen }: {
       <div className="min-w-fit" style={{ display: "grid", gridTemplateColumns: `56px repeat(${columns.length}, minmax(140px, 1fr))` }}>
         <div className="sticky left-0 z-20 bg-card border-b border-border" />
         {columns.map((c) => (
-          <div key={c.key} className={`px-2 py-3 text-center border-b border-l border-border font-display text-[11px] tracking-wider uppercase ${c.today ? "text-primary" : "text-muted-foreground"}`}>{c.label}</div>
+          <div key={c.key} className={`px-2 py-3 text-center border-b border-l border-border font-display text-[11px] tracking-wider ${c.today ? "text-primary" : "text-muted-foreground"}`}>{c.label}</div>
         ))}
 
         <div className="sticky left-0 z-10 bg-card">
@@ -312,7 +312,7 @@ const MonthGrid = ({ from, to, cursor, bookings, colorOf, onPick }: {
   return (
     <div className="grid grid-cols-7">
       {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((d) => (
-        <div key={d} className="py-2 text-center font-display text-[11px] tracking-wider uppercase text-muted-foreground border-b border-border">{d}</div>
+        <div key={d} className="py-2 text-center font-display text-[11px] tracking-wider text-muted-foreground border-b border-border">{d}</div>
       ))}
       {days.map((d) => {
         const list = bookings.filter((b) => isSameDay(new Date(b.date + "T00:00"), d));

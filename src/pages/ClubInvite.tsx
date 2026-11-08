@@ -59,8 +59,8 @@ const ClubInvite = () => {
       <Card className="max-w-md w-full p-8 text-center space-y-6">
         <Building2 size={48} className="mx-auto text-primary" />
         <div>
-          <h1 className="font-display text-2xl tracking-wide text-foreground uppercase">{club?.name}</h1>
-          <p className="text-xs font-body text-muted-foreground uppercase tracking-wider mt-1">{club?.city}</p>
+          <h1 className="font-display text-2xl tracking-wide text-foreground">{club?.name}</h1>
+          <p className="text-xs font-body text-muted-foreground tracking-wider mt-1">{club?.city}</p>
         </div>
         <p className="text-sm font-body text-muted-foreground">
           You've been invited to join <strong className="text-foreground">{club?.name}</strong> as a <strong className="text-foreground">{invite.club_role}</strong>.

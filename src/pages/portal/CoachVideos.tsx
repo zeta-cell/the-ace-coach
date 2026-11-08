@@ -223,7 +223,7 @@ const CoachVideos = () => {
                       {v.player_name}
                     </span>
                     {v.shot_tag && (
-                      <span className="text-[10px] font-body text-muted-foreground uppercase">{v.shot_tag}</span>
+                      <span className="text-[10px] font-body text-muted-foreground">{v.shot_tag}</span>
                     )}
                   </div>
                   <p className="font-display text-foreground">{v.title}</p>

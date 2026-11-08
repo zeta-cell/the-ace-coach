@@ -506,8 +506,8 @@ const BookCoach = () => {
                       <div className="flex items-start justify-between">
                         <div>
                           <div className="flex flex-wrap gap-1.5 mb-1">
-                            <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase ${SESSION_COLORS[pkg.session_type] || "bg-secondary text-foreground"}`}>{pkg.session_type}</span>
-                            <span className="px-2 py-0.5 rounded-full bg-secondary text-muted-foreground text-[10px] font-semibold uppercase">{pkg.sport}</span>
+                            <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold ${SESSION_COLORS[pkg.session_type] || "bg-secondary text-foreground"}`}>{pkg.session_type}</span>
+                            <span className="px-2 py-0.5 rounded-full bg-secondary text-muted-foreground text-[10px] font-semibold">{pkg.sport}</span>
                             <span className="px-2 py-0.5 rounded-full bg-secondary text-muted-foreground text-[10px] font-semibold">{pkg.duration_minutes}min</span>
                             {pkg.session_type === "group" && pkg.max_group_size && (
                               <span className="px-2 py-0.5 rounded-full bg-chart-2/10 text-chart-2 text-[10px] font-semibold flex items-center gap-0.5">

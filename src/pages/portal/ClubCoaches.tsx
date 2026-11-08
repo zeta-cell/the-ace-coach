@@ -149,7 +149,7 @@ const ClubCoaches = () => {
     <PortalLayout>
       <div className="space-y-6">
         <div className="flex items-center justify-between">
-          <h1 className="font-display text-2xl tracking-wide text-foreground uppercase">Coaches</h1>
+          <h1 className="font-display text-2xl tracking-wide text-foreground">Coaches</h1>
           <div className="flex gap-2">
             <Dialog open={linkOpen} onOpenChange={setLinkOpen}>
               <DialogTrigger asChild>
@@ -197,7 +197,7 @@ const ClubCoaches = () => {
 
         {/* Active coaches */}
         <Card className="p-5">
-          <h2 className="font-display text-xs uppercase tracking-wider text-muted-foreground mb-3">Active Roster ({coaches.length})</h2>
+          <h2 className="font-display text-xs tracking-wider text-muted-foreground mb-3">Active Roster ({coaches.length})</h2>
           {loading ? <p className="text-sm text-muted-foreground">Loading…</p> : coaches.length === 0 ? (
             <p className="text-sm text-muted-foreground">No coaches yet.</p>
           ) : (
@@ -227,7 +227,7 @@ const ClubCoaches = () => {
         {/* Pending invites */}
         {invites.length > 0 && (
           <Card className="p-5">
-            <h2 className="font-display text-xs uppercase tracking-wider text-muted-foreground mb-3">Pending Invites ({invites.length})</h2>
+            <h2 className="font-display text-xs tracking-wider text-muted-foreground mb-3">Pending Invites ({invites.length})</h2>
             <div className="divide-y divide-border">
               {invites.map((i) => (
                 <div key={i.id} className="flex items-center justify-between py-3">

@@ -34,7 +34,7 @@ const RaffleCard = () => {
       <div className="flex items-center gap-4 mb-3">
         <div className="text-center">
           <p className="font-display text-3xl text-foreground">{tickets}</p>
-          <p className="font-body text-[9px] text-muted-foreground uppercase tracking-wider">Your tickets</p>
+          <p className="font-body text-[9px] text-muted-foreground tracking-wider">Your tickets</p>
         </div>
         <div className="flex-1 bg-secondary/50 rounded-lg p-3">
           <div className="flex items-center gap-2 mb-1">

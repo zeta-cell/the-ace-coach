@@ -480,12 +480,12 @@ const CoachProfile = () => {
               <div className="bg-secondary rounded-lg p-4 text-center">
                 <Target size={24} className="text-primary mx-auto mb-2" />
                 <p className="font-display text-lg text-foreground">{coachData.best_shot || "—"}</p>
-                <p className="text-[10px] font-body text-muted-foreground uppercase">Best Shot</p>
+                <p className="text-[10px] font-body text-muted-foreground">Best Shot</p>
               </div>
               <div className="bg-secondary rounded-lg p-4 text-center">
                 <TrendingDown size={24} className="text-muted-foreground mx-auto mb-2" />
                 <p className="font-display text-lg text-foreground">{coachData.weakest_shot || "—"}</p>
-                <p className="text-[10px] font-body text-muted-foreground uppercase">Weakest Shot</p>
+                <p className="text-[10px] font-body text-muted-foreground">Weakest Shot</p>
               </div>
             </div>
             <h3 className="font-display text-xs tracking-wider text-muted-foreground mb-3">SHOT CONFIDENCE</h3>
@@ -556,7 +556,7 @@ const CoachProfile = () => {
         <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
           <button
             onClick={signOut}
-            className="w-full py-3 rounded-xl border border-destructive/30 text-destructive font-display text-sm tracking-widest hover:bg-destructive/10 transition-colors flex items-center justify-center gap-2"
+            className="w-full py-3 rounded-xl border border-destructive/30 text-destructive font-display text-sm hover:bg-destructive/10 transition-colors flex items-center justify-center gap-2"
           >
             <LogOut className="w-4 h-4" />
             SIGN OUT

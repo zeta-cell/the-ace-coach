@@ -212,7 +212,7 @@ const PlayerProfile = () => {
             )}
             <button
               onClick={() => navigate("/messages")}
-              className="mt-2 w-full py-2.5 rounded-xl bg-primary text-primary-foreground font-display text-sm tracking-widest hover:bg-primary/90 transition-colors flex items-center justify-center gap-2"
+              className="mt-2 w-full py-2.5 rounded-xl bg-primary text-primary-foreground font-display text-sm hover:bg-primary/90 transition-colors flex items-center justify-center gap-2"
             >
               <MessageCircle size={16} /> MESSAGE MY COACH
             </button>
@@ -228,21 +228,21 @@ const PlayerProfile = () => {
               {playerData.preferred_court_surface && (
                 <div className="bg-secondary rounded-lg p-3 text-center">
                   <p className="font-display text-sm text-foreground">{SURFACE_LABELS[playerData.preferred_court_surface] || playerData.preferred_court_surface}</p>
-                  <p className="text-[10px] font-body text-muted-foreground uppercase">Court Surface</p>
+                  <p className="text-[10px] font-body text-muted-foreground">Court Surface</p>
                 </div>
               )}
               {playerData.training_freq && (
                 <div className="bg-secondary rounded-lg p-3 text-center">
                   <Dumbbell size={18} className="text-primary mx-auto mb-1" />
                   <p className="font-display text-sm text-foreground">{FREQ_LABELS[playerData.training_freq] || playerData.training_freq}</p>
-                  <p className="text-[10px] font-body text-muted-foreground uppercase">Training</p>
+                  <p className="text-[10px] font-body text-muted-foreground">Training</p>
                 </div>
               )}
               {playerData.target_ranking && (
                 <div className="bg-secondary rounded-lg p-3 text-center">
                   <Trophy size={18} className="text-chart-4 mx-auto mb-1" />
                   <p className="font-display text-sm text-foreground">{playerData.target_ranking}</p>
-                  <p className="text-[10px] font-body text-muted-foreground uppercase">Target Ranking</p>
+                  <p className="text-[10px] font-body text-muted-foreground">Target Ranking</p>
                 </div>
               )}
             </div>
@@ -381,12 +381,12 @@ const PlayerProfile = () => {
               <div className="bg-secondary rounded-lg p-4 text-center">
                 <Target size={24} className="text-primary mx-auto mb-2" />
                 <p className="font-display text-lg text-foreground">{playerData.best_shot || "—"}</p>
-                <p className="text-[10px] font-body text-muted-foreground uppercase">Best Shot</p>
+                <p className="text-[10px] font-body text-muted-foreground">Best Shot</p>
               </div>
               <div className="bg-secondary rounded-lg p-4 text-center">
                 <TrendingDown size={24} className="text-muted-foreground mx-auto mb-2" />
                 <p className="font-display text-lg text-foreground">{playerData.weakest_shot || "—"}</p>
-                <p className="text-[10px] font-body text-muted-foreground uppercase">Weakest Shot</p>
+                <p className="text-[10px] font-body text-muted-foreground">Weakest Shot</p>
               </div>
             </div>
 
@@ -426,7 +426,7 @@ const PlayerProfile = () => {
                       <div className="flex items-center gap-2">
                         <span className="font-body text-sm font-medium text-foreground">{racket.model}</span>
                         {racket.is_favorite && (
-                          <span className="text-[10px] bg-primary/10 text-primary px-2 py-0.5 rounded-full font-body font-semibold uppercase">Main</span>
+                          <span className="text-[10px] bg-primary/10 text-primary px-2 py-0.5 rounded-full font-body font-semibold">Main</span>
                         )}
                       </div>
                       <p className="text-xs font-body text-muted-foreground">{racket.brand} · {racket.type}</p>
@@ -484,7 +484,7 @@ const PlayerProfile = () => {
               ))}
             </div>
             {playerData.fitness_level && (
-              <span className="px-3 py-1 rounded-full bg-secondary text-foreground text-xs font-body font-semibold uppercase">{playerData.fitness_level}</span>
+              <span className="px-3 py-1 rounded-full bg-secondary text-foreground text-xs font-body font-semibold">{playerData.fitness_level}</span>
             )}
           </motion.div>
         )}
@@ -525,7 +525,7 @@ const PlayerProfile = () => {
         <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}>
           <button
             onClick={signOut}
-            className="w-full py-3 rounded-xl border border-destructive/30 text-destructive font-display text-sm tracking-widest hover:bg-destructive/10 transition-colors flex items-center justify-center gap-2"
+            className="w-full py-3 rounded-xl border border-destructive/30 text-destructive font-display text-sm hover:bg-destructive/10 transition-colors flex items-center justify-center gap-2"
           >
             <LogOut className="w-4 h-4" /> SIGN OUT
           </button>

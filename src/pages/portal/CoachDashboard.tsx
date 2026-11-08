@@ -193,12 +193,12 @@ const CoachDashboard = () => {
           <div className="bg-card border border-border rounded-xl p-4 text-center">
             <Users size={18} className="text-primary mx-auto mb-1" />
             <p className="font-display text-2xl text-foreground"><AnimatedNumber value={stats.players} /></p>
-            <p className="font-body text-[10px] text-muted-foreground uppercase tracking-wide">Players</p>
+            <p className="font-body text-[10px] text-muted-foreground tracking-wide">Players</p>
           </div>
           <div className="bg-card border border-border rounded-xl p-4 text-center">
             <Calendar size={18} className="text-primary mx-auto mb-1" />
             <p className="font-display text-2xl text-foreground"><AnimatedNumber value={stats.sessionsMonth} /></p>
-            <p className="font-body text-[10px] text-muted-foreground uppercase tracking-wide">Sessions</p>
+            <p className="font-body text-[10px] text-muted-foreground tracking-wide">Sessions</p>
             <p className={`text-[9px] font-body flex items-center justify-center gap-0.5 mt-0.5 ${sessionsTrend >= 0 ? "text-green-400" : "text-red-400"}`}>
               {sessionsTrend >= 0 ? <TrendingUp size={8} /> : <TrendingDown size={8} />} {sessionsTrend >= 0 ? "+" : ""}{sessionsTrend} vs last month
             </p>
@@ -206,7 +206,7 @@ const CoachDashboard = () => {
           <div className="bg-card border border-border rounded-xl p-4 text-center">
             <CreditCard size={18} className="text-primary mx-auto mb-1" />
             <p className="font-display text-2xl text-foreground"><AnimatedNumber value={Math.round(stats.revenueMonth)} prefix="€" /></p>
-            <p className="font-body text-[10px] text-muted-foreground uppercase tracking-wide">Revenue</p>
+            <p className="font-body text-[10px] text-muted-foreground tracking-wide">Revenue</p>
             <p className={`text-[9px] font-body flex items-center justify-center gap-0.5 mt-0.5 ${revenueTrend >= 0 ? "text-green-400" : "text-red-400"}`}>
               {revenueTrend >= 0 ? <TrendingUp size={8} /> : <TrendingDown size={8} />} €{Math.abs(Math.round(revenueTrend))}
             </p>
@@ -214,7 +214,7 @@ const CoachDashboard = () => {
           <div className="bg-card border border-border rounded-xl p-4 text-center">
             <Star size={18} className="text-amber-400 mx-auto mb-1" />
             <p className="font-display text-2xl text-foreground">{stats.avgRating > 0 ? stats.avgRating.toFixed(1) : "—"}</p>
-            <p className="font-body text-[10px] text-muted-foreground uppercase tracking-wide">Avg Rating</p>
+            <p className="font-body text-[10px] text-muted-foreground tracking-wide">Avg Rating</p>
           </div>
         </motion.div>
 
@@ -257,7 +257,7 @@ const CoachDashboard = () => {
                   <p className="font-display text-xs text-foreground truncate">{p.full_name}</p>
                   <div className="flex items-center justify-center gap-1 mt-0.5">
                     <span className="w-2 h-2 rounded-full" style={{ backgroundColor: LEVEL_COLORS[p.current_level || "bronze"] }} />
-                    <span className="text-[8px] font-body text-muted-foreground uppercase">{p.current_level}</span>
+                    <span className="text-[8px] font-body text-muted-foreground">{p.current_level}</span>
                   </div>
                   <p className="text-[9px] font-body text-muted-foreground mt-1">{p.sessions_this_month} sessions</p>
                 </Link>
@@ -277,15 +277,15 @@ const CoachDashboard = () => {
           <div className="grid grid-cols-3 gap-3">
             <div className="bg-card border border-border rounded-xl p-3 text-center">
               <p className="font-display text-xl text-foreground">{marketplaceStats.published}</p>
-              <p className="font-body text-[9px] text-muted-foreground uppercase">Published</p>
+              <p className="font-body text-[9px] text-muted-foreground">Published</p>
             </div>
             <div className="bg-card border border-border rounded-xl p-3 text-center">
               <p className="font-display text-xl text-foreground">{marketplaceStats.sales}</p>
-              <p className="font-body text-[9px] text-muted-foreground uppercase">Sales</p>
+              <p className="font-body text-[9px] text-muted-foreground">Sales</p>
             </div>
             <div className="bg-card border border-border rounded-xl p-3 text-center">
               <p className="font-display text-xl text-foreground">€{marketplaceStats.revenue.toFixed(0)}</p>
-              <p className="font-body text-[9px] text-muted-foreground uppercase">Earnings</p>
+              <p className="font-body text-[9px] text-muted-foreground">Earnings</p>
             </div>
           </div>
         </motion.div>

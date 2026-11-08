@@ -59,11 +59,11 @@ const CoachPackageCard = ({ pkg, onEdit, onDelete, onToggleActive }: Props) => {
         </div>
 
         <div className="flex flex-wrap gap-1.5 mb-3">
-          <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase ${sessionTypeColors[pkg.session_type] || "bg-secondary text-foreground"}`}>
+          <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold ${sessionTypeColors[pkg.session_type] || "bg-secondary text-foreground"}`}>
             {pkg.session_type === "group" && <Users size={10} />}
             {pkg.session_type}
           </span>
-          <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase ${sportColors[pkg.sport] || "bg-secondary text-foreground"}`}>
+          <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold ${sportColors[pkg.sport] || "bg-secondary text-foreground"}`}>
             {pkg.sport}
           </span>
           <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-secondary text-muted-foreground text-[10px] font-semibold">

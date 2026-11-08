@@ -550,7 +550,7 @@ const SelectionStep = ({
                           )}
                           {module.instructions && (
                             <div>
-                              <span className="text-[9px] font-display text-foreground/70 uppercase tracking-wider">Instructions</span>
+                              <span className="text-[9px] font-display text-foreground/70 tracking-wider">Instructions</span>
                               <p className="text-[10px] font-body text-muted-foreground mt-0.5 whitespace-pre-line">{module.instructions}</p>
                             </div>
                           )}

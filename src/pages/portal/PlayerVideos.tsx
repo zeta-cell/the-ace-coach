@@ -234,7 +234,7 @@ const PlayerVideos = () => {
                 <div className="p-3">
                   <div className="flex items-center gap-2 mb-1">
                     {v.shot_tag && (
-                      <span className="text-[10px] font-body font-semibold bg-primary/10 text-primary px-2 py-0.5 rounded-full uppercase">
+                      <span className="text-[10px] font-body font-semibold bg-primary/10 text-primary px-2 py-0.5 rounded-full">
                         {v.shot_tag}
                       </span>
                     )}
@@ -284,7 +284,7 @@ const PlayerVideos = () => {
                     </button>
                   </div>
                   {selectedVideo.shot_tag && (
-                    <span className="text-xs font-body font-semibold bg-primary/10 text-primary px-2 py-0.5 rounded-full uppercase">
+                    <span className="text-xs font-body font-semibold bg-primary/10 text-primary px-2 py-0.5 rounded-full">
                       {selectedVideo.shot_tag}
                     </span>
                   )}
@@ -293,7 +293,7 @@ const PlayerVideos = () => {
                   )}
                   {selectedVideo.coach_feedback && (
                     <div className="mt-4 bg-primary/5 border border-primary/20 rounded-lg p-3">
-                      <p className="text-xs font-display text-primary mb-1 uppercase tracking-wider">Coach Feedback</p>
+                      <p className="text-xs font-display text-primary mb-1 tracking-wider">Coach Feedback</p>
                       <p className="font-body text-sm text-foreground">{selectedVideo.coach_feedback}</p>
                     </div>
                   )}
@@ -301,7 +301,7 @@ const PlayerVideos = () => {
                   {/* Coach comments section */}
                   {(videoComments[selectedVideo.id]?.length || 0) > 0 && (
                     <div className="mt-4">
-                      <p className="text-xs font-display text-foreground mb-2 uppercase tracking-wider">COACH COMMENTS</p>
+                      <p className="text-xs font-display text-foreground mb-2 tracking-wider">COACH COMMENTS</p>
                       <div className="space-y-2">
                         {videoComments[selectedVideo.id]?.map(c => {
                           const isNew = isNewComment(selectedVideo.id, c.created_at);

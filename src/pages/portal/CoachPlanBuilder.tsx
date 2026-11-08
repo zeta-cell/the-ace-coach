@@ -116,11 +116,11 @@ const SortablePlanItem = ({
             <div className="flex-1 min-w-0">
               <p className="font-display text-foreground text-sm">{item.module.title}</p>
               <div className="flex items-center gap-2 mt-0.5">
-                <span className="font-body text-[10px] font-semibold bg-primary/10 text-primary px-2 py-0.5 rounded-full uppercase">
+                <span className="font-body text-[10px] font-semibold bg-primary/10 text-primary px-2 py-0.5 rounded-full">
                   {item.module.category.replace("_", " ")}
                 </span>
                 {item.module.difficulty && (
-                  <span className="font-body text-[10px] text-muted-foreground uppercase">{item.module.difficulty}</span>
+                  <span className="font-body text-[10px] text-muted-foreground">{item.module.difficulty}</span>
                 )}
               </div>
             </div>

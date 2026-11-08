@@ -48,7 +48,7 @@ const MetricCard = ({ label, value, prefix, suffix, decimals, highlight, color }
 }) => (
   <Card className={`${highlight ? "border-destructive/50" : ""}`} style={color ? { borderColor: color } : undefined}>
     <CardContent className="p-4">
-      <p className="text-[10px] font-body uppercase tracking-wider text-muted-foreground mb-1">{label}</p>
+      <p className="text-[10px] font-body tracking-wider text-muted-foreground mb-1">{label}</p>
       <AnimatedNumber value={value} prefix={prefix} suffix={suffix} decimals={decimals} />
     </CardContent>
   </Card>
@@ -1375,7 +1375,7 @@ const FoundersDashboard = () => {
                       <td className="p-2 text-right">{c.sessions}</td>
                       <td className="p-2 text-right font-medium">€{c.revenue.toLocaleString()}</td>
                       <td className="p-2 text-right">{c.avgRating}</td>
-                      <td className="p-2 text-center uppercase text-[9px]">{c.badge}</td>
+                      <td className="p-2 text-center text-[9px]">{c.badge}</td>
                       <td className="p-2 text-center">{c.verified ? <CheckCircle2 size={14} className="text-green-400 mx-auto" /> : "—"}</td>
                     </tr>
                   ))}
@@ -1429,13 +1429,13 @@ const FoundersDashboard = () => {
           <Card><CardHeader className="pb-2"><CardTitle className="text-sm font-body">Marketplace Stats</CardTitle></CardHeader>
             <CardContent>
               <div className="grid grid-cols-3 gap-3 mb-4">
-                <div><p className="text-[10px] text-muted-foreground uppercase">Published</p><p className="font-display text-xl">{coach.published}</p></div>
-                <div><p className="text-[10px] text-muted-foreground uppercase">Sold</p><p className="font-display text-xl">{coach.sold}</p></div>
-                <div><p className="text-[10px] text-muted-foreground uppercase">GMV</p><p className="font-display text-xl">€{coach.marketplaceGMV.toLocaleString()}</p></div>
+                <div><p className="text-[10px] text-muted-foreground">Published</p><p className="font-display text-xl">{coach.published}</p></div>
+                <div><p className="text-[10px] text-muted-foreground">Sold</p><p className="font-display text-xl">{coach.sold}</p></div>
+                <div><p className="text-[10px] text-muted-foreground">GMV</p><p className="font-display text-xl">€{coach.marketplaceGMV.toLocaleString()}</p></div>
               </div>
               {coach.topPrograms.length > 0 && (
                 <div className="space-y-1">
-                  <p className="text-[10px] text-muted-foreground uppercase mb-1">Top Programs</p>
+                  <p className="text-[10px] text-muted-foreground mb-1">Top Programs</p>
                   {coach.topPrograms.map((p: any, i: number) => (
                     <div key={i} className="flex justify-between text-xs p-1.5 rounded bg-secondary/30">
                       <span className="text-foreground truncate">{p.name}</span>
@@ -1482,11 +1482,11 @@ const FoundersDashboard = () => {
         </div>
         <div className="grid grid-cols-2 gap-3">
           <Card><CardContent className="p-4">
-            <p className="text-[10px] uppercase text-muted-foreground mb-1">Dominant Hand Split</p>
+            <p className="text-[10px] text-muted-foreground mb-1">Dominant Hand Split</p>
             <p className="font-display text-lg">Left: {equip.leftHand} ({equip.leftHand + equip.rightHand > 0 ? ((equip.leftHand / (equip.leftHand + equip.rightHand)) * 100).toFixed(0) : 0}%) • Right: {equip.rightHand}</p>
           </CardContent></Card>
           <Card><CardContent className="p-4">
-            <p className="text-[10px] uppercase text-muted-foreground mb-1">Top String Brands</p>
+            <p className="text-[10px] text-muted-foreground mb-1">Top String Brands</p>
             <div className="space-y-0.5">
               {equip.topStrings.map(([name, count]: any) => (
                 <p key={name} className="text-xs text-foreground">{name}: {count}</p>
@@ -1644,7 +1644,7 @@ const FoundersDashboard = () => {
               {community.refFunnel.map((f: any, i: number) => (
                 <div key={f.stage} className="text-center p-3 rounded-lg bg-secondary/30">
                   <p className="font-display text-xl text-foreground">{f.count}</p>
-                  <p className="text-[10px] text-muted-foreground uppercase">{f.stage}</p>
+                  <p className="text-[10px] text-muted-foreground">{f.stage}</p>
                   {i < community.refFunnel.length - 1 && i > 0 && community.refFunnel[i - 1].count > 0 && (
                     <p className="text-[9px] text-primary mt-1">{((f.count / community.refFunnel[0].count) * 100).toFixed(0)}%</p>
                   )}
@@ -1663,7 +1663,7 @@ const FoundersDashboard = () => {
           <MetricCard label="Avg Days to First Booking" value={marketing.avgDaysToFirstBooking} decimals={1} suffix=" days" />
           <MetricCard label="Referral Conversion" value={marketing.refConvRate} suffix="%" decimals={1} />
           <Card><CardContent className="p-4">
-            <p className="text-[10px] font-body uppercase tracking-wider text-muted-foreground mb-1">Top Referral Source</p>
+            <p className="text-[10px] font-body tracking-wider text-muted-foreground mb-1">Top Referral Source</p>
             <p className="font-display text-lg text-foreground truncate">{marketing.topRefSource ? `${marketing.topRefSource[0]} (${marketing.topRefSource[1]})` : "—"}</p>
           </CardContent></Card>
           <MetricCard label="Coach Profile Views" value={(d.pageViews || []).filter((v: any) => v.page_type === "coach_profile").length} />
@@ -1812,7 +1812,7 @@ const FoundersDashboard = () => {
 
         <Card className={unitEcon.walletLiability > biz.thisMonthFees ? "border-destructive/50" : ""}>
           <CardContent className="p-4">
-            <p className="text-[10px] uppercase text-muted-foreground mb-2">Wallet Liability</p>
+            <p className="text-[10px] text-muted-foreground mb-2">Wallet Liability</p>
             <div className="grid grid-cols-3 gap-4">
               <div><p className="font-display text-xl text-foreground">€{unitEcon.walletLiability.toLocaleString()}</p><p className="text-[10px] text-muted-foreground">Outstanding</p></div>
               <div><p className="font-display text-xl text-foreground">€{unitEcon.creditsIssuedThisMonth.toLocaleString()}</p><p className="text-[10px] text-muted-foreground">Issued this month</p></div>
@@ -1939,14 +1939,14 @@ const FoundersDashboard = () => {
 
         <div className="grid grid-cols-2 gap-3">
           <Card><CardContent className="p-4">
-            <p className="text-[10px] uppercase text-muted-foreground mb-1">Avg M1 Retention</p>
+            <p className="text-[10px] text-muted-foreground mb-1">Avg M1 Retention</p>
             <p className="font-display text-xl text-foreground">{cohort.avgM1.toFixed(1)}%</p>
             <p className={`text-[10px] ${cohort.avgM1 >= 20 ? "text-green-400" : "text-red-400"}`}>
               {cohort.avgM1 >= 20 ? "Above benchmark (20-30%)" : "Below benchmark (20-30%)"}
             </p>
           </CardContent></Card>
           <Card><CardContent className="p-4">
-            <p className="text-[10px] uppercase text-muted-foreground mb-1">Avg M3 Retention</p>
+            <p className="text-[10px] text-muted-foreground mb-1">Avg M3 Retention</p>
             <p className="font-display text-xl text-foreground">{cohort.avgM3.toFixed(1)}%</p>
             <p className={`text-[10px] ${cohort.avgM3 >= 10 ? "text-green-400" : "text-red-400"}`}>
               {cohort.avgM3 >= 10 ? "Above benchmark (10-15%)" : "Below benchmark (10-15%)"}

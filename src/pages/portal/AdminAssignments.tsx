@@ -192,7 +192,7 @@ const AdminAssignments = () => {
                         </div>
                         <div>
                           <p className="font-display text-sm text-foreground">{a.coach_name}</p>
-                          <p className="text-[10px] font-body text-purple-400 uppercase">Coach</p>
+                          <p className="text-[10px] font-body text-purple-400">Coach</p>
                         </div>
                       </div>
                       <ArrowRight size={16} className="text-muted-foreground shrink-0" />
@@ -202,7 +202,7 @@ const AdminAssignments = () => {
                         </div>
                         <div>
                           <p className="font-display text-sm text-foreground">{a.player_name}</p>
-                          <p className="text-[10px] font-body text-blue-400 uppercase">Player</p>
+                          <p className="text-[10px] font-body text-blue-400">Player</p>
                         </div>
                       </div>
                     </div>

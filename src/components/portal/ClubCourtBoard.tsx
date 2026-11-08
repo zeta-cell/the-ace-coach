@@ -160,7 +160,7 @@ const ClubCourtBoard = ({ clubId, date, courts, coaches, onChanged }: Props) => 
       <div className="min-w-fit" style={{ display: "grid", gridTemplateColumns: `72px repeat(${courts.length}, minmax(170px, 1fr))` }}>
         <div className="sticky left-0 z-10 bg-card border-b border-border" />
         {courts.map((c) => (
-          <div key={c.id} className="px-2 py-3 text-center border-b border-l border-border font-display text-[11px] tracking-wider uppercase text-muted-foreground">{c.court_number}</div>
+          <div key={c.id} className="px-2 py-3 text-center border-b border-l border-border font-display text-[11px] tracking-wider text-muted-foreground">{c.court_number}</div>
         ))}
 
         {times.map((time) => (
@@ -179,7 +179,7 @@ const ClubCourtBoard = ({ clubId, date, courts, coaches, onChanged }: Props) => 
                   <div key={court.id} className="border-b border-l border-border p-2">
                     <div className="rounded-md border-2 bg-secondary/70 min-h-[92px] p-2 flex flex-col justify-center gap-0.5"
                       style={{ borderColor: `color-mix(in hsl, ${bc} 70%, transparent)` }}>
-                      <span className="font-display text-[10px] tracking-wider uppercase text-muted-foreground">Booked · Private</span>
+                      <span className="font-display text-[10px] tracking-wider text-muted-foreground">Booked · Private</span>
                       <span className="font-display text-xs text-foreground">{bk.start}–{bk.end}</span>
                       <span className="font-body text-[11px] text-foreground truncate">{coachName(bk.coach_id)}</span>
                       <span className="font-body text-[10px] text-muted-foreground truncate">{bk.player}</span>
@@ -242,7 +242,7 @@ const ClubCourtBoard = ({ clubId, date, courts, coaches, onChanged }: Props) => 
       <Dialog open={!!target} onOpenChange={(o) => !o && setTarget(null)}>
         <DialogContent className="max-w-sm">
           <DialogHeader>
-            <DialogTitle className="font-display text-sm tracking-wider uppercase">
+            <DialogTitle className="font-display text-sm tracking-wider">
               {target ? `${target.court.court_number} · ${target.time}–${addMin(target.time, DURATION)}` : ""}
             </DialogTitle>
           </DialogHeader>

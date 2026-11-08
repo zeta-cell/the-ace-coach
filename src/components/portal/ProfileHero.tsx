@@ -320,7 +320,7 @@ const ProfileHero = ({
 
           <div className="min-w-0 flex-1 pb-1">
             {eyebrow && (
-              <p className="font-display text-[10px] tracking-[0.2em] text-primary">{eyebrow}</p>
+              <p className="font-display text-[10px] text-primary">{eyebrow}</p>
             )}
             <h1 className="flex items-center gap-2 truncate font-display text-xl text-foreground sm:text-2xl">
               {name?.toUpperCase()}
@@ -336,7 +336,7 @@ const ProfileHero = ({
               <span
                 key={c.label}
                 className={cn(
-                  "rounded-full border px-2.5 py-1 font-body text-[10px] font-semibold uppercase tracking-wide",
+                  "rounded-full border px-2.5 py-1 font-body text-[10px] font-semibold tracking-wide",
                   chipTone[c.tone || "neutral"],
                 )}
               >
@@ -355,7 +355,7 @@ const ProfileHero = ({
               >
                 {s.icon && <div className="mb-1 flex justify-center">{s.icon}</div>}
                 <p className="font-display text-lg leading-none text-foreground">{s.value}</p>
-                <p className="mt-1 font-body text-[9px] uppercase tracking-wider text-muted-foreground">
+                <p className="mt-1 font-body text-[9px] tracking-wider text-muted-foreground">
                   {s.label}
                 </p>
               </div>

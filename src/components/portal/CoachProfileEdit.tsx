@@ -357,7 +357,7 @@ const CoachProfileEdit = ({ open, onClose, coachData, onSaved }: Props) => {
           <button
             onClick={handleSave}
             disabled={saving}
-            className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-display text-sm tracking-widest hover:bg-primary/90 transition-colors disabled:opacity-50"
+            className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-display text-sm hover:bg-primary/90 transition-colors disabled:opacity-50"
           >
             {saving ? "SAVING…" : "SAVE CHANGES"}
           </button>

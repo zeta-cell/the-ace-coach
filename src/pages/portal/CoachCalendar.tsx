@@ -1084,7 +1084,7 @@ const CoachCalendar = () => {
                     <span>{b.package_title}</span>
                   </div>
                   <div className="flex items-center gap-2 mt-0.5">
-                    <span className={`text-[9px] font-display px-2 py-0.5 rounded-full uppercase ${
+                    <span className={`text-[9px] font-display px-2 py-0.5 rounded-full ${
                       b.status === "confirmed" ? "bg-green-500/10 text-green-400" : "bg-yellow-500/10 text-yellow-400"
                     }`}>{b.status}</span>
                     {b.location_type && (

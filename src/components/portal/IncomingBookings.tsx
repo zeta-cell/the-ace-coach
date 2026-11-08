@@ -278,7 +278,7 @@ const IncomingBookings = () => {
                       )}
                     </div>
                     <span className="font-body text-xs text-foreground flex-1">{p.name}</span>
-                    <span className={`text-[9px] font-display px-2 py-0.5 rounded-full uppercase ${
+                    <span className={`text-[9px] font-display px-2 py-0.5 rounded-full ${
                       p.status === "confirmed" ? "bg-green-500/10 text-green-400" : "bg-yellow-500/10 text-yellow-400"
                     }`}>{p.status}</span>
                   </Link>
@@ -338,8 +338,8 @@ const IncomingBookings = () => {
                     <span>{b.start_time.slice(0, 5)} – {b.end_time.slice(0, 5)}</span>
                   </div>
                   <div className="flex items-center gap-2 mt-1">
-                    <span className="text-[9px] font-body font-semibold bg-primary/10 text-primary px-2 py-0.5 rounded-full uppercase">{b.package_title}</span>
-                    <span className={`text-[9px] font-body font-semibold px-2 py-0.5 rounded-full uppercase ${b.status === "confirmed" ? "bg-green-500/10 text-green-400" : "bg-yellow-500/10 text-yellow-400"}`}>
+                    <span className="text-[9px] font-body font-semibold bg-primary/10 text-primary px-2 py-0.5 rounded-full">{b.package_title}</span>
+                    <span className={`text-[9px] font-body font-semibold px-2 py-0.5 rounded-full ${b.status === "confirmed" ? "bg-green-500/10 text-green-400" : "bg-yellow-500/10 text-yellow-400"}`}>
                       {b.status.toUpperCase()}
                     </span>
                     {b.location_type && (

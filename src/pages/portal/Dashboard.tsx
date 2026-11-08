@@ -290,33 +290,33 @@ const Dashboard = () => {
             <p className="font-display text-xl text-foreground"><AnimatedNumber value={userStats.total_xp} /></p>
             <div className="flex items-center justify-center gap-1">
               <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: lvl.color }} />
-              <p className="font-body text-[9px] text-muted-foreground uppercase">{lvl.label}</p>
+              <p className="font-body text-[9px] text-muted-foreground">{lvl.label}</p>
             </div>
           </div>
           <div className="bg-card border border-border rounded-xl p-3 text-center">
             <PhFire size={20} weight="fill" className="text-orange-400 mx-auto mb-0.5" />
             <p className="font-display text-xl text-foreground"><AnimatedNumber value={userStats.current_streak_days} /></p>
-            <p className="font-body text-[9px] text-muted-foreground uppercase">Streak</p>
+            <p className="font-body text-[9px] text-muted-foreground">Streak</p>
           </div>
           <div className="bg-card border border-border rounded-xl p-3 text-center">
             <PhCheck size={20} weight="fill" className="text-green-400 mx-auto mb-0.5" />
             <p className="font-display text-xl text-foreground"><AnimatedNumber value={userStats.total_sessions} /></p>
-            <p className="font-body text-[9px] text-muted-foreground uppercase">Sessions</p>
+            <p className="font-body text-[9px] text-muted-foreground">Sessions</p>
           </div>
           <div className="bg-card border border-border rounded-xl p-3 text-center">
             <PhWallet size={20} weight="fill" className="text-primary mx-auto mb-0.5" />
             <p className="font-display text-xl text-foreground">€<AnimatedNumber value={Math.round(Number(userStats.wallet_balance))} /></p>
-            <p className="font-body text-[9px] text-muted-foreground uppercase">Wallet</p>
+            <p className="font-body text-[9px] text-muted-foreground">Wallet</p>
           </div>
           <div className="bg-card border border-border rounded-xl p-3 text-center">
             <PhTrendUp size={20} weight="fill" className="text-cyan-400 mx-auto mb-0.5" />
             <p className="font-display text-xl text-foreground"><AnimatedNumber value={improvementScore} /></p>
-            <p className="font-body text-[9px] text-muted-foreground uppercase">Improvement</p>
+            <p className="font-body text-[9px] text-muted-foreground">Improvement</p>
           </div>
           <div className="bg-card border border-border rounded-xl p-3 text-center">
             <PhPulse size={20} weight="fill" className="text-rose-400 mx-auto mb-0.5" />
             <p className="font-display text-xl text-foreground">{estimatedCalories.toLocaleString()}</p>
-            <p className="font-body text-[9px] text-muted-foreground uppercase">KCAL BURNED</p>
+            <p className="font-body text-[9px] text-muted-foreground">KCAL BURNED</p>
           </div>
         </motion.div>
 

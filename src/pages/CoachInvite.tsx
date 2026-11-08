@@ -150,7 +150,7 @@ const CoachInvite = () => {
                   </p>
                   <p className="mt-1 font-display text-sm text-foreground">
                     {invite.overall_level ?? "—"}
-                    {invite.level_system ? <span className="ml-1 text-[10px] text-muted-foreground uppercase">{invite.level_system}</span> : null}
+                    {invite.level_system ? <span className="ml-1 text-[10px] text-muted-foreground">{invite.level_system}</span> : null}
                   </p>
                 </div>
               </div>

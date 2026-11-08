@@ -293,7 +293,7 @@ const TrainingDayInfo = ({ playerId, date }: TrainingDayInfoProps) => {
               {plan.focus_categories.map((cat) => (
                 <span
                   key={cat}
-                  className="px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-body font-semibold uppercase"
+                  className="px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-body font-semibold"
                 >
                   {CATEGORY_LABELS[cat] || cat.replace("_", " ")}
                 </span>

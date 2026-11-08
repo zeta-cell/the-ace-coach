@@ -384,7 +384,7 @@ const CoachPlayerDetail = () => {
                   <p className="font-body text-sm text-muted-foreground">No plan for this day</p>
                   <button
                     onClick={() => navigate(`/training?player=${playerId}&date=${format(quickDate, "yyyy-MM-dd")}`)}
-                    className="inline-flex items-center gap-2 px-5 py-2 rounded-xl bg-primary text-primary-foreground font-display text-xs tracking-widest hover:bg-primary/90 transition-colors"
+                    className="inline-flex items-center gap-2 px-5 py-2 rounded-xl bg-primary text-primary-foreground font-display text-xs hover:bg-primary/90 transition-colors"
                   >
                     <Plus size={14} /> CREATE PLAN
                   </button>
@@ -396,11 +396,11 @@ const CoachPlayerDetail = () => {
           {/* Action buttons row */}
           <div className="grid grid-cols-2 gap-2 mb-6">
             <button onClick={() => navigate(`/messages?to=${playerId}`)}
-              className="py-2.5 rounded-xl bg-card border border-border text-foreground font-display text-xs tracking-widest hover:bg-secondary transition-colors flex items-center justify-center gap-2">
+              className="py-2.5 rounded-xl bg-card border border-border text-foreground font-display text-xs hover:bg-secondary transition-colors flex items-center justify-center gap-2">
               <MessageCircle size={14} /> MESSAGE
             </button>
             <Link to={`/coach/videos`}
-              className="py-2.5 rounded-xl bg-card border border-border text-foreground font-display text-xs tracking-widest hover:bg-secondary transition-colors flex items-center justify-center gap-2">
+              className="py-2.5 rounded-xl bg-card border border-border text-foreground font-display text-xs hover:bg-secondary transition-colors flex items-center justify-center gap-2">
               <Video size={14} /> VIDEOS
             </Link>
           </div>
@@ -541,14 +541,14 @@ const CoachPlayerDetail = () => {
                 <Target size={20} className="text-primary flex-shrink-0" />
                 <div>
                   <p className="font-display text-lg text-foreground">{playerData?.best_shot || "—"}</p>
-                  <p className="font-body text-[10px] text-muted-foreground uppercase tracking-wide">Best Shot</p>
+                  <p className="font-body text-[10px] text-muted-foreground tracking-wide">Best Shot</p>
                 </div>
               </div>
               <div className="bg-card border border-border rounded-xl p-4 flex items-center gap-3">
                 <TrendingDown size={20} className="text-muted-foreground flex-shrink-0" />
                 <div>
                   <p className="font-display text-lg text-foreground">{playerData?.weakest_shot || "—"}</p>
-                  <p className="font-body text-[10px] text-muted-foreground uppercase tracking-wide">Weakest Shot</p>
+                  <p className="font-body text-[10px] text-muted-foreground tracking-wide">Weakest Shot</p>
                 </div>
               </div>
             </div>
@@ -642,7 +642,7 @@ const CoachPlayerDetail = () => {
 
           {/* Quick plan link */}
           <Link to={`/training?player=${playerId}`}
-            className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-primary text-primary-foreground font-display text-sm tracking-widest hover:bg-primary/90 transition-colors">
+            className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-primary text-primary-foreground font-display text-sm hover:bg-primary/90 transition-colors">
             <Plus size={16} /> CREATE DAY PLAN
           </Link>
         </motion.div>
