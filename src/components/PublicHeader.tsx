@@ -35,7 +35,7 @@ const PublicHeader = () => {
     { label: t("nav.marketplace"), href: "/marketplace", flag: "marketplace", visible: showDiscovery },
     { label: t("nav.events"), href: "/events", flag: "events", visible: showDiscovery },
     { label: t("nav.community"), href: "/community", flag: "community", visible: showDiscovery },
-    { label: "FOR CLUBS", href: "/login", flag: "club_signup", visible: true },
+    { label: "For clubs", href: "/login", flag: "club_signup", visible: true },
   ].map((l) => ({ ...l, active: isEnabled(l.flag), soon: isComingSoon(l.flag) })).filter((l) => l.visible);
 
 
