@@ -27,60 +27,62 @@
 
 @layer base {
   :root, .light, .dark {
-    --background: 222 62% 11%;
-    --foreground: 0 0% 100%;
-    --card: 220 42% 15%;
-    --card-foreground: 0 0% 100%;
-    --popover: 220 42% 16%;
-    --popover-foreground: 0 0% 100%;
-    --coach-1: 199 98% 44%;
-    --coach-2: 13 97% 64%;
-    --coach-3: 0 0% 92%;
-    --coach-4: 199 70% 70%;
-    --coach-5: 13 80% 78%;
-    --coach-6: 203 20% 45%;
-    --primary: 199 98% 44%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 218 38% 19%;
-    --secondary-foreground: 0 0% 100%;
-    --muted: 218 38% 18%;
-    --muted-foreground: 214 22% 72%;
-    --accent: 13 97% 64%;
-    --accent-foreground: 222 62% 11%;
-    --destructive: 4 72% 50%;
+    --background: 213 52% 87%;
+    --foreground: 195 6% 14%;
+    --card: 213 57% 93%;
+    --card-foreground: 195 6% 14%;
+    --popover: 213 60% 95%;
+    --popover-foreground: 195 6% 14%;
+    --coach-1: 354 100% 70%;
+    --coach-2: 213 35% 45%;
+    --coach-3: 195 6% 30%;
+    --coach-4: 213 45% 65%;
+    --coach-5: 354 70% 82%;
+    --coach-6: 213 20% 55%;
+    --primary: 354 100% 70%;
+    --primary-foreground: 195 6% 14%;
+    --secondary: 213 46% 80%;
+    --secondary-foreground: 195 6% 14%;
+    --muted: 213 46% 82%;
+    --muted-foreground: 213 25% 36%;
+    --accent: 354 71% 58%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 4 65% 48%;
     --destructive-foreground: 0 0% 100%;
-    --border: 216 32% 25%;
-    --input: 216 32% 27%;
-    --ring: 199 98% 44%;
+    --border: 213 40% 76%;
+    --input: 213 40% 74%;
+    --ring: 354 71% 58%;
     --radius: 0.75rem;
-    --sidebar-background: 222 55% 9%;
-    --sidebar-foreground: 0 0% 100%;
-    --sidebar-primary: 199 98% 44%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 218 38% 19%;
-    --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 216 32% 25%;
-    --sidebar-ring: 199 98% 44%;
-    --coral: 13 97% 64%;
-    --coral-soft: 13 45% 20%;
-    --navy: 0 0% 100%;
-    --navy-soft: 214 22% 78%;
-    --sky: 199 98% 44%;
-    --sky-soft: 199 55% 18%;
-    --mustard: 13 97% 64%;
-    --mustard-soft: 13 45% 20%;
-    --cream: 0 0% 100%;
-    --cream-deep: 214 22% 85%;
-    --maroon: 0 0% 100%;
-    --maroon-light: 214 22% 78%;
-    --cream-dark: 218 38% 18%;
-    --surface-elevated: 220 42% 17%;
-    --gold: 13 97% 64%;
-    --midnight: 222 62% 11%;
-    --hero-gradient: radial-gradient(120% 80% at 50% 110%, hsl(13 97% 64% / 0.55), transparent 60%), radial-gradient(90% 70% at 50% 0%, hsl(199 98% 44% / 0.9), hsl(222 62% 11%) 75%);
-    --text-gradient: linear-gradient(0deg, hsl(199 98% 44%), hsl(199 98% 44%));
-    --overlay-dark: linear-gradient(180deg, hsl(222 62% 11% / 0.1) 0%, hsl(222 62% 11% / 0.8) 100%);
-    --overlay-hero: linear-gradient(180deg, hsl(222 62% 11% / 0.1) 0%, hsl(222 62% 11% / 0.55) 60%, hsl(222 62% 11% / 0.85) 100%);
+    --sidebar-background: 213 50% 84%;
+    --sidebar-foreground: 195 6% 14%;
+    --sidebar-primary: 354 100% 70%;
+    --sidebar-primary-foreground: 195 6% 14%;
+    --sidebar-accent: 213 57% 93%;
+    --sidebar-accent-foreground: 195 6% 14%;
+    --sidebar-border: 213 40% 76%;
+    --sidebar-ring: 354 71% 58%;
+    --coral: 354 71% 58%;
+    --coral-soft: 354 80% 90%;
+    --navy: 195 6% 14%;
+    --navy-soft: 213 25% 36%;
+    --sky: 213 35% 45%;
+    --sky-soft: 213 57% 93%;
+    --mustard: 354 71% 58%;
+    --mustard-soft: 354 80% 90%;
+    --cream: 213 57% 93%;
+    --cream-deep: 213 46% 80%;
+    --maroon: 195 6% 14%;
+    --maroon-light: 213 25% 36%;
+    --cream-dark: 213 46% 82%;
+    --surface-elevated: 213 60% 95%;
+    --gold: 354 71% 58%;
+    --midnight: 195 6% 14%;
+    --graphite: 195 6% 14%;
+    --mist: 213 52% 87%;
+    --hero-gradient: linear-gradient(180deg, hsl(213 57% 93%), hsl(213 52% 87%));
+    --text-gradient: linear-gradient(0deg, hsl(195 6% 14%), hsl(195 6% 14%));
+    --overlay-dark: linear-gradient(180deg, hsl(213 52% 87% / 0) 0%, hsl(213 52% 87% / 0.85) 100%);
+    --overlay-hero: linear-gradient(180deg, hsl(213 52% 87% / 0) 0%, hsl(213 52% 87% / 0.6) 60%, hsl(213 52% 87% / 0.95) 100%);
     --font-display: 'Unbounded', 'Bebas Neue', sans-serif;
     --font-body: 'Space Grotesk', sans-serif;
   }
@@ -103,8 +105,8 @@
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
-    letter-spacing: -0.02em;
-    font-weight: 600;
+    letter-spacing: -0.01em;
+    font-weight: 500;
   }
 }
 
@@ -176,4 +178,8 @@ img[alt="Hi Volley"] {
     radial-gradient(30% 70% at 50% 20%, hsl(199 98% 60% / 0.55) 0%, transparent 70%),
     radial-gradient(70% 80% at 50% 0%, hsl(199 98% 44% / 0.65) 0%, hsl(217 75% 28% / 0.45) 45%, transparent 80%),
     hsl(222 62% 11%);
+}
+
+@layer utilities {
+  .signature-bar { display:block; width:32px; height:3px; border-radius:2px; background:hsl(var(--coral)); }
 }
