@@ -4,7 +4,7 @@ import PublicBottomNav from "@/components/PublicBottomNav";
 import PublicHeader from "@/components/PublicHeader";
 import { ArrowRight } from "@phosphor-icons/react";
 import heroPadel from "@/assets/hero-padel.jpg";
-import featuresTennis from "@/assets/features-tennis.jpg";
+import heroBlue from "@/assets/features-tennis.jpg";
 import ctaCourt from "@/assets/cta-court.jpg";
 import tennisAction from "@/assets/events/tennis-player.jpg";
 import clinicGroup from "@/assets/events/clinic-group.jpg";
@@ -212,8 +212,8 @@ const Index = () => {
             </h2>
             <p className="font-body text-muted-foreground max-w-sm">{t("features.lead")}</p>
             <img
-              src={featuresTennis}
-              alt="Close-up of a tennis ball meeting the racquet strings"
+              src={heroPadel}
+              alt="Tennis player sliding across a clay court to reach a ball"
               width={1920}
               height={1080}
               loading="lazy"
