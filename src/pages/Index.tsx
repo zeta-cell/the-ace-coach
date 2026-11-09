@@ -16,6 +16,7 @@ import racketClay from "@/assets/events/racket-clay.jpg";
 import fitnessStretch from "@/assets/events/fitness-stretch.jpg";
 import drillsGear from "@/assets/events/drills-gear.jpg";
 import { BrandLogo } from "@/components/BrandLogo";
+import logoWhite from "@/assets/hi-volley-logo-white.png.asset.json";
 import BlurText from "@/components/reactbits/BlurText";
 import CountUp from "@/components/reactbits/CountUp";
 import SpotlightRow from "@/components/reactbits/SpotlightRow";
