@@ -282,25 +282,67 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Progression ladder */}
+      {/* Membership: what your account keeps from the first session */}
       <section className="px-6 py-24">
-        <div className="max-w-6xl mx-auto">
-          <span className="signature-bar mb-6" />
-          <h2 className="font-display text-4xl md:text-5xl font-medium mb-12 leading-[1.05]">{L("From first rally to match play", "Del primer peloteo a la competición")}</h2>
-          <ol className="border-y border-foreground/10 divide-y divide-foreground/10">
-            {[
-              [L("Foundations", "Fundamentos"), L("Grip, footwork and a forehand you trust", "Empuñadura, pies y una derecha fiable")],
-              [L("Rally builder", "Constructor de peloteo"), L("Consistency drills and your first ratings", "Ejercicios de regularidad y tus primeras notas")],
-              [L("Match ready", "Listo para jugar"), L("Tactics, serve patterns and weekly plans", "Táctica, saque y planes semanales")],
-              [L("Tournament", "Torneo"), L("Video review, load tracking and draws", "Vídeo, carga de entreno y cuadros")],
-            ].map(([a, b], i) => (
-              <li key={a} className="grid grid-cols-[48px_1fr] md:grid-cols-[80px_1fr_1.4fr] gap-4 py-6 items-baseline">
-                <span className="font-body text-sm text-muted-foreground tabular-nums">{String(i + 1).padStart(2, "0")}</span>
-                <h3 className="font-display text-2xl font-medium">{a}</h3>
-                <p className="font-body text-muted-foreground col-start-2 md:col-start-auto">{b}</p>
-              </li>
-            ))}
-          </ol>
+        <div className="max-w-6xl mx-auto grid lg:grid-cols-[1fr_1.05fr] gap-12 lg:gap-16 items-center">
+          <div className="rounded-3xl bg-foreground text-background p-8 md:p-10 ring-1 ring-foreground/10">
+            <div className="flex items-center justify-between mb-10">
+              <img src={logoWhite.url} alt="Hi Volley" className="h-6 w-auto" />
+              <span className="font-body text-xs px-2.5 h-7 inline-flex items-center rounded-md bg-primary/15 text-primary">
+                {L("Member", "Miembro")}
+              </span>
+            </div>
+            <p className="font-display text-4xl md:text-5xl font-medium leading-none">Anna K.</p>
+            <p className="font-body text-sm text-background/60 mt-3">{L("Tennis · Padel · Madrid", "Tenis · Pádel · Madrid")}</p>
+            <div className="mt-9 grid grid-cols-3 gap-4">
+              {[
+                ["8", L("shots tracked", "golpes medidos")],
+                ["12", L("sessions played", "sesiones jugadas")],
+                ["18:00", L("next · Thu", "próxima · jue")],
+              ].map(([v, l]) => (
+                <div key={l}>
+                  <p className="font-display text-2xl font-medium tabular-nums text-primary">{v}</p>
+                  <p className="font-body text-xs text-background/60 mt-1">{l}</p>
+                </div>
+              ))}
+            </div>
+            <div className="mt-9 flex items-center gap-3">
+              <span className="signature-bar" />
+              <span className="font-body text-xs text-background/55">{L("Sample account", "Cuenta de ejemplo")}</span>
+            </div>
+          </div>
+
+          <div>
+            <span className="signature-bar mb-6" />
+            <h2 className="font-display text-4xl md:text-5xl font-medium leading-[1.05] mb-6">
+              {L("Your game,", "Tu juego,")} <span className="text-accent">{L("on record", "anotado")}</span> {L("from the first session", "desde la primera sesión")}
+            </h2>
+            <p className="font-body text-muted-foreground max-w-md mb-8">
+              {L(
+                "Create an account and everything your coach does for you is saved in one place: your eight shots, your bookings, the notes on your videos and your results in clinics and tournaments.",
+                "Crea una cuenta y todo lo que tu profesor hace por ti queda en un solo lugar: tus ocho golpes, tus reservas, las notas de tus vídeos y tus resultados en clínicas y torneos.",
+              )}
+            </p>
+            <div className="space-y-5 mb-9">
+              {[
+                [L("Your eight shots, measured", "Tus ocho golpes, medidos"), L("Rated by your coach after every session", "Tu profesor los valora en cada sesión")],
+                [L("Bookings, notes and videos together", "Reservas, notas y vídeos juntos"), L("One place instead of four chats", "Un solo sitio en vez de cuatro chats")],
+                [L("Clinics and tournaments in a tap", "Clínicas y torneos en un toque"), L("See the spots left and join the group", "Mira las plazas libres y entra en el grupo")],
+              ].map(([a, b]) => (
+                <div key={a} className="flex gap-4">
+                  <span className="signature-bar mt-2.5 shrink-0" />
+                  <div>
+                    <p className="font-body font-medium">{a}</p>
+                    <p className="font-body text-sm text-muted-foreground">{b}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <Link to="/login" className="inline-flex items-center gap-2 font-body font-medium text-base bg-primary text-primary-foreground px-6 h-12 rounded-[10px] hover:bg-primary/90 active:scale-[0.98] transition-[background-color,transform]">
+              {L("Create free account", "Crear cuenta gratis")} <ArrowRight size={18} />
+            </Link>
+            <p className="mt-3 font-body text-xs text-muted-foreground">{L("No card needed · no subscription", "Sin tarjeta · sin suscripción")}</p>
+          </div>
         </div>
       </section>
 
