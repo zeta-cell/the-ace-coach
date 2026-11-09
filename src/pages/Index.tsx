@@ -106,8 +106,8 @@ const Index = () => {
       <PublicHeader />
 
       {/* Hero: the original clay-court photo at full strength, headline on the brand background */}
-      <section className="relative min-h-[100svh] overflow-hidden bg-background flex flex-col md:grid md:grid-cols-[minmax(0,46%)_minmax(0,54%)]">
-        <div className="order-2 md:order-1 relative z-10 flex items-center px-6 md:px-12 py-12 md:py-24">
+      <section className="relative min-h-[100svh] overflow-hidden bg-background flex flex-col md:grid md:grid-cols-[minmax(0,42%)_minmax(0,58%)]">
+        <div className="order-2 md:order-1 relative z-10 flex items-center px-6 md:px-12 pt-10 pb-28 md:pt-24 md:pb-24">
           <div className="w-full max-w-md mx-auto md:mx-0 md:ml-auto">
             <p className="font-body text-sm text-muted-foreground mb-3">{t("home.badge")}</p>
             <span className="signature-bar mb-8" />
@@ -133,7 +133,7 @@ const Index = () => {
             alt="Tennis player sliding on a clay court to reach a ball"
             width={1536}
             height={1024}
-            className="h-full w-full object-cover object-[35%_center] md:object-[18%_center]"
+            className="h-full w-full object-cover object-[20%_center] md:object-[30%_center]"
             loading="eager"
           />
         </div>
