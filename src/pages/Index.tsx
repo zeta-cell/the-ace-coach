@@ -35,6 +35,40 @@ const Index = () => {
     { titleKey: "feat.ai.title", descKey: "feat.ai.desc" },
   ] as const;
 
+
+  const chip = "h-8 px-3 inline-flex items-center rounded-lg font-body text-xs tabular-nums";
+  const previews = [
+    <div className="w-full flex items-center gap-3 rounded-xl bg-card p-3">
+      <span className="w-10 h-10 rounded-full bg-foreground text-background font-display flex items-center justify-center">PS</span>
+      <div className="flex-1"><p className="font-body text-sm font-medium">Pedro Sousa</p><p className="font-body text-xs text-muted-foreground">Padel · EN ES · Elite</p></div>
+      <span className="font-body text-sm font-medium tabular-nums">€45</span>
+    </div>,
+    <div className="flex flex-wrap gap-2">
+      {["09:00","10:00","17:00","18:00","19:00"].map((h) => <span key={h} className={`${chip} ${h === "18:00" ? "bg-primary text-primary-foreground" : h === "10:00" ? "bg-foreground/5 text-muted-foreground line-through" : "bg-card"}`}>{h}</span>)}
+    </div>,
+    <div className="w-full flex items-end gap-2 h-full">
+      {[["Forehand",72],["Backhand",58],["Serve",64],["Volley",81],["Smash",49],["Bandeja",67],["Vibora",55],["Lob",70]].map(([n,v]) => (
+        <div key={n as string} className="flex-1 flex flex-col items-center gap-1 h-full justify-end">
+          <span className={`w-full rounded-md ${n === "Volley" ? "bg-primary" : "bg-foreground/15"}`} style={{ height: `${v}%` }} />
+          <span className="font-body text-[11px] text-muted-foreground hidden sm:block">{n}</span>
+        </div>
+      ))}
+    </div>,
+    <div className="w-full rounded-xl bg-card p-3 flex items-center justify-between">
+      <div><p className="font-body text-sm font-medium">{L("Winter clinic", "Clínica de invierno")}</p><p className="font-body text-xs text-muted-foreground">{L("Sat 14 Nov · 6 of 8 spots", "Sáb 14 nov · 6 de 8 plazas")}</p></div>
+      <div className="flex gap-1">{Array.from({ length: 8 }).map((_, k) => <span key={k} className={`w-2 h-2 rounded-full ${k < 6 ? "bg-primary" : "bg-foreground/15"}`} />)}</div>
+    </div>,
+    <div className="w-full rounded-xl bg-card p-3">
+      <p className="font-display text-3xl font-medium tabular-nums">4.9<span className="font-body text-sm text-muted-foreground ml-2">{L("from 38 players", "de 38 jugadores")}</span></p>
+      <div className="mt-2 h-1.5 rounded-full bg-foreground/10"><div className="h-full w-[96%] rounded-full bg-primary" /></div>
+    </div>,
+    <div className="w-full space-y-2">
+      {[L("Warm-up · 10 min","Calentamiento · 10 min"), L("Volley ladder · 20 min","Escalera de volea · 20 min"), L("Cool-down · 5 min","Vuelta a la calma · 5 min")].map((r, k) => (
+        <div key={r} className="flex items-center gap-2 font-body text-xs"><span className={`w-1 h-4 rounded-full ${k === 1 ? "bg-primary" : "bg-foreground/20"}`} />{r}</div>
+      ))}
+    </div>,
+  ];
+
   const steps = [
     { step: "01", titleKey: "how.1.title", descKey: "how.1.desc" },
     { step: "02", titleKey: "how.2.title", descKey: "how.2.desc" },
@@ -166,7 +200,7 @@ const Index = () => {
 
       {/* Features: numbered list beside the racquet photo */}
       <section className="relative py-24 px-6 bg-card">
-        <div className="max-w-6xl mx-auto grid lg:grid-cols-[1fr_1.3fr] gap-16">
+        <div className="max-w-6xl mx-auto grid lg:grid-cols-[1fr_1.6fr] gap-12">
           <div>
             <span className="signature-bar mb-6" />
             <h2 className="font-display text-4xl md:text-5xl mb-4 leading-[1.05] font-medium">
@@ -182,19 +216,15 @@ const Index = () => {
               className="mt-10 hidden lg:block w-full h-[320px] object-cover rounded-2xl saturate-[0.8]"
             />
           </div>
-          <ol className="divide-y divide-foreground/10 border-y border-foreground/10">
+          <div className="grid sm:grid-cols-2 gap-3">
             {features.map((f, i) => (
-              <li key={f.titleKey}>
-                <SpotlightRow className="grid grid-cols-[48px_1fr] gap-4 py-6 px-2">
-                  <span className="font-body text-sm text-muted-foreground tabular-nums pt-1">{String(i + 1).padStart(2, "0")}</span>
-                  <div>
-                    <h3 className="font-display text-xl font-medium mb-1">{t(f.titleKey)}</h3>
-                    <p className="font-body text-sm text-muted-foreground">{t(f.descKey)}</p>
-                  </div>
-                </SpotlightRow>
-              </li>
+              <SpotlightRow key={f.titleKey} className={`rounded-2xl bg-background p-6 ring-1 ring-foreground/10 flex flex-col ${i === 2 ? "sm:col-span-2" : ""}`}>
+                <div className="h-28 mb-6 flex items-end" aria-hidden>{previews[i]}</div>
+                <h3 className="font-display text-2xl font-medium mb-1">{t(f.titleKey)}</h3>
+                <p className="font-body text-sm text-muted-foreground">{t(f.descKey)}</p>
+              </SpotlightRow>
             ))}
-          </ol>
+          </div>
         </div>
       </section>
 
