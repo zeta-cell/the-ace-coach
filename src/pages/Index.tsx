@@ -6,7 +6,7 @@ import { ArrowRight } from "@phosphor-icons/react";
 import heroPadel from "@/assets/hero-padel.jpg";
 import featuresTennis from "@/assets/features-tennis.jpg";
 import ctaCourt from "@/assets/cta-court.jpg";
-import tennisAction from "@/assets/events/tennis-action.jpg";
+import tennisAction from "@/assets/events/tennis-player.jpg";
 import clinicGroup from "@/assets/events/clinic-group.jpg";
 import kidsCamp from "@/assets/events/kids-camp.jpg";
 import tennisServe from "@/assets/events/tennis-serve.jpg";
@@ -146,7 +146,7 @@ const Index = () => {
       {/* Mission split */}
       <section className="px-6 py-24">
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
-          <img src={tennisAction} alt="Tennis player hitting a forehand on court" loading="lazy" className="w-full h-[420px] object-cover rounded-2xl saturate-[0.85]" />
+          <img src={tennisAction} alt="Tennis player ready to return on court" loading="lazy" className="w-full h-[420px] object-cover rounded-2xl saturate-[0.85]" />
           <div>
             <span className="signature-bar mb-6" />
             <h2 className="font-display text-4xl md:text-5xl leading-[1.05] font-medium mb-6">
