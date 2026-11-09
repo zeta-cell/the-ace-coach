@@ -107,19 +107,19 @@ const Index = () => {
 
       {/* Hero: the original clay-court photo, text laid directly over it with no overlay */}
       <section className="relative overflow-hidden bg-background">
-        <div className="relative h-[68svh] md:min-h-[100svh]">
+        <div className="relative h-[62svh] md:min-h-[100svh]">
           <img
             src={heroPadel}
             alt="Tennis player sliding on a clay court to reach a ball"
             width={1536}
             height={1024}
-            className="absolute inset-0 h-full w-full object-cover object-[53%_center] md:object-[50%_center]"
+            className="absolute inset-0 h-full w-full object-cover object-[55%_center] md:object-[50%_center]"
             loading="eager"
           />
 
-          <div className="relative z-10 flex h-full items-end px-6 pt-24 pb-24 md:px-12 md:pt-28 md:pb-16">
+          <div className="relative z-10 flex h-full items-end px-6 pt-20 pb-24 md:px-12 md:pt-28 md:pb-20">
             <div className="w-full max-w-7xl mx-auto grid md:grid-cols-[minmax(0,1fr)_minmax(0,340px)] gap-8 md:gap-12 items-end">
-              <div className="[text-shadow:0_2px_22px_rgba(2,7,10,0.5)]">
+              <div className="[text-shadow:0_1px_3px_rgba(2,7,10,0.6),0_2px_26px_rgba(2,7,10,0.55)]">
                 <p className="font-body text-sm text-background/80 mb-3">{t("home.badge")}</p>
                 <span className="signature-bar mb-6" />
                 <h1 className="font-display text-[2rem] md:text-6xl leading-[1.02] font-medium text-background">
