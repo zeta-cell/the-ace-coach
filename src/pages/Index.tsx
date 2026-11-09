@@ -346,19 +346,27 @@ const Index = () => {
         </div>
       </section>
 
-      {/* How it works: one graphite contrast band */}
+      {/* Member pitch: one graphite contrast band, no step sequence */}
       <section className="relative py-24 px-6 bg-foreground text-background">
-        <div className="max-w-6xl mx-auto">
-          <span className="signature-bar mb-6" />
-          <h2 className="font-display text-4xl md:text-5xl mb-12 font-medium">
-            {t("how.h2.a")} {t("how.h2.b")}
-          </h2>
-          <div className="grid md:grid-cols-4 gap-8">
+        <div className="max-w-6xl mx-auto grid md:grid-cols-[1.1fr_1fr] gap-12 items-center">
+          <div>
+            <span className="signature-bar mb-6" />
+            <h2 className="font-display text-4xl md:text-5xl mb-6 font-medium leading-[1.05]">
+              {L("One free account. Your whole game in one place.", "Una cuenta gratis. Todo tu juego en un solo lugar.")}
+            </h2>
+            <p className="font-body text-background/70 mb-8 max-w-md">
+              {L("Coaches, bookings, training plans and your progress on eight shots — all of it lives in your profile from day one.", "Profesores, reservas, planes de entreno y tu progreso en ocho golpes — todo vive en tu perfil desde el primer día.")}
+            </p>
+            <Link to="/login" className="inline-flex items-center gap-2 font-body font-medium text-base bg-primary text-primary-foreground px-6 h-12 rounded-[10px] hover:bg-primary/90 active:scale-[0.98] transition-[background-color,transform]">
+              {L("Create free account", "Crear cuenta gratis")} <ArrowRight size={18} />
+            </Link>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
             {steps.map((item) => (
-              <div key={item.titleKey} className="border-t border-background/15 pt-6">
+              <div key={item.titleKey} className="rounded-2xl bg-background/5 border border-background/10 p-5">
                 <span className="signature-bar" />
-                <h3 className="font-display text-xl mt-4 mb-2 font-medium">{t(item.titleKey)}</h3>
-                <p className="font-body text-sm text-background/70">{t(item.descKey)}</p>
+                <h3 className="font-display text-lg mt-3 mb-1.5 font-medium">{t(item.titleKey)}</h3>
+                <p className="font-body text-xs text-background/60 leading-relaxed">{t(item.descKey)}</p>
               </div>
             ))}
           </div>
