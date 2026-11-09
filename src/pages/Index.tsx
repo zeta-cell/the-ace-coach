@@ -127,7 +127,7 @@ const Index = () => {
                   <BlurText text={t("home.h1.line3")} delay={0.2} className="text-primary" />
                 </h1>
               </div>
-              <div className="md:pb-1 [text-shadow:0_2px_22px_rgba(2,7,10,0.5)]">
+              <div className="md:pb-1 [text-shadow:0_1px_3px_rgba(2,7,10,0.6),0_2px_26px_rgba(2,7,10,0.55)]">
                 <p className="hidden md:block font-body text-sm md:text-base text-background/85 mb-5">{t("home.lead")}</p>
                 <div className="flex flex-col sm:flex-row gap-3">
                   <Link to="/login" className="inline-flex items-center justify-center gap-2 font-body font-medium text-base bg-background text-foreground px-6 h-12 rounded-[10px] hover:bg-background/90 active:scale-[0.98] transition-[background-color,transform]">
