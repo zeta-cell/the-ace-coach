@@ -105,18 +105,31 @@ const Index = () => {
     <div className="min-h-screen bg-background text-foreground overflow-hidden">
       <PublicHeader />
 
-      {/* Hero: the original clay-court photo at full strength, headline on the brand background */}
-      <section className="relative min-h-[100svh] overflow-hidden bg-background flex flex-col md:grid md:grid-cols-[minmax(0,42%)_minmax(0,58%)]">
-        <div className="order-2 md:order-1 relative z-10 flex items-center px-6 md:px-12 pt-10 pb-28 md:pt-24 md:pb-24">
-          <div className="w-full max-w-md mx-auto md:mx-0 md:ml-auto">
-            <p className="font-body text-sm text-muted-foreground mb-3">{t("home.badge")}</p>
-            <span className="signature-bar mb-8" />
-            <h1 className="font-display text-[2.5rem] md:text-6xl leading-[1.02] mb-6 font-medium">
-              <BlurText text={`${t("home.h1.line1")} ${t("home.h1.line2")}`} />{" "}
-              <BlurText text={t("home.h1.line3")} delay={0.2} className="text-accent" />
-            </h1>
-            <p className="font-body text-base md:text-lg text-muted-foreground mb-10 max-w-md">{t("home.lead")}</p>
-            <div className="flex flex-col sm:flex-row gap-3">
+      {/* Hero: the original clay-court photo full width, nothing laid over it; headline on the brand background below */}
+      <section className="relative min-h-[100svh] overflow-hidden bg-background flex flex-col">
+        <div className="h-[34svh] md:h-[58svh] w-full shrink-0">
+          <img
+            src={heroPadel}
+            alt="Tennis player sliding on a clay court to reach a ball"
+            width={1536}
+            height={1024}
+            className="h-full w-full object-cover object-[50%_center] md:object-[center_65%]"
+            loading="eager"
+          />
+        </div>
+
+        <div className="relative z-10 flex-1 flex items-center px-6 md:px-12 pt-8 pb-28 md:pb-16">
+          <div className="w-full max-w-7xl mx-auto flex flex-col md:flex-row md:items-end md:justify-between gap-8">
+            <div className="max-w-xl">
+              <p className="font-body text-sm text-muted-foreground mb-3">{t("home.badge")}</p>
+              <span className="signature-bar mb-6" />
+              <h1 className="font-display text-[2rem] md:text-6xl leading-[1.02] mb-5 md:mb-6 font-medium">
+                <BlurText text={`${t("home.h1.line1")} ${t("home.h1.line2")}`} />{" "}
+                <BlurText text={t("home.h1.line3")} delay={0.2} className="text-accent" />
+              </h1>
+              <p className="font-body text-sm md:text-lg text-muted-foreground max-w-md">{t("home.lead")}</p>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-3 md:pb-1 shrink-0">
               <Link to="/login" className="inline-flex items-center justify-center gap-2 font-body font-medium text-base bg-primary text-primary-foreground px-6 h-12 rounded-[10px] hover:bg-primary/90 active:scale-[0.98] transition-[background-color,transform]">
                 {L("Create free account", "Crear cuenta gratis")} <ArrowRight size={18} />
               </Link>
@@ -125,17 +138,6 @@ const Index = () => {
               </Link>
             </div>
           </div>
-        </div>
-
-        <div className="order-1 md:order-2 h-[46svh] md:h-auto">
-          <img
-            src={heroPadel}
-            alt="Tennis player sliding on a clay court to reach a ball"
-            width={1536}
-            height={1024}
-            className="h-full w-full object-cover object-[20%_center] md:object-[30%_center]"
-            loading="eager"
-          />
         </div>
       </section>
 
