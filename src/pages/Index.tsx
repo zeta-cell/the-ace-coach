@@ -105,20 +105,16 @@ const Index = () => {
     <div className="min-h-screen bg-background text-foreground overflow-hidden">
       <PublicHeader />
 
-      {/* Hero: clay-court photo graded into mist blue, headline on the calm left side */}
+      {/* Hero: the original clay-court photo, untouched, headline on the calm left side */}
       <section className="relative min-h-[100svh] flex items-center overflow-hidden bg-background">
         <img
           src={heroPadel}
           alt="Tennis player sliding on a clay court to reach a ball"
           width={1536}
           height={1024}
-          className="absolute inset-0 h-full w-full object-cover object-[70%_center] saturate-[0.85]"
+          className="absolute inset-0 h-full w-full object-cover object-[70%_center]"
           loading="eager"
         />
-        {/* Mist blue enters from the top right; the player on the left stays clear */}
-        <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 75% 85% at 100% 0%, hsl(var(--background)) 0%, hsl(var(--background) / 0.75) 35%, transparent 70%)" }} />
-        <div className="absolute inset-y-0 left-0 w-full md:w-[48%] bg-gradient-to-r from-background/80 via-background/40 to-transparent" />
-        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-background to-transparent" />
 
         <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12 pt-32 pb-20">
           <div className="max-w-xl">
