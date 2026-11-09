@@ -71,10 +71,10 @@ const Index = () => {
   ];
 
   const steps = [
-    { step: "01", titleKey: "how.1.title", descKey: "how.1.desc" },
-    { step: "02", titleKey: "how.2.title", descKey: "how.2.desc" },
-    { step: "03", titleKey: "how.3.title", descKey: "how.3.desc" },
-    { step: "04", titleKey: "how.4.title", descKey: "how.4.desc" },
+    { titleKey: "how.1.title", descKey: "how.1.desc" },
+    { titleKey: "how.2.title", descKey: "how.2.desc" },
+    { titleKey: "how.3.title", descKey: "how.3.desc" },
+    { titleKey: "how.4.title", descKey: "how.4.desc" },
   ] as const;
 
   useEffect(() => {
@@ -355,8 +355,8 @@ const Index = () => {
           </h2>
           <div className="grid md:grid-cols-4 gap-8">
             {steps.map((item) => (
-              <div key={item.step} className="border-t border-background/15 pt-6">
-                <span className="font-body text-sm tabular-nums text-primary">{item.step}</span>
+              <div key={item.titleKey} className="border-t border-background/15 pt-6">
+                <span className="signature-bar" />
                 <h3 className="font-display text-xl mt-4 mb-2 font-medium">{t(item.titleKey)}</h3>
                 <p className="font-body text-sm text-background/70">{t(item.descKey)}</p>
               </div>
