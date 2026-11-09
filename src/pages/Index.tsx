@@ -106,31 +106,29 @@ const Index = () => {
     <div className="min-h-screen bg-background text-foreground overflow-hidden">
       <PublicHeader />
 
-      {/* Hero: the original clay-court photo, text laid directly over it with no overlay */}
+      {/* Hero: deep-blue motion-blur photo, text sits in the naturally dark lower-left. No shadows, no overlays. */}
       <section className="relative overflow-hidden bg-background">
-        <div className="relative h-[62svh] md:min-h-[100svh]">
+        <div className="relative h-[70svh] md:min-h-[100svh]">
           <img
-            src={heroPadel}
-            alt="Tennis player sliding on a clay court to reach a ball"
-            width={1536}
-            height={1024}
-            className="absolute inset-0 h-full w-full object-cover object-[62%_center] md:object-[50%_center]"
+            src={heroBlue}
+            alt="Tennis racket striking a ball in motion over a blue court"
+            width={1920}
+            height={1080}
+            className="absolute inset-0 h-full w-full object-cover object-center"
             loading="eager"
           />
 
           <div className="relative z-10 flex h-full items-end px-6 pt-20 pb-24 md:px-12 md:pt-28 md:pb-20">
-            <div className="w-full max-w-7xl mx-auto grid md:grid-cols-[minmax(0,1fr)_minmax(0,340px)] gap-8 md:gap-12 items-end">
-              <div className="[text-shadow:0_1px_3px_rgba(2,7,10,0.6),0_2px_26px_rgba(2,7,10,0.55)]">
+            <div className="mx-auto w-full max-w-7xl">
+              <div className="max-w-[40rem]">
                 <p className="font-body text-sm text-background/80 mb-3">{t("home.badge")}</p>
                 <span className="signature-bar mb-6" />
-                <h1 className="font-display text-[2rem] md:text-6xl leading-[1.02] font-medium text-background">
+                <h1 className="font-display text-[2.1rem] md:text-[3.5rem] leading-[1.03] font-medium text-background">
                   <BlurText text={`${t("home.h1.line1")} ${t("home.h1.line2")}`} />{" "}
                   <BlurText text={t("home.h1.line3")} delay={0.2} className="text-primary" />
                 </h1>
-              </div>
-              <div className="md:pb-1 [text-shadow:0_1px_3px_rgba(2,7,10,0.6),0_2px_26px_rgba(2,7,10,0.55)]">
-                <p className="hidden md:block font-body text-sm md:text-base text-background/85 mb-5">{t("home.lead")}</p>
-                <div className="flex flex-col sm:flex-row gap-3">
+                <p className="mt-5 max-w-[30rem] font-body text-sm md:text-base text-background/80">{t("home.lead")}</p>
+                <div className="mt-8 flex flex-col sm:flex-row gap-3">
                   <Link to="/login" className="inline-flex items-center justify-center gap-2 font-body font-medium text-base bg-background text-foreground px-6 h-12 rounded-[10px] hover:bg-background/90 active:scale-[0.98] transition-[background-color,transform]">
                     {L("Create free account", "Crear cuenta gratis")} <ArrowRight size={18} />
                   </Link>
