@@ -113,29 +113,31 @@ const Index = () => {
             alt="Tennis player sliding on a clay court to reach a ball"
             width={1536}
             height={1024}
-            className="h-full w-full object-cover object-[50%_center] md:object-[center_65%]"
+            className="h-full w-full object-cover object-[50%_center] md:object-[center_25%]"
             loading="eager"
           />
         </div>
 
-        <div className="relative z-10 flex-1 flex items-center px-6 md:px-12 pt-8 pb-28 md:pb-16">
-          <div className="w-full max-w-7xl mx-auto flex flex-col md:flex-row md:items-end md:justify-between gap-8">
-            <div className="max-w-xl">
+        <div className="relative z-10 flex-1 flex items-center px-6 md:px-12 pt-6 pb-28 md:pb-10">
+          <div className="w-full max-w-7xl mx-auto grid md:grid-cols-[minmax(0,1fr)_minmax(0,340px)] gap-8 md:gap-12 items-end">
+            <div>
               <p className="font-body text-sm text-muted-foreground mb-3">{t("home.badge")}</p>
               <span className="signature-bar mb-6" />
-              <h1 className="font-display text-[2rem] md:text-6xl leading-[1.02] mb-5 md:mb-6 font-medium">
+              <h1 className="font-display text-[2rem] md:text-6xl leading-[1.02] font-medium">
                 <BlurText text={`${t("home.h1.line1")} ${t("home.h1.line2")}`} />{" "}
                 <BlurText text={t("home.h1.line3")} delay={0.2} className="text-accent" />
               </h1>
-              <p className="font-body text-sm md:text-lg text-muted-foreground max-w-md">{t("home.lead")}</p>
             </div>
-            <div className="flex flex-col sm:flex-row gap-3 md:pb-1 shrink-0">
-              <Link to="/login" className="inline-flex items-center justify-center gap-2 font-body font-medium text-base bg-primary text-primary-foreground px-6 h-12 rounded-[10px] hover:bg-primary/90 active:scale-[0.98] transition-[background-color,transform]">
-                {L("Create free account", "Crear cuenta gratis")} <ArrowRight size={18} />
-              </Link>
-              <Link to="/find-a-coach" className="inline-flex items-center justify-center font-body font-medium text-base text-foreground px-6 h-12 rounded-[10px] ring-1 ring-foreground/15 hover:bg-card transition-colors">
-                {t("home.cta.find")}
-              </Link>
+            <div className="md:pb-1">
+              <p className="font-body text-sm md:text-base text-muted-foreground mb-5">{t("home.lead")}</p>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Link to="/login" className="inline-flex items-center justify-center gap-2 font-body font-medium text-base bg-primary text-primary-foreground px-6 h-12 rounded-[10px] hover:bg-primary/90 active:scale-[0.98] transition-[background-color,transform]">
+                  {L("Create free account", "Crear cuenta gratis")} <ArrowRight size={18} />
+                </Link>
+                <Link to="/find-a-coach" className="inline-flex items-center justify-center font-body font-medium text-base text-foreground px-6 h-12 rounded-[10px] ring-1 ring-foreground/15 hover:bg-card transition-colors">
+                  {t("home.cta.find")}
+                </Link>
+              </div>
             </div>
           </div>
         </div>
