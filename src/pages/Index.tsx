@@ -105,37 +105,39 @@ const Index = () => {
     <div className="min-h-screen bg-background text-foreground overflow-hidden">
       <PublicHeader />
 
-      {/* Hero: clay-court photo graded into mist blue, headline on the calm left side */}
-      <section className="relative min-h-[100svh] flex items-center overflow-hidden bg-background">
-        <img
-          src={heroPadel}
-          alt="Tennis player sliding on a clay court to reach a ball"
-          width={1536}
-          height={1024}
-          className="absolute inset-0 h-full w-full object-cover object-[70%_center] saturate-[0.85]"
-          loading="eager"
-        />
-        {/* Mist blue enters from the top right; the player on the left stays clear */}
-        <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 75% 85% at 100% 0%, hsl(var(--background)) 0%, hsl(var(--background) / 0.75) 35%, transparent 70%)" }} />
-        <div className="absolute inset-y-0 left-0 w-full md:w-[48%] bg-gradient-to-r from-background/80 via-background/40 to-transparent" />
-        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-background to-transparent" />
+      {/* Hero: the original clay-court photo full width, nothing laid over it; headline on the brand background below */}
+      <section className="relative min-h-[100svh] overflow-hidden bg-background flex flex-col">
+        <div className="h-[34svh] md:h-[58svh] w-full shrink-0">
+          <img
+            src={heroPadel}
+            alt="Tennis player sliding on a clay court to reach a ball"
+            width={1536}
+            height={1024}
+            className="h-full w-full object-cover object-[50%_center] md:object-top"
+            loading="eager"
+          />
+        </div>
 
-        <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12 pt-32 pb-20">
-          <div className="max-w-xl">
-            <p className="font-body text-sm text-muted-foreground mb-3">{t("home.badge")}</p>
-            <span className="signature-bar mb-8" />
-            <h1 className="font-display text-[2.5rem] md:text-6xl leading-[1.02] mb-6 font-medium">
-              <BlurText text={`${t("home.h1.line1")} ${t("home.h1.line2")}`} />{" "}
-              <BlurText text={t("home.h1.line3")} delay={0.2} className="text-accent" />
-            </h1>
-            <p className="font-body text-base md:text-lg text-muted-foreground mb-10 max-w-md">{t("home.lead")}</p>
-            <div className="flex flex-col sm:flex-row gap-3">
-              <Link to="/login" className="inline-flex items-center justify-center gap-2 font-body font-medium text-base bg-primary text-primary-foreground px-6 h-12 rounded-[10px] hover:bg-primary/90 active:scale-[0.98] transition-[background-color,transform]">
-                {L("Create free account", "Crear cuenta gratis")} <ArrowRight size={18} />
-              </Link>
-              <Link to="/find-a-coach" className="inline-flex items-center justify-center font-body font-medium text-base text-foreground px-6 h-12 rounded-[10px] ring-1 ring-foreground/15 hover:bg-card transition-colors">
-                {t("home.cta.find")}
-              </Link>
+        <div className="relative z-10 flex-1 flex items-center px-6 md:px-12 pt-6 pb-28 md:pb-10">
+          <div className="w-full max-w-7xl mx-auto grid md:grid-cols-[minmax(0,1fr)_minmax(0,340px)] gap-8 md:gap-12 items-end">
+            <div>
+              <p className="font-body text-sm text-muted-foreground mb-3">{t("home.badge")}</p>
+              <span className="signature-bar mb-6" />
+              <h1 className="font-display text-[2rem] md:text-6xl leading-[1.02] font-medium">
+                <BlurText text={`${t("home.h1.line1")} ${t("home.h1.line2")}`} />{" "}
+                <BlurText text={t("home.h1.line3")} delay={0.2} className="text-accent" />
+              </h1>
+            </div>
+            <div className="md:pb-1">
+              <p className="font-body text-sm md:text-base text-muted-foreground mb-5">{t("home.lead")}</p>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Link to="/login" className="inline-flex items-center justify-center gap-2 font-body font-medium text-base bg-primary text-primary-foreground px-6 h-12 rounded-[10px] hover:bg-primary/90 active:scale-[0.98] transition-[background-color,transform]">
+                  {L("Create free account", "Crear cuenta gratis")} <ArrowRight size={18} />
+                </Link>
+                <Link to="/find-a-coach" className="inline-flex items-center justify-center font-body font-medium text-base text-foreground px-6 h-12 rounded-[10px] ring-1 ring-foreground/15 hover:bg-card transition-colors">
+                  {t("home.cta.find")}
+                </Link>
+              </div>
             </div>
           </div>
         </div>
