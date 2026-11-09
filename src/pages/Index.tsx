@@ -105,36 +105,34 @@ const Index = () => {
     <div className="min-h-screen bg-background text-foreground overflow-hidden">
       <PublicHeader />
 
-      {/* Hero: the original clay-court photo full width, nothing laid over it; headline on the brand background below */}
-      <section className="relative min-h-[100svh] overflow-hidden bg-background flex flex-col">
-        <div className="h-[34svh] md:h-[58svh] w-full shrink-0">
-          <img
-            src={heroPadel}
-            alt="Tennis player sliding on a clay court to reach a ball"
-            width={1536}
-            height={1024}
-            className="h-full w-full object-cover object-[50%_center] md:object-top"
-            loading="eager"
-          />
-        </div>
+      {/* Hero: the original clay-court photo full bleed, text laid directly over it with no overlay */}
+      <section className="relative min-h-[100svh] overflow-hidden bg-background">
+        <img
+          src={heroPadel}
+          alt="Tennis player sliding on a clay court to reach a ball"
+          width={1536}
+          height={1024}
+          className="absolute inset-0 h-full w-full object-cover object-[50%_center]"
+          loading="eager"
+        />
 
-        <div className="relative z-10 flex-1 flex items-center px-6 md:px-12 pt-6 pb-28 md:pb-10">
+        <div className="relative z-10 flex min-h-[100svh] items-end px-6 md:px-12 pt-28 pb-28 md:pb-16">
           <div className="w-full max-w-7xl mx-auto grid md:grid-cols-[minmax(0,1fr)_minmax(0,340px)] gap-8 md:gap-12 items-end">
-            <div>
-              <p className="font-body text-sm text-muted-foreground mb-3">{t("home.badge")}</p>
+            <div className="[text-shadow:0_2px_22px_rgba(2,7,10,0.5)]">
+              <p className="font-body text-sm text-background/80 mb-3">{t("home.badge")}</p>
               <span className="signature-bar mb-6" />
-              <h1 className="font-display text-[2rem] md:text-6xl leading-[1.02] font-medium">
+              <h1 className="font-display text-[2rem] md:text-6xl leading-[1.02] font-medium text-background">
                 <BlurText text={`${t("home.h1.line1")} ${t("home.h1.line2")}`} />{" "}
-                <BlurText text={t("home.h1.line3")} delay={0.2} className="text-accent" />
+                <BlurText text={t("home.h1.line3")} delay={0.2} className="text-primary" />
               </h1>
             </div>
-            <div className="md:pb-1">
-              <p className="font-body text-sm md:text-base text-muted-foreground mb-5">{t("home.lead")}</p>
+            <div className="md:pb-1 [text-shadow:0_2px_22px_rgba(2,7,10,0.5)]">
+              <p className="font-body text-sm md:text-base text-background/85 mb-5">{t("home.lead")}</p>
               <div className="flex flex-col sm:flex-row gap-3">
-                <Link to="/login" className="inline-flex items-center justify-center gap-2 font-body font-medium text-base bg-primary text-primary-foreground px-6 h-12 rounded-[10px] hover:bg-primary/90 active:scale-[0.98] transition-[background-color,transform]">
+                <Link to="/login" className="inline-flex items-center justify-center gap-2 font-body font-medium text-base bg-background text-foreground px-6 h-12 rounded-[10px] hover:bg-background/90 active:scale-[0.98] transition-[background-color,transform]">
                   {L("Create free account", "Crear cuenta gratis")} <ArrowRight size={18} />
                 </Link>
-                <Link to="/find-a-coach" className="inline-flex items-center justify-center font-body font-medium text-base text-foreground px-6 h-12 rounded-[10px] ring-1 ring-foreground/15 hover:bg-card transition-colors">
+                <Link to="/find-a-coach" className="inline-flex items-center justify-center font-body font-medium text-base text-background px-6 h-12 rounded-[10px] ring-1 ring-background/45 hover:bg-background/10 transition-colors">
                   {t("home.cta.find")}
                 </Link>
               </div>
