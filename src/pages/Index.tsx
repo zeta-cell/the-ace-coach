@@ -6,6 +6,15 @@ import { ArrowRight } from "@phosphor-icons/react";
 import heroPadel from "@/assets/hero-padel.jpg";
 import featuresTennis from "@/assets/features-tennis.jpg";
 import ctaCourt from "@/assets/cta-court.jpg";
+import tennisAction from "@/assets/events/tennis-action.jpg";
+import clinicGroup from "@/assets/events/clinic-group.jpg";
+import kidsCamp from "@/assets/events/kids-camp.jpg";
+import tennisServe from "@/assets/events/tennis-serve.jpg";
+import padelMatch from "@/assets/events/padel-match.jpg";
+import tennisClay from "@/assets/events/tennis-clay.jpg";
+import racketClay from "@/assets/events/racket-clay.jpg";
+import fitnessStretch from "@/assets/events/fitness-stretch.jpg";
+import drillsGear from "@/assets/events/drills-gear.jpg";
 import { BrandLogo } from "@/components/BrandLogo";
 import BlurText from "@/components/reactbits/BlurText";
 import SpotlightRow from "@/components/reactbits/SpotlightRow";
@@ -14,6 +23,7 @@ import { useI18n } from "@/lib/i18n";
 
 const Index = () => {
   const { t, lang } = useI18n();
+  const L = (en: string, es: string) => (lang === "es" ? es : en);
 
   const features = [
     { titleKey: "feat.find.title", descKey: "feat.find.desc" },
@@ -84,16 +94,54 @@ const Index = () => {
             </h1>
             <p className="font-body text-base md:text-lg text-muted-foreground mb-10 max-w-md">{t("home.lead")}</p>
             <div className="flex flex-col sm:flex-row gap-3">
-              <Link to="/find-a-coach" className="inline-flex items-center justify-center gap-2 font-body font-medium text-base bg-primary text-primary-foreground px-6 h-12 rounded-[10px] hover:bg-primary/90 active:scale-[0.98] transition-[background-color,transform]">
-                {t("home.cta.find")} <ArrowRight size={18} />
+              <Link to="/login" className="inline-flex items-center justify-center gap-2 font-body font-medium text-base bg-primary text-primary-foreground px-6 h-12 rounded-[10px] hover:bg-primary/90 active:scale-[0.98] transition-[background-color,transform]">
+                {L("Create free account", "Crear cuenta gratis")} <ArrowRight size={18} />
               </Link>
-              <Link to="/login" className="inline-flex items-center justify-center font-body font-medium text-base text-foreground px-6 h-12 rounded-[10px] ring-1 ring-foreground/15 hover:bg-card transition-colors">
-                {t("home.cta.coach")}
+              <Link to="/find-a-coach" className="inline-flex items-center justify-center font-body font-medium text-base text-foreground px-6 h-12 rounded-[10px] ring-1 ring-foreground/15 hover:bg-card transition-colors">
+                {t("home.cta.find")}
               </Link>
             </div>
           </div>
         </div>
       </section>
+
+      {/* Facts strip: true product numbers, no invented claims */}
+      <section className="px-6 py-16 border-b border-foreground/10">
+        <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8">
+          {[
+            ["8", L("shots tracked per player", "golpes medidos por jugador")],
+            ["4", L("players per court slot", "jugadores por pista")],
+            ["2", L("sports, tennis and padel", "deportes, tenis y pádel")],
+            ["€0", L("to create a player account", "para crear tu cuenta")],
+          ].map(([n, l]) => (
+            <div key={l}>
+              <p className="font-display text-5xl md:text-6xl font-medium tabular-nums">{n}</p>
+              <p className="font-body text-sm text-muted-foreground mt-2">{l}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Mission split */}
+      <section className="px-6 py-24">
+        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+          <img src={tennisAction} alt="Tennis player hitting a forehand on court" loading="lazy" className="w-full h-[420px] object-cover rounded-2xl saturate-[0.85]" />
+          <div>
+            <span className="signature-bar mb-6" />
+            <h2 className="font-display text-4xl md:text-5xl leading-[1.05] font-medium mb-6">
+              {L("Your coach sees your game.", "Tu profesor ve tu juego.")} <span className="text-accent">{L("Now you do too", "Ahora tú también")}</span>
+            </h2>
+            <p className="font-body text-muted-foreground mb-8 max-w-md">
+              {L("Every session your coach rates, every shot that improves and every booking you make lives in one place, so progress stops being a feeling and becomes a line you can follow.",
+                 "Cada sesión que tu profesor evalúa, cada golpe que mejora y cada reserva viven en un solo lugar. El progreso deja de ser una sensación y se convierte en una línea que puedes seguir.")}
+            </p>
+            <Link to="/login" className="inline-flex items-center gap-2 font-body font-medium text-base bg-primary text-primary-foreground px-6 h-12 rounded-[10px] hover:bg-primary/90 transition-colors">
+              {L("Create free account", "Crear cuenta gratis")} <ArrowRight size={18} />
+            </Link>
+          </div>
+        </div>
+      </section>
+
 
       {/* Features: numbered list beside the racquet photo */}
       <section className="relative py-24 px-6 bg-card">
@@ -129,6 +177,82 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Services: four numbered panels */}
+      <section className="px-6 py-24">
+        <div className="max-w-6xl mx-auto">
+          <span className="signature-bar mb-6" />
+          <h2 className="font-display text-4xl md:text-5xl font-medium mb-12 max-w-2xl leading-[1.05]">{L("Four ways to play with us", "Cuatro formas de jugar")}</h2>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {[
+              [clinicGroup, L("Private coaching", "Clases privadas"), L("One coach, your shots, your pace", "Un profesor, tus golpes, tu ritmo"), "/find-a-coach"],
+              [kidsCamp, L("Camps and clinics", "Campus y clínicas"), L("Group weeks with daily feedback", "Semanas en grupo con feedback diario"), "/events"],
+              [tennisServe, L("Tournaments", "Torneos"), L("Draws, results and your record", "Cuadros, resultados y tu historial"), "/events"],
+              [padelMatch, L("Academy access", "Academias"), L("Join your club's academy in one tap", "Únete a la academia de tu club"), "/login"],
+            ].map(([img, title, desc, to], i) => (
+              <Link key={title} to={to} className="group relative h-[380px] rounded-2xl overflow-hidden bg-foreground">
+                <img src={img} alt="" loading="lazy" className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-95 transition-opacity" />
+                <div className="absolute inset-0 bg-gradient-to-t from-foreground/90 via-foreground/20 to-transparent" />
+                <div className="absolute inset-x-0 bottom-0 p-6 text-background">
+                  <p className="font-body text-sm tabular-nums text-background/70">{String(i + 1).padStart(2, "0")}</p>
+                  <h3 className="font-display text-2xl font-medium mt-2">{title}</h3>
+                  <p className="font-body text-sm text-background/75 mt-1">{desc}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Booking teaser: a real-looking slot picker */}
+      <section className="px-6 py-24 bg-card">
+        <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
+          <div>
+            <span className="signature-bar mb-6" />
+            <h2 className="font-display text-4xl md:text-5xl font-medium leading-[1.05] mb-6">{L("Pick a slot.", "Elige hora.")} <span className="text-accent">{L("You're on court", "Ya estás en pista")}</span></h2>
+            <p className="font-body text-muted-foreground max-w-md mb-8">{L("See your coach's free hours, book in two taps and pay per session. No subscription.", "Mira las horas libres de tu profesor, reserva en dos toques y paga por sesión. Sin suscripción.")}</p>
+            <Link to="/find-a-coach" className="inline-flex items-center gap-2 font-body font-medium text-base bg-primary text-primary-foreground px-6 h-12 rounded-[10px] hover:bg-primary/90 transition-colors">{L("Find a coach", "Buscar profesor")} <ArrowRight size={18} /></Link>
+          </div>
+          <div className="rounded-2xl bg-background p-6 ring-1 ring-foreground/10">
+            <div className="flex items-baseline justify-between mb-6">
+              <p className="font-display text-xl font-medium">{L("Thursday, 12 Nov", "Jueves, 12 nov")}</p>
+              <p className="font-body text-sm text-muted-foreground">{L("Court 2 · 60 min", "Pista 2 · 60 min")}</p>
+            </div>
+            <div className="grid grid-cols-3 gap-2">
+              {["08:00","09:00","10:00","16:00","17:00","18:00","19:00","20:00","21:00"].map((h) => {
+                const taken = ["09:00","17:00","20:00"].includes(h); const pick = h === "18:00";
+                return <div key={h} className={`h-12 rounded-[10px] flex items-center justify-center font-body text-sm tabular-nums ${pick ? "bg-primary text-primary-foreground" : taken ? "bg-foreground/5 text-muted-foreground line-through" : "bg-card ring-1 ring-foreground/10"}`}>{h}</div>;
+              })}
+            </div>
+            <div className="mt-6 pt-6 border-t border-foreground/10 flex items-center justify-between font-body text-sm">
+              <span className="text-muted-foreground">{L("Private session", "Sesión privada")}</span>
+              <span className="font-medium tabular-nums">€45</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Progression ladder */}
+      <section className="px-6 py-24">
+        <div className="max-w-6xl mx-auto">
+          <span className="signature-bar mb-6" />
+          <h2 className="font-display text-4xl md:text-5xl font-medium mb-12 leading-[1.05]">{L("From first rally to match play", "Del primer peloteo a la competición")}</h2>
+          <ol className="border-y border-foreground/10 divide-y divide-foreground/10">
+            {[
+              [L("Foundations", "Fundamentos"), L("Grip, footwork and a forehand you trust", "Empuñadura, pies y una derecha fiable")],
+              [L("Rally builder", "Constructor de peloteo"), L("Consistency drills and your first ratings", "Ejercicios de regularidad y tus primeras notas")],
+              [L("Match ready", "Listo para jugar"), L("Tactics, serve patterns and weekly plans", "Táctica, saque y planes semanales")],
+              [L("Tournament", "Torneo"), L("Video review, load tracking and draws", "Vídeo, carga de entreno y cuadros")],
+            ].map(([a, b], i) => (
+              <li key={a} className="grid grid-cols-[48px_1fr] md:grid-cols-[80px_1fr_1.4fr] gap-4 py-6 items-baseline">
+                <span className="font-body text-sm text-muted-foreground tabular-nums">{String(i + 1).padStart(2, "0")}</span>
+                <h3 className="font-display text-2xl font-medium">{a}</h3>
+                <p className="font-body text-muted-foreground col-start-2 md:col-start-auto">{b}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
       {/* How it works: one graphite contrast band */}
       <section className="relative py-24 px-6 bg-foreground text-background">
         <div className="max-w-6xl mx-auto">
@@ -143,6 +267,39 @@ const Index = () => {
                 <h3 className="font-display text-xl mt-4 mb-2 font-medium">{t(item.titleKey)}</h3>
                 <p className="font-body text-sm text-background/70">{t(item.descKey)}</p>
               </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Event spotlight */}
+      <section className="px-6 pb-24">
+        <div className="max-w-6xl mx-auto grid md:grid-cols-[1.2fr_1fr] rounded-2xl overflow-hidden bg-foreground text-background">
+          <img src={tennisClay} alt="Tennis match on a clay court" loading="lazy" className="w-full h-72 md:h-full object-cover" />
+          <div className="p-10 md:p-12 flex flex-col justify-center">
+            <p className="font-body text-sm text-background/70 mb-3">{L("Inside the app", "Dentro de la app")}</p>
+            <h2 className="font-display text-4xl font-medium leading-[1.05] mb-4">{L("Camps, clinics and tournaments near you", "Campus, clínicas y torneos cerca de ti")}</h2>
+            <p className="font-body text-background/75 mb-8">{L("Register, pay and chat with the group in one place. Past results stay on your profile.", "Inscríbete, paga y habla con el grupo en un solo lugar. Tus resultados quedan en tu perfil.")}</p>
+            <Link to="/events" className="self-start inline-flex items-center gap-2 font-body font-medium text-base bg-primary text-primary-foreground px-6 h-12 rounded-[10px] hover:bg-primary/90 transition-colors">{L("See events", "Ver eventos")} <ArrowRight size={18} /></Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Journal */}
+      <section className="px-6 pb-24">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="font-display text-3xl md:text-4xl font-medium mb-10">{L("What you'll train inside", "Lo que entrenarás dentro")}</h2>
+          <div className="grid md:grid-cols-3 gap-6">
+            {[
+              [racketClay, L("Technique", "Técnica"), L("The bandeja, broken into four checkpoints", "La bandeja en cuatro puntos clave")],
+              [fitnessStretch, L("Recovery", "Recuperación"), L("A ten-minute routine after every match", "Diez minutos después de cada partido")],
+              [drillsGear, L("Drills", "Ejercicios"), L("Volley ladders your coach can assign", "Escaleras de volea que tu profesor asigna")],
+            ].map(([img, tag, title]) => (
+              <Link key={title} to="/login" className="group">
+                <img src={img} alt="" loading="lazy" className="w-full h-56 object-cover rounded-2xl mb-4 saturate-[0.85]" />
+                <p className="font-body text-sm text-muted-foreground">{tag}</p>
+                <h3 className="font-display text-xl font-medium mt-1 group-hover:text-accent transition-colors">{title}</h3>
+              </Link>
             ))}
           </div>
         </div>
