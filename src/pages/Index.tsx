@@ -113,7 +113,7 @@ const Index = () => {
             alt="Tennis player sliding on a clay court to reach a ball"
             width={1536}
             height={1024}
-            className="h-full w-full object-cover object-[50%_center] md:object-[center_25%]"
+            className="h-full w-full object-cover object-[50%_center] md:object-top"
             loading="eager"
           />
         </div>
