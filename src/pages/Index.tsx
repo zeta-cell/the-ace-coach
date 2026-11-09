@@ -22,6 +22,7 @@ import CountUp from "@/components/reactbits/CountUp";
 import SpotlightRow from "@/components/reactbits/SpotlightRow";
 import { setSeo } from "@/lib/seo";
 import { useI18n } from "@/lib/i18n";
+import { Button } from "@/components/ui/button";
 
 const Index = () => {
   const { t, lang } = useI18n();
@@ -231,26 +232,51 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Services: four numbered panels */}
-      <section className="px-6 py-24">
+      {/* Playing opportunities: clear photography and an account-first invitation */}
+      <section className="px-6 py-20 md:py-24" aria-labelledby="play-heading">
         <div className="max-w-6xl mx-auto">
-          <span className="signature-bar mb-6" />
-          <h2 className="font-display text-4xl md:text-5xl font-medium mb-12 max-w-2xl leading-[1.05]">{L("Four ways to play with us", "Cuatro formas de jugar")}</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid lg:grid-cols-[1.2fr_1fr] gap-6 lg:gap-16 items-end mb-10">
+            <div>
+              <span className="signature-bar mb-6" />
+              <h2 id="play-heading" className="font-display text-4xl md:text-5xl font-medium leading-[1.05]">{L("More reasons to", "Más razones para")} <span className="text-accent">{L("get on court", "salir a pista")}</span></h2>
+            </div>
+            <div>
+              <p className="font-body text-muted-foreground mb-5 max-w-md">{L("A coach who gets your game. A group to train with. A match to look forward to. Find your next reason to play with Hi Volley.", "Un profesor que entiende tu juego. Un grupo con el que entrenar. Un partido que esperas con ganas. Encuentra tu próxima razón para jugar con Hi Volley.")}</p>
+              <Button asChild size="lg" className="font-body h-12 px-6">
+                <Link to="/login">{L("Create free account", "Crear cuenta gratis")} <ArrowRight size={18} /></Link>
+              </Button>
+            </div>
+          </div>
+
+          <div className="grid md:grid-cols-[1.15fr_1fr] gap-6 md:gap-10 items-center mb-12">
+            <img src={clinicGroup} alt="Players gathered around their coach on court" loading="lazy" className="w-full aspect-[16/10] object-cover rounded-lg" />
+            <div className="md:py-6">
+              <p className="font-body text-sm text-accent mb-3">{L("Private coaching", "Clases privadas")}</p>
+              <h3 className="font-display text-3xl md:text-4xl font-medium leading-[1.1] mb-4">{L("Make it your game", "Hazlo tuyo")}</h3>
+              <p className="font-body text-muted-foreground mb-6 max-w-sm">{L("Work on the shots that matter to you, at your pace. Keep your coach’s feedback and see how your game develops in your player profile.", "Trabaja los golpes que te importan, a tu ritmo. Guarda el feedback de tu profesor y sigue tu evolución en tu perfil de jugador.")}</p>
+              <Button asChild variant="link" className="p-0 h-11 text-foreground hover:text-accent font-body">
+                <Link to="/find-a-coach">{L("Meet your coach", "Encuentra tu profesor")} <ArrowRight size={18} /></Link>
+              </Button>
+            </div>
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-10">
             {[
-              [clinicGroup, L("Private coaching", "Clases privadas"), L("One coach, your shots, your pace", "Un profesor, tus golpes, tu ritmo"), "/find-a-coach"],
-              [kidsCamp, L("Camps and clinics", "Campus y clínicas"), L("Group weeks with daily feedback", "Semanas en grupo con feedback diario"), "/events"],
-              [tennisServe, L("Tournaments", "Torneos"), L("Draws, results and your record", "Cuadros, resultados y tu historial"), "/events"],
-              [padelMatch, L("Academy access", "Academias"), L("Join your club's academy in one tap", "Únete a la academia de tu club"), "/login"],
-            ].map(([img, title, desc, to]) => (
-              <Link key={title} to={to} className="group relative h-[380px] rounded-2xl overflow-hidden bg-foreground">
-                <img src={img} alt="" loading="lazy" className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-95 transition-opacity" />
-                <div className="absolute inset-0 bg-gradient-to-t from-foreground/90 via-foreground/20 to-transparent" />
-                <div className="absolute inset-x-0 bottom-0 p-6 text-background">
-                  <h3 className="font-display text-2xl font-medium">{title}</h3>
-                  <p className="font-body text-sm text-background/75 mt-1">{desc}</p>
+              [kidsCamp, L("Camps and clinics", "Campus y clínicas"), L("Train together. Take more home", "Entrena en grupo. Llévate más"), L("Meet other players, practise together and keep your coach’s feedback after camp ends.", "Conoce a otros jugadores, practica en grupo y guarda el feedback de tu profesor al terminar el campus."), L("Explore camps and clinics", "Explorar campus y clínicas"), "/events", "Young tennis player practising a forehand"],
+              [tennisServe, L("Tournaments", "Torneos"), L("Give your training a match day", "Pon fecha a tu próximo partido"), L("Find a tournament to play in and keep your results alongside your training progress.", "Encuentra un torneo y guarda tus resultados junto a tu progreso de entrenamiento."), L("Find a tournament", "Buscar un torneo"), "/events", "Tennis racket and ball on a clay court"],
+              [padelMatch, L("Academy access", "Academias"), L("Find your people on court", "Encuentra tu gente en pista"), L("Connect with your academy, its coaches and the sessions that bring you back to court.", "Conecta con tu academia, sus profesores y las sesiones que te hacen volver a pista."), L("Join Hi Volley", "Unirme a Hi Volley"), "/login", "Padel players sharing a court"],
+            ].map(([img, category, title, desc, action, to, alt]) => (
+              <article key={category} className="flex flex-col min-w-0">
+                <img src={img} alt={alt} loading="lazy" className="w-full aspect-[4/3] object-cover rounded-lg mb-5" />
+                <div className="flex flex-col flex-1">
+                  <p className="font-body text-sm text-muted-foreground mb-2">{category}</p>
+                  <h3 className="font-display text-2xl font-medium leading-tight mb-3">{title}</h3>
+                  <p className="font-body text-sm text-muted-foreground mb-4">{desc}</p>
+                  <Button asChild variant="link" className="self-start mt-auto p-0 h-11 text-foreground hover:text-accent font-body whitespace-normal text-left">
+                    <Link to={to}>{action} <ArrowRight size={18} /></Link>
+                  </Button>
                 </div>
-              </Link>
+              </article>
             ))}
           </div>
         </div>
