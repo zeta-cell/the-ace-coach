@@ -240,13 +240,12 @@ const Index = () => {
               [kidsCamp, L("Camps and clinics", "Campus y clínicas"), L("Group weeks with daily feedback", "Semanas en grupo con feedback diario"), "/events"],
               [tennisServe, L("Tournaments", "Torneos"), L("Draws, results and your record", "Cuadros, resultados y tu historial"), "/events"],
               [padelMatch, L("Academy access", "Academias"), L("Join your club's academy in one tap", "Únete a la academia de tu club"), "/login"],
-            ].map(([img, title, desc, to], i) => (
+            ].map(([img, title, desc, to]) => (
               <Link key={title} to={to} className="group relative h-[380px] rounded-2xl overflow-hidden bg-foreground">
                 <img src={img} alt="" loading="lazy" className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-95 transition-opacity" />
                 <div className="absolute inset-0 bg-gradient-to-t from-foreground/90 via-foreground/20 to-transparent" />
                 <div className="absolute inset-x-0 bottom-0 p-6 text-background">
-                  <p className="font-body text-sm tabular-nums text-background/70">{String(i + 1).padStart(2, "0")}</p>
-                  <h3 className="font-display text-2xl font-medium mt-2">{title}</h3>
+                  <h3 className="font-display text-2xl font-medium">{title}</h3>
                   <p className="font-body text-sm text-background/75 mt-1">{desc}</p>
                 </div>
               </Link>
