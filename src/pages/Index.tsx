@@ -114,7 +114,7 @@ const Index = () => {
             alt="Tennis racket striking a ball in motion over a blue court"
             width={1920}
             height={1080}
-            className="absolute inset-0 h-full w-full object-cover object-[0%_50%] md:object-center"
+            className="absolute inset-0 h-full w-full object-cover object-[65%_50%] md:object-center"
             loading="eager"
           />
 
