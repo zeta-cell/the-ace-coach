@@ -17,6 +17,7 @@ import fitnessStretch from "@/assets/events/fitness-stretch.jpg";
 import drillsGear from "@/assets/events/drills-gear.jpg";
 import { BrandLogo } from "@/components/BrandLogo";
 import BlurText from "@/components/reactbits/BlurText";
+import CountUp from "@/components/reactbits/CountUp";
 import SpotlightRow from "@/components/reactbits/SpotlightRow";
 import { setSeo } from "@/lib/seo";
 import { useI18n } from "@/lib/i18n";
@@ -105,20 +106,40 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Facts strip: true product numbers, no invented claims */}
-      <section className="px-6 py-16 border-b border-foreground/10">
-        <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8">
-          {[
-            ["8", L("shots tracked per player", "golpes medidos por jugador")],
-            ["4", L("players per court slot", "jugadores por pista")],
-            ["2", L("sports, tennis and padel", "deportes, tenis y pádel")],
-            ["€0", L("to create a player account", "para crear tu cuenta")],
-          ].map(([n, l]) => (
-            <div key={l}>
-              <p className="font-display text-5xl md:text-6xl font-medium tabular-nums">{n}</p>
-              <p className="font-body text-sm text-muted-foreground mt-2">{l}</p>
-            </div>
-          ))}
+      {/* Facts strip: graphite band, coral count-ups, each fact drawn */}
+      <section className="px-6 py-20 bg-foreground text-background">
+        <div className="max-w-6xl mx-auto">
+          <p className="font-body text-sm text-background/60 mb-10">{L("What's waiting inside", "Lo que te espera dentro")}</p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-12">
+            {([
+              [8, "", L("shots tracked per player", "golpes medidos por jugador"), "shots"],
+              [4, "", L("players per court slot", "jugadores por pista"), "court"],
+              [2, "", L("sports, tennis and padel", "deportes, tenis y pádel"), "sports"],
+              [0, "€", L("to create a player account", "para crear tu cuenta"), "free"],
+            ] as const).map(([n, pre, l, kind]) => (
+              <div key={l} className="border-t border-background/15 pt-6">
+                <p className="font-display text-6xl md:text-7xl font-medium text-primary leading-none">
+                  <CountUp to={n} prefix={pre} />
+                </p>
+                <p className="font-body text-sm text-background/75 mt-3 max-w-[14rem]">{l}</p>
+                <div className="mt-5 h-6 flex items-center gap-1.5" aria-hidden>
+                  {kind === "shots" && Array.from({ length: 8 }).map((_, i) => (
+                    <span key={i} className="w-1.5 rounded-full bg-primary" style={{ height: `${8 + ((i * 5) % 16)}px`, opacity: 0.4 + i * 0.075 }} />
+                  ))}
+                  {kind === "court" && (
+                    <span className="grid grid-cols-2 gap-0.5 w-12 h-6 rounded-[4px] ring-1 ring-background/30 p-0.5">
+                      {[0,1,2,3].map((i) => <span key={i} className={`rounded-[2px] ${i < 3 ? "bg-primary" : "bg-background/15"}`} />)}
+                    </span>
+                  )}
+                  {kind === "sports" && <span className="font-body text-xs text-background/60">Tennis · Padel</span>}
+                  {kind === "free" && <span className="font-body text-xs px-2 h-6 inline-flex items-center rounded-md bg-primary/15 text-primary">{L("No card needed", "Sin tarjeta")}</span>}
+                </div>
+              </div>
+            ))}
+          </div>
+          <Link to="/login" className="mt-14 inline-flex items-center gap-2 font-body font-medium text-base bg-primary text-primary-foreground px-6 h-12 rounded-[10px] hover:bg-primary/90 active:scale-[0.98] transition-[background-color,transform]">
+            {L("Create free account", "Crear cuenta gratis")} <ArrowRight size={18} />
+          </Link>
         </div>
       </section>
 
