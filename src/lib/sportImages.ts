@@ -6,22 +6,21 @@ import drillsGear from "@/assets/events/drills-gear.jpg";
 import fitnessAgility from "@/assets/events/fitness-agility.jpg";
 import fitnessStretch from "@/assets/events/fitness-stretch.jpg";
 import racketClay from "@/assets/events/racket-clay.jpg";
-import tennisAction from "@/assets/events/tennis-action.jpg";
 import tennisPlayer from "@/assets/events/tennis-player.jpg";
 import tennisServe from "@/assets/events/tennis-serve.jpg";
 import tennisTraining from "@/assets/events/tennis-training.jpg";
 
 const POOL = [
   padelMatch, tennisClay, clinicGroup, drillsGear, kidsCamp, fitnessAgility,
-  fitnessStretch, racketClay, tennisAction, tennisPlayer, tennisServe, tennisTraining,
+  fitnessStretch, racketClay, tennisPlayer, tennisServe, tennisTraining,
 ];
 
 const CAMP = [kidsCamp, clinicGroup, tennisTraining];
 const CLINIC = [clinicGroup, tennisTraining, kidsCamp];
-const TOURNAMENT_TENNIS = [tennisClay, tennisAction, tennisServe];
+const TOURNAMENT_TENNIS = [tennisClay, tennisServe];
 const TOURNAMENT_PADEL = [padelMatch, drillsGear, racketClay];
 const PADEL = [padelMatch, drillsGear, racketClay];
-const TENNIS = [tennisClay, tennisAction, tennisServe, tennisPlayer];
+const TENNIS = [tennisClay, tennisServe, tennisPlayer];
 const FITNESS = [fitnessAgility, fitnessStretch];
 const DRILLS = [drillsGear, racketClay, tennisServe];
 
