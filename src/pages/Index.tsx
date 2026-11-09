@@ -108,7 +108,7 @@ const Index = () => {
 
       {/* Hero: deep-blue motion-blur photo. Text sits in the naturally dark lower band — no shadows, no overlays. */}
       <section className="relative overflow-hidden bg-background">
-        <div className="relative h-[72svh] md:min-h-[100svh]">
+        <div className="relative h-[100svh] md:min-h-[100svh]">
           <img
             src={heroBlue}
             alt="Tennis racket striking a ball in motion over a blue court"
